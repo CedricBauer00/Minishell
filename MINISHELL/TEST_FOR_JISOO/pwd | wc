@@ -50,7 +50,6 @@ root@796eb7844e49:/#cat strace_output.txt
 
 
 int last_exit_status = 0;
-
 int	pwd_pipe_wc()
 {
 	pid_t pid;
@@ -75,7 +74,7 @@ int	pwd_pipe_wc()
 	pid2 = fork();
 	if (pid2 == 0) //memo 291
 	{
-		#close(fd[1]); //memo it is alredy close at the first process
+		close(fd[1]); //memo it is alredy close at the first process
 		dup2(fd[0], STDIN_FILENO);
 		close(fd[0]);
 		execve("wc");

@@ -8,34 +8,35 @@ openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
 read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\20t\2\0\0\0\0\0"..., 832) = 832
 close(3)                                = 0
 pipe2([3, 4], 0)                        = 0
-clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLDstrace: Process 148 attached
+
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLDstrace: Process 148 attached //fork
 , child_tidptr=0x7f6a85c9ca10) = 148
-[pid   147] close(4)                    = 0
-[pid   148] close(3)                    = 0
-[pid   148] dup2(4, 1)                  = 1
-[pid   148] close(4)                    = 0
-[pid   148] write(1, "hello\n", 6)      = 6
-[pid   147] pipe2([4, 5], 0)            = 0
+[pid   147] close(4)                    = 0 //in parent write pipe.
+[pid   148] close(3)                    = 0 //in child printout to next cmd child cant read
+[pid   148] dup2(4, 1)                  = 1 // 4 is stdout. in child
+[pid   148] close(4)                    = 0 //in child
+[pid   148] write(1, "hello\n", 6)      = 6 
+[pid   147] pipe2([4, 5], 0)            = 0//3, 4 , 5
 [pid   148] +++ exited with 0 +++
 
 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=148, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLDstrace: Process 149 attached
-, child_tidptr=0x7f6a85c9ca10) = 149
+, child_tidptr=0x7f6a85c9ca10) = 149 //3,4,5
 [pid   147] close(3)                    = 0
 [pid   147] close(5 <unfinished ...>
 [pid   149] close(4 <unfinished ...>
 [pid   147] <... close resumed>)        = 0
 [pid   149] <... close resumed>)        = 0
-[pid   149] dup2(3, 0)                  = 0
+[pid   149] dup2(3, 0)                  = 0 //in child 3 , stdin 
 [pid   149] close(3)                    = 0
-[pid   149] dup2(5, 1)                  = 1
+[pid   149] dup2(5, 1)                  = 1 //in child write of second pipe >> stdout 
 [pid   149] close(5 <unfinished ...>
 [pid   147] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD <unfinished ...>
 [pid   149] <... close resumed>)        = 0
 [pid   149] execve("/usr/bin/cat", ["cat"], 0x55a28ee1e970 /* 8 vars */strace: Process 150 attached
  <unfinished ...>
 [pid   147] <... clone resumed>, child_tidptr=0x7f6a85c9ca10) = 150
-[pid   147] close(4)                    = 0
+[pid   147] close(4)                    = 0 //in parent close 4
 [pid   150] dup2(4, 0 <unfinished ...>
 [pid   149] <... execve resumed>)       = 0
 [pid   147] close(-1 <unfinished ...>
