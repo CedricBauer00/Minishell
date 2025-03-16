@@ -1,3 +1,14 @@
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <fcntl.h>
+# include <errno.h>
+# include <sys/stat.h>
+
+//temp header
+#include <string.h>
 
 //int last_status_exit; //to check last exited status.
 
@@ -14,7 +25,6 @@ typedef enum TokenType
 	SEMICOLON,			//by line excute commands.
 	QUOTE,				// '
 	DOUBLE_QUOTE,		// "
-
 
 	//can manage just with WORD? 
 	TILDE, // ~ 
