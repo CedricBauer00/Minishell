@@ -8,13 +8,11 @@
 
 /*
 	think!
-
-	1. it mighte need to copy of envp
+	1. i think, i need to copy of envp
 	2. and then maybe i need to stroe copied envp to a structure.
 	3. and if we need a copied envp then change the var's name to copied envp;
 */
 #include "../INCLUDE/main.h"
-
 
 //stat(): check path, and check if its approchable.
 //S_ISDIR is a macro 
@@ -162,7 +160,6 @@ void cd()
 		char *add_slash = ft_strjoin(curdir, "/");
 		char *full_path = ft_strjoin(add_slash, input);
 		free(add_slash);
-
 		if (full_path == NULL)
 		{
 			perror("ft_strjoin error");
@@ -171,7 +168,7 @@ void cd()
 		if (is_valid_dir(full_path))
 		{
 			printf("validpath");
-			setenv("OLDPWD", curdir, 1, envp);
+			ft_setenv("NEWPWD", curdir, 1, envp);
 			free(curdir);
 			if (chdir(full_path) != 0)
 			{
@@ -182,7 +179,7 @@ void cd()
 			curdir = getcwd(NULL, 0);
 			if (curdir != NULL)
 			{
-				setenv("PWD", curdir, 1, envp);
+				ft_setenv("PWD", curdir, 1, envp);
 				free(curdir);
 			}
 			else
@@ -210,7 +207,7 @@ void cd()
 		curdir = getcwd(NULL, 0);
 		if (curdir != NULL)
 		{
-			setenv("PWD", curdir, 1, envp);
+			ft_setenv("PWD", curdir, 1, envp);
 			free(curdir);
 		}
 		else

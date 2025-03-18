@@ -1,4 +1,4 @@
-# include <stdio.h>
+//# include <stdio.h> //already have in gabae_colletor.h 
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/types.h>
@@ -6,6 +6,7 @@
 # include <fcntl.h>
 # include <errno.h>
 # include <sys/stat.h>
+# include "../gabage_manager/gabage_collector.h"
 
 //temp header
 #include <string.h>
