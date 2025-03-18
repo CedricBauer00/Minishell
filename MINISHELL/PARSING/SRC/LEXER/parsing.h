@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 13:08:10 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/17 17:53:45 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/03/18 11:04:03 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
-
+# include "../../../INCLUDE/libft/libft.h"
 // ----------------------------------------------------------------------
 //								LEXER
 // ----------------------------------------------------------------------
@@ -31,7 +31,7 @@ typedef enum
 	TOKEN_APPEND,		//Symbol: >>
 	TOKEN_HEREDOC,		//Symbol: <<
 	TOKEN_QUOTE,		//String in '
-	TOKEN_DOUBLE,		//string in "
+	TOKEN_DQOUTE,		//string in "
 	TOKEN_EOF			//End of input
 }	t_token_type;
 
@@ -46,7 +46,6 @@ typedef struct s_token //struct being allocated for each token from input
 typedef struct s_main
 {
 	t_token	*start; //= first
-	
 }	t_main;
 
 // like this 
