@@ -1,10 +1,17 @@
 //reference count :  number of times referenced
 #include <stdio.h>
 
-typedef struct s_gc_list
+typedef enum	e_data_type
+{
+	TYPE_SINGLE_CHAR,
+	TYPE_DOUBLE_CHAR,
+}	t_data_type;
+
+typedef struct	s_gc_list
 {
 	void				*data;
 	struct s_gc_list	*next;
+	t_data_type			type;
 	//int					ref_count;
 }	t_gc_list;
 
@@ -18,11 +25,12 @@ t_gc_list	*init_gc_list(void)
 	}
 	head->data = NULL;
 	head->next = NULL;
+	head->type = TYPE_SINGLE_CHAR;
 	//head->ref_count = 0;
 	return head;
 }
 
-void	*do_alloc(t_gc_list *gc_lst, size_t howmuch)
+void	*do_alloc(t_gc_list *gc_lst, size_t howmuch, t_data_type data_type)
 {
 	t_gc_list	*new_node = malloc(sizeof(t_gc_list));
 	if (!new_node)
@@ -38,12 +46,32 @@ void	*do_alloc(t_gc_list *gc_lst, size_t howmuch)
 	}
 	new_node->data = data;
 	new_node->next = gc_lst->next;
+	new_node->type = data_type;
 	//new_node->ref_count = 1;
 	gc_lst->next = new_node;
 	return (data);
 }
 
-void	gc_free(t_gc_list **gc_lst)
+void	free_data_type(void *data, t_data_type data_type)
+{
+	if(!data)
+		return ;
+	if (data_type == TYPE_SINGLE_CHAR)
+		free(data);
+	else if (data_type == TYPE_DOUBLE_CHAR)
+	{
+		char ** temp = (char **)data;
+		int i = 0;
+		while(temp[i])
+		{
+			free(temp[i]);
+			i++;
+		}
+		free (temp);
+	}
+}
+
+void	gc_free(t_gc_list **gc_lst, t_data_type data_type)
 {
 	if (!gc_lst || !(*gc_lst))
 		return ;
@@ -55,13 +83,31 @@ void	gc_free(t_gc_list **gc_lst)
 	while(cur)
 	{
 		next = cur->next;
-		free(cur->data);
+		printf("%p is free, type is %d\n", cur->data , cur->type);
+		free_data_type(cur->data, cur->type);
 		free(cur);
 		cur = next;
 	}
+	printf("at last %p		is free\n", *gc_lst);
 	free(*gc_lst);
     *gc_lst = NULL;
 }
+
+void	print_list(t_gc_list *gc_lst)
+{
+	t_gc_list	*cur;
+	int			i;
+
+	i = 1;
+	cur = gc_lst->next;
+	while(cur != NULL)
+	{
+		printf("[%d]th NODE, %p\n",i, cur->data);
+		i++;
+		cur = cur->next;
+	}
+}
+
 
 // void	gc_inc_ref_count(t_gc_list *gc_lst, void *ptr)
 // {
@@ -106,18 +152,3 @@ void	gc_free(t_gc_list **gc_lst)
 // 	printf("can't found to decrease referenced counts\n");
 // 	return ;
 // }
-
-void	print_list(t_gc_list *gc_lst)
-{
-	t_gc_list	*cur;
-	int			i;
-
-	i = 0;
-	cur = gc_lst->next;
-	while(cur != NULL)
-	{
-		printf("[%d]th NODE, %p\n",i, cur->data);
-		i++;
-		cur = cur->next;
-	}
-}
