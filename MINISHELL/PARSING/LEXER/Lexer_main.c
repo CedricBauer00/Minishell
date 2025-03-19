@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/18 17:47:08 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/03/19 14:34:03 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,11 @@ int main(int argc, char **argv)
 	i = 0;
 	ws = 0;
 	len = 0;
+	char *line = readline()
 	set_default(&main);
 	if (argc > 1)
 	{
+		
 		while (argv[j] != NULL)
 		{
 			i = 0;

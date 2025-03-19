@@ -1,3 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.h                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/17 13:08:10 by cbauer            #+#    #+#             */
+/*   Updated: 2025/03/19 14:31:17 by cbauer           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef MAIN_H
+# define MAIN_H
+
 //# include <stdio.h> //already have in gabae_colletor.h 
 # include <stdlib.h>
 # include <unistd.h>
@@ -12,37 +27,40 @@
 #include <string.h>
 
 //int last_status_exit; //to check last exited status.
+# include "libft/libft.h"
 
-typedef enum TokenType
+typedef enum
 {
-	PIPE,				// |
-	CMD,				// ls, wc
-	FLAGS,				// -l, -a
-	BUILD_IN,			// cd, pwd, export, ...
-	LEFT_REDIRECTION,   //	<
-	RIGHT_REDIRECTION,  //	>
-	HEREDOC,			//	<<
-	APPEND_OUTPUT,		//	>>
-	SEMICOLON,			//by line excute commands.
-	QUOTE,				// '
-	DOUBLE_QUOTE,		// "
+	TOKEN_WORD,			//word
+	TOKEN_CMD,			//Command
+	TOKEN_FLAGS,		// -l, -a
+	TOKEN_BUILT_IN,		// cd, pwd, export, ...
+	TOKEN_PIPE,			//Symbol: |
+	TOKEN_REDIRECT_IN,	//Symbol: <
+	TOKEN_REDIRECT_OUT,	//Symbol: >
+	TOKEN_APPEND,		//Symbol: >>
+	TOKEN_HEREDOC,		//Symbol: <<
+	TOKEN_QUOTE,		//String in '
+	TOKEN_DQOUTE,		//string in "
+	TOKEN_VAR,			//$ variable
+	TOKEN_EOF,			//End of input
 
-	//can manage just with WORD? 
-	TILDE, // ~ 
-	SLASH, // bin/ls
-	OTHER,
-	END,
-}TokenType;
+	SLASH,				// bin/ls
+}	t_token_type;
 
-//"ls -l | grep .txt" 이경우 cmd 는 'ls -l' 과 'grep .txt'
 
-// and token is 'ls, -l, |, grep, .txt ?? 
-typedef struct s_token
+typedef struct s_token //struct being allocated for each token from input
 {
-	TokenType		token_type;
-	char			*token;
-	struct s_token	*next;
-}t_token;
+	t_token_type	type;
+	char			*value;
+	struct			s_token *next;
+}	t_token;
+
+typedef struct s_main
+{
+	t_token	*start; //= first
+	char	**envp;
+}	t_main;
 
 typedef struct s_cmd
 {
@@ -51,3 +69,31 @@ typedef struct s_cmd
 	char			*flags;  //idont know could be delte
 	struct s_cmd	*next;   //"ls -l"
 }t_cmd;
+
+
+
+// like this 
+
+// t_token *first;
+
+// first = malloc(sizeof(t_token));
+// first->type = TOKEN_WORD;
+// first->value = strdup("echo");
+// first->next = NULL;
+
+// ----------------------------------------------------------------------
+//								LEXER
+// ----------------------------------------------------------------------
+
+int		main(int argc, char **argv);
+int		create_token(t_token **tokens, t_token_type type, char *str);
+int		append_token(t_token **tokens, t_token *new_token);
+void	free_tokens(t_token *tokens);
+void	set_default(t_main *main);
+
+// ---------------------------Lexer_utils--------------------------------
+
+int		ft_isspace(char c);
+
+
+#endif
