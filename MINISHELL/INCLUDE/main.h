@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 13:08:10 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/19 16:43:59 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:47:21 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ typedef struct s_token
 	TOKEN_VAR,			//$ variable
 	TOKEN_EOF,			//End of input
 
-	SLASH,				// bin/ls
+	SLASH				// bin/ls
 }	t_token_type;
 
 
