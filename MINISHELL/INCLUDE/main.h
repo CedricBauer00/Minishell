@@ -36,7 +36,7 @@ typedef enum TokenType
 
 //"ls -l | grep .txt" 이경우 cmd 는 'ls -l' 과 'grep .txt'
 
-// and token is 'ls, -l, |, grep, .txt ?? 
+// and token is 'ls, -l, |, grep, .txt ?? ls -o
 typedef struct s_token
 {
 	TokenType		token_type;

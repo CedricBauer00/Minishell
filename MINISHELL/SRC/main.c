@@ -3,17 +3,20 @@
 int	main()
 {
 	t_gc_list *head = init_gc_list();
+	printf("head : %p\n",head);
 	char	*first;
 	char	*second;
 	
-	first = do_alloc(head, 10);
-	printf("test %p\n", first);
-	gc_inc_ref_count(head,first);
+	do_alloc(head, 10);
+	printf("first %p\n", head->next->data);
 
-	second = do_alloc(head, 10);
-	printf("second %p\n", second);
-	gc_inc_ref_count(head,second);
+	do_alloc(head, 10);
+	printf("second %p\n", head->next->data);
 
 	printf("------------------------------------------------------------\n");
 	print_list(head);
+	gc_free(&head);
+	printf("------------------------------------------------------------\n");
+	if (head->next == NULL)
+		printf("null");
 }
