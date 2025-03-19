@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 13:08:10 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/19 14:31:17 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/03/19 16:43:59 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,33 +29,8 @@
 //int last_status_exit; //to check last exited status.
 # include "libft/libft.h"
 
-typedef enum
-{
-<<<<<<< HEAD
-	PIPE,				// |
-	CMD,				// ls, wc
-	FLAGS,				// -l, -a
-	BUILD_IN,			// cd, pwd, export, ...
-	LEFT_REDIRECTION,   //	<
-	RIGHT_REDIRECTION,  //	>
-	HEREDOC,			//	<<
-	APPEND_OUTPUT,		//	>>
-	SEMICOLON,			//by line excute commands.
-	QUOTE,				// '
-	DOUBLE_QUOTE,		// "
-
-	//can manage just with WORD? 
-	TILDE, // ~ 
-	SLASH, // bin/ls
-	OTHER,
-	END,
-}TokenType;
-
-//"ls -l | grep .txt" 이경우 cmd 는 'ls -l' 과 'grep .txt'
-
-// and token is 'ls, -l, |, grep, .txt ?? ls -o
 typedef struct s_token
-=======
+{
 	TOKEN_WORD,			//word
 	TOKEN_CMD,			//Command
 	TOKEN_FLAGS,		// -l, -a
@@ -75,7 +50,6 @@ typedef struct s_token
 
 
 typedef struct s_token //struct being allocated for each token from input
->>>>>>> 01b2e53a1a133a9da4ba8cc98e35fdb80f63e216
 {
 	t_token_type	type;
 	char			*value;
