@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 13:08:10 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/19 16:47:21 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:51:04 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,13 @@
 
 //int last_status_exit; //to check last exited status.
 # include "libft/libft.h"
+
+#define RED "\033[0;31m"
+#define GREEN "\033[0;32m"
+#define BLUE "\033[0;34m"
+#define YELLOW "\033[0;33m"
+#define DEFAULT "\033[0m"
+
 
 typedef struct s_token
 {
