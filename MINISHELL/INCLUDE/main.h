@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   main.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 13:08:10 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/19 16:51:04 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/03/19 17:05:33 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAIN_H
 # define MAIN_H
 
-//# include <stdio.h> //already have in gabae_colletor.h 
+//# include <stdio.h> //already have in gabae_colletor.h
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/types.h>
@@ -21,12 +21,8 @@
 # include <fcntl.h>
 # include <errno.h>
 # include <sys/stat.h>
+# include <term.h> //tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
 # include "../gabage_manager/gabage_collector.h"
-
-//temp header
-#include <string.h>
-
-//int last_status_exit; //to check last exited status.
 # include "libft/libft.h"
 
 #define RED "\033[0;31m"
@@ -36,7 +32,7 @@
 #define DEFAULT "\033[0m"
 
 
-typedef struct s_token
+typedef struct s_tenum
 {
 	TOKEN_WORD,			//word
 	TOKEN_CMD,			//Command
