@@ -1,4 +1,18 @@
-# include "gabage_collector.h"
+# include "garbage_collector.h"
+
+t_gc_list	*init_gc_list(void)
+{
+	t_gc_list *head = malloc(sizeof(t_gc_list));
+	if (!head)
+	{
+		return (NULL);
+	}
+	head->data = NULL;
+	head->next = NULL;
+	head->type = TYPE_SINGLE_CHAR;
+	//head->ref_count = 0;
+	return head;
+}
 
 void	*do_alloc(t_gc_list *gc_lst, size_t howmuch, t_data_type data_type)
 {

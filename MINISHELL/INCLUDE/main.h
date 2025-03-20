@@ -1,30 +1,15 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.h                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/17 13:08:10 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/20 11:56:42 by jisokim2         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef MAIN_H
 # define MAIN_H
 
 //# include <stdio.h> //already have in gabae_colletor.h 
-# include <stdlib.h>
+//# include <stdlib.h> //already have in garbage_colletor.h
 # include <unistd.h>
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <fcntl.h>
 # include <errno.h>
 # include <sys/stat.h>
-# include "../gabage_manager/gabage_collector.h"
-
-//temp header
-// #include <string.h>
+# include "../garbage_manager/garbage_collector.h"
 
 # include "libft/libft.h"
 #define RED "\033[0;31m"	//error
@@ -73,6 +58,11 @@ typedef struct s_cmd
 	struct s_cmd	*next;   //"ls -l"
 }t_cmd;
 
+
+
+
+
+
 // like this 
 // t_token *first;
 // first = malloc(sizeof(t_token));
@@ -84,21 +74,30 @@ typedef struct s_cmd
 // 								LEXER
 // ----------------------------------------------------------------------
 
-int		main(int argc, char **argv);
-int		create_token(t_token **tokens, t_token_type type, char *str);
-int		append_token(t_token **tokens, t_token *new_token);
-void		free_tokens(t_token *tokens);
-void		set_default(t_main *main);
+// int		main(int argc, char **argv);
+// int		create_token(t_token **tokens, t_token_type type, char *str);
+// int		append_token(t_token **tokens, t_token *new_token);
+// void		free_tokens(t_token *tokens);
+// void		set_default(t_main *main);
 
 // ---------------------------Lexer_utils--------------------------------
 
-int		ft_isspace(char c);
+// int		ft_isspace(char c);
 
 
 
 // copy_envp.c  -- ok!
 char	**copy_envp(t_gc_list *gc_lst, char **envp);
 int		get_envp_count(char **envp);
+
+//pwd.c
+//char	*pwd(void);
+
+//cd.c
+int	is_valid_dir(const char *path);
+int	check_existing(char **my_envp, const char *name);
+int	ft_setenv(const char *name, const char *value, int overwrite, char **my_envp);
+void cd(char **argv, char **envp);
 
 //built_in
 //pwd

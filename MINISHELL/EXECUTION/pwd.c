@@ -1,7 +1,7 @@
 #include "../INCLUDE/main.h"
 
 //pwd getcwd() get current working directory
-char	*pwd()
+char	*pwd(void)
 {
 	char	*cwd;
 

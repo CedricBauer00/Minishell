@@ -2,7 +2,8 @@
 # define GABAGE_COLLECTOR_H
 
 //temp header
-#include <stdio.h>
+# include <stdio.h>
+# include <stdlib.h>
 
 typedef enum	e_data_type
 {
@@ -19,20 +20,8 @@ typedef struct	s_gc_list
 }	t_gc_list;
 
 //empty node, just a head node as dummy.
-t_gc_list	*init_gc_list(void)
-{
-	t_gc_list *head = malloc(sizeof(t_gc_list));
-	if (!head)
-	{
-		return (NULL);
-	}
-	head->data = NULL;
-	head->next = NULL;
-	head->type = TYPE_SINGLE_CHAR;
-	//head->ref_count = 0;
-	return head;
-}
 
+t_gc_list	*init_gc_list(void);
 void	*do_alloc(t_gc_list *gc_lst, size_t howmuch, t_data_type data_type);
 void	free_data_type(void *data, t_data_type data_type);
 void	gc_free(t_gc_list **gc_lst, t_data_type data_type);
