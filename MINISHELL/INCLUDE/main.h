@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/03/20 11:04:15 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/03/20 11:19:48 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,14 @@ typedef struct s_token //struct being allocated for each token from input
 
 typedef struct s_main
 {
-    t_token *start; //= first
-    char    **envp;
+    t_token	*start;
+    char	**envp;
+	int		last_status_exit;
+	
 }   t_main;
 
 typedef struct s_cmd
 {
-    int             last_status_exit;
     char            *cmd;
     char            *flags;  //idont know could be delte
     struct s_cmd    *next;   //"ls -l"
@@ -84,10 +85,13 @@ typedef struct s_cmd
 int     main(int argc, char **argv);
 int     create_token(t_token **tokens, t_token_type type, char *str);
 int     append_token(t_token **tokens, t_token *new_token);
-void        free_tokens(t_token *tokens);
-void        set_default(t_main *main);
+void    free_tokens(t_token *tokens);
+void    set_default(t_main *main);
 
-// ---------------------------Lexer_utils--------------------------------
+// ----------------------------------------------------------------------
+// 							  Lexer_utils
+// ----------------------------------------------------------------------
+
 int     ft_isspace(char c);
 
 // copy_envp.c  -- ok!
