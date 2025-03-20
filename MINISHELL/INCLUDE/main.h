@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 13:08:10 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/19 19:54:49 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/03/20 11:08:34 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,12 @@
 //temp header
 // #include <string.h>
 
-//int last_status_exit; //to check last exited status.
 # include "libft/libft.h"
-
 #define RED "\033[0;31m"	//error
 #define GREEN "\033[0;32m"	//
 #define BLUE "\033[0;34m"	//ok
 #define YELLOW "\033[0;33m"	//
 #define DEFAULT "\033[0m"	//
-
 
 typedef enum s_tenum
 {
@@ -55,7 +52,6 @@ typedef enum s_tenum
 	SLASH				// bin/ls
 }	t_token_type;
 
-
 typedef struct s_token //struct being allocated for each token from input
 {
 	t_token_type	type;
@@ -65,7 +61,7 @@ typedef struct s_token //struct being allocated for each token from input
 
 typedef struct s_main
 {
-	t_token	*start; //= first
+	t_token	*start;
 	char	**envp;
 }	t_main;
 
@@ -85,14 +81,14 @@ typedef struct s_cmd
 // first->next = NULL;
 
 // ----------------------------------------------------------------------
-//								LEXER
+// 								LEXER
 // ----------------------------------------------------------------------
 
-// int		main(int argc, char **argv);
-// int		create_token(t_token **tokens, t_token_type type, char *str);
-// int		append_token(t_token **tokens, t_token *new_token);
-// void		free_tokens(t_token *tokens);
-// void		set_default(t_main *main);
+int		main(int argc, char **argv);
+int		create_token(t_token **tokens, t_token_type type, char *str);
+int		append_token(t_token **tokens, t_token *new_token);
+void		free_tokens(t_token *tokens);
+void		set_default(t_main *main);
 
 // ---------------------------Lexer_utils--------------------------------
 
@@ -100,9 +96,11 @@ int		ft_isspace(char c);
 
 
 
-
 // copy_envp.c  -- ok!
 char	**copy_envp(t_gc_list *gc_lst, char **envp);
 int		get_envp_count(char **envp);
 
+//built_in
+//pwd
+//cd
 #endif
