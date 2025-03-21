@@ -53,6 +53,7 @@ void	free_data_type(void *data, t_data_type data_type)
 		}
 		free (temp);
 	}
+	//todo add case for struct
 }
 
 void	gc_free(t_gc_list **gc_lst, t_data_type data_type)
@@ -72,7 +73,7 @@ void	gc_free(t_gc_list **gc_lst, t_data_type data_type)
 		free(cur);
 		cur = next;
 	}
-	printf("at last %p		is free\n", *gc_lst);
+	printf("at last %p is free\n", *gc_lst);
 	free(*gc_lst);
     *gc_lst = NULL;
 }

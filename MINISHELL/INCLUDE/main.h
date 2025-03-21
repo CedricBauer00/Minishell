@@ -54,10 +54,20 @@ typedef struct s_cmd
 {
 	int				last_status_exit;
 	char			*cmd;
-	char			*flags;  //idont know could be delte
+	char			*flags;  //idont know could be delete
 	struct s_cmd	*next;   //"ls -l"
 }t_cmd;
 
+/***********************************************************************/
+
+typedef struct s_shell_info
+{
+	char	**my_envp;
+	char	*cur_dir;
+	char	*old_dir;
+
+	int		last_status_exit;
+}	t_shell_info;
 
 
 
@@ -86,6 +96,11 @@ typedef struct s_cmd
 
 
 
+//-----------------------------EXECUTION------------------------------------
+
+//init.c
+t_shell_info	*init_shell_info(void);
+
 // copy_envp.c  -- ok!
 char	**copy_envp(t_gc_list *gc_lst, char **envp);
 int		get_envp_count(char **envp);
@@ -96,8 +111,8 @@ int		get_envp_count(char **envp);
 //cd.c
 int	is_valid_dir(const char *path);
 int	check_existing(char **my_envp, const char *name);
-int	ft_setenv(const char *name, const char *value, int overwrite, char **my_envp);
-void cd(char **argv, char **envp);
+int ft_setenv(const char *name, const char *value, int overwrite, t_shell_info *shell);
+void cd(char **argv, t_shell_info *shell);
 
 //built_in
 //pwd
