@@ -1,1 +1,41 @@
 sigaction struct - funktion
+
+
+PARSING
+
+Input processing
+> input from readline()
+> implementation of working history (add_history)
+
+LEXER/TOKENIZER
+> converting input to string of tokens
+> correct handling of white spaces
+
+QUOTES HANDLING
+> single quotes: metasignals (variables e.g. $VAR) not gonna be interpreted
+> dqoutes: metasignals are not gonna be interpreted except $VAR
+> 
+
+OPERATIONEN
+> recognizing pipes & redirections (<, >, <<, >>)
+	- '<' redirect in
+	- '>' redirect out
+	- '>>' append
+	- '<<' heredoc
+
+VARIABLEN-EXPANSIONS
+> replacing $VAR with substitutional value
+> replacing $? with exit status of last cmd
+> no expansion in single quite
+
+SYNTAX-CHECKING & ERRORHADNLING
+> empty cmds behind pipes/redirections
+> if nothing standing before or behind redirection 
+> incorrect placements of pipes
+
+PARSER / COMMADN STRUCTURE
+> correctly recognizing tokens
+> distinction between built-ins and cmds
+> correctly assigning redericts to correct cmds or file
+> correctly assigning pipelines 
+> creating data-structure for execution

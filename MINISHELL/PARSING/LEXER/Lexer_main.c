@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Lexer_main.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/19 17:04:36 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/03/20 17:24:41 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../INCLUDE/main.h"
+#include "../../INCLUDE/parsing.h"
+
 
 void	set_default(t_main *main)
 {
@@ -76,6 +77,7 @@ int main(int argc, char **argv)
 	char *word;
 	t_main main;
 	t_token *tokens;
+	char *line;
 	
 	tokens = NULL;
 	error = 0;
@@ -83,50 +85,51 @@ int main(int argc, char **argv)
 	i = 0;
 	ws = 0;
 	len = 0;
-	char *line = readline()
 	set_default(&main);
 	if (argc > 1)
 	{
 		
-		while (argv[j] != NULL)
-		{
+		// while (argv[j] != NULL)
+		// {
 			i = 0;
-			while (argv[j][i])
+			// while (line[i])
+			line = readline("minishell> ");
+			while (line[i])
 			{
-				while (argv[j][i] && ft_isspace(argv[j][i]))
+				while (line[i] && ft_isspace(line[i]))
 					i++;
 				// if (isspace )
-				if (argv[j][i] == '|')
+				if (line[i] == '|')
 					error = create_token(&tokens, TOKEN_PIPE, "|");
-				else if (argv[j][i] == '>' && argv[j][i + 1] == '>')
+				else if (line[i] == '>' && line[i + 1] == '>')
 				{
 					error = create_token(&tokens, TOKEN_APPEND, ">>");
 					i++;
 				}
-				else if (argv[j][i] == '<' && argv[j][i + 1] == '<')
+				else if (line[i] == '<' && line[i + 1] == '<')
 				{
 					error = create_token(&tokens, TOKEN_HEREDOC, "<<");
 					i++;
 				}
-				else if (argv[j][i] == '<')
+				else if (line[i] == '<')
 					error = create_token(&tokens, TOKEN_REDIRECT_IN, "<");
-				else if (argv[j][i] == '>')
+				else if (line[i] == '>')
 					error = create_token(&tokens, TOKEN_REDIRECT_OUT, ">");
-				else if (argv[j][i] == '\'')
+				else if (line[i] == '\'')
 					error = create_token(&tokens, TOKEN_QUOTE, "\'");
-				else if (argv[j][i] == '"')
+				else if (line[i] == '"')
 					error = create_token(&tokens, TOKEN_DQOUTE, "\"");
-				else if (argv[j][i] && argv[j][i + 1] && argv[j][i + 2] &&
+				else if (line[i] && argv[j][i + 1] && argv[j][i + 2] &&
 					ft_strncmp(argv[j] + i, "EOF", 3) == 0 && !ft_isalnum(argv[j][i + 3]))
 				{
 					error = create_token(&tokens, TOKEN_EOF, "EOF");
 					i += 2;
 				}
 					//checking for alpanumeric words (commands, arguments)
-				else if (ft_isalnum(argv[j][i]) || argv[j][i] == '_')
+				else if (ft_isalnum(line[i]) || line[i] == '_')
 				{
 					ws = i;
-					while (argv[j][i] && (ft_isalnum(argv[j][i]) || argv[j][i] =='_'))
+					while (line[i] && (ft_isalnum(line[i]) || line[i] =='_'))
 						i++;
 					len = i - ws;
 					word = ft_strndup(argv[j] + ws, len);
@@ -134,10 +137,10 @@ int main(int argc, char **argv)
 					free(word);
 					i--;
 				}
-				else if (argv[j][i] == '$')
+				else if (line[i] == '$')
 				{
 					ws = i++;
-					while (argv[j][i] && (ft_isalnum(argv[j][i]) || argv[j][i] =='_'))
+					while (line[i] && (ft_isalnum(line[i]) || line[i] == '_'))
 						i++;
 					len = i - ws;
 					if (len > 1)
@@ -148,10 +151,10 @@ int main(int argc, char **argv)
 					free(word);
 					i--;
 				}
-				// else if (argv[j][i] == '$')
+				// else if (line[i] == '$')
 				// {
 				// 	ws = i++;//possibly i = 0 first
-				// 	while (ft_isalnum(argv[j][i]) || argv[j][i] == '_')
+				// 	while (ft_isalnum(line[i]) || line[i] == '_')
 				// 		i++;
 				// }
 				if (error < 0)
@@ -164,6 +167,6 @@ int main(int argc, char **argv)
 		}
 		free_tokens(tokens);
 		tokens = NULL;
-	}
+	// }
 	write(1, "\n", 1);
 }
