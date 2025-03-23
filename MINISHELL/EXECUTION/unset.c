@@ -28,37 +28,42 @@
 // 	return (0);
 // }
 
+//todo think about multiple env NAME should work like "unset PWD OLDPWD HOME PATH"
 void	unset(char **argv, t_shell *shell)
 {
 	int	i;
+	int	j;
 	int	found;
 
 	i = 0;
-	found = -1;
 	if ((strcmp("unset", argv[1]) == 0) && argv[2] != NULL)
 	{
-		int	i = 0;
-		while (shell->my_envp[i])
+		i = 2;
+		while (argv[i])
 		{
-			printf(YELLOW"%s\n"DEFAULT, shell->my_envp[i]);
-			//printf(GREEN"shell->my_envp[i][strlen(argv[2])] %c\n"DEFAULT, shell->my_envp[i][strlen(argv[2])]);
-			if ((strncmp(shell->my_envp[i], argv[2], ft_strlen(argv[2])) == 0) && (shell->my_envp[i][strlen(argv[2])] == '='))
+			found = -1;
+			j = 0;
+			while (shell->my_envp[j])
 			{
-				found = i;
-				break;
+				if ((strncmp(shell->my_envp[j], argv[i], ft_strlen(argv[i])) == 0) && (shell->my_envp[j][strlen(argv[i])] == '='))
+				{
+					found = j;
+					break;
+				}
+				j++;
+			}
+			printf(GREEN"%d\n"DEFAULT, found);
+			if (found != -1)
+			{
+				free(shell->my_envp[found]);
+				while(shell->my_envp[found + 1])
+				{
+					shell->my_envp[found] = shell->my_envp[found + 1];
+					found++;
+				}
+				shell->my_envp[found] = NULL;
 			}
 			i++;
-		}
-		printf(GREEN"%d\n"DEFAULT, found);
-		if (found != -1)
-		{
-			free(shell->my_envp[found]);
-			while(shell->my_envp[found + 1])
-			{
-				shell->my_envp[found] = shell->my_envp[found + 1];
-				found++;
-			}
-			shell->my_envp[found] = NULL;
 		}
 	}
 }
