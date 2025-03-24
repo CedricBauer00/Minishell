@@ -6,21 +6,16 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/20 17:24:41 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/03/24 13:14:45 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../INCLUDE/parsing.h"
 
-
 void	set_default(t_main *main)
 {
 	main->start = NULL;
-}
-
-int	ft_isspace(char c)
-{
-	return (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f' || c == '\v');
+	return ;
 }
 
 void	free_tokens(t_token *tokens)
@@ -50,6 +45,10 @@ int	append_token(t_token **tokens, t_token *new_token)
 	current = *tokens;
 	while (current->next)
 		current = current->next;//get last element of list
+	if (current)
+		printf("type = %d\n", current->type);
+	else
+		printf("Error: current is NULL\n");
 	current->next = new_token;//appending to last next pinter
 	return (0);
 }
@@ -67,7 +66,38 @@ int	create_token(t_token **tokens, t_token_type type, char *str)
 	return (append_token(tokens, new_token));
 }
 
-int main(int argc, char **argv)
+void print_tokens(t_token *tokens)
+{
+	printf("\n---- Token List ----\n");
+	while (tokens)
+	{
+		if (tokens->type == 0)
+			printf("Token Type: %s, Value: %s\n", "word", tokens->value);
+		else if (tokens->type == 5)
+			printf("Token Type: %s, Value: %s\n", "pipe", tokens->value);
+		else if (tokens->type == 6)
+			printf("Token Type: %s, Value: %s\n", "redirect_in", tokens->value);
+		else if (tokens->type == 7)
+			printf("Token Type: %s, Value: %s\n", "redirect_out", tokens->value);
+		else if (tokens->type == 8)
+			printf("Token Type: %s, Value: %s\n", "append", tokens->value);
+		else if (tokens->type == 9)
+			printf("Token Type: %s, Value: %s\n", "heredoc", tokens->value);
+		else if (tokens->type == 10)
+			printf("Token Type: %s, Value: %s\n", "squote", tokens->value);
+		else if (tokens->type == 11)
+			printf("Token Type: %s, Value: %s\n", "dquote", tokens->value);
+		else if (tokens->type == 12)
+			printf("Token Type: %s, Value: %s\n", "VAR", tokens->value);
+		else
+			printf("Token Type: UNKNOWN (%d), Value: %s\n", tokens->type, tokens->value);
+		// printf("Token Type: %d, Value: %s\n", tokens->type, tokens->value);
+		tokens = tokens->next;
+	}
+	printf("--------------------\n");
+}
+
+int main(int argc, char *argv[])
 {
 	int	i;
 	int	j;
@@ -86,14 +116,24 @@ int main(int argc, char **argv)
 	ws = 0;
 	len = 0;
 	set_default(&main);
-	if (argc > 1)
+	if (argc == 1 && argv[0] != NULL)
 	{
 		
-		// while (argv[j] != NULL)
+		// while ([j] != NULL)
 		// {
 			i = 0;
 			// while (line[i])
 			line = readline("minishell> ");
+			if (!line)
+			{
+				printf("exit\n");
+				return (0);
+			}
+			if (ft_strncmp(line, "", 1) == 0)
+			{
+				printf("enter\n");
+				return (0);
+			}
 			while (line[i])
 			{
 				while (line[i] && ft_isspace(line[i]))
@@ -119,8 +159,8 @@ int main(int argc, char **argv)
 					error = create_token(&tokens, TOKEN_QUOTE, "\'");
 				else if (line[i] == '"')
 					error = create_token(&tokens, TOKEN_DQOUTE, "\"");
-				else if (line[i] && argv[j][i + 1] && argv[j][i + 2] &&
-					ft_strncmp(argv[j] + i, "EOF", 3) == 0 && !ft_isalnum(argv[j][i + 3]))
+				else if (line[i] && line[i + 1] && line[i + 2] &&
+					ft_strncmp(line + i, "EOF", 3) == 0 && !ft_isalnum(line[i + 3]))
 				{
 					error = create_token(&tokens, TOKEN_EOF, "EOF");
 					i += 2;
@@ -132,7 +172,7 @@ int main(int argc, char **argv)
 					while (line[i] && (ft_isalnum(line[i]) || line[i] =='_'))
 						i++;
 					len = i - ws;
-					word = ft_strndup(argv[j] + ws, len);
+					word = ft_strndup(line + ws, len);
 					error = create_token(&tokens, TOKEN_WORD, word);
 					free(word);
 					i--;
@@ -144,7 +184,7 @@ int main(int argc, char **argv)
 						i++;
 					len = i - ws;
 					if (len > 1)
-						word = ft_strndup(argv[j] + ws, len);
+						word = ft_strndup(line + ws, len);
 					else
 						word = ft_strdup("$");
 					error = create_token(&tokens, TOKEN_VAR, word);
@@ -165,6 +205,7 @@ int main(int argc, char **argv)
 			}
 			j++;
 		}
+		print_tokens(tokens);
 		free_tokens(tokens);
 		tokens = NULL;
 	// }
