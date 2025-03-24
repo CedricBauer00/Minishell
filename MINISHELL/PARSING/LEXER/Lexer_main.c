@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/24 16:48:19 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/03/24 17:47:58 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,8 @@ int main()
 	t_main main;
 	t_token *tokens;
 	char *line;
+	char *next_line;
+	char *new;
 	
 	tokens = NULL;
 	error = 0;
@@ -157,14 +159,32 @@ int main()
 		{
 			// error = create_token(&tokens, TOKEN_QUOTE, "\'");
 			ws = i + 1;
-			while (line[i] && line[i] != '\'')
-				i++;
-			if (line[i] == '\'')
+			while (1)
 			{
-				word = ft_strndup(line + ws, i - ws);
-				error = create_token(&tokens, TOKEN_QUOTE, word);
-				free(word);
+				while (line[i] && line[i] != '\'')
+					i++;
+				if (line[i] == '\'')
+				{
+					word = ft_strndup(line + ws, i - ws);
+					error = create_token(&tokens, TOKEN_QUOTE, word);
+					i++;
+					free(word);
+					break ;
+				}
+				next_line = readline("> ");
+				if (!next_line)
+					return (printf("ERROR\nFailed!\n"));
+				new = line;
+				line = ft_strjoin(line, next_line);
+				free(new);
+				free(next_line);
 			}
+			// 	if (error < 0)
+			// 	{
+			// 		free(word);
+			// 		return (perror("ERROR\nTokenizing single quotes failed!\n"), -1);
+			// 	}
+			// }
 			
 		}
 		else if (line[i] == '"')

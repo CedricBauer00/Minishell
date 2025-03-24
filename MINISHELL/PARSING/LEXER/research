@@ -39,3 +39,204 @@ PARSER / COMMADN STRUCTURE
 > correctly assigning redericts to correct cmds or file
 > correctly assigning pipelines 
 > creating data-structure for execution
+
+else if (line\[i\] == '\\'') // Wenn ein Single Quote gefunden wird { ws = ++i; // Springe hinter das öffnende Single Quote und speichere die Startposition while (line\[i\] && line\[i\] != '\\'') // Suche nach dem schließenden Single Quote { i++; } if (line\[i\] == '\\'') // Falls ein schließendes Single Quote gefunden wurde { // Extrahiere den Inhalt zwischen den Single Quotes word = ft\_strndup(line + ws, i - ws); // Speichere den Inhalt als Token (TOKEN\_WORD) error = create\_token(&tokens, TOKEN\_WORD, word); if (error < 0) { free(word); return (perror("ERROR:\\nTokenizing failed!\\n"), \-1); } // Gib den extrahierten Text zwischen den Quotes frei free(word); // Nach dem schließenden Single Quote weiterfahren i++; } else // Falls kein schließendes Single Quote gefunden wurde { printf("Error: Unmatched single quote!\\n"); return (\-1); // Fehler zurückgeben } }
+
+das sieht schon mal relativ gut aus aber was ist mit dem Fall, dass man nur eine einzelne SIngle quote schreibt?
+
+ChatGPT said:
+Wenn eine einzelne Single Quote (') ohne passendes Gegenstück existiert, entspricht das einem ungeöffneten oder unvollständigen String in Bash. Bash wartet dann darauf, dass der Nutzer die Eingabe vervollständigt (z. B. durch eine neue Zeile).
+
+🔹 Was passiert in Bash bei einer einzelnen '?
+Angenommen, du gibst Folgendes ein:
+
+bash
+Copy
+Edit
+echo 'Hello
+Dann wartet Bash, bis du das schließende ' eingibst. Das wird durch eine sekundäre Eingabeaufforderung (> ) signalisiert. Erst wenn die ' geschlossen wird, wird der gesamte String als ein einziges Token interpretiert.
+
+Falls du wirklich eine einsame ' in einem Befehl haben möchtest, musst du sie escapen oder anders schreiben:
+
+bash
+Copy
+Edit
+echo "'"
+🔹 Wie sollte unser Tokenizer darauf reagieren?
+Wir müssen sicherstellen, dass:
+✅ Falls ein ' geöffnet wird, aber kein passendes ' existiert, wir dies erkennen und eine passende Fehlermeldung ausgeben.
+✅ Falls ein ' geöffnet und korrekt geschlossen wird, der Inhalt als ein einziges Token (TOKEN_WORD) gespeichert wird.
+✅ Falls eine ' einzeln steht, sollte sie nicht als separates Token gespeichert werden.
+
+🛠 Korrigierte Version für das Single-Quote-Handling
+Hier ist die verbesserte Implementierung:
+
+c
+Copy
+Edit
+else if (line[i] == '\'') // Single Quote erkannt
+{
+    ws = ++i;  // Springe hinter das öffnende Quote und speichere die Startposition
+
+    while (line[i] && line[i] != '\'')  // Suche nach dem schließenden Quote
+    {
+        i++;
+    }
+
+    if (line[i] == '\'')  // Falls ein schließendes Quote gefunden wurde
+    {
+        // Extrahiere den Inhalt zwischen den Single Quotes
+        word = ft_strndup(line + ws, i - ws);
+        
+        // Speichere den Inhalt als Token (TOKEN_WORD)
+        error = create_token(&tokens, TOKEN_WORD, word);
+        if (error < 0)
+        {
+            free(word);
+            return (perror("ERROR:\nTokenizing failed!\n"), -1);
+        }
+        
+        free(word); // Speicher freigeben
+        
+        i++; // Gehe über das schließende Quote hinaus
+    }
+    else  // Falls kein schließendes Single Quote gefunden wurde
+    {
+        printf("Error: Unmatched single quote detected! Waiting for closure...\n");
+        return (-1);  // Fehler zurückgeben, da der String unvollständig ist
+    }
+}
+🔹 Was passiert jetzt?
+1️⃣ Vollständige Quotes ('Hello <>!'):
+
+Wird als ein einziges TOKEN_WORD gespeichert (also Hello <>!).
+
+Die Quotes selbst werden nicht als Token gespeichert.
+
+2️⃣ Unvollständige Quotes ('Hello ohne ' am Ende):
+
+Gibt eine Fehlermeldung aus:
+
+vbnet
+Copy
+Edit
+Error: Unmatched single quote detected! Waiting for closure...
+Tokenizing wird abgebrochen, bis eine vollständige Eingabe gemacht wird.
+
+3️⃣ Einsame Single Quote ('):
+
+Wird ebenfalls als Fehler behandelt, weil eine ' allein keinen gültigen String ergibt.
+
+🛠 Erweitern für Bash-ähnliches Verhalten?
+Falls du möchtest, dass dein Tokenizer wie Bash auf eine Fortsetzung wartet anstatt sofort einen Fehler zu werfen, kannst du eine neue Zeile einlesen, bis das ' geschlossen wird.
+
+Hier ist eine Alternative, die Bashs Verhalten mit der PS2-Prompt-Simulation nachahmt:
+
+c
+Copy
+Edit
+else if (line[i] == '\'')
+{
+    ws = ++i;  
+    while (line[i] && line[i] != '\'')
+        i++;
+
+    if (!line[i])  // Falls das Ende erreicht wurde, ohne ein schließendes Quote
+    {
+        char *next_line = readline("> ");  // Bash-like Fortsetzung der Eingabe
+        if (!next_line) 
+        {
+            printf("Error: Unexpected end of input\n");
+            return (-1);
+        }
+
+        // Füge neue Zeile zum aktuellen Token hinzu
+        line = ft_strjoin(line, next_line);
+        free(next_line);
+
+        // Setze i zurück und suche weiter nach schließendem Quote
+        continue;
+    }
+
+    // Falls schließendes Quote gefunden wurde, speichere den Inhalt
+    word = ft_strndup(line + ws, i - ws);
+    error = create_token(&tokens, TOKEN_WORD, word);
+    free(word);
+    i++;
+}
+💡 Was passiert hier?
+
+Falls die ' nicht geschlossen wurde, wartet der Tokenizer auf eine weitere Eingabezeile, genau wie Bash es tun würde!
+
+Das schließt das ' nicht automatisch, sondern erlaubt dem Benutzer, weiterzuschreiben.
+
+🔹 Zusammenfassung
+✔️ Quotes werden nicht als separates Token gespeichert.
+✔️ Unvollständige Quotes lösen eine Fehlermeldung aus (oder fordern eine neue Eingabe, wenn du Bash-ähnliches Verhalten implementierst).
+✔️ Das Verhalten entspricht genau dem von Bash!
+
+🔹 Nächster Schritt: Falls du Double Quotes (") ähnlich behandeln möchtest, kannst du fast denselben Code wiederverwenden! 🚀
+
+
+
+
+
+
+
+You said:
+continue;
+
+kannst du die Funktion ohne continue schreiben?
+ChatGPT said:
+Ja, ich kann die Funktion so umschreiben, dass sie ohne continue funktioniert. Statt continue verwenden wir eine Schleife, die explizit nach einer geschlossenen ' sucht, bevor sie mit der Verarbeitung fortfährt.
+
+Hier ist die überarbeitete Version, die das gleiche Bash-ähnliche Verhalten beibehält, aber ohne continue:
+
+Finale Version ohne continue
+c
+Copy
+Edit
+else if (line[i] == '\'')
+{
+    ws = ++i;  // Springe hinter das öffnende Quote und speichere die Startposition
+
+    while (1)  // Endlosschleife, um nach der schließenden Quote zu suchen
+    {
+        while (line[i] && line[i] != '\'') // Suche nach schließendem Quote
+            i++;
+
+        if (line[i] == '\'')  // Falls gefunden, Token speichern
+        {
+            word = ft_strndup(line + ws, i - ws);
+            error = create_token(&tokens, TOKEN_WORD, word);
+            free(word);
+            i++;  // Gehe über das schließende Quote hinaus
+            break; // Beende die Schleife
+        }
+
+        // Falls kein schließendes Quote vorhanden ist, neue Zeile einlesen
+        char *next_line = readline("> ");
+        if (!next_line) 
+        {
+            printf("Error: Unexpected end of input\n");
+            return (-1);
+        }
+
+        // Füge neue Zeile zum aktuellen Input hinzu
+        char *temp = line;
+        line = ft_strjoin(line, next_line); 
+        free(temp);
+        free(next_line);  
+    }
+}
+Erklärung der Änderungen
+🔹 Anstelle von continue benutzen wir eine Endlosschleife (while (1)), die erst beendet wird, wenn:
+1️⃣ Ein schließendes ' gefunden wurde (break;).
+2️⃣ Die Eingabe weitergeführt werden muss, weil die ' fehlt.
+
+🔹 Falls ein schließendes Quote gefunden wird, wird der String als TOKEN_WORD gespeichert und die Schleife verlassen.
+🔹 Falls keines gefunden wird, wird eine neue Zeile eingelesen (readline("> ")), genau wie Bash es tut, und mit der neuen Zeile weitergesucht.
+🔹 Das Fehlermeldungssystem bleibt gleich: Falls keine neue Zeile eingelesen werden kann, gibt es einen Fehler für unvollständige Eingaben.
+
+✨ Endergebnis:
+✔ Kein continue, aber identisches Verhalten zu Bash! ✅
