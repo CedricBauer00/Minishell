@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/24 17:47:58 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/03/24 17:54:11 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,120 +123,123 @@ int main()
 	// {
 	i = 0;
 	// while (line[i])
-	line = readline("minishell> ");
-	if (!line)
+	while (1)
 	{
-		printf("exit\n");
-		return (0);
-	}
-	if (ft_strncmp(line, "", 1) == 0)
-	{
-		printf("enter\n");
-		return (0);
-	}
-	while (line[i])
-	{
-		while (line[i] && ft_isspace(line[i]))
-			i++;
-		// if (isspace )
-		if (line[i] == '|')
-			error = create_token(&tokens, TOKEN_PIPE, "|");
-		else if (line[i] == '>' && line[i + 1] == '>')
+		line = readline("minishell> ");
+		if (!line)
 		{
-			error = create_token(&tokens, TOKEN_APPEND, ">>");
-			i++;
+			printf("exit\n");
+			return (0);
 		}
-		else if (line[i] == '<' && line[i + 1] == '<')
+		if (ft_strncmp(line, "", 1) == 0)
 		{
-			error = create_token(&tokens, TOKEN_HEREDOC, "<<");
-			i++;
+			printf("enter\n");
+			return (0);
 		}
-		else if (line[i] == '<')
-			error = create_token(&tokens, TOKEN_REDIRECT_IN, "<");
-		else if (line[i] == '>')
-			error = create_token(&tokens, TOKEN_REDIRECT_OUT, ">");
-		else if (line[i] == '\'')
+		add_history(line);
+		while (line[i])
 		{
-			// error = create_token(&tokens, TOKEN_QUOTE, "\'");
-			ws = i + 1;
-			while (1)
+			while (line[i] && ft_isspace(line[i]))
+				i++;
+			// if (isspace )
+			if (line[i] == '|')
+				error = create_token(&tokens, TOKEN_PIPE, "|");
+			else if (line[i] == '>' && line[i + 1] == '>')
 			{
-				while (line[i] && line[i] != '\'')
-					i++;
-				if (line[i] == '\'')
-				{
-					word = ft_strndup(line + ws, i - ws);
-					error = create_token(&tokens, TOKEN_QUOTE, word);
-					i++;
-					free(word);
-					break ;
-				}
-				next_line = readline("> ");
-				if (!next_line)
-					return (printf("ERROR\nFailed!\n"));
-				new = line;
-				line = ft_strjoin(line, next_line);
-				free(new);
-				free(next_line);
+				error = create_token(&tokens, TOKEN_APPEND, ">>");
+				i++;
 			}
-			// 	if (error < 0)
-			// 	{
-			// 		free(word);
-			// 		return (perror("ERROR\nTokenizing single quotes failed!\n"), -1);
-			// 	}
-			// }
-			
-		}
-		else if (line[i] == '"')
-			error = create_token(&tokens, TOKEN_DQOUTE, "\"");
-		else if (line[i] && line[i + 1] && line[i + 2] &&
-			ft_strncmp(line + i, "EOF", 3) == 0 && !ft_isalnum(line[i + 3]))
-		{
-			error = create_token(&tokens, TOKEN_EOF, "EOF");
-			i += 2;
-		}
-			//checking for alpanumeric words (commands, arguments)
-		else if (ft_isalnum(line[i]) || line[i] == '_')
-		{
-			ws = i;
-			while (line[i] && (ft_isalnum(line[i]) || line[i] =='_'))
+			else if (line[i] == '<' && line[i + 1] == '<')
+			{
+				error = create_token(&tokens, TOKEN_HEREDOC, "<<");
 				i++;
-			len = i - ws;
-			word = ft_strndup(line + ws, len);
-			error = create_token(&tokens, TOKEN_WORD, word);
-			free(word);
-			i--;
-		}
-		else if (line[i] == '$')
-		{
-			ws = i++;
-			while (line[i] && (ft_isalnum(line[i]) || line[i] == '_'))
-				i++;
-			len = i - ws;
-			if (len > 1)
+			}
+			else if (line[i] == '<')
+				error = create_token(&tokens, TOKEN_REDIRECT_IN, "<");
+			else if (line[i] == '>')
+				error = create_token(&tokens, TOKEN_REDIRECT_OUT, ">");
+			else if (line[i] == '\'')
+			{
+				// error = create_token(&tokens, TOKEN_QUOTE, "\'");
+				ws = i + 1;
+				while (1)
+				{
+					while (line[i] && line[i] != '\'')
+						i++;
+					if (line[i] == '\'')
+					{
+						word = ft_strndup(line + ws, i - ws);
+						error = create_token(&tokens, TOKEN_QUOTE, word);
+						i++;
+						free(word);
+						break ;
+					}
+					next_line = readline("> ");
+					if (!next_line)
+						return (printf("ERROR\nFailed!\n"));
+					new = line;
+					line = ft_strjoin(line, next_line);
+					free(new);
+					free(next_line);
+				}
+				// 	if (error < 0)
+				// 	{
+				// 		free(word);
+				// 		return (perror("ERROR\nTokenizing single quotes failed!\n"), -1);
+				// 	}
+				// }
+				
+			}
+			else if (line[i] == '"')
+				error = create_token(&tokens, TOKEN_DQOUTE, "\"");
+			else if (line[i] && line[i + 1] && line[i + 2] &&
+				ft_strncmp(line + i, "EOF", 3) == 0 && !ft_isalnum(line[i + 3]))
+			{
+				error = create_token(&tokens, TOKEN_EOF, "EOF");
+				i += 2;
+			}
+				//checking for alpanumeric words (commands, arguments)
+			else if (ft_isalnum(line[i]) || line[i] == '_')
+			{
+				ws = i;
+				while (line[i] && (ft_isalnum(line[i]) || line[i] =='_'))
+					i++;
+				len = i - ws;
 				word = ft_strndup(line + ws, len);
-			else
-				word = ft_strdup("$");
-			error = create_token(&tokens, TOKEN_VAR, word);
-			free(word);
-			i--;
+				error = create_token(&tokens, TOKEN_WORD, word);
+				free(word);
+				i--;
+			}
+			else if (line[i] == '$')
+			{
+				ws = i++;
+				while (line[i] && (ft_isalnum(line[i]) || line[i] == '_'))
+					i++;
+				len = i - ws;
+				if (len > 1)
+					word = ft_strndup(line + ws, len);
+				else
+					word = ft_strdup("$");
+				error = create_token(&tokens, TOKEN_VAR, word);
+				free(word);
+				i--;
+			}
+			// else if (line[i] == '$')
+			// {
+			// 	ws = i++;//possibly i = 0 first
+			// 	while (ft_isalnum(line[i]) || line[i] == '_')
+			// 		i++;
+			// }
+			if (error < 0)
+				return (perror("ERROR:\nTokenizing failed!\n"), (-1));
+			// if (main.start == NULL)
+				
+			i++;
 		}
-		// else if (line[i] == '$')
-		// {
-		// 	ws = i++;//possibly i = 0 first
-		// 	while (ft_isalnum(line[i]) || line[i] == '_')
-		// 		i++;
-		// }
-		if (error < 0)
-			return (perror("ERROR:\nTokenizing failed!\n"), (-1));
-		// if (main.start == NULL)
-			
-		i++;
+		j++;
+	print_tokens(tokens);
+	free_tokens(tokens);
+	tokens = NULL;
 	}
-	j++;
-print_tokens(tokens);
-free_tokens(tokens);
-tokens = NULL;
-
 	write(1, "\n", 1);
 }
