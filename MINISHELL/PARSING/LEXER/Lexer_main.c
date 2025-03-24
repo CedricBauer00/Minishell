@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/24 13:14:45 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/03/24 16:48:19 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,10 @@ int	append_token(t_token **tokens, t_token *new_token)
 	current = *tokens;
 	while (current->next)
 		current = current->next;//get last element of list
-	if (current)
-		printf("type = %d\n", current->type);
-	else
-		printf("Error: current is NULL\n");
+	// if (current)
+	// 	printf("type = %d\n", current->type);
+	// else
+	// 	printf("Error: current is NULL\n");
 	current->next = new_token;//appending to last next pinter
 	return (0);
 }
@@ -97,7 +97,7 @@ void print_tokens(t_token *tokens)
 	printf("--------------------\n");
 }
 
-int main(int argc, char *argv[])
+int main()
 {
 	int	i;
 	int	j;
@@ -116,98 +116,107 @@ int main(int argc, char *argv[])
 	ws = 0;
 	len = 0;
 	set_default(&main);
-	if (argc == 1 && argv[0] != NULL)
+
+	// while ([j] != NULL)
+	// {
+	i = 0;
+	// while (line[i])
+	line = readline("minishell> ");
+	if (!line)
 	{
-		
-		// while ([j] != NULL)
-		// {
-			i = 0;
-			// while (line[i])
-			line = readline("minishell> ");
-			if (!line)
-			{
-				printf("exit\n");
-				return (0);
-			}
-			if (ft_strncmp(line, "", 1) == 0)
-			{
-				printf("enter\n");
-				return (0);
-			}
-			while (line[i])
-			{
-				while (line[i] && ft_isspace(line[i]))
-					i++;
-				// if (isspace )
-				if (line[i] == '|')
-					error = create_token(&tokens, TOKEN_PIPE, "|");
-				else if (line[i] == '>' && line[i + 1] == '>')
-				{
-					error = create_token(&tokens, TOKEN_APPEND, ">>");
-					i++;
-				}
-				else if (line[i] == '<' && line[i + 1] == '<')
-				{
-					error = create_token(&tokens, TOKEN_HEREDOC, "<<");
-					i++;
-				}
-				else if (line[i] == '<')
-					error = create_token(&tokens, TOKEN_REDIRECT_IN, "<");
-				else if (line[i] == '>')
-					error = create_token(&tokens, TOKEN_REDIRECT_OUT, ">");
-				else if (line[i] == '\'')
-					error = create_token(&tokens, TOKEN_QUOTE, "\'");
-				else if (line[i] == '"')
-					error = create_token(&tokens, TOKEN_DQOUTE, "\"");
-				else if (line[i] && line[i + 1] && line[i + 2] &&
-					ft_strncmp(line + i, "EOF", 3) == 0 && !ft_isalnum(line[i + 3]))
-				{
-					error = create_token(&tokens, TOKEN_EOF, "EOF");
-					i += 2;
-				}
-					//checking for alpanumeric words (commands, arguments)
-				else if (ft_isalnum(line[i]) || line[i] == '_')
-				{
-					ws = i;
-					while (line[i] && (ft_isalnum(line[i]) || line[i] =='_'))
-						i++;
-					len = i - ws;
-					word = ft_strndup(line + ws, len);
-					error = create_token(&tokens, TOKEN_WORD, word);
-					free(word);
-					i--;
-				}
-				else if (line[i] == '$')
-				{
-					ws = i++;
-					while (line[i] && (ft_isalnum(line[i]) || line[i] == '_'))
-						i++;
-					len = i - ws;
-					if (len > 1)
-						word = ft_strndup(line + ws, len);
-					else
-						word = ft_strdup("$");
-					error = create_token(&tokens, TOKEN_VAR, word);
-					free(word);
-					i--;
-				}
-				// else if (line[i] == '$')
-				// {
-				// 	ws = i++;//possibly i = 0 first
-				// 	while (ft_isalnum(line[i]) || line[i] == '_')
-				// 		i++;
-				// }
-				if (error < 0)
-					return (perror("ERROR:\nTokenizing failed!\n"), (-1));
-				// if (main.start == NULL)
-					
-				i++;
-			}
-			j++;
+		printf("exit\n");
+		return (0);
+	}
+	if (ft_strncmp(line, "", 1) == 0)
+	{
+		printf("enter\n");
+		return (0);
+	}
+	while (line[i])
+	{
+		while (line[i] && ft_isspace(line[i]))
+			i++;
+		// if (isspace )
+		if (line[i] == '|')
+			error = create_token(&tokens, TOKEN_PIPE, "|");
+		else if (line[i] == '>' && line[i + 1] == '>')
+		{
+			error = create_token(&tokens, TOKEN_APPEND, ">>");
+			i++;
 		}
-		print_tokens(tokens);
-		free_tokens(tokens);
-		tokens = NULL;
-	// }
+		else if (line[i] == '<' && line[i + 1] == '<')
+		{
+			error = create_token(&tokens, TOKEN_HEREDOC, "<<");
+			i++;
+		}
+		else if (line[i] == '<')
+			error = create_token(&tokens, TOKEN_REDIRECT_IN, "<");
+		else if (line[i] == '>')
+			error = create_token(&tokens, TOKEN_REDIRECT_OUT, ">");
+		else if (line[i] == '\'')
+		{
+			// error = create_token(&tokens, TOKEN_QUOTE, "\'");
+			ws = i + 1;
+			while (line[i] && line[i] != '\'')
+				i++;
+			if (line[i] == '\'')
+			{
+				word = ft_strndup(line + ws, i - ws);
+				error = create_token(&tokens, TOKEN_QUOTE, word);
+				free(word);
+			}
+			
+		}
+		else if (line[i] == '"')
+			error = create_token(&tokens, TOKEN_DQOUTE, "\"");
+		else if (line[i] && line[i + 1] && line[i + 2] &&
+			ft_strncmp(line + i, "EOF", 3) == 0 && !ft_isalnum(line[i + 3]))
+		{
+			error = create_token(&tokens, TOKEN_EOF, "EOF");
+			i += 2;
+		}
+			//checking for alpanumeric words (commands, arguments)
+		else if (ft_isalnum(line[i]) || line[i] == '_')
+		{
+			ws = i;
+			while (line[i] && (ft_isalnum(line[i]) || line[i] =='_'))
+				i++;
+			len = i - ws;
+			word = ft_strndup(line + ws, len);
+			error = create_token(&tokens, TOKEN_WORD, word);
+			free(word);
+			i--;
+		}
+		else if (line[i] == '$')
+		{
+			ws = i++;
+			while (line[i] && (ft_isalnum(line[i]) || line[i] == '_'))
+				i++;
+			len = i - ws;
+			if (len > 1)
+				word = ft_strndup(line + ws, len);
+			else
+				word = ft_strdup("$");
+			error = create_token(&tokens, TOKEN_VAR, word);
+			free(word);
+			i--;
+		}
+		// else if (line[i] == '$')
+		// {
+		// 	ws = i++;//possibly i = 0 first
+		// 	while (ft_isalnum(line[i]) || line[i] == '_')
+		// 		i++;
+		// }
+		if (error < 0)
+			return (perror("ERROR:\nTokenizing failed!\n"), (-1));
+		// if (main.start == NULL)
+			
+		i++;
+	}
+	j++;
+print_tokens(tokens);
+free_tokens(tokens);
+tokens = NULL;
+
 	write(1, "\n", 1);
 }
