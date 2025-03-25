@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/25 10:07:45 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/03/25 11:29:32 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,15 @@ int	create_token(t_token **tokens, t_token_type type, char *str)
 {
 	t_token *new_token;
 	
+	if (!str)
+		return (perror("ERROR\nStr is NULL!\n"), -1);
 	new_token = malloc(sizeof(t_token));
 	if (!new_token)
-		return (-1);//errormessage
+		return (perror("ERROR\nMalloc failed!\n"), -1);//errormessage
 	new_token->type = type;
 	new_token->value = ft_strdup(str);
 	new_token->next = NULL;
+	printf("Created Token: Type = %d, Value = %s\n", type, new_token->value);
 	return (append_token(tokens, new_token));
 }
 
@@ -126,6 +129,7 @@ int main()
 	while (1)
 	{
 		line = readline("minishell> ");
+		i = 0;
 		if (!line)
 		{
 			printf("exit\n");
@@ -143,21 +147,35 @@ int main()
 				i++;
 			// if (isspace )
 			if (line[i] == '|')
+			{
 				error = create_token(&tokens, TOKEN_PIPE, "|");
+				i++;
+			}
 			else if (line[i] == '>' && line[i + 1] == '>')
 			{
 				error = create_token(&tokens, TOKEN_APPEND, ">>");
-				i++;
+				i += 2;
 			}
 			else if (line[i] == '<' && line[i + 1] == '<')
 			{
+				if (!line[i + 2] || ft_isspace(line[i + 2]))
+					return(perror("ERROR\nHeredoc failed!\n"), -1);
 				error = create_token(&tokens, TOKEN_HEREDOC, "<<");
-				i++;
+				i += 2;
 			}
 			else if (line[i] == '<')
+			{
+				printf("Found '<', creating token...\n");
 				error = create_token(&tokens, TOKEN_REDIRECT_IN, "<");
+				if (error < 0)
+					printf("ERROR: Token creation failed for '<'\n");
+				i++;
+			}
 			else if (line[i] == '>')
+			{
 				error = create_token(&tokens, TOKEN_REDIRECT_OUT, ">");
+				i++;
+			}
 			else if (line[i] == '\'')
 			{
 				// error = create_token(&tokens, TOKEN_QUOTE, "\'");
@@ -224,6 +242,11 @@ int main()
 				free(word);
 				i--;
 			}
+			else
+			{
+				printf("Warning: Unrecognized character '%c' at position %d\n", line[i], i);
+				i++;
+			}
 			// else if (line[i] == '$')
 			// {
 			// 	ws = i++;//possibly i = 0 first
@@ -233,13 +256,15 @@ int main()
 			if (error < 0)
 				return (perror("ERROR:\nTokenizing failed!\n"), (-1));
 			// if (main.start == NULL)
-				
+			printf("i = %d\n", i);
 			i++;
 		}
 		j++;
 	print_tokens(tokens);
 	free_tokens(tokens);
 	tokens = NULL;
+	if (line)
+		free(line);
 	}
 	write(1, "\n", 1);
 }
