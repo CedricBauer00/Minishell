@@ -4,6 +4,12 @@
 	echo $ //using VAR
 	echo -n -n -n //ok!
 	echo "HELLO"
+	
+	
+	//todo
+	echo $? >>> printf("shell ->last_exit");
+	case for ''
+	case for ""
 */
 void	ft_echo(char **argv, t_shell *shell)
 {

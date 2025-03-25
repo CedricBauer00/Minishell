@@ -72,6 +72,11 @@ int	export(char **argv, t_shell *shell)
 		print_envp(shell, argv[1]);
 		return (1);
 	}
+	if ((strcmp(argv[1], "env") == 0 )&& argv[2] == NULL)
+	{
+		print_envp(shell, argv[1]);
+		return (1);
+	}
 	else if (strcmp(argv[1], "export") == 0 && argv[2] != NULL)
 	{
 		char	*name = extract_name(argv[2]);
