@@ -18,7 +18,9 @@ LIBFT_DIR = ../../INCLUDE/libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
 SOURCES = Lexer_main.c \
-		Lexer_utils.c
+		Lexer_utils.c \
+		GC/gc.c \
+		copy_envp.c
 
 OBJECTS := $(SOURCES:.c=.o)
 

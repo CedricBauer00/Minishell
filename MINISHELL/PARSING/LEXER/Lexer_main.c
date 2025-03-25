@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/25 16:23:25 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/03/25 17:50:00 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	set_default(t_main *main)
 {
 	main->tokens = NULL;
 	main->line = NULL;
+	main->last_status_exit = 0;
+	main->envp = NULL;
 	return ;
 }
 
@@ -115,8 +117,10 @@ void	freecase(t_main *main)
 	}
 }
 
-int main()
+int main(int argc, char **argv, char **envp)
 {
+	(void)argc;
+	(void)argv;
 	int	i;
 	int	error;
 	int	ws;
@@ -126,8 +130,16 @@ int main()
 	char *next_line;
 	char *new;
 	t_gc_list *head;
-	
 	head = init_gc_list();
+	main.envp = copy_envp(head, envp);
+
+	// int k = 0;
+	// while(main.envp[k])
+	// {
+	// 	printf("%s\n", main.envp[k]);
+	// 	k++;
+	// }
+	
 	main.tokens = NULL;
 	error = 0;
 	i = 0;
@@ -158,11 +170,7 @@ int main()
 		while (main.line[i])
 		{
 			while (main.line[i] && ft_isspace(main.line[i]))
-			{
 				i++;
-				//printf(RED"is in?%d\n"DEFAULT, i);
-			}
-			// if (isspace )
 			if (main.line[i] == '|')
 			{
 				error = create_token(&main.tokens, TOKEN_PIPE, "|");
@@ -289,3 +297,8 @@ int main()
 	}
 	write(1, "\n", 1);
 }
+
+//single quotes fertig implementatiion
+//double quotes fix
+//built in commands with now copied envp
+// ... so far

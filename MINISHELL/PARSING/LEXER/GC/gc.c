@@ -56,7 +56,7 @@ void	free_data_type(void *data, t_data_type data_type)
 	//todo add case for struct
 }
 
-void	gc_free(t_gc_list **gc_lst, t_data_type data_type)
+void	gc_free(t_gc_list **gc_lst)
 {
 	if (!gc_lst || !(*gc_lst))
 		return ;

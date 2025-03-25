@@ -24,7 +24,7 @@ typedef struct	s_gc_list
 t_gc_list	*init_gc_list(void);
 void	*do_alloc(t_gc_list *gc_lst, size_t howmuch, t_data_type data_type);
 void	free_data_type(void *data, t_data_type data_type);
-void	gc_free(t_gc_list **gc_lst, t_data_type data_type);
+void	gc_free(t_gc_list **gc_lst);
 void	print_list(t_gc_list *gc_lst);
 
 
