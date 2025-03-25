@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/25 11:29:32 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/03/25 16:23:25 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 void	set_default(t_main *main)
 {
-	main->start = NULL;
+	main->tokens = NULL;
+	main->line = NULL;
 	return ;
 }
 
@@ -35,7 +36,7 @@ int	append_token(t_token **tokens, t_token *new_token)
 	t_token	*current;
 	
 	if (!new_token)
-		return (-1);// if new token is null
+		return (-1);// if new token is null //wie schreibe ich für diesen Fall eine freeing function?
 	if (!*tokens)//if List os empty - set first token
 	{
 		*tokens = new_token;
@@ -58,10 +59,10 @@ int	create_token(t_token **tokens, t_token_type type, char *str)
 	t_token *new_token;
 	
 	if (!str)
-		return (perror("ERROR\nStr is NULL!\n"), -1);
+		return (perror("ERROR\nStr is NULL!\n"), -1);//wie schreibe ich für diesen Fall eine freeing function?
 	new_token = malloc(sizeof(t_token));
 	if (!new_token)
-		return (perror("ERROR\nMalloc failed!\n"), -1);//errormessage
+		return (perror("ERROR\nMalloc failed!\n"), -1);//wie schreibe ich für diesen Fall eine freeing function?
 	new_token->type = type;
 	new_token->value = ft_strdup(str);
 	new_token->next = NULL;
@@ -100,103 +101,124 @@ void print_tokens(t_token *tokens)
 	printf("--------------------\n");
 }
 
+void	freecase(t_main *main)
+{
+	if (main->line)
+	{
+		free(main->line);
+		main->line = NULL;
+	}
+	if (main->tokens)
+	{
+		free_tokens(main->tokens);
+		main->tokens = NULL;
+	}
+}
+
 int main()
 {
 	int	i;
-	int	j;
 	int	error;
 	int	ws;
 	int	len;
 	char *word;
 	t_main main;
-	t_token *tokens;
-	char *line;
 	char *next_line;
 	char *new;
+	t_gc_list *head;
 	
-	tokens = NULL;
+	head = init_gc_list();
+	main.tokens = NULL;
 	error = 0;
-	j = 1;
 	i = 0;
 	ws = 0;
 	len = 0;
 	set_default(&main);
-
+	
 	// while ([j] != NULL)
 	// {
 	i = 0;
 	// while (line[i])
 	while (1)
 	{
-		line = readline("minishell> ");
+		main.line = readline("minishell> ");
+		printf(YELLOW"%s\n"DEFAULT, main.line);
 		i = 0;
-		if (!line)
+		if (!main.line)
 		{
 			printf("exit\n");
-			return (0);
+			return (freecase(&main), 0);
 		}
-		if (ft_strncmp(line, "", 1) == 0)
+		if (ft_strncmp(main.line, "", 1) == 0)
 		{
 			printf("enter\n");
-			return (0);
+			return (freecase(&main), 0);
 		}
-		add_history(line);
-		while (line[i])
+		add_history(main.line);
+		while (main.line[i])
 		{
-			while (line[i] && ft_isspace(line[i]))
+			while (main.line[i] && ft_isspace(main.line[i]))
+			{
 				i++;
+				//printf(RED"is in?%d\n"DEFAULT, i);
+			}
 			// if (isspace )
-			if (line[i] == '|')
+			if (main.line[i] == '|')
 			{
-				error = create_token(&tokens, TOKEN_PIPE, "|");
+				error = create_token(&main.tokens, TOKEN_PIPE, "|");
 				i++;
 			}
-			else if (line[i] == '>' && line[i + 1] == '>')
+			else if (main.line[i] == '>' && main.line[i + 1] == '>')
 			{
-				error = create_token(&tokens, TOKEN_APPEND, ">>");
+				printf(RED"is in?%d\n"DEFAULT, i);
+				error = create_token(&main.tokens, TOKEN_APPEND, ">>");
 				i += 2;
 			}
-			else if (line[i] == '<' && line[i + 1] == '<')
+			else if (main.line[i] == '<' && main.line[i + 1] == '<')
 			{
-				if (!line[i + 2] || ft_isspace(line[i + 2]))
-					return(perror("ERROR\nHeredoc failed!\n"), -1);
-				error = create_token(&tokens, TOKEN_HEREDOC, "<<");
+				printf(GREEN"<< ,%s , %c\n"DEFAULT, main.line, main.line[i]);
+				if (!main.line[i + 2] || ft_isspace(main.line[i + 2]))
+					return(perror("ERROR\nHeredoc failed!\n"), freecase(&main), -1);
+				error = create_token(&main.tokens, TOKEN_HEREDOC, "<<");
 				i += 2;
 			}
-			else if (line[i] == '<')
+			else if (main.line[i] == '<')
 			{
+				printf(GREEN"<, %s, %c\n"DEFAULT, main.line, main.line[i]);
 				printf("Found '<', creating token...\n");
-				error = create_token(&tokens, TOKEN_REDIRECT_IN, "<");
+				error = create_token(&main.tokens, TOKEN_REDIRECT_IN, "<");
 				if (error < 0)
 					printf("ERROR: Token creation failed for '<'\n");
 				i++;
 			}
-			else if (line[i] == '>')
+			else if (main.line[i] == '>')
 			{
-				error = create_token(&tokens, TOKEN_REDIRECT_OUT, ">");
+				printf(GREEN">, %s, %c, i: %d\n"DEFAULT, main.line, main.line[i], i);
+				error = create_token(&main.tokens, TOKEN_REDIRECT_OUT, ">");
 				i++;
+				//break;
 			}
-			else if (line[i] == '\'')
+			else if (main.line[i] == '\'')
 			{
-				// error = create_token(&tokens, TOKEN_QUOTE, "\'");
+				// error = create_token(&main.tokens, TOKEN_QUOTE, "\'");
 				ws = i + 1;
 				while (1)
 				{
-					while (line[i] && line[i] != '\'')
+					while (main.line[i] && main.line[i] != '\'')
 						i++;
-					if (line[i] == '\'')
+					if (main.line[i] == '\'')
 					{
-						word = ft_strndup(line + ws, i - ws);
-						error = create_token(&tokens, TOKEN_QUOTE, word);
+						word = ft_strndup(main.line + ws, i - ws);
+						error = create_token(&main.tokens, TOKEN_QUOTE, word);
 						i++;
 						free(word);
 						break ;
 					}
 					next_line = readline("> ");
 					if (!next_line)
-						return (printf("ERROR\nFailed!\n"));
-					new = line;
-					line = ft_strjoin(line, next_line);
+						return (printf("ERROR\nFailed!\n"), freecase(&main), -1);
+					new = main.line;
+					main.line = ft_strjoin(main.line, next_line);
 					free(new);
 					free(next_line);
 				}
@@ -206,65 +228,64 @@ int main()
 				// 		return (perror("ERROR\nTokenizing single quotes failed!\n"), -1);
 				// 	}
 				// }
-				
 			}
-			else if (line[i] == '"')
-				error = create_token(&tokens, TOKEN_DQOUTE, "\"");
-			else if (line[i] && line[i + 1] && line[i + 2] &&
-				ft_strncmp(line + i, "EOF", 3) == 0 && !ft_isalnum(line[i + 3]))
+			else if (main.line[i] == '"')
+				error = create_token(&main.tokens, TOKEN_DQOUTE, "\"");
+			else if (main.line[i] && main.line[i + 1] && main.line[i + 2] &&
+				ft_strncmp(main.line + i, "EOF", 3) == 0 && !ft_isalnum(main.line[i + 3]))
 			{
-				error = create_token(&tokens, TOKEN_EOF, "EOF");
+				printf(RED"is in?%d\n"DEFAULT, i);
+				error = create_token(&main.tokens, TOKEN_EOF, "EOF");
 				i += 2;
 			}
 				//checking for alpanumeric words (commands, arguments)
-			else if (ft_isalnum(line[i]) || line[i] == '_')
+			else if (valid_char(main.line[i]) || main.line[i] == '_')
 			{
 				ws = i;
-				while (line[i] && (ft_isalnum(line[i]) || line[i] =='_'))
+				printf(GREEN"ws : %d\n"DEFAULT, ws);
+				while (main.line[i] && (valid_char(main.line[i]) || main.line[i] =='_'))
 					i++;
+				printf(GREEN"len : %d\n"DEFAULT, i);
 				len = i - ws;
-				word = ft_strndup(line + ws, len);
-				error = create_token(&tokens, TOKEN_WORD, word);
+				word = ft_strndup(main.line + ws, len);
+				printf(GREEN"word = %s\n"DEFAULT, word);
+				error = create_token(&main.tokens, TOKEN_WORD, word);
 				free(word);
-				i--;
+				//i--;
 			}
-			else if (line[i] == '$')
+			else if (main.line[i] == '$')
 			{
 				ws = i++;
-				while (line[i] && (ft_isalnum(line[i]) || line[i] == '_'))
+				while (main.line[i] && (valid_char(main.line[i]) || main.line[i] == '_'))
 					i++;
 				len = i - ws;
 				if (len > 1)
-					word = ft_strndup(line + ws, len);
+					word = ft_strndup(main.line + ws, len);
 				else
 					word = ft_strdup("$");
-				error = create_token(&tokens, TOKEN_VAR, word);
+				error = create_token(&main.tokens, TOKEN_VAR, word);
 				free(word);
 				i--;
 			}
 			else
 			{
-				printf("Warning: Unrecognized character '%c' at position %d\n", line[i], i);
+				printf("Warning: Unrecognized character '%c' at position %d\n", main.line[i], i);
 				i++;
 			}
-			// else if (line[i] == '$')
+			// else if (main.line[i] == '$')
 			// {
 			// 	ws = i++;//possibly i = 0 first
-			// 	while (ft_isalnum(line[i]) || line[i] == '_')
+			// 	while (ft_isalnum(main.line[i]) || main.line[i] == '_')
 			// 		i++;
 			// }
 			if (error < 0)
-				return (perror("ERROR:\nTokenizing failed!\n"), (-1));
+				return (perror("ERROR:\nTokenizing failed!\n"), freecase(&main), -1);
 			// if (main.start == NULL)
-			printf("i = %d\n", i);
-			i++;
+			printf(RED"i = %d\n"DEFAULT, i);
+			//i++;
 		}
-		j++;
-	print_tokens(tokens);
-	free_tokens(tokens);
-	tokens = NULL;
-	if (line)
-		free(line);
+		print_tokens(main.tokens);
+		freecase(&main);
 	}
 	write(1, "\n", 1);
 }
