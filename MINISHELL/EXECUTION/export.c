@@ -4,19 +4,63 @@
 // char	**expand_envp(t_shell *shell, char *new_path)
 // char *create_new_path(const char *name, const char *value)
 
+// char	*ft_strchr(char *str, char c)
+// {
+// 	if (!str || !c)
+// 		return NULL;
+// 	while(1)
+// 	{
+// 		if(*str == c)
+// 			return str;
+// 		if(*str == '\0')
+// 			break;
+// 		str++;
+// 	}
+// 	return (NULL);
+// }
+
 void	print_envp(t_shell *shell, char *flag)
 {
 	int	i;
 
 	i = 0;
+
 	if (!shell)
 		return ;
 	while(shell->my_envp[i])
 	{
 		if (strcmp(flag, "export") == 0)
-			printf("declare -x %s\n", shell->my_envp[i]);
+			printf(YELLOW"declare -x %s\n"DEFAULT, shell->my_envp[i]);
 		else if (strcmp(flag, "env") == 0)
-			printf("%s\n", shell->my_envp[i]);
+		{
+			int j = 0;
+			bool is_path = false;
+			while (shell->my_envp[j] != NULL)
+			{
+				if (strncmp(shell->my_envp[j], "PATH=", 5) == 0)
+				{
+					is_path = true;
+					break;
+				}
+				j++;
+			}
+			if (is_path)
+			{
+				j = 0;
+				while (shell->my_envp[j] != NULL)
+				{
+					if(ft_strchr(shell->my_envp[j], '=') != NULL)
+					{
+						printf(BLUE"%s\n"DEFAULT, shell->my_envp[j]);
+					}
+					j++;
+				}
+			}
+			else
+			{
+				printf(RED"env: No such file or directory\n"DEFAULT);
+			}
+		}
 		i++;
 	}
 }
@@ -31,8 +75,10 @@ int	export(char **argv, t_shell *shell)
 	else if (strcmp(argv[1], "export") == 0 && argv[2] != NULL)
 	{
 		char	*name = extract_name(argv[2]);
+		printf("name:%s\n", name);
 		char	*value = extract_value(argv[2]);
-		if (!name || !value)
+		printf("value:%s\n", value);
+		if (!name)
 			return (0);
 		else
 		{
@@ -74,4 +120,3 @@ char	*extract_value(char *arg)
 	else
 		return NULL;
 }
-

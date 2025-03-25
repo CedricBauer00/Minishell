@@ -96,19 +96,35 @@ char *create_new_path(const char *name, const char *value)
 	int	namelen;
 	int	valuelen;
 
-	namelen = ft_strlen(name);
-	valuelen = ft_strlen(value);
-	char *new_path = malloc(namelen + valuelen + 2);
-	if (!new_path)
+	if (!value)
 	{
-		perror("failed to create new_path");
-		return (NULL);
+		namelen = ft_strlen(name);
+		char *new_path = malloc(namelen + 1);
+		if (!new_path)
+		{
+			perror("failed to create new_path");
+			return (NULL);
+		}
+		ft_strlcpy(new_path, name, namelen + 1);
+		// if(new_path[namelen] == '\0')
+		// 	printf(RED"null\n"DEFAULT);
+		return new_path;
 	}
-	ft_strlcpy(new_path, name, namelen + valuelen + 2);
-	new_path[namelen] = '=';
-	ft_strlcpy(new_path + namelen + 1, value, valuelen + 1);
-
-	return (new_path);
+	else
+	{
+		namelen = ft_strlen(name);
+		valuelen = ft_strlen(value);
+		char *new_path = malloc(namelen + valuelen + 2);
+		if (!new_path)
+		{
+			perror("failed to create new_path");
+			return (NULL);
+		}
+		ft_strlcpy(new_path, name, namelen + valuelen + 2);
+		new_path[namelen] = '=';
+		ft_strlcpy(new_path + namelen + 1, value, valuelen + 1);
+		return (new_path);
+	}
 }
 
 int	ft_setenv(const char *name, const char *value, int overwrite, t_shell *shell)
@@ -117,7 +133,7 @@ int	ft_setenv(const char *name, const char *value, int overwrite, t_shell *shell
 	char	*new_path;
 	char	**new_envp;
 
-	if(!value || !name || *name == '\0')
+	if(!name || *name == '\0')
 		return (0);
 	index = check_existing(shell->my_envp, name);
 	new_path = create_new_path(name, value);

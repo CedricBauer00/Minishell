@@ -74,18 +74,20 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	t_gc_list *head = init_gc_list();
 	t_shell *shell = get_shell();
-	
+
 	//todo copy_envp should put into init_shell func.
 	shell->my_envp = copy_envp(head, envp);
 
 	export(argv, shell);
 	printf("argv[1]%s, argv[2]%s\n", argv[1],argv[2]);
 	unset(argv, shell);
+	
+	ft_echo(argv, shell);
 	//test
-	int i = 0;
-	while (shell->my_envp[i])
-	{
-		printf(BLUE"%p,  %s\n"DEFAULT, shell->my_envp[i], shell->my_envp[i]);
-		i++;
-	}
+	// int i = 0;
+	// while (shell->my_envp[i])
+	// {
+	// 	printf(BLUE"%p,  %s\n"DEFAULT, shell->my_envp[i], shell->my_envp[i]);
+	// 	i++;
+	// }
 }
