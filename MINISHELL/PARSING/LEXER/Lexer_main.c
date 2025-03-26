@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/25 17:50:00 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/03/26 11:44:19 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@ void	set_default(t_main *main)
 	main->line = NULL;
 	main->last_status_exit = 0;
 	main->envp = NULL;
+	main->next_line = NULL;
+	main->new = NULL;
+	main->word = NULL;
 	return ;
 }
 
@@ -38,7 +41,10 @@ int	append_token(t_token **tokens, t_token *new_token)
 	t_token	*current;
 	
 	if (!new_token)
+	{
+		free(new_token);
 		return (-1);// if new token is null //wie schreibe ich für diesen Fall eine freeing function?
+	}
 	if (!*tokens)//if List os empty - set first token
 	{
 		*tokens = new_token;
@@ -61,12 +67,17 @@ int	create_token(t_token **tokens, t_token_type type, char *str)
 	t_token *new_token;
 	
 	if (!str)
-		return (perror("ERROR\nStr is NULL!\n"), -1);//wie schreibe ich für diesen Fall eine freeing function?
+		return (perror("ERROR\nStr is NULL!\n"), -1);
 	new_token = malloc(sizeof(t_token));
 	if (!new_token)
-		return (perror("ERROR\nMalloc failed!\n"), -1);//wie schreibe ich für diesen Fall eine freeing function?
+		return (perror("ERROR\nMalloc failed!\n"), -1);
 	new_token->type = type;
 	new_token->value = ft_strdup(str);
+	if (!new_token->value)
+	{
+		free(new_token);
+		return (perror("ERROR\nMalloc for new_token->value failed!\n"), -1);
+	}
 	new_token->next = NULL;
 	printf("Created Token: Type = %d, Value = %s\n", type, new_token->value);
 	return (append_token(tokens, new_token));
@@ -105,6 +116,34 @@ void print_tokens(t_token *tokens)
 
 void	freecase(t_main *main)
 {
+	int	i;
+
+	i = 0;
+	if (main->envp)
+	{
+		while (main->envp[i] == NULL)
+		{
+			free(main->envp[i]);
+			i++;
+		}
+		free(main->envp);
+		main->envp = NULL;
+	}
+	if (main->new)
+	{
+		free(main->new);
+		main->new = NULL;
+	}
+	if (main->next_line)
+	{
+		free(main->next_line);
+		main->next_line = NULL;
+	}
+	// if (main->word)
+	// {
+	// 	free(main->word);
+	// 	main->word = NULL;
+	// }
 	if (main->line)
 	{
 		free(main->line);
@@ -125,10 +164,7 @@ int main(int argc, char **argv, char **envp)
 	int	error;
 	int	ws;
 	int	len;
-	char *word;
 	t_main main;
-	char *next_line;
-	char *new;
 	t_gc_list *head;
 	head = init_gc_list();
 	main.envp = copy_envp(head, envp);
@@ -159,7 +195,8 @@ int main(int argc, char **argv, char **envp)
 		if (!main.line)
 		{
 			printf("exit\n");
-			return (freecase(&main), 0);
+			freecase(&main);
+			exit(0);
 		}
 		if (ft_strncmp(main.line, "", 1) == 0)
 		{
@@ -216,23 +253,23 @@ int main(int argc, char **argv, char **envp)
 						i++;
 					if (main.line[i] == '\'')
 					{
-						word = ft_strndup(main.line + ws, i - ws);
-						error = create_token(&main.tokens, TOKEN_QUOTE, word);
+						main.word = ft_strndup(main.line + ws, i - ws);
+						error = create_token(&main.tokens, TOKEN_QUOTE, main.word);
 						i++;
-						free(word);
+						free(main.word);
 						break ;
 					}
-					next_line = readline("> ");
-					if (!next_line)
+					main.next_line = readline("> ");
+					if (!main.next_line)
 						return (printf("ERROR\nFailed!\n"), freecase(&main), -1);
-					new = main.line;
-					main.line = ft_strjoin(main.line, next_line);
-					free(new);
-					free(next_line);
+					main.new = main.line;
+					main.line = ft_strjoin(main.line, main.next_line);
+					free(main.new);
+					free(main.next_line);
 				}
 				// 	if (error < 0)
 				// 	{
-				// 		free(word);
+				// 		free(main.word);
 				// 		return (perror("ERROR\nTokenizing single quotes failed!\n"), -1);
 				// 	}
 				// }
@@ -246,7 +283,7 @@ int main(int argc, char **argv, char **envp)
 				error = create_token(&main.tokens, TOKEN_EOF, "EOF");
 				i += 2;
 			}
-				//checking for alpanumeric words (commands, arguments)
+				//checking for alpanumeric main.words (commands, arguments)
 			else if (valid_char(main.line[i]) || main.line[i] == '_')
 			{
 				ws = i;
@@ -255,10 +292,10 @@ int main(int argc, char **argv, char **envp)
 					i++;
 				printf(GREEN"len : %d\n"DEFAULT, i);
 				len = i - ws;
-				word = ft_strndup(main.line + ws, len);
-				printf(GREEN"word = %s\n"DEFAULT, word);
-				error = create_token(&main.tokens, TOKEN_WORD, word);
-				free(word);
+				main.word = ft_strndup(main.line + ws, len);
+				printf(GREEN"word = %s\n"DEFAULT, main.word);
+				error = create_token(&main.tokens, TOKEN_WORD, main.word);
+				free(main.word);
 				//i--;
 			}
 			else if (main.line[i] == '$')
@@ -268,11 +305,11 @@ int main(int argc, char **argv, char **envp)
 					i++;
 				len = i - ws;
 				if (len > 1)
-					word = ft_strndup(main.line + ws, len);
+					main.word = ft_strndup(main.line + ws, len);
 				else
-					word = ft_strdup("$");
-				error = create_token(&main.tokens, TOKEN_VAR, word);
-				free(word);
+					main.word = ft_strdup("$");
+				error = create_token(&main.tokens, TOKEN_VAR, main.word);
+				free(main.word);
 				i--;
 			}
 			else
