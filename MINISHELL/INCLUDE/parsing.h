@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/03/25 15:12:41 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/03/28 12:21:10 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,20 @@
 
 //# include <stdio.h> //already have in gabae_colletor.h
 
-# include <stdlib.h>
+// # include <stdlib.h>
 # include <unistd.h>
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <fcntl.h>
 # include <errno.h>
 # include <sys/stat.h>
-# include <stdio.h>
-// # include "../gabage_manager/gabage_collector.h"
+// # include <stdio.h>
+# include "/Users/cbauer/Documents/03_Circle/privat_mini/MINISHELL/PARSING/GC/garbage_collector.h"
 # include <readline/readline.h>
 # include <readline/history.h>
 
 # include "libft/libft.h"
+
 
 #define RED "\033[0;31m"    //error
 #define GREEN "\033[0;32m"  //
@@ -67,6 +68,12 @@ typedef struct s_main
     char	**envp;
 	int		last_status_exit;
 	char    *line;
+	char    *next_line;
+    char    *new;
+	char    *word;
+    char    *old_line;
+    char    *temp;
+
 }   t_main;
 
 typedef struct s_cmd
@@ -87,7 +94,7 @@ typedef struct s_cmd
 //                              LEXER
 // ----------------------------------------------------------------------
 
-int     main(int argc, char **argv);
+int     main(int argc, char **argv, char **envp);
 int     create_token(t_token **tokens, t_token_type type, char *str);
 int     append_token(t_token **tokens, t_token *new_token);
 void    free_tokens(t_token *tokens);
@@ -100,6 +107,11 @@ void    set_default(t_main *main);
 int     ft_isspace(char c);
 char	*ft_strndup(const char *str, size_t n);
 int	valid_char(int c);
+
+char	**copy_envp(t_gc_list *gc_lst, char **envp);
+int	get_envp_count(char **envp);
+
+
 
 
 // copy_envp.c  -- ok!

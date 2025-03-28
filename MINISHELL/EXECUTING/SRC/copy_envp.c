@@ -1,4 +1,4 @@
-# include "../../INCLUDE/main.h"
+# include "../INCLUDE/main.h"
 
 int	get_envp_count(char **envp)
 {
