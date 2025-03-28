@@ -6,11 +6,11 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 17:53:21 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/25 12:47:11 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/03/28 12:21:30 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../INCLUDE/parsing.h"
+#include "../INCLUDE/parsing.h"
 
 int	ft_isspace(char c)
 {

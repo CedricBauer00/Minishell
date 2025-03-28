@@ -6,11 +6,11 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/26 11:44:19 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/03/28 12:21:22 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../INCLUDE/parsing.h"
+#include "../INCLUDE/parsing.h"
 
 void	set_default(t_main *main)
 {
@@ -121,8 +121,10 @@ void	freecase(t_main *main)
 	i = 0;
 	if (main->envp)
 	{
-		while (main->envp[i] == NULL)
+		// printf("insin?\n");
+		while (main->envp[i] != NULL)
 		{
+			// printf(YELLOW "main-> envp%p\n"DEFAULT, main->envp[i]);
 			free(main->envp[i]);
 			i++;
 		}
@@ -131,26 +133,38 @@ void	freecase(t_main *main)
 	}
 	if (main->new)
 	{
+		// fprintf(stderr,BLUE"main->new %p\n"DEFAULT,main->new);
 		free(main->new);
 		main->new = NULL;
 	}
+	// if (main->next_line == NULL)
+	// {
+	// 	fprintf(stderr, RED"%s ,%p\n"DEFAULT, main->next_line, main->next_line);\
+	// }
 	if (main->next_line)
 	{
+		// fprintf(stderr, RED"main->next_line %p\n"DEFAULT, main->next_line);
 		free(main->next_line);
 		main->next_line = NULL;
 	}
-	// if (main->word)
-	// {
-	// 	free(main->word);
-	// 	main->word = NULL;
-	// }
+	if (main->word)
+	{
+		// fprintf(stderr, RED"main->word %p\n"DEFAULT, main->word);
+		free(main->word);
+		main->word = NULL;
+	}
+	// if (main->line == NULL)
+	// 	fprintf(stderr,"is already free\n");
 	if (main->line)
 	{
+		// printf("isin?\n");
+		// printf(YELLOW"main.line : %p"DEFAULT, main->line);
 		free(main->line);
 		main->line = NULL;
 	}
 	if (main->tokens)
 	{
+		// printf("isin4?");
 		free_tokens(main->tokens);
 		main->tokens = NULL;
 	}
@@ -168,7 +182,7 @@ int main(int argc, char **argv, char **envp)
 	t_gc_list *head;
 	head = init_gc_list();
 	main.envp = copy_envp(head, envp);
-
+	
 	// int k = 0;
 	// while(main.envp[k])
 	// {
@@ -190,7 +204,8 @@ int main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		main.line = readline("minishell> ");
-		printf(YELLOW"%s\n"DEFAULT, main.line);
+		// printf(GREEN"first main.line %p\n"DEFAULT, main.line);
+		// printf(YELLOW"%s\n"DEFAULT, main.line);
 		i = 0;
 		if (!main.line)
 		{
@@ -215,13 +230,13 @@ int main(int argc, char **argv, char **envp)
 			}
 			else if (main.line[i] == '>' && main.line[i + 1] == '>')
 			{
-				printf(RED"is in?%d\n"DEFAULT, i);
+				// printf(RED"is in?%d\n"DEFAULT, i);
 				error = create_token(&main.tokens, TOKEN_APPEND, ">>");
 				i += 2;
 			}
 			else if (main.line[i] == '<' && main.line[i + 1] == '<')
 			{
-				printf(GREEN"<< ,%s , %c\n"DEFAULT, main.line, main.line[i]);
+				// printf(GREEN"<< ,%s , %c\n"DEFAULT, main.line, main.line[i]);
 				if (!main.line[i + 2] || ft_isspace(main.line[i + 2]))
 					return(perror("ERROR\nHeredoc failed!\n"), freecase(&main), -1);
 				error = create_token(&main.tokens, TOKEN_HEREDOC, "<<");
@@ -247,6 +262,7 @@ int main(int argc, char **argv, char **envp)
 			{
 				// error = create_token(&main.tokens, TOKEN_QUOTE, "\'");
 				ws = i + 1;
+				i++;
 				while (1)
 				{
 					while (main.line[i] && main.line[i] != '\'')
@@ -254,25 +270,37 @@ int main(int argc, char **argv, char **envp)
 					if (main.line[i] == '\'')
 					{
 						main.word = ft_strndup(main.line + ws, i - ws);
-						error = create_token(&main.tokens, TOKEN_QUOTE, main.word);
+						if (!main.word)
+							return (perror("ERROR\nAllocating main.word failed!\n"), freecase(&main), -1);
+						error = create_token(&main.tokens, TOKEN_WORD, main.word);
+						if (error < 0)
+							return (perror("ERROR\nToken creation failed!\n"), freecase(&main), -1);
 						i++;
 						free(main.word);
+						main.word = NULL;
 						break ;
+						write(1, "enter\n", 6);
 					}
 					main.next_line = readline("> ");
 					if (!main.next_line)
-						return (printf("ERROR\nFailed!\n"), freecase(&main), -1);
-					main.new = main.line;
+						return (perror("ERROR\nFailed!\n"), freecase(&main), -1);
+					
+					main.new = ft_strjoin(main.line, main.next_line);
+					if (!main.new)
+					{
+						free(main.next_line);
+						return (perror("ERROR\nAllocating main.new failed!\n"), freecase(&main), -1);
+					}
+					// main.line = main.new;
 					main.line = ft_strjoin(main.line, main.next_line);
-					free(main.new);
+					// printf(RED" main.next_line :%s ,%p"DEFAULT,main.next_line,  main.next_line);
 					free(main.next_line);
+					main.next_line = NULL;
+					
+						// main.old_line = main.line;
+					// free(main.old_line);
+					// free(main.next_line);
 				}
-				// 	if (error < 0)
-				// 	{
-				// 		free(main.word);
-				// 		return (perror("ERROR\nTokenizing single quotes failed!\n"), -1);
-				// 	}
-				// }
 			}
 			else if (main.line[i] == '"')
 				error = create_token(&main.tokens, TOKEN_DQOUTE, "\"");
@@ -293,8 +321,14 @@ int main(int argc, char **argv, char **envp)
 				printf(GREEN"len : %d\n"DEFAULT, i);
 				len = i - ws;
 				main.word = ft_strndup(main.line + ws, len);
-				printf(GREEN"word = %s\n"DEFAULT, main.word);
-				error = create_token(&main.tokens, TOKEN_WORD, main.word);
+				if (ft_strncmp(main.word, "cd", 2) == 0)
+				{
+					write(1, "here!\n", 6);
+					error = create_token(&main.tokens, TOKEN_BUILT_IN, main.word);
+				}
+				else
+					printf(GREEN"word = %s\n"DEFAULT, main.word);
+					error = create_token(&main.tokens, TOKEN_WORD, main.word);
 				free(main.word);
 				//i--;
 			}
@@ -326,7 +360,7 @@ int main(int argc, char **argv, char **envp)
 			if (error < 0)
 				return (perror("ERROR:\nTokenizing failed!\n"), freecase(&main), -1);
 			// if (main.start == NULL)
-			printf(RED"i = %d\n"DEFAULT, i);
+			// printf(RED"i = %d\n"DEFAULT, i);
 			//i++;
 		}
 		print_tokens(main.tokens);

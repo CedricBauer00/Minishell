@@ -1,7 +1,7 @@
 GREEN = \033[0;32m
 DEFAULT = \033[0m
 
-CFLAGS = -Wall -Wextra -Werror -g #-Dreadline#-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address #-Dreadline
 
 RL_FLAG = -lreadline
 
@@ -13,7 +13,7 @@ CC = cc
 
 NAME = minishell
 
-LIBFT_DIR = ../../INCLUDE/libft
+LIBFT_DIR = ../INCLUDE/libft
 
 LIBFT = $(LIBFT_DIR)/libft.a
 

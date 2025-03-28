@@ -18,9 +18,7 @@ void	*do_alloc(t_gc_list *gc_lst, size_t howmuch, t_data_type data_type)
 {
 	t_gc_list	*new_node = malloc(sizeof(t_gc_list));
 	if (!new_node)
-	{
 		return (NULL);
-	}
 	void *data;
 	data = malloc(howmuch);
 	if (!data)
