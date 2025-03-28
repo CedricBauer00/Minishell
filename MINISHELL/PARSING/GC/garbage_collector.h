@@ -4,11 +4,14 @@
 //temp header
 # include <stdio.h>
 # include <stdlib.h>
+# include <string.h>
 
 typedef enum	e_data_type
 {
-	TYPE_SINGLE_CHAR,
-	TYPE_DOUBLE_CHAR,
+	TYPE_SINGLE_PTR,
+	TYPE_DOUBLE_PTR,
+	TYPE_STRUCT,	  //STRUCT 
+	TYPE_END
 }	t_data_type;
 
 typedef struct	s_gc_list
@@ -22,11 +25,13 @@ typedef struct	s_gc_list
 //empty node, just a head node as dummy.
 
 t_gc_list	*init_gc_list(void);
+
+void	delete_node(t_gc_list **gc_lst, t_gc_list *to_delete);
 void	*do_alloc(t_gc_list *gc_lst, size_t howmuch, t_data_type data_type);
 void	free_data_type(void *data, t_data_type data_type);
-void	gc_free(t_gc_list **gc_lst);
+void	all_free(t_gc_list **gc_lst);
 void	print_list(t_gc_list *gc_lst);
-
+t_gc_list	*find_node(t_gc_list *gc_lst, void *target);
 
 
 // void	gc_inc_ref_count(t_gc_list *gc_lst, void *ptr)
