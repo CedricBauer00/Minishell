@@ -16,6 +16,8 @@ t_gc_list	*init_gc_list(void)
 
 void	*do_alloc(t_gc_list *gc_lst, size_t howmuch, t_data_type data_type)
 {
+	if (!gc_lst)
+		return NULL;
 	t_gc_list	*new_node = malloc(sizeof(t_gc_list));
 	if (!new_node)
 	{
@@ -42,8 +44,11 @@ void	free_data_type(void *data, t_data_type data_type)
 		return ;
 	if (data_type == TYPE_SINGLE_PTR)
 	{
-		free(data);
-		data = NULL;
+		if (data)
+		{
+			free(data);
+			data = NULL;
+		}
 	}
 	else if (data_type == TYPE_DOUBLE_PTR)
 	{
@@ -92,7 +97,7 @@ void	delete_node(t_gc_list **gc_lst, t_gc_list *to_delete)
 	{
 		if (cur == to_delete)
 		{
-			printf("%p is free, type is %d\n", cur->data , cur->type);
+			printf("delete node();%p is free, type is %d\n", cur->data , cur->type);
 			free_data_type(cur->data, cur->type);
 			prev ->next = cur ->next;
 			free(cur);
@@ -106,24 +111,29 @@ void	delete_node(t_gc_list **gc_lst, t_gc_list *to_delete)
 
 void	all_free(t_gc_list **gc_lst)
 {
-	if (!gc_lst || !(*gc_lst))
+	if (!gc_lst || !(*gc_lst) || !(*gc_lst)->next)
 		return ;
 
 	t_gc_list	*cur;
 	t_gc_list	*next;
 	
 	cur = (*gc_lst)->next;
-	while(cur)
-	{
-		next = cur->next;
-		printf("%p is free, type is %d\n", cur->data , cur->type);
-		free_data_type(cur->data, cur->type);
+	next = NULL;
+	while (cur)
+    {
+        next = cur->next;
+        printf("all_free(); %p is free, type is %d\n", cur->data , cur->type);
+        if (cur->data)
+		{
+            free_data_type(cur->data, cur->type);
+			cur->data = NULL;
+		}
 		free(cur);
-		cur = next;
-	}
-	printf("at last %p is free\n", *gc_lst);
+        cur = next;
+    }
 	free(*gc_lst);
     *gc_lst = NULL;
+	
 }
 
 void	print_list(t_gc_list *gc_lst)
@@ -135,7 +145,7 @@ void	print_list(t_gc_list *gc_lst)
 	cur = gc_lst->next;
 	while(cur != NULL)
 	{
-		printf("[%d]th NODE[%s], %p\n",i, cur->data, cur->data);
+		printf("[%d]th NODE[%s], %p\n",i, (char *)cur->data, cur->data);
 		i++;
 		cur = cur->next;
 	}

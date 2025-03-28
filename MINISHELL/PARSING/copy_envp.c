@@ -1,4 +1,5 @@
-#include "../INCLUDE/parsing.h"
+// #include "../INCLUDE/parsing.h"
+#include "parsing.h"
 
 int	get_envp_count(char **envp)
 {
@@ -26,7 +27,7 @@ char	**copy_envp(t_gc_list *gc_lst, char **envp)
 	}
 	count = get_envp_count(envp);
 	//printf("%d\n", count);
-	my_envp = do_alloc(gc_lst, sizeof(char *) * count, TYPE_DOUBLE_CHAR);
+	my_envp = do_alloc(gc_lst, sizeof(char *) * count, TYPE_DOUBLE_PTR);
 	if (!my_envp)
 	{
 		printf(RED "copy_envp()edge case\n" DEFAULT);
@@ -36,7 +37,7 @@ char	**copy_envp(t_gc_list *gc_lst, char **envp)
 	printf("my_nevp %p\n", my_envp);
 	while (envp[i])
 	{
-		my_envp[i] = strdup(envp[i]);
+		my_envp[i] = gc_strdup(envp[i], gc_lst);
 		if (!my_envp[i])
 		{
 			while(--i >= 0)
