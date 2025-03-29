@@ -122,10 +122,9 @@ void	all_free(t_gc_list **gc_lst)
 	while (cur)
     {
         next = cur->next;
-        printf("all_free(); %p is free, type is %d\n", cur->data , cur->type);
         if (cur->data)
 		{
-			printf("will be freed %s\n", cur->data);
+			printf("all_free(); %p is free, type is %d, data: %s\n", cur->data , cur->type, (char*)cur->data);
             free_data_type(cur->data, cur->type);
 			cur->data = NULL;
 		}

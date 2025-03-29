@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Lexer_main.c                                       :+:      :+:    :+:   */
+/*   MAIN.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/28 19:04:01 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/03/29 14:54:42 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	create_token(t_token **tokens, t_token_type type, char *str, t_gc_list *gc_l
 	
 	if (!str)
 		return (perror("ERROR\nStr is NULL!\n"), -1);
-	new_token = (t_token *)do_alloc(gc_list, sizeof(t_token), TYPE_SINGLE_PTR);
+	new_token = (t_token *)do_alloc(gc_list, sizeof(t_token),TYPE_SINGLE_PTR);
 	if (!new_token)
 		return (perror("ERROR\nMalloc failed!\n"), -1);
 	printf(GREEN"new_token :%p\n"DEFAULT, new_token);
@@ -158,11 +158,14 @@ int main(int argc, char **argv, char **envp)
 	// while (line[i])
 	while (1)
 	{
-		printf(RED"1\n"DEFAULT);
+		if (main.line)
+		{
+			printf(RED"prev main.line is deleted\n"DEFAULT);
+			free(main.line);
+		}
 		main.line = readline(YELLOW"minishell> "DEFAULT);
-		
-		printf(GREEN"main.line %p\n"DEFAULT, main.line);
-		//printf(YELLOW"%s\n"DEFAULT, main.line);
+		printf(GREEN"main.line = %s\n"DEFAULT, main.line);
+		printf(YELLOW"%s\n"DEFAULT, main.line);
 		i = 0;
 		if (!main.line) //error
 		{
@@ -171,11 +174,11 @@ int main(int argc, char **argv, char **envp)
 				all_free(&gc_list);
 			exit(1);
 		}
-		// if (ft_strncmp(main.line, "", 1) == 0)
-		// {
-		// 	printf("enter\n");
-		// 	return (all_free(&gc_list), 0);
-		// }
+		if (ft_strncmp(main.line, "", 1) == 0)
+		{
+			printf("enter\n");
+			return (all_free(&gc_list), 0);
+		}
 		add_history(main.line);
 		while (main.line[i])
 		{
@@ -224,6 +227,7 @@ int main(int argc, char **argv, char **envp)
 				i++;
 				//break;
 			}
+			
 			else if (main.line[i] == '\'') //error 
 			{
 				// error = create_token(&main.tokens, TOKEN_QUOTE, "\'");
@@ -277,6 +281,7 @@ int main(int argc, char **argv, char **envp)
 					// free(main.next_line);
 				}
 			}
+			
 			// else if (main.line[i] == '"')
 			// 	error = create_token(&main.tokens, TOKEN_DQOUTE, "\"");
 			// else if (main.line[i] && main.line[i + 1] && main.line[i + 2] &&
@@ -332,8 +337,6 @@ int main(int argc, char **argv, char **envp)
 			else
 			{
 				printf("Warning: Unrecognized character '%c' at position %d\n", main.line[i], i);
-				
-				//i++;
 			}
 			// else if (main.line[i] == '$')
 			// {
@@ -345,11 +348,10 @@ int main(int argc, char **argv, char **envp)
 				return (perror("ERROR:\nTokenizing failed!\n"),all_free(&gc_list), -1);
 			// if (main.start == NULL)
 			// printf(RED"i = %d\n"DEFAULT, i);
-			// i++;
+			//i++;
 		}
 		print_tokens(main.tokens);
-		if (main.line)
-			free(main.line);
+		//todo : delete later temp data and node
 	}
 	printf(BLUE"while loop out\n"DEFAULT);
 	if (gc_list)

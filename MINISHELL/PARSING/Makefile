@@ -5,7 +5,7 @@ DEFAULT = \033[0m
 
 #CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address #-Dreadline change
 LDFLAGS = -lreadline -Llibft -lft #del
-CFLAGS = -I/usr/include/readline -Ilibft -Wextra -Wall -Werror -fsanitize=address -g #del
+CFLAGS = -I/usr/include/readline -Ilibft -Wextra -Wall -Werror  -g -fsanitize=address #del 
 
 #INC = -I ../INCLUDE/# ./GC/ change
 
@@ -23,8 +23,8 @@ LIBFT_DIR = libft
 
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SOURCES = Lexer_main.c \
-		Lexer_utils.c \
+SOURCES = MAIN.c \
+		UTILS.c \
 		GC/gc.c \
 		copy_envp.c
 

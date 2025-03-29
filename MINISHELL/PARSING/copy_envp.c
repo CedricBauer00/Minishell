@@ -49,7 +49,7 @@ char	**copy_envp(t_gc_list *gc_lst, char **envp)
 		i++;
 	}
 	printf("%d\n", i);
-	my_envp[i - 1] = NULL;
+	my_envp[i -1] = NULL;
 	return (my_envp);
 }
 
