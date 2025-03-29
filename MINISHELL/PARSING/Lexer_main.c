@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/28 18:45:53 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/03/28 19:04:01 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,10 +166,10 @@ int main(int argc, char **argv, char **envp)
 		i = 0;
 		if (!main.line) //error
 		{
-			printf("exit\n");
-			all_free(&gc_list);
-			free(main.line);
-			break;
+			printf(RED"exit\n"DEFAULT);
+			if (gc_list)
+				all_free(&gc_list);
+			exit(1);
 		}
 		// if (ft_strncmp(main.line, "", 1) == 0)
 		// {
@@ -235,14 +235,12 @@ int main(int argc, char **argv, char **envp)
 						i++;
 					if (main.line[i] == '\'')
 					{
-						printf(RED"0\n"DEFAULT);
 						main.word = gc_strndup(main.line + ws, i - ws, gc_list);
 						if (!main.word)
 						{
 							return (perror("ERROR\nAllocating main.word failed!\n"), all_free(&gc_list), -1);
 							exit(1);
 						}
-						printf(RED"1\n"DEFAULT);
 						error = create_token(&main.tokens, TOKEN_WORD, main.word, gc_list);
 						if (error < 0)
 						{
@@ -250,8 +248,8 @@ int main(int argc, char **argv, char **envp)
 							exit(1);
 						}
 						i++;
-						printf(RED"2\n"DEFAULT);
 						t_gc_list *todelte = find_node(gc_list, main.word);
+						printf(RED"main.word : %p\n"DEFAULT, main.word);
 						delete_node(&gc_list, todelte);
 						// free(main.word);
 						// main.word = NULL;
@@ -354,7 +352,8 @@ int main(int argc, char **argv, char **envp)
 			free(main.line);
 	}
 	printf(BLUE"while loop out\n"DEFAULT);
-	all_free(&gc_list);
+	if (gc_list)
+		all_free(&gc_list);
 	write(1, "\n", 1);
 }
 

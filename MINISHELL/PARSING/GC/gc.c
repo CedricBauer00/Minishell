@@ -125,6 +125,7 @@ void	all_free(t_gc_list **gc_lst)
         printf("all_free(); %p is free, type is %d\n", cur->data , cur->type);
         if (cur->data)
 		{
+			printf("will be freed %s\n", cur->data);
             free_data_type(cur->data, cur->type);
 			cur->data = NULL;
 		}
