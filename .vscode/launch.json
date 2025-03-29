@@ -9,7 +9,7 @@
 			"request": "launch",
 			"name": "Debug",
 			"program": "${workspaceFolder}/MINISHELL/EXECUTION/a.out",
-			"args": ["cd","/Users/jisokim2/MySubjects/git_minishell"],
+			"args": ["export","jisoo"],
 			"cwd": "${workspaceFolder}"
 		}
 	]

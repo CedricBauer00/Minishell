@@ -25,7 +25,7 @@ char	**copy_envp(t_gc_list *gc_lst, char **envp)
 		return (NULL);
 	}
 	count = get_envp_count(envp);
-	my_envp = do_alloc(gc_lst, sizeof(char *) * count, TYPE_DOUBLE_CHAR);
+	my_envp = (char**)do_alloc(gc_lst, sizeof(char *) * count, TYPE_DOUBLE_PTR);
 	if (!my_envp)
 	{
 		printf(RED "copy_envp()edge case\n" DEFAULT);

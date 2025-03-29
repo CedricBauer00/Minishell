@@ -78,11 +78,12 @@ int	main(int argc, char **argv, char **envp)
 	//todo copy_envp should put into init_shell func.
 	shell->my_envp = copy_envp(head, envp);
 
-	export(argv, shell);
-	printf("argv[1]%s, argv[2]%s\n", argv[1],argv[2]);
-	unset(argv, shell);
+	// export(argv, shell);
+	// printf("argv[1]%s, argv[2]%s\n", argv[1],argv[2]);
+	// unset(argv, shell);
 	
-	ft_echo(argv, shell);
+	// ft_echo(argv, shell);
+
 	//test
 	// int i = 0;
 	// while (shell->my_envp[i])
@@ -90,4 +91,5 @@ int	main(int argc, char **argv, char **envp)
 	// 	printf(BLUE"%p,  %s\n"DEFAULT, shell->my_envp[i], shell->my_envp[i]);
 	// 	i++;
 	// }
+	echo_Hello_pipe_cat_pipe_wc(shell);
 }

@@ -175,7 +175,7 @@ void cd(char **argv, t_shell *shell)
 		return ;
 	}
 
-	//case just cd
+	//test just cd
 	if ((strcmp(argv[1], "cd") == 0 && strlen(argv[1]) == 2) && argv[2] == NULL)
 	{
 		printf(RED"case just cd\n"DEFAULT);

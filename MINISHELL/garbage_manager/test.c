@@ -6,10 +6,10 @@ int main()
 
 	// char *single_ptr = (char*)do_alloc(gc_lst, 10, TYPE_SINGLE_PTR);
 	// single_ptr = "Aaaa";
-	char **double_ptr = (char**) do_alloc(gc_lst, sizeof(char*) *10, TYPE_DOUBLE_PTR);
+	char **double_ptr = (char**) do_alloc(gc_lst, sizeof(char*) *10);
 	for(int i = 0; i < 5; i++)
 	{
-		double_ptr[i] = (char *)do_alloc(gc_lst, 10, TYPE_SINGLE_PTR);
+		double_ptr[i] = (char *)do_alloc(gc_lst, 10);
 		if (double_ptr[i])
 			strcpy(double_ptr[i], "HELLO");
 		printf("%p, %s\n", double_ptr[i], double_ptr[i]);

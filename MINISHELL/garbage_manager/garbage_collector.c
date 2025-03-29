@@ -20,12 +20,12 @@ t_gc_list	*init_gc_list(void)
 	}
 	head->data = NULL;
 	head->next = NULL;
-	head->is_freed = false;
+	head->type = 0;
 	//head->ref_count = 0;
 	return head;
 }
 
-void	*do_alloc(t_gc_list *gc_lst, size_t howmuch)
+void	*do_alloc(t_gc_list *gc_lst, size_t howmuch, t_data_type data_type)
 {
 	t_gc_list	*new_node = malloc(sizeof(t_gc_list));
 	if (!new_node)
@@ -41,30 +41,34 @@ void	*do_alloc(t_gc_list *gc_lst, size_t howmuch)
 	}
 	new_node->data = data;              
 	new_node->next = gc_lst->next;
+	new_node->type = data_type;
 	//new_node->ref_count = 1;
 	gc_lst->next = new_node;
 	return (data);
 }
 
-void	free_data_type(t_gc_list *node)
+void	free_data_type(void *data, t_data_type data_type)
 {
-	if (!node || !node->is_freed || !node->data)
+	if(!data)
 		return ;
-	// if(node->type == TYPE_SINGLE_PTR)
-		free(node->data);
-	// else if(node->type == TYPE_DOUBLE_PTR)
-	// {
-	// 	char **temp = (char**)node->data;
-	// 	int i = 0;
-	// 	while(temp[i])
-	// 	{
-	// 		free(temp[i]);
-	// 		i++;
-	// 	}
-	// 	free(temp);
-	// }
-	node->data = NULL;
-	node->is_freed = true;
+	if (data_type == TYPE_SINGLE_PTR)
+	{
+		free(data);
+		data = NULL;
+	}
+	else if (data_type == TYPE_DOUBLE_PTR)
+	{
+		char **temp = (char **)data;
+		// int i = 0;
+		// while(temp[i])
+		// {
+		// 	free(temp[i]);
+		// 	temp[i] = NULL;
+		// 	i++;
+		// }
+		free (temp);
+		temp = NULL;
+	}
 	//todo add case for struct
 }
 
@@ -99,13 +103,11 @@ void	delete_node(t_gc_list **gc_lst, t_gc_list *to_delete)
 	{
 		if (cur == to_delete)
 		{
-			if (!cur->is_freed)
-			{
-				free_data_type(cur);
-				printf("%p is free\n", cur->data);
-			}
+			printf("%p is free, type is %d\n", cur->data , cur->type);
+			free_data_type(cur->data, cur->type);
 			prev ->next = cur ->next;
 			free(cur);
+			cur = NULL;
 			break;
 		}
 		prev = cur;
@@ -125,11 +127,8 @@ void	all_free(t_gc_list **gc_lst)
 	while(cur)
 	{
 		next = cur->next;
-		if (!cur ->is_freed)
-		{
-			printf("%p is free, type is %s\n", cur->data , (char*)cur->data);
-			free_data_type(cur);
-		}
+		printf("%p is free, type is %d\n", cur->data , cur->type);
+		free_data_type(cur->data, cur->type);
 		free(cur);
 		cur = next;
 	}
@@ -147,7 +146,7 @@ void	print_list(t_gc_list *gc_lst)
 	cur = gc_lst->next;
 	while(cur != NULL)
 	{
-		printf("[%d]th NODE[%s], %p\n",i, cur->data, (char*)cur->data);
+		printf("[%d]th NODE[%s], %p\n",i, cur->data, cur->data);
 		i++;
 		cur = cur->next;
 	}

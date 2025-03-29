@@ -3,6 +3,7 @@
 
 //# include <stdio.h> //already have in gabae_colletor.h 
 //# include <stdlib.h> //already have in garbage_colletor.h
+// # include <stdbool.h> also in garbage_header
 # include <unistd.h>
 # include <sys/types.h>
 # include <sys/wait.h>
@@ -51,13 +52,13 @@ typedef struct s_token //struct being allocated for each token from input
 // }	t_main;
 
 //memo may be cedric doesnt need it .
-typedef struct s_cmd
-{
-	int				last_status_exit;
-	char			*cmd;
-	char			*flags;  //idont know could be delete
-	struct s_cmd	*next;   //"ls -l"
-}t_cmd;
+// typedef struct s_cmd
+// {
+// 	int				last_status_exit;
+// 	char			*cmd;
+// 	char			*flags;  //idont know could be delete
+// 	struct s_cmd	*next;   //"ls -l"
+// }t_cmd;
 
 /***********************************************************************/
 
@@ -68,10 +69,6 @@ typedef struct s_shell
 	char	*old_dir;
 	int		last_status_exit;
 }	t_shell;
-
-
-
-
 
 // like this 
 // t_token *first;
@@ -94,22 +91,20 @@ typedef struct s_shell
 
 // int		ft_isspace(char c);
 
-
-
 //-----------------------------EXECUTION------------------------------------
 
 //init.c
 t_shell	*init_shell_info(void);
 t_shell *get_shell(void);
 
-// copy_envp.c  -- ok!
+//memo copy_envp.c  -- ok!
 char	**copy_envp(t_gc_list *gc_lst, char **envp);
 int		get_envp_count(char **envp);
 
-//pwd.c
+//memo pwd.c
 char	*pwd(void);
 
-//cd.c
+//memo cd.c
 int		is_valid_dir(const char *path);
 int		get_env_count(char **my_envp);
 char	**expand_envp(t_shell *shell, char *new_path);
@@ -118,16 +113,34 @@ int		check_existing(char **my_envp, const char *name);
 int		ft_setenv(const char *name, const char *value, int overwrite, t_shell *shell);
 void	cd(char **argv, t_shell *shell);
 
-//export.c
+//memo export.c
 int		export(char **argv, t_shell *shell);
 void	print_envp(t_shell *shell, char *flag);
 char	*extract_name(char *arg);
 char	*extract_value(char *arg);
+//char	*ft_strchr(char *str, char c);
 
-//unset.c
+//memo unset.c
+void	unset(char **argv, t_shell *shell);
 
+//memo echo.c
+void	ft_echo(char **argv, t_shell *sehll);
+
+
+
+//memo pipe
+void echo_Hello_pipe_cat_pipe_wc(t_shell *shell);
 
 //built_in
 //pwd
 //cd
 #endif
+
+// char *input = readline("prompt> ");
+// if (input)
+// {
+//     char *gc_input = do_alloc(gc_list, strlen(input) + 1);
+//     strcpy(gc_input, input);
+//     free(input);  // readline의 원본 메모리 해제
+//     // gc_input 사용
+// }

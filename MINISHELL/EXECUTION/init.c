@@ -17,7 +17,7 @@ t_shell	*init_shell_info(void)
 
 //after using this function at the beginning, this func ensures that the 'shell' is no longer 'null'
 //because it has already been initialized as a static var.
-
+//static var is initialized just only at once when it called and assigned in data area.
 t_shell *get_shell(void)
 {
 	static t_shell *shell = NULL;
