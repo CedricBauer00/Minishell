@@ -27,7 +27,7 @@ void echo_Hello_pipe_cat_pipe_wc(t_shell *shell)
 		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), fd[1]);
 		//find echo excute echo
 		write(1, "hello\n", 6); 
-		fprintf(stderr, YELLOW"[pid %d] write(1, hello\n, 6)\n"DEFAULT, getpid());
+		fprintf(stderr, YELLOW"[pid %d] write(1, hello, 6)\n"DEFAULT, getpid());
 		exit(0);
 		fprintf(stderr, YELLOW "exited with 0\n" DEFAULT);
 	}
@@ -71,23 +71,22 @@ void echo_Hello_pipe_cat_pipe_wc(t_shell *shell)
 	}
 	//waitpid(pid, status, 0);
 
-	// pid = fork();
-	// fprintf(stderr, YELLOW "fork() = %d\n" DEFAULT, pid);
-	// if (pid == 0) //85645
-	// {
-	// 	dup2(fd1[0], STDIN_FILENO);
-	// 	fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), fd1[0], STDIN_FILENO);
-	// 	close(fd1[0]);
-	// 	fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), fd1[0]);
-	// 	execve("/usr/bin/wc", args2 , shell->my_envp);
-	// 	fprintf(stderr, YELLOW "[pid %d], execve wc \n" DEFAULT, getpid());
-	// }
-	// else
-	// {
-	// 	close(fd1[0]);
-	// 	fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), fd1[0]);
-	// }
-	
+	pid = fork();
+	fprintf(stderr, YELLOW "fork() = %d\n" DEFAULT, pid);
+	if (pid == 0) //85645
+	{
+		dup2(fd1[0], STDIN_FILENO);
+		fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), fd1[0], STDIN_FILENO);
+		close(fd1[0]);
+		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), fd1[0]);
+		execve("/usr/bin/wc", args2 , shell->my_envp);
+		fprintf(stderr, YELLOW "[pid %d], execve wc \n" DEFAULT, getpid());
+	}
+	else
+	{
+		close(fd1[0]);
+		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), fd1[0]);
+	}
 	//to check 
 	while (waitpid(-1, NULL, WNOHANG) > 0);
 }
