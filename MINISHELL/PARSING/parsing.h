@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/03/28 17:36:10 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/03/31 13:08:33 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,8 @@ typedef enum s_tenum
     TOKEN_REDIRECT_OUT = 7, //Symbol: >
     TOKEN_APPEND = 8,       //Symbol: >>
     TOKEN_HEREDOC = 9,      //Symbol: <<
-    TOKEN_QUOTE = 10,        //String in '
-    TOKEN_DQOUTE = 11,       //string in "
-    TOKEN_VAR = 12,          //$ variable
-    TOKEN_EOF = 13,          //End of input
+    TOKEN_VAR = 10,          //$ variable
+    TOKEN_EOF = 11,          //End of input
     SLASH               // bin/ls
 }   t_token_type;
 
@@ -69,20 +67,22 @@ typedef struct s_main
     t_token	*tokens;
     char	**envp;
 	int		last_status_exit;
-	char    *line;
-	char    *next_line;
-    char    *new;
-	char    *word;
-    char    *old_line;
-    char    *temp;
+	char	*line;
+    char    *newline;
+	char	*next_line;
+	char	*new;
+	char	*word;
+	char	*old_line;
+	char	*temp;
+	int     error;
 
 }   t_main;
 
 typedef struct s_cmd
 {
-    char            *cmd;
-    char            *flags;  //idont know could be delte
-    struct s_cmd    *next;   //"ls -l"
+	char			*cmd;
+	char			*flags;  //idont know could be delte
+	struct s_cmd	*next;   //"ls -l"
 }t_cmd;
 
 // like this
@@ -102,7 +102,7 @@ int	create_token(t_token **tokens, t_token_type type, char *str, t_gc_list *gc_l
 
 int     append_token(t_token **tokens, t_token *new_token);
 void    free_tokens(t_token *tokens);
-void    set_default(t_main *main);
+void	set_default(t_main *main);
 
 // ----------------------------------------------------------------------
 // 							  Lexer_utils
@@ -117,7 +117,17 @@ int     valid_char(int c);
 char	**copy_envp(t_gc_list *gc_lst, char **envp);
 int	    get_envp_count(char **envp);
 
+// ----------------------------------------------------------------------
+// 							  BUILT-INS
+// ----------------------------------------------------------------------
 
+int	is_built_in(t_main *main);
+
+// ----------------------------------------------------------------------
+// 							SINGLE_QUOTES
+// ----------------------------------------------------------------------
+
+int	quotes(t_main *main, int ws, int i, t_gc_list *gc_list);
 
 
 // copy_envp.c  -- ok!
