@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   MAIN.c                                             :+:      :+:    :+:   */
+/*   P_MAIN.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/29 14:54:42 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/03/31 14:40:51 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	set_default(t_main *main)
 	main->next_line = NULL;
 	main->new = NULL;
 	main->word = NULL;
+	main->error = 0;
 	return ;
 }
 
@@ -94,6 +95,8 @@ void print_tokens(t_token *tokens)
 	{
 		if (tokens->type == 0)
 			printf("Token Type: %s, Value: %s\n", "word", tokens->value);
+		else if (tokens->type == 4)
+			printf("Token Type: %s, Value: %s\n", "Built-in", tokens->value);
 		else if (tokens->type == 5)
 			printf("Token Type: %s, Value: %s\n", "pipe", tokens->value);
 		else if (tokens->type == 6)
@@ -104,10 +107,6 @@ void print_tokens(t_token *tokens)
 			printf("Token Type: %s, Value: %s\n", "append", tokens->value);
 		else if (tokens->type == 9)
 			printf("Token Type: %s, Value: %s\n", "heredoc", tokens->value);
-		else if (tokens->type == 10)
-			printf("Token Type: %s, Value: %s\n", "squote", tokens->value);
-		else if (tokens->type == 11)
-			printf("Token Type: %s, Value: %s\n", "dquote", tokens->value);
 		else if (tokens->type == 12)
 			printf("Token Type: %s, Value: %s\n", "VAR", tokens->value);
 		else
@@ -130,42 +129,27 @@ int main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	int	i;
-	int	error;
 	int	ws;
 	int	len;
 	t_main main;
 	t_gc_list *gc_list;
 	gc_list = init_gc_list();
 	main.envp = copy_envp(gc_list, envp);
-	
-	// int k = 0;
-	// while(main.envp[k])
-	// {
-	// 	printf("%s\n", main.envp[k]);
-	// 	k++;
-	// }
-	
-	main.tokens = NULL;
-	error = 0;
+
 	i = 0;
 	ws = 0;
 	len = 0;
 	set_default(&main);
-	
-	// while ([j] != NULL)
-	// {
-	i = 0;
-	// while (line[i])
 	while (1)
 	{
-		if (main.line)
-		{
-			printf(RED"prev main.line is deleted\n"DEFAULT);
-			free(main.line);
-		}
+		// if (main.line)
+		// {
+		// 	printf(RED"prev main.line is deleted %p \n"DEFAULT, main.line);
+		// 	free(main.line);
+		// }
+		
 		main.line = readline(YELLOW"minishell> "DEFAULT);
-		printf(GREEN"main.line = %s\n"DEFAULT, main.line);
-		printf(YELLOW"%s\n"DEFAULT, main.line);
+		printf(YELLOW"main.line %s ,%p\n"DEFAULT, main.line, main.line);
 		i = 0;
 		if (!main.line) //error
 		{
@@ -174,10 +158,17 @@ int main(int argc, char **argv, char **envp)
 				all_free(&gc_list);
 			exit(1);
 		}
+		if (main.line == NULL)
+			fprintf(stderr, RED"is already free %p\n"DEFAULT, main.line);
 		if (ft_strncmp(main.line, "", 1) == 0)
 		{
-			printf("enter\n");
-			return (all_free(&gc_list), 0);
+			printf(RED"enter %p\n"DEFAULT, main.line);
+			if (gc_list)
+			{
+				all_free(&gc_list);
+				printf(RED"already\n"DEFAULT);
+			}
+			exit(1);
 		}
 		add_history(main.line);
 		while (main.line[i])
@@ -190,7 +181,7 @@ int main(int argc, char **argv, char **envp)
 			}
 			if (main.line[i] == '|')
 			{
-				error = create_token(&main.tokens, TOKEN_PIPE, "|", gc_list);
+				main.error = create_token(&main.tokens, TOKEN_PIPE, "|", gc_list);
 				printf(RED"pipe i : %d\n, "DEFAULT, i);
 				i++;
 				printf(RED"pipe after increased i : %d\n, "DEFAULT, i);
@@ -199,8 +190,8 @@ int main(int argc, char **argv, char **envp)
 			{
 				// printf(RED"is in?%d\n"DEFAULT, i);
 				if (main.line[i + 2] == '>')
-					return (perror("ERROR\nsyntax error near unexpected token `>`"), all_free(&gc_list), -1);
-				error = create_token(&main.tokens, TOKEN_APPEND, ">>", gc_list);
+					return (perror("ERROR\nsyntax main.error near unexpected token `>`"), all_free(&gc_list), -1);
+				main.error = create_token(&main.tokens, TOKEN_APPEND, ">>", gc_list);
 				i += 2;
 			}
 			else if (main.line[i] == '<' && main.line[i + 1] == '<') //fix
@@ -208,45 +199,59 @@ int main(int argc, char **argv, char **envp)
 				// printf(GREEN"<< ,%s , %c\n"DEFAULT, main.line, main.line[i]);
 				if (!main.line[i + 2] || ft_isspace(main.line[i + 2]))
 					return(perror("ERROR\nHeredoc failed!\n"), all_free(&gc_list), -1);
-				error = create_token(&main.tokens, TOKEN_HEREDOC, "<<", gc_list);
+				main.error = create_token(&main.tokens, TOKEN_HEREDOC, "<<", gc_list);
 				i += 2;
 			}
 			else if (main.line[i] == '<')
 			{
 				printf(GREEN"<, %s, %c\n"DEFAULT, main.line, main.line[i]);
 				printf("Found '<', creating token...\n");
-				error = create_token(&main.tokens, TOKEN_REDIRECT_IN, "<", gc_list);
-				if (error < 0)
+				main.error = create_token(&main.tokens, TOKEN_REDIRECT_IN, "<", gc_list);
+				if (main.error < 0)
 					printf("ERROR: Token creation failed for '<'\n");
 				i++;
 			}
 			else if (main.line[i] == '>')
 			{
 				printf(GREEN">, %s, %c, i: %d\n"DEFAULT, main.line, main.line[i], i);
-				error = create_token(&main.tokens, TOKEN_REDIRECT_OUT, ">", gc_list);
+				main.error = create_token(&main.tokens, TOKEN_REDIRECT_OUT, ">", gc_list);
 				i++;
 				//break;
 			}
-			
-			else if (main.line[i] == '\'') //error 
+			else if (main.line[i] == '\'') //main.error 
 			{
-				// error = create_token(&main.tokens, TOKEN_QUOTE, "\'");
+				// if (quotes(&main, ws, i, gc_list) < 0)
+				// 	return (perror("ERROR\nQuotes failed!\n"), all_free(&gc_list), -1);
+				// main.error = create_token(&main.tokens, TOKEN_QUOTE, "\'");
 				ws = i + 1;
 				i++;
 				while (1)
 				{
-					while (main.line[i] && main.line[i] != '\'')
+					while (main.line[i] && main.line[i] != '\'') //0x5
 						i++;
 					if (main.line[i] == '\'')
 					{
-						main.word = gc_strndup(main.line + ws, i - ws, gc_list);
+						main.word = gc_strndup(main.line + ws, i - ws, gc_list);  //0x0001 + >> main.word = 0x0002 . 0x00005 + ws
 						if (!main.word)
 						{
 							return (perror("ERROR\nAllocating main.word failed!\n"), all_free(&gc_list), -1);
 							exit(1);
 						}
-						error = create_token(&main.tokens, TOKEN_WORD, main.word, gc_list);
-						if (error < 0)
+						// if (is_built_in(&main) == 1)
+						// 	main.error = create_token(&main.tokens, TOKEN_BUILT_IN, main.word, gc_list);
+						// else
+						
+						if ((ft_strncmp(main.word, "cd", 2) == 0 && main.word[2] == '\0')\
+						|| (ft_strncmp(main.word, "echo", 4) == 0 && main.word[4] == '\0') \
+						|| (ft_strncmp(main.word, "export", 6) == 0 && main.word[6] == '\0') \
+						|| (ft_strncmp(main.word, "unset", 5) == 0 && main.word[5] == '\0') \
+						|| (ft_strncmp(main.word, "env", 3) == 0 && main.word[3] == '\0') \
+						|| (ft_strncmp(main.word, "pwd", 3) == 0 && main.word[3] == '\0') \
+						|| (ft_strncmp(main.word, "exit", 4) == 0 && main.word[4] == '\0') )
+							main.error = create_token(&main.tokens, TOKEN_BUILT_IN, main.word, gc_list);
+						else
+							main.error = create_token(&main.tokens, TOKEN_WORD, main.word, gc_list);
+						if (main.error < 0)
 						{
 							return (perror("ERROR\nToken creation failed!\n"), all_free(&gc_list), -1);
 							exit(1);
@@ -255,42 +260,81 @@ int main(int argc, char **argv, char **envp)
 						t_gc_list *todelte = find_node(gc_list, main.word);
 						printf(RED"main.word : %p\n"DEFAULT, main.word);
 						delete_node(&gc_list, todelte);
-						// free(main.word);
-						// main.word = NULL;
 						break ;
 						printf(RED"enter\n"DEFAULT);
 					}
 					main.next_line = readline("> ");
 					if (!main.next_line)
 						return (perror("ERROR\nFailed!\n"), all_free(&gc_list), -1);
-					
-					main.new = gc_strjoin(main.line, main.next_line, gc_list);
-					if (!main.new)
+					printf(YELLOW"before usig strjoin%p\n"DEFAULT, main.line);
+					main.line = gc_strjoin(main.line, main.next_line, gc_list);  //0x0001 ,0x0002 >> main.line 0x0005
+					printf("main.line : %p\n", main.line);
+					//free(main.line);
+					printf(YELLOW"after usig strjoin%p\n"DEFAULT, main.newline);
+					if (main.next_line)
 					{
+						printf(BLUE"free next_line\n"DEFAULT);
 						free(main.next_line);
-						return (perror("ERROR\nAllocating main.new failed!\n"), all_free(&gc_list), -1);
+						main.next_line = NULL;
 					}
-					// main.line = main.new;
-					main.line = gc_strjoin(main.line, main.next_line, gc_list);
-					// printf(RED" main.next_line :%s ,%p"DEFAULT,main.next_line,  main.next_line);
-					free(main.next_line);
-					main.next_line = NULL;
-					
-						// main.old_line = main.line;
-					// free(main.old_line);
-					// free(main.next_line);
 				}
 			}
-			
 			// else if (main.line[i] == '"')
-			// 	error = create_token(&main.tokens, TOKEN_DQOUTE, "\"");
-			// else if (main.line[i] && main.line[i + 1] && main.line[i + 2] &&
-			// 	ft_strncmp(main.line + i, "EOF", 3) == 0 && !ft_isalnum(main.line[i + 3]))
 			// {
-			// 	printf(RED"is in?%d\n"DEFAULT, i);
-			// 	error = create_token(&main.tokens, TOKEN_EOF, "EOF");
-			// 	i += 2;
+			// 	ws = i + 1;
+			// 	i++;
+			// 	while (1)
+			// 	{
+			// 		while (main.line[i] && main.line[i] != '"')
+			// 			i++;
+			// 		if (main.line[i] == '"')
+			// 		{
+			// 			main.word = gc_strndup(main.line + ws, i - ws, gc_list);
+			// 			if (!main.word)
+			// 			{
+			// 				return (perror("ERROR\nAllocating main.word failed!\n"), all_free(&gc_list), -1);
+			// 				exit(1);
+			// 			}
+			// 			if (is_built_in(&main) == 1)
+			// 				main.error = create_token(&main.tokens, TOKEN_BUILT_IN, main.word, gc_list);
+			// 			else
+			// 				main.error = create_token(&main.tokens, TOKEN_WORD, main.word, gc_list);
+			// 			if (main.error < 0)
+			// 			{
+			// 				return (perror("ERROR\nToken creation failed!\n"), all_free(&gc_list), -1);
+			// 				exit(1);
+			// 			}
+			// 			i++;
+			// 			t_gc_list *todelte = find_node(gc_list, main.word);
+			// 			printf(RED"main.word : %p\n"DEFAULT, main.word);
+			// 			delete_node(&gc_list, todelte);
+			// 			break ;
+			// 			printf(RED"enter\n"DEFAULT);
+			// 		}
+			// 		main.next_line = readline("> ");
+			// 		if (!main.next_line)
+			// 			return (perror("ERROR\nFailed!\n"), all_free(&gc_list), -1);
+					
+			// 		main.new = gc_strjoin(main.line, main.next_line, gc_list);
+			// 		if (!main.new)
+			// 		{
+			// 			free(main.next_line);
+			// 			return (perror("ERROR\nAllocating main.new failed!\n"), all_free(&gc_list), -1);
+			// 		}
+			// 		main.line = gc_strjoin(main.line, main.next_line, gc_list);
+			// 		free(main.next_line);
+			// 		main.next_line = NULL;
+			// 	}
 			// }
+			///////
+				// main.error = create_token(&main.tokens, TOKEN_DQOUTE, "\"", gc_list);
+			else if (main.line[i] && main.line[i + 1] && main.line[i + 2] &&
+				ft_strncmp(main.line + i, "EOF", 3) == 0 && !ft_isalnum(main.line[i + 3]))
+			{
+				printf(RED"is in?%d\n"DEFAULT, i);
+				main.error = create_token(&main.tokens, TOKEN_EOF, "EOF", gc_list);
+				i += 2;
+			}
 				//checking for alpanumeric main.words (commands, arguments)
 			else if (ft_isalnum(main.line[i]) || main.line[i] == '_')
 			{
@@ -304,15 +348,12 @@ int main(int argc, char **argv, char **envp)
 				printf(RED"main.word :%p, main.line :%p\n"DEFAULT, main.word, main.line);
 				main.word = gc_strndup(main.line + ws, len, gc_list);
 				printf(GREEN"main.word %p\n"DEFAULT, main.word);
-				if (ft_strncmp(main.word, "cd", 2) == 0)
-				{
-					write(1, "here!\n", 6);
-					error = create_token(&main.tokens, TOKEN_BUILT_IN, main.word, gc_list);
-				}
+				if (is_built_in(&main) == 1)
+					main.error = create_token(&main.tokens, TOKEN_BUILT_IN, main.word, gc_list);
 				else
 				{
 					printf(GREEN"word = %s\n"DEFAULT, main.word);
-					error = create_token(&main.tokens, TOKEN_WORD, main.word, gc_list);
+					main.error = create_token(&main.tokens, TOKEN_WORD, main.word, gc_list);
 				}
 				t_gc_list *find = find_node(gc_list, main.word);
 				(void)find;
@@ -327,12 +368,11 @@ int main(int argc, char **argv, char **envp)
 			// 		i++;
 			// 	len = i - ws;
 			// 	if (len > 1)
-			// 		main.word = gc_strndup(main.line + ws, len);
+			// 		main.word = gc_strndup(main.line + ws, len, gc_list);
 			// 	else
 			// 		main.word = ft_strdup("$");
-			// 	error = create_token(&main.tokens, TOKEN_VAR, main.word);
+			// 	main.error = create_token(&main.tokens, TOKEN_VAR, main.word, gc_list);
 			// 	free(main.word);
-			// 	i--;
 			// }
 			else
 			{
@@ -344,7 +384,7 @@ int main(int argc, char **argv, char **envp)
 			// 	while (ft_isalnum(main.line[i]) || main.line[i] == '_')
 			// 		i++;
 			// }
-			if (error < 0)
+			if (main.error < 0)
 				return (perror("ERROR:\nTokenizing failed!\n"),all_free(&gc_list), -1);
 			// if (main.start == NULL)
 			// printf(RED"i = %d\n"DEFAULT, i);

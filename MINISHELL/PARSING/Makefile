@@ -23,8 +23,10 @@ LIBFT_DIR = libft
 
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SOURCES = MAIN.c \
-		UTILS.c \
+SOURCES = P_MAIN.c \
+		P_UTILS.c \
+		P_BUILTINS.c \
+		P_QUOTES.c \
 		GC/gc.c \
 		copy_envp.c
 
