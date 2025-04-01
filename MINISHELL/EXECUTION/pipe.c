@@ -6,8 +6,8 @@
 //use fpirintf! stderr isn't not for error otherwise for printing out without bufffering.
 void echo_Hello_pipe_cat_pipe_wc(t_shell *shell)
 {
-	char *args1[] = {"/usr/bin/cat", NULL};
-	char *args2[] = {"/usr/bin/wc", NULL};
+	char *args1[] = {"cat", NULL};
+	char *args2[] = {"wc", "-l", NULL};
 
 	int fd[2];
 	pid_t pid;
@@ -21,12 +21,13 @@ void echo_Hello_pipe_cat_pipe_wc(t_shell *shell)
 	{
 		close(fd[0]);
 		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), fd[0]);
-		dup2(fd[1], STDOUT_FILENO);
+		if (dup2(fd[1], STDOUT_FILENO) ==-1)
+			perror(RED"first cmd dup2 error\n"DEFAULT);
 		fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), fd[1], STDOUT_FILENO);
+		fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
 		close(fd[1]);
 		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), fd[1]);
-		//find echo excute echo
-		write(1, "hello\n", 6); 
+		write(1, "hello\n", 6);
 		fprintf(stderr, YELLOW"[pid %d] write(1, hello, 6)\n"DEFAULT, getpid());
 		exit(0);
 		fprintf(stderr, YELLOW "exited with 0\n" DEFAULT);
@@ -39,26 +40,31 @@ void echo_Hello_pipe_cat_pipe_wc(t_shell *shell)
 		// dup2(fd[0], STDIN_FILENO);
 		// close(fd[0]);
 	}
-	//waitpid(pid, &status, 0);
 
 	int fd1[2];
-	pipe(fd1);
+	if (pipe(fd1) == -1)
+		perror(RED"SEC PIPE ERROR\n"DEFAULT);
 	fprintf(stderr, YELLOW "pipe() [%d, %d]\n" DEFAULT, fd1[0], fd1[1]);
 	pid	= fork();
 	fprintf(stderr, YELLOW "fork() = %d\n" DEFAULT, pid);
 	if (pid == 0) //85644
 	{
-		dup2(fd[0], STDIN_FILENO);
+		if (dup2(fd[0], STDIN_FILENO) == -1)
+			perror(RED"SE dup2 ERROR\n"DEFAULT);
 		fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), fd[0], STDIN_FILENO);
+		fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
 		close(fd[0]);
 		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), fd[0]);
 		close(fd1[0]);
 		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), fd1[0]);
-		dup2(fd1[1], STDOUT_FILENO);
+		if (dup2(fd1[1], STDOUT_FILENO) == -1)
+			perror(RED"SE dup2 ERROR\n"DEFAULT);
 		fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), fd1[1], STDOUT_FILENO);
+		fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
 		close(fd1[1]);
 		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), fd1[1]);
-		execve("/usr/bin/cat", args1, shell->my_envp);
+		if(execve("/bin/cat", args1, shell->my_envp) == -1)
+			perror(RED"cat failed\n"DEFAULT);
 		fprintf(stderr, YELLOW "[pid %d], execve cat \n" DEFAULT, getpid());
 		exit(0);
 	}
@@ -69,7 +75,6 @@ void echo_Hello_pipe_cat_pipe_wc(t_shell *shell)
 		close(fd1[1]);
 		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), fd1[1]);
 	}
-	//waitpid(pid, status, 0);
 
 	pid = fork();
 	fprintf(stderr, YELLOW "fork() = %d\n" DEFAULT, pid);
@@ -77,16 +82,35 @@ void echo_Hello_pipe_cat_pipe_wc(t_shell *shell)
 	{
 		dup2(fd1[0], STDIN_FILENO);
 		fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), fd1[0], STDIN_FILENO);
+		fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
 		close(fd1[0]);
 		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), fd1[0]);
-		execve("/usr/bin/wc", args2 , shell->my_envp);
+		//write(1,"hello\n",6);
+		if (execve("/usr/bin/wc", args2 , shell->my_envp) ==-1)
+			perror(RED"WC ERROR\n"DEFAULT);
 		fprintf(stderr, YELLOW "[pid %d], execve wc \n" DEFAULT, getpid());
+		exit(0);
 	}
 	else
 	{
 		close(fd1[0]);
 		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), fd1[0]);
+		fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
 	}
 	//to check 
-	while (waitpid(-1, NULL, WNOHANG) > 0);
+	while ((pid = wait(&status)) > 0) 
+	{
+		fprintf(stderr, "Process %d exited with status %d\n", pid, WEXITSTATUS(status));
+	}
 }
+
+/*
+	1.파이프가 여러개일경우
+	if(첫번째 노드인경우, 앞에 아무것도 없고 뒤에 머가있는경우)
+		if (dup2(fd[1], STDOUT_FILENO) ==-1)
+			perror(RED"first cmd dup2 error\n"DEFAULT);
+	if(마지막 노드인 경우, 앞에 뭐가있고,? 뒤에 머가 없는경우)
+		dup2(fd1[0], STDIN_FILENO);
+		fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), fd1[0], STDIN_FILENO);
+
+*/
