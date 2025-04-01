@@ -6,62 +6,55 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 11:35:34 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/01 09:58:48 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/01 15:58:44 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-int	quotes(t_main *main, int ws, int i, t_gc_list *gc_list)
+int quotes(t_main *main, int *i, t_gc_list *gc_list)
 {
-	printf(RED"ws = %d\n"DEFAULT, ws);
-	printf(BLUE"i = %d\n"DEFAULT, i);
-	ws = i + 1;
-	printf(RED"ws2 = %d\n"DEFAULT, ws);
+    int ws;
 
-	i++;
-	while (1)
-	{
-		while (main->line[i] && main->line[i] != '\'') //0x5
-			i++;
-		if (main->line[i] == '\'')
-		{
-			main->word = gc_strndup(main->line + ws, i - ws, gc_list);  //0x0001 + >> main->word = 0x0002 . 0x00005 + ws
-			if (!main->word)
-				return (perror("ERROR\nAllocating main->word failed!\n"), all_free(&gc_list), -1);
-			if (is_built_in(main) == 1)
-				main->error = create_token(&main->tokens, TOKEN_BUILT_IN, main->word, gc_list);
-			else
-			// if ((ft_strncmp(main->word, "cd", 2) == 0 && main->word[2] == '\0')\
-			// || (ft_strncmp(main->word, "echo", 4) == 0 && main->word[4] == '\0') \
-			// || (ft_strncmp(main->word, "export", 6) == 0 && main->word[6] == '\0') \
-			// || (ft_strncmp(main->word, "unset", 5) == 0 && main->word[5] == '\0') \
-			// || (ft_strncmp(main->word, "env", 3) == 0 && main->word[3] == '\0') \
-			// || (ft_strncmp(main->word, "pwd", 3) == 0 && main->word[3] == '\0') \
-			// || (ft_strncmp(main->word, "exit", 4) == 0 && main->word[4] == '\0') )
-			// 	main->error = create_token(&main->tokens, TOKEN_BUILT_IN, main->word, gc_list);
-			// else
-				main->error = create_token(&main->tokens, TOKEN_WORD, main->word, gc_list);
-			if (main->error < 0)
-				return (perror("ERROR\nToken creation failed!\n"), all_free(&gc_list), -1);
-			i++;
-			t_gc_list *todelte = find_node(gc_list, main->word);
-			// printf(RED"main->word : %p\n"DEFAULT, main->word);
-			delete_node(&gc_list, todelte);
-			write(1, "passes\n", 7);
-			break ;
-			write(1, "break\n", 6);
-			// printf(RED"enter\n"DEFAULT);
-		}
-		main->next_line = readline("> ");
-		if (!main->next_line)
-			return (perror("ERROR\nFailed!\n"), all_free(&gc_list), -1);
-		main->line = gc_strjoin(main->line, main->next_line, gc_list);  //0x0001 ,0x0002 >> main->line 0x0005
-		if (main->next_line)
-		{
-			free(main->next_line);
-			main->next_line = NULL;
-		}
-	}
-	return (0);
+    ws = *i + 1; // Start after the opening quote
+    (*i)++;      // Move past the opening quote
+
+    while (main->line[*i]) // Loop through the input line
+    {
+        while (main->line[*i] && main->line[*i] != '\'') // Find closing quote
+        {
+            (*i)++;
+        }
+        if (main->line[*i] == '\'') // If closing quote is found
+        {
+            // Extract the word between quotes
+            main->word = gc_strndup(main->line + ws, *i - ws, gc_list);
+            if (!main->word)
+                return (-1);
+            // Create token for the extracted word
+            if (is_built_in(main) == 1)
+                main->error = create_token(&main->tokens, TOKEN_BUILT_IN, main->word, gc_list);
+            else
+                main->error = create_token(&main->tokens, TOKEN_WORD, main->word, gc_list);
+            if (main->error < 0)
+                return (-1);
+            (*i)++; // Move past the closing quote
+            return 0; // Successfully processed one quoted segment
+        }
+        // else
+        // {
+		// 	main->next_line = readline("> ");
+		// 	if (!main->next_line)
+		// 		return (-1);
+		// 	main->line = gc_strjoin(main->line, main->next_line, gc_list);
+		// 	if (main->next_line)
+		// 	{
+		// 		free(main->next_line);
+		// 		main->next_line = NULL;
+		// 	}
+        // }
+    }
+
+    return 0; // Return success if no errors occurred
 }
+

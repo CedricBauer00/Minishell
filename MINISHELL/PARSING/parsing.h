@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/01 10:45:29 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/01 15:17:29 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,13 @@ int     valid_char(int c);
 char	**copy_envp(t_gc_list *gc_lst, char **envp);
 int	    get_envp_count(char **envp);
 
+
+// ----------------------------------------------------------------------
+// 							  BUILT-INS
+// ----------------------------------------------------------------------
+
+void    words(t_main *main, int i, int ws, t_gc_list *gc_list, int len);
+
 // ----------------------------------------------------------------------
 // 							  BUILT-INS
 // ----------------------------------------------------------------------
@@ -127,7 +134,7 @@ int	is_built_in(t_main *main);
 // 							SINGLE_QUOTES
 // ----------------------------------------------------------------------
 
-int	quotes(t_main *main, int ws, int i, t_gc_list *gc_list);
+int	quotes(t_main *main,int *i, t_gc_list *gc_list);
 
 // ----------------------------------------------------------------------
 // 							DOUBLE_QUOTES
@@ -163,10 +170,16 @@ int	append(t_main *main, int i, t_gc_list *gc_list);
 // 							 HEREDOC
 // ----------------------------------------------------------------------
 
+int	heredoc(t_main *main, int i, t_gc_list *gc_list);
+
 // ----------------------------------------------------------------------
 // 							EXPAND
 // ----------------------------------------------------------------------
-// copy_envp.c  -- ok!
+
+void	variables(t_main *main, int i, int ws, int len, t_gc_list *gc_list);
+
+
+// copy_envp.c  -- ok! 
 // char    **copy_envp(t_gc_list *gc_lst, char **envp);
 // int     get_envp_count(char **envp);
 //built_in

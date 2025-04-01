@@ -24,6 +24,7 @@ LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
 SOURCES = P_MAIN.c \
+		P_WORDS.c \
 		P_UTILS.c \
 		P_BUILTINS.c \
 		P_QUOTES.c \
@@ -31,6 +32,8 @@ SOURCES = P_MAIN.c \
 		P_PIPE.c \
 		P_REDIRECTS.c \
 		P_APPEND.c \
+		P_HEREDOC.c \
+		P_VAR.c \
 		GC/gc.c \
 		copy_envp.c
 
