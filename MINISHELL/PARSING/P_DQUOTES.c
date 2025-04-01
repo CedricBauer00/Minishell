@@ -1,67 +1,62 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   P_QUOTES.c                                         :+:      :+:    :+:   */
+/*   P_DQUOTES.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/31 11:35:34 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/01 09:58:48 by cbauer           ###   ########.fr       */
+/*   Created: 2025/04/01 09:42:44 by cbauer            #+#    #+#             */
+/*   Updated: 2025/04/01 09:55:45 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-int	quotes(t_main *main, int ws, int i, t_gc_list *gc_list)
+int	dquotes(t_main *main, int ws, int i, t_gc_list *gc_list)
 {
-	printf(RED"ws = %d\n"DEFAULT, ws);
-	printf(BLUE"i = %d\n"DEFAULT, i);
 	ws = i + 1;
-	printf(RED"ws2 = %d\n"DEFAULT, ws);
-
 	i++;
 	while (1)
 	{
-		while (main->line[i] && main->line[i] != '\'') //0x5
+		while (main->line[i] && main->line[i] != '"')
 			i++;
-		if (main->line[i] == '\'')
+		if (main->line[i] == '"')
 		{
-			main->word = gc_strndup(main->line + ws, i - ws, gc_list);  //0x0001 + >> main->word = 0x0002 . 0x00005 + ws
+			main->word = gc_strndup(main->line + ws, i - ws, gc_list);
 			if (!main->word)
+			{
 				return (perror("ERROR\nAllocating main->word failed!\n"), all_free(&gc_list), -1);
+				exit(1);
+			}
 			if (is_built_in(main) == 1)
 				main->error = create_token(&main->tokens, TOKEN_BUILT_IN, main->word, gc_list);
 			else
-			// if ((ft_strncmp(main->word, "cd", 2) == 0 && main->word[2] == '\0')\
-			// || (ft_strncmp(main->word, "echo", 4) == 0 && main->word[4] == '\0') \
-			// || (ft_strncmp(main->word, "export", 6) == 0 && main->word[6] == '\0') \
-			// || (ft_strncmp(main->word, "unset", 5) == 0 && main->word[5] == '\0') \
-			// || (ft_strncmp(main->word, "env", 3) == 0 && main->word[3] == '\0') \
-			// || (ft_strncmp(main->word, "pwd", 3) == 0 && main->word[3] == '\0') \
-			// || (ft_strncmp(main->word, "exit", 4) == 0 && main->word[4] == '\0') )
-			// 	main->error = create_token(&main->tokens, TOKEN_BUILT_IN, main->word, gc_list);
-			// else
 				main->error = create_token(&main->tokens, TOKEN_WORD, main->word, gc_list);
 			if (main->error < 0)
+			{
 				return (perror("ERROR\nToken creation failed!\n"), all_free(&gc_list), -1);
+				exit(1);
+			}
 			i++;
 			t_gc_list *todelte = find_node(gc_list, main->word);
 			// printf(RED"main->word : %p\n"DEFAULT, main->word);
 			delete_node(&gc_list, todelte);
-			write(1, "passes\n", 7);
 			break ;
-			write(1, "break\n", 6);
 			// printf(RED"enter\n"DEFAULT);
 		}
 		main->next_line = readline("> ");
 		if (!main->next_line)
 			return (perror("ERROR\nFailed!\n"), all_free(&gc_list), -1);
-		main->line = gc_strjoin(main->line, main->next_line, gc_list);  //0x0001 ,0x0002 >> main->line 0x0005
-		if (main->next_line)
+		
+		main->new = gc_strjoin(main->line, main->next_line, gc_list);
+		if (!main->new)
 		{
 			free(main->next_line);
-			main->next_line = NULL;
+			return (perror("ERROR\nAllocating main->new failed!\n"), all_free(&gc_list), -1);
 		}
+		main->line = gc_strjoin(main->line, main->next_line, gc_list);
+		free(main->next_line);
+		main->next_line = NULL;
 	}
 	return (0);
 }
