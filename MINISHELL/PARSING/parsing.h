@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/01 15:17:29 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/01 17:05:19 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,10 +119,10 @@ int	    get_envp_count(char **envp);
 
 
 // ----------------------------------------------------------------------
-// 							  BUILT-INS
+// 							    WORDS
 // ----------------------------------------------------------------------
 
-void    words(t_main *main, int i, int ws, t_gc_list *gc_list, int len);
+void	words(t_main *main, int *i, int ws, t_gc_list *gc_list);
 
 // ----------------------------------------------------------------------
 // 							  BUILT-INS
@@ -140,10 +140,10 @@ int	quotes(t_main *main,int *i, t_gc_list *gc_list);
 // 							DOUBLE_QUOTES
 // ----------------------------------------------------------------------
 
-int	dquotes(t_main *main, int ws, int i, t_gc_list *gc_list);
+int dquotes(t_main *main, int *i, t_gc_list *gc_list);
 
 // ----------------------------------------------------------------------
-// 							DOUBLE_QUOTES
+// 							  PIPES
 // ----------------------------------------------------------------------
 
 int	pipes(t_main *main, t_gc_list *gc_list, int i);
