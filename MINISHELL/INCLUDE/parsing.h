@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/03/28 12:21:10 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/02 11:42:54 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,13 @@ typedef struct s_cmd
     struct s_cmd    *next;   //"ls -l"
 }t_cmd;
 
+typedef struct s_shell
+{
+	char	**my_envp;
+	char	*cur_dir;
+	char	*old_dir;
+	int		last_status_exit;
+}	t_shell;
 // like this
 // t_token *first;
 // first = malloc(sizeof(t_token));
