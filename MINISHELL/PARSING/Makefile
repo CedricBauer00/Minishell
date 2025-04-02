@@ -34,6 +34,7 @@ SOURCES = P_MAIN.c \
 		P_APPEND.c \
 		P_HEREDOC.c \
 		P_VAR.c \
+		P_EXPAND.c \
 		GC/gc.c \
 		copy_envp.c
 

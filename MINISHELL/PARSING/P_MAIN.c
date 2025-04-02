@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/02 10:19:49 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/02 11:39:16 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ int	create_token(t_token **tokens, t_token_type type, char *str, t_gc_list *gc_l
 	new_token = (t_token *)do_alloc(gc_list, sizeof(t_token),TYPE_SINGLE_PTR);
 	if (!new_token)
 		return (perror("ERROR\nMalloc failed!\n"), -1);
-	// printf(GREEN"new_token :%p\n"DEFAULT, new_token);
 	new_token->type = type;
 	new_token->value = gc_strdup(str, gc_list);
 	if (!new_token->value)
@@ -83,9 +82,7 @@ int	create_token(t_token **tokens, t_token_type type, char *str, t_gc_list *gc_l
 		free(new_token);
 		return (perror("ERROR\nMalloc for new_token->value failed!\n"), -1);
 	}
-	// printf(GREEN"new_token->value :%p\n"DEFAULT, new_token->value);
 	new_token->next = NULL;
-	//printf("Created Token: Type = %d, Value = %s\n", type, new_token->value);
 	return (append_token(tokens, new_token));
 }
 
@@ -212,16 +209,7 @@ int main(int argc, char **argv, char **envp)
 			else if (main.line[i] == '$')
 				// variables(&main, i, ws, len, gc_list);
 			{
-				ws = i++;
-				while (main.line[i] && (valid_char(main.line[i]) || main.line[i] == '_'))
-					i++;
-				len = i - ws;
-				if (len > 1)
-					main.word = gc_strndup(main.line + ws, len, gc_list);
-				else
-					main.word = ft_strdup("$");
-				main.error = create_token(&main.tokens, TOKEN_VAR, main.word, gc_list);
-				free(main.word);
+				expands(&main, &i, gc_list);
 			}
 			else
 			{

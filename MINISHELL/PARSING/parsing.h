@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/01 17:05:19 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/02 11:15:47 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,8 @@ int	heredoc(t_main *main, int i, t_gc_list *gc_list);
 // 							EXPAND
 // ----------------------------------------------------------------------
 
+int is_valid_char(char c);
+void	expands(t_main *main, int *i, t_gc_list *gc_list);
 void	variables(t_main *main, int i, int ws, int len, t_gc_list *gc_list);
 
 
