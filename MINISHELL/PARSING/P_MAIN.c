@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/02 11:39:16 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/02 14:29:19 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,16 +129,19 @@ int main(int argc, char **argv, char **envp)
 	int	ws;
 	int	len;
 	t_main main;
+	t_shell *shell;
 	t_gc_list *gc_list;
+	set_default(&main);
 	gc_list = init_gc_list();
 	main.envp = copy_envp(gc_list, envp);
 
+	shell = get_shell(gc_list);
 	i = 0;
 	ws = 0;
 	len = 0;
-	set_default(&main);
 	while (1)
 	{
+	
 		main.temp_for_line = readline(YELLOW"minishell> "DEFAULT);
 		main.line = do_alloc(gc_list,ft_strlen(main.temp_for_line) + 1, TYPE_SINGLE_PTR);
 		strcpy(main.line, main.temp_for_line);
@@ -165,8 +168,10 @@ int main(int argc, char **argv, char **envp)
 			exit(0);
 		}
 		add_history(main.line);
+	
 		while (main.line[i])
 		{
+			
 			while (main.line[i] && ft_isspace(main.line[i]))
 				i++;
 			if (main.line[i] == '|')
@@ -207,9 +212,9 @@ int main(int argc, char **argv, char **envp)
 			else if (ft_isalnum(main.line[i]) || main.line[i] == '_')
 				words(&main, &i, ws, gc_list);
 			else if (main.line[i] == '$')
-				// variables(&main, i, ws, len, gc_list);
 			{
-				expands(&main, &i, gc_list);
+				if (expands(&main, &i, gc_list) < 0)
+					return (perror("ERROR\nExpand failed!\n"), -1);
 			}
 			else
 			{

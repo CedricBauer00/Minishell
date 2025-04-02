@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 09:42:44 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/01 16:47:57 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/02 14:46:21 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ int dquotes(t_main *main, int *i, t_gc_list *gc_list)
             // Create token for the extracted word
             if (is_built_in(main) == 1)
                 main->error = create_token(&main->tokens, TOKEN_BUILT_IN, main->word, gc_list);
+            else if (expands(main, i, gc_list) < 0)
+                return (perror("ERROR\nExpand failed!\n"), -1);
             else
                 main->error = create_token(&main->tokens, TOKEN_WORD, main->word, gc_list);
             if (main->error < 0)
