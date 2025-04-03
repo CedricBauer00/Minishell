@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/02 14:28:35 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/03 10:21:37 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,6 +191,11 @@ void	variables(t_main *main, int i, int ws, int len, t_gc_list *gc_list);
 
 t_shell	*init_shell_info(t_gc_list *gc_list);
 t_shell *get_shell(t_gc_list *gc_list);
+
+
+
+// -------printing-------
+void print_tokens(t_token *tokens);
 
 // copy_envp.c  -- ok! 
 // char    **copy_envp(t_gc_list *gc_lst, char **envp);

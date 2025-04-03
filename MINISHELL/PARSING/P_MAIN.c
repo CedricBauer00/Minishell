@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/02 14:29:19 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/03 10:21:01 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,34 +86,7 @@ int	create_token(t_token **tokens, t_token_type type, char *str, t_gc_list *gc_l
 	return (append_token(tokens, new_token));
 }
 
-void print_tokens(t_token *tokens)
-{
-	printf("\n---- Token List ----\n");
-	while (tokens)
-	{
-		if (tokens->type == 0)
-			printf("Token Type: %s, Value: %s\n", "word", tokens->value);
-		else if (tokens->type == 4)
-			printf("Token Type: %s, Value: %s\n", "Built-in", tokens->value);
-		else if (tokens->type == 5)
-			printf("Token Type: %s, Value: %s\n", "pipe", tokens->value);
-		else if (tokens->type == 6)
-			printf("Token Type: %s, Value: %s\n", "redirect_in", tokens->value);
-		else if (tokens->type == 7)
-			printf("Token Type: %s, Value: %s\n", "redirect_out", tokens->value);
-		else if (tokens->type == 8)
-			printf("Token Type: %s, Value: %s\n", "append", tokens->value);
-		else if (tokens->type == 9)
-			printf("Token Type: %s, Value: %s\n", "heredoc", tokens->value);
-		else if (tokens->type == 10)
-			printf("Token Type: %s, Value: %s\n", "VAR", tokens->value);
-		else
-			printf("Token Type: UNKNOWN (%d), Value: %s\n", tokens->type, tokens->value);
-		// printf("Token Type: %d, Value: %s\n", tokens->type, tokens->value);
-		tokens = tokens->next;
-	}
-	printf("--------------------\n");
-}
+
 
 // void checkleak(void)
 // {
