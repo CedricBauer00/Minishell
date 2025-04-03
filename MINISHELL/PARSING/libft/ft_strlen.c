@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 11:15:31 by cbauer            #+#    #+#             */
-/*   Updated: 2024/11/06 10:11:47 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/03 15:11:57 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ size_t	ft_strlen(const char *str)
 	int	counter;
 
 	counter = 0;
+	if (!str)
+		return (0);
 	while (str[counter] != '\0')
 		counter++;
 	return (counter);

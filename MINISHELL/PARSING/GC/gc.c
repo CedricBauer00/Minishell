@@ -16,7 +16,7 @@ t_gc_list	*init_gc_list(void)
 
 void	*do_alloc(t_gc_list *gc_lst, size_t howmuch, t_data_type data_type)
 {
-	if (!gc_lst)
+	if (!gc_lst || howmuch < 0)
 		return NULL;
 	t_gc_list	*new_node = malloc(sizeof(t_gc_list));
 	if (!new_node)
@@ -124,7 +124,7 @@ void	all_free(t_gc_list **gc_lst)
         next = cur->next;
         if (cur->data)
 		{
-			printf("all_free(); %p is free, type is %d, data: %s\n", cur->data , cur->type, (char*)cur->data);
+			//printf("all_free(); %p is free, type is %d, data: %s\n", cur->data , cur->type, (char*)cur->data);
             free_data_type(cur->data, cur->type);
 			cur->data = NULL;
 		}

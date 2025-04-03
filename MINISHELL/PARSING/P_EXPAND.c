@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 09:58:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/02 14:42:47 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/03 15:19:33 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@ int is_valid_char(char c)
 
 int	expands(t_main *main, int *i, t_gc_list *gc_list)
 {
+	write(1, "expand\n", 7);
+	printf("line = %s\n", main->line);
+	t_shell *shell = get_shell(gc_list);
 	int		ws;
 	int		j;
 	char	*var;
@@ -30,21 +33,33 @@ int	expands(t_main *main, int *i, t_gc_list *gc_list)
 	var = NULL;
 	value = NULL; //wenn value später immernoch NULL ist wurde sie nicht gefunden
 	(*i)++;
+	printf("*i = %d , char = %c\n", *i, main->line[*i]);
+	// if (indic == 1)
+	// 	(*i)++;
+	// printf("char = %c\n", main->line[*i]);
 	//edge case für nur $ input
 	// if (main->line[*i] == '?' || main->line[*i] == '$') this case needs handling ????
 	if (main->line[*i] && main->line[*i] == '?')
 	{
-		value = ft_itoa(main->last_status_exit);
+		write(1, "here1\n", 6);
+		value = ft_itoa(shell->last_status_exit);
 		if (!value)
 			return (-1);
+		main->error = create_token(&main->tokens, TOKEN_WORD, value, gc_list);
 		(*i)++;
+		if (value)
+			free(value);
 	}
 	else if (main->line[*i] && main->line[*i] == '$')
 	{
+		write(1, "here2\n", 6);
 		value = ft_itoa(getpid());
 		if (!value)
 			return (-1);
+		main->error = create_token(&main->tokens, TOKEN_WORD, value, gc_list);
 		(*i)++;
+		if (value)
+			free(value);
 	}
 	else
 	{
@@ -52,7 +67,8 @@ int	expands(t_main *main, int *i, t_gc_list *gc_list)
 			(*i)++;
 		if ((*i) - ws - 1 <= 0)
 		{
-			create_token(&main->tokens, TOKEN_WORD, "$", gc_list);
+			write(1, "this is here!\n", 14);
+			main->error = create_token(&main->tokens, TOKEN_WORD, "$", gc_list);
 			if (value)
 				free(value);
 			return (0);
@@ -86,7 +102,8 @@ int	expands(t_main *main, int *i, t_gc_list *gc_list)
 			value = ft_strdup("");
 		if (value)
 		{
-			create_token(&main->tokens, TOKEN_VAR, value, gc_list);
+			write(1, "is var\n", 7);
+			main->error = create_token(&main->tokens, TOKEN_VAR, value, gc_list);
 			free(value);
 		}
 		if (var)

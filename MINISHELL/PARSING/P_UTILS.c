@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 17:53:21 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/31 15:08:59 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/03 15:06:23 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,3 +100,4 @@ char	*gc_strjoin(char const *s1, char const *s2, t_gc_list *gc_list)
 	newstr[counter] = '\0';
 	return (newstr);
 }
+

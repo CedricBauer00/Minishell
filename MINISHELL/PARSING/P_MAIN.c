@@ -6,13 +6,11 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/03 10:21:01 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/03 16:16:48 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "../include/parsing.h" //change -- libft in INCLUDE && parsing.h
 #include "parsing.h"
-
 
 void	set_default(t_main *main)
 {
@@ -47,22 +45,17 @@ int	append_token(t_token **tokens, t_token *new_token)
 	if (!new_token)
 	{
 		free(new_token);
-		return (-1);// if new token is null //wie schreibe ich für diesen Fall eine freeing function?
+		return (-1);
 	}
-	if (!*tokens)//if List os empty - set first token
+	if (!*tokens)
 	{
 		*tokens = new_token;
 		return (0);
 	}
-	// else append new token to list
 	current = *tokens;
 	while (current->next)
-		current = current->next;//get last element of list
-	// if (current)
-	// 	printf("type = %d\n", current->type);
-	// else
-	// 	printf("Error: current is NULL\n");
-	current->next = new_token;//appending to last next pinter
+		current = current->next;
+	current->next = new_token;
 	return (0);
 }
 
@@ -85,9 +78,6 @@ int	create_token(t_token **tokens, t_token_type type, char *str, t_gc_list *gc_l
 	new_token->next = NULL;
 	return (append_token(tokens, new_token));
 }
-
-
-
 // void checkleak(void)
 // {
 // 	system(RED"leask "DEFAULT);
@@ -104,26 +94,25 @@ int main(int argc, char **argv, char **envp)
 	t_main main;
 	t_shell *shell;
 	t_gc_list *gc_list;
+	
 	set_default(&main);
 	gc_list = init_gc_list();
 	main.envp = copy_envp(gc_list, envp);
-
 	shell = get_shell(gc_list);
 	i = 0;
 	ws = 0;
 	len = 0;
 	while (1)
 	{
-	
 		main.temp_for_line = readline(YELLOW"minishell> "DEFAULT);
-		main.line = do_alloc(gc_list,ft_strlen(main.temp_for_line) + 1, TYPE_SINGLE_PTR);
-		strcpy(main.line, main.temp_for_line);
-		// printf(YELLOW"main.line %s ,%p , main.temp_for_line %p\n"DEFAULT, main.line, main.line,main.temp_for_line);
+		if(!main.temp_for_line)
+			break;
+		main.line = do_alloc(gc_list,ft_strlen(main.temp_for_line) +1, TYPE_SINGLE_PTR);
+		ft_strlcpy(main.line, main.temp_for_line,ft_strlen(main.line));
 		free(main.temp_for_line);
 		i = 0;
-		if (!main.line) //error
+		if (!main.line)
 		{
-			// printf(RED"exit\n"DEFAULT);
 			if (gc_list)
 				all_free(&gc_list);
 			exit(1);
@@ -132,16 +121,11 @@ int main(int argc, char **argv, char **envp)
 			fprintf(stderr, RED"is already free %p\n"DEFAULT, main.line);
 		if (ft_strncmp(main.line, "", 1) == 0)
 		{
-			// printf(RED"enter %p\n"DEFAULT, main.line);
 			if (gc_list)
-			{
 				all_free(&gc_list);
-				// printf(RED"already\n"DEFAULT);
-			}
 			exit(0);
 		}
 		add_history(main.line);
-	
 		while (main.line[i])
 		{
 			
@@ -165,7 +149,7 @@ int main(int argc, char **argv, char **envp)
 				i = redirect_in(&main, i, gc_list);
 			else if (main.line[i] == '>')
 				i = redirect_out(&main, i, gc_list);
-			else if (main.line[i] == '\'') //main.error 
+			else if (main.line[i] == '\'')
 			{	
 				if (quotes(&main,&i, gc_list) < 0)
 					return (perror("ERROR\nQuotes failed!\n"), all_free(&gc_list), -1);
@@ -173,7 +157,7 @@ int main(int argc, char **argv, char **envp)
 			else if (main.line[i] == '"')
 			{
 				if (dquotes(&main,&i, gc_list) < 0)
-					return (perror("ERROR\nQuotes failed!\n"), all_free(&gc_list), -1);
+					return (fprintf(stderr, BLUE"ERROR\nQuotes failed!\n"DEFAULT), all_free(&gc_list), -1);
 			}
 			else if (main.line[i] && main.line[i + 1] && main.line[i + 2] &&
 				ft_strncmp(main.line + i, "EOF", 3) == 0 && !ft_isalnum(main.line[i + 3]))
@@ -190,26 +174,13 @@ int main(int argc, char **argv, char **envp)
 					return (perror("ERROR\nExpand failed!\n"), -1);
 			}
 			else
-			{
 				printf("Warning: Unrecognized character '%c' at position %d\n", main.line[i], i);
-			}
-		
 			if (main.error < 0)
 				return (perror("ERROR:\nTokenizing failed!\n"),all_free(&gc_list), -1);
-			// if (main.start == NULL)
-			// printf(RED"i = %d\n"DEFAULT, i);
-			//i++;
 		}
 		print_tokens(main.tokens);
-		//todo : delete later temp data and node
 	}
-	// printf(BLUE"while loop out\n"DEFAULT);
 	if (gc_list)
 		all_free(&gc_list);
 	write(1, "\n", 1);
 }
-
-//single quotes fertig implementatiion
-//double quotes fix
-//built in commands with now copied envp
-// ... so far
