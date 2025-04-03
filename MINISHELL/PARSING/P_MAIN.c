@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/03 16:16:48 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/03 17:20:23 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ int main(int argc, char **argv, char **envp)
 			else if (main.line[i] == '\'')
 			{	
 				if (quotes(&main,&i, gc_list) < 0)
-					return (perror("ERROR\nQuotes failed!\n"), all_free(&gc_list), -1);
+					return (printf("ERROR\nQuotes failed!\n"), all_free(&gc_list), -1);
 			}
 			else if (main.line[i] == '"')
 			{

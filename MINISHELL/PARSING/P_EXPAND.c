@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 09:58:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/03 15:19:33 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/03 17:02:07 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,6 @@ int	expands(t_main *main, int *i, t_gc_list *gc_list)
 	var = NULL;
 	value = NULL; //wenn value später immernoch NULL ist wurde sie nicht gefunden
 	(*i)++;
-	printf("*i = %d , char = %c\n", *i, main->line[*i]);
-	// if (indic == 1)
-	// 	(*i)++;
-	// printf("char = %c\n", main->line[*i]);
-	//edge case für nur $ input
-	// if (main->line[*i] == '?' || main->line[*i] == '$') this case needs handling ????
 	if (main->line[*i] && main->line[*i] == '?')
 	{
 		write(1, "here1\n", 6);
@@ -84,7 +78,6 @@ int	expands(t_main *main, int *i, t_gc_list *gc_list)
 		while (main->envp[j])
 		{
 			len = ft_strlen(var);
-			// ft_strlen(main->envp[j]) > len
 			if (ft_strncmp(main->envp[j], var, len) == 0 \
 				&& main->envp[j][len] == '=')
 			{
