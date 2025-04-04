@@ -105,11 +105,8 @@
 //이리스트를 어떻게 release 할까?
 //릴리즈 할시 가비지 컬렉터에서 헤드의 주소를 찾고 릴리즈~!
 /*
-	//todo 
 	need to //test!
-	add_pipe를 언제 호출해야하는지 생각해보기,
-	need to think when should i call first_pipe, middle_pipe, and last_pipe...
-
+	add_pipe를 언제 호출해야하는지 생각해보기 -> in exe function.
 */
 
 void	add_pipe(t_token **token, t_gc_list *gc_lst)

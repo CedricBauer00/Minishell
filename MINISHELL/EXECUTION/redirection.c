@@ -21,6 +21,7 @@
 	
 	
 */
+ // todo need to change if 
 int	re_dir_in(t_token *token)
 {
 	t_token *cur;
@@ -65,6 +66,11 @@ int	re_dir_in(t_token *token)
 	}
 */
 
+/*
+	< filename cmd 
+	cmd < filename
+*/
+//todo need to change if 
 int	re_dir_out(t_token *token)
 {
 	t_token *cur;
@@ -73,7 +79,7 @@ int	re_dir_out(t_token *token)
 	cur = token;
 	if(cur->type == TOKEN_REDIRECT_OUT)
 	{
-		fd = open(cur->next->value, O_WRONLY | O_CREAT, 0644);
+		fd = open(cur->next->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd == -1)
 		{
 			perror(RED"re_dir_in faield\n"DEFAULT);
