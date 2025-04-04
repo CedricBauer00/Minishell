@@ -108,6 +108,8 @@
 	//todo 
 	need to //test!
 	add_pipe를 언제 호출해야하는지 생각해보기,
+	need to think when should i call first_pipe, middle_pipe, and last_pipe...
+
 */
 void	add_pipe(t_token **token, t_gc_list *gc_lst)
 {
@@ -150,7 +152,7 @@ int	create_pipe(t_token **token, t_gc_list *gc_lst)
 	cur = *token;
 	while(cur)
 	{
-		if (cur->next && cur->type == TOKEN_CMD && cur->next->type == TOKEN_PIPE)//todo fix if condition
+		if (cur->next && cur->next->type == TOKEN_PIPE)//todo fix if condition
 		{
 			add_pipe(cur, gc_lst);
 			printf(YELLOW"created pipe_fd: read_end=%d, write_end=%d\n"DEFAULT,
@@ -162,11 +164,59 @@ int	create_pipe(t_token **token, t_gc_list *gc_lst)
 	return (pipe_count);
 }
 
-int	setup_first_pipe(t_token *token)
+bool	is_first_pipe(t_token *token)
+{
+	t_token *cur = token;
+	while (cur != cur->pipe_head)
+	{
+		if (cur->prev && cur->prev->type == TOKEN_PIPE)
+		{
+			return false;
+		}
+		cur = cur->prev;
+	}
+	return true;
+}
+
+bool	is_last_pipe(t_token *token)
+{
+	t_token *cur = token;
+	while(cur != cur->pipe_tail)
+	{
+		if(cur->next && cur->next->type == TOKEN_PIPE)
+		{
+			return false;
+		}
+		cur = cur->next;
+	}
+	return true;
+}
+
+bool	is_middle_pipe(t_token *token)
+{
+	return(!token->is_first_pipe && !token->is_last_pipe);
+}
+
+void	setup_pipe_flags(t_token *token)
+{
+	t_token *cur;
+
+	cur = token;
+	while(cur)
+	{
+		cur->is_first_pipe = is_first_pipe(cur);
+		cur->is_last_pipe = is_last_pipe(cur);
+		cur->is_middle_pipe = is_middle_pipe(cur);
+		cur = cur->next;
+	}
+}
+
+int	first_pipe_cmd(t_token *token)
 {
 	pid_t	pid;
 
 	pid = fork();
+
 	if (pid == 0)
 	{
 		close(token->pipe_head->pipefd[0]);
@@ -178,7 +228,6 @@ int	setup_first_pipe(t_token *token)
 		close( token->pipe_head->pipefd[1]);
 		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(),  token->pipe_head->pipefd[1]);
 		//todo execve();
-		write(1,"hello\n",6);
 		exit(0);
 		fprintf(stderr, YELLOW "exited with 0\n" DEFAULT);
 	}
@@ -191,12 +240,13 @@ int	setup_first_pipe(t_token *token)
 	return (1);
 }
 
-int	handle_middle_pipe(t_token *token, t_shell *shell)
+//memo if its multiple pipe lines...
+int	middle_pipe_cmd(t_token *token, t_shell *shell)
 {
 	pid_t	pid;
-	char *args[] = {"/bin/cat", NULL}; //test
 
 	pid = fork();
+	//todo if cur && cur ->next ->type  == TOKENTYPEPIPE && cur->next->next
 	if (pid == 0)
 	{
 		if (dup2(token->pipe_head->prev_read_end_fd , STDIN_FILENO) == -1)
@@ -229,11 +279,10 @@ int	handle_middle_pipe(t_token *token, t_shell *shell)
 	return 1;
 }
 
-int	setup_last_pipe(t_token *token, t_shell *shell)
+int	last_pipe_cmd(t_token *token, t_shell *shell)
 {
 	pid_t	pid;
 
-	char *args[] = {"/usr/bin/wc", NULL}; //test
 	pid = fork();
 	fprintf(stderr, YELLOW "fork() = %d\n" DEFAULT, pid);
 	if (pid == 0) //todo fix if condition
