@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/03 17:20:23 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/04 11:38:38 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,7 @@ int main(int argc, char **argv, char **envp)
 			else if (main.line[i] == '<' && main.line[i + 1] == '<') //fix
 			{
 				i = heredoc(&main , i, gc_list);
+				printf("i = %d\n", i);
 				if (i < 0)
 					return(perror("ERROR\nHeredoc failed!\n"), all_free(&gc_list), -1);
 			}
