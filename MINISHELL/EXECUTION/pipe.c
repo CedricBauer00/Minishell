@@ -111,6 +111,7 @@
 	need to think when should i call first_pipe, middle_pipe, and last_pipe...
 
 */
+
 void	add_pipe(t_token **token, t_gc_list *gc_lst)
 {
 	t_pipe *new_pipe_node;
@@ -127,7 +128,7 @@ void	add_pipe(t_token **token, t_gc_list *gc_lst)
         exit(EXIT_FAILURE);
     }
 	if (!(*token)->pipe_head && !(*token)->pipe_tail)
-		init_pipe_list(); //todo Ich muss darüber nachdenken, wo ich die Funktion einsetzen soll.
+		init_pipe_list(); //todo Ich muss darüber nachdenken, wo ich die Funktion einsetzen soll. 
 	if ((*token)->pipe_head->next == NULL)
 	{
 		(*token)->pipe_head->next = new_pipe_node;
@@ -143,72 +144,56 @@ void	add_pipe(t_token **token, t_gc_list *gc_lst)
 	}
 }
 
-int	create_pipe(t_token **token, t_gc_list *gc_lst)
-{
-	t_token *cur;
-	int		pipe_count;
+// int	create_pipe(t_token **token, t_gc_list *gc_lst)
+// {
+// 	t_token *cur;
+// 	int		pipe_count;
 
-	pipe_count = 0;
-	cur = *token;
-	while(cur)
-	{
-		if (cur->next && cur->next->type == TOKEN_PIPE)//todo fix if condition
-		{
-			add_pipe(cur, gc_lst);
-			printf(YELLOW"created pipe_fd: read_end=%d, write_end=%d\n"DEFAULT,
-				cur->pipe_head->pipefd[0], cur->pipe_head->pipefd[1]);
-			pipe_count++;
-		}
-		cur = cur->next;
-	}
-	return (pipe_count);
+// 	pipe_count = 0;
+// 	cur = *token;
+// 	while(cur)
+// 	{
+// 		if (cur->next && cur->next->type == TOKEN_PIPE)//todo fix if condition
+// 		{
+// 			add_pipe(cur, gc_lst);
+// 			printf(YELLOW"created pipe_fd: read_end=%d, write_end=%d\n"DEFAULT,
+// 				cur->pipe_head->pipefd[0], cur->pipe_head->pipefd[1]);
+// 			pipe_count++;
+// 		}
+// 		cur = cur->next;
+// 	}
+// 	return (pipe_count);
+// }
+
+bool	is_first_pipe_cmd(int *pipefd)
+{
+	if (!pipefd)
+		return true;
+	return false;
 }
 
-bool	is_first_pipe(t_token *token)
+bool	is_middle_pipe_cmd(int fd_prev_read_end, int cur_fd_write_end) //prev->read_end->fd exist
 {
-	t_token *cur = token;
-	while (cur != cur->pipe_head)
-	{
-		if (cur->prev && cur->prev->type == TOKEN_PIPE)
-		{
-			return false;
-		}
-		cur = cur->prev;
-	}
-	return true;
+	if (fd_prev_read_end != -1 && cur_fd_write_end != -1)
+		return true;
+	return false;
 }
 
-bool	is_last_pipe(t_token *token)
+bool	is_last_pipe_cmd(int fd_prev_read_end, int cur_fd_write_end) // prev->read_end->fd exist
 {
-	t_token *cur = token;
-	while(cur != cur->pipe_tail)
-	{
-		if(cur->next && cur->next->type == TOKEN_PIPE)
-		{
-			return false;
-		}
-		cur = cur->next;
-	}
-	return true;
+	if (fd_prev_read_end != -1 && cur_fd_write_end == -1)
+		return true;
+	return false;
 }
 
-bool	is_middle_pipe(t_token *token)
+bool	is_single_pipe(t_token *token) //in disenfall muss ich nur first and last aufrufen.
 {
-	return(!token->is_first_pipe && !token->is_last_pipe);
+	return (is_first_pipe(token) && is_last_pipe(token));
 }
 
-void	setup_pipe_flags(t_token *token)
+bool	is_multiple_pipe(t_token *token) //in diesenfall muss ich alle aufrufen.
 {
-	t_token *cur;
-
-	cur = token;
-	while(cur)
-	{
-		cur->is_first_pipe = is_first_pipe(cur);
-		cur->is_last_pipe = is_last_pipe(cur);
-		cur->is_middle_pipe = is_middle_pipe(cur);
-		cur = cur->next;
-	}
+	return (is_middle_pipe(token));
 }
 
 int	first_pipe_cmd(t_token *token)
@@ -217,8 +202,16 @@ int	first_pipe_cmd(t_token *token)
 
 	pid = fork();
 
+	//todo i think this if statment also could be in exe function later. not here.
+	if (token->next && token->next->type == TOKEN_PIPE && is_first_pipe_cmd())
+    {
+        add_pipe(&token, gc_lst);
+        fprintf(YELLOW"Created pipe_fd: read_end=%d, write_end=%d\n"DEFAULT,
+            token->pipe_head->pipefd[0], token->pipe_head->pipefd[1]);
+    }
 	if (pid == 0)
 	{
+		//todo if theres redirection i need to call re_dir_in
 		close(token->pipe_head->pipefd[0]);
 		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), token->pipe_head->pipefd[0]);
 		if (dup2( token->pipe_head->pipefd[1], STDOUT_FILENO) == -1)
@@ -233,10 +226,11 @@ int	first_pipe_cmd(t_token *token)
 	}
 	else
 	{
+		token->pipe_head->prev_read_end_fd = token->pipe_head->pipefd[0];
+		token->pipe_head->cur_fd_write_end = token->pipe_head->pipefd[1];
 		close(token->pipe_head->pipefd[1]);
 		fprintf(stderr, YELLOW "[%d], close[%d]\n" DEFAULT, getpid(),  token->pipe_head->pipefd[1]);
 	}
-	token->pipe_head->prev_read_end_fd = token->pipe_head->pipefd[0];
 	return (1);
 }
 
@@ -245,6 +239,13 @@ int	middle_pipe_cmd(t_token *token, t_shell *shell)
 {
 	pid_t	pid;
 
+	//todo i think this if statment also could be in exe function later. not here.
+	if (token->next && token->next->type == TOKEN_PIPE && is_middle_pipe_cmd())
+    {
+        add_pipe(&token, gc_lst);
+        fprintf(YELLOW"Created pipe_fd: read_end=%d, write_end=%d\n"DEFAULT,
+            token->pipe_head->pipefd[0], token->pipe_head->pipefd[1]);
+    }
 	pid = fork();
 	//todo if cur && cur ->next ->type  == TOKENTYPEPIPE && cur->next->next
 	if (pid == 0)
@@ -272,10 +273,11 @@ int	middle_pipe_cmd(t_token *token, t_shell *shell)
 	{
 		close(token->pipe_head->prev_read_end_fd);
 		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), token->pipe_head->prev_read_end_fd);
+		token->pipe_head->prev_read_end_fd = token->pipe_head->pipefd[0];
+		token->pipe_head->cur_fd_write_end = token->pipe_head->pipefd[1];
 		close(token->pipe_head->pipefd[1]);
 		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), token->pipe_head->pipefd[1]);
 	}
-	token->pipe_head->prev_read_end_fd = token->pipe_head->pipefd[0];
 	return 1;
 }
 
@@ -283,10 +285,14 @@ int	last_pipe_cmd(t_token *token, t_shell *shell)
 {
 	pid_t	pid;
 
+	//todo i think this if statment also could be in exe function later. not here.
+	if (is_last_pipe_cmd())
+
 	pid = fork();
 	fprintf(stderr, YELLOW "fork() = %d\n" DEFAULT, pid);
 	if (pid == 0) //todo fix if condition
 	{
+		//todo if theres re_dir_out then i need to call re_dir_out()
 		dup2(token->pipe_head->prev_read_end_fd, STDIN_FILENO);
 		fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), token->pipe_head->prev_read_end_fd, STDIN_FILENO);
 		fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
