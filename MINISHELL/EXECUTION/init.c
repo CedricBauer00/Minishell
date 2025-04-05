@@ -1,18 +1,19 @@
 # include "../INCLUDE/main.h"
 
-t_shell	*init_shell_info(void)
+
+t_shell	*init_shell_struct(void)
 {
-	t_shell *shell_info;
-	shell_info = malloc(sizeof(t_shell));
-	if (!shell_info)
+	t_shell *shell;
+	shell = malloc(sizeof(t_shell));
+	if (!shell)
 	{
 		return (NULL);
 	}
-	shell_info->cur_dir = NULL;
-	shell_info->old_dir = NULL;
-	shell_info->my_envp = NULL;
-	shell_info->last_status_exit = 0;
-	return shell_info;
+	shell->cur_dir = NULL;
+	shell->old_dir = NULL;
+	shell->my_envp = NULL;
+	shell->last_status_exit = 0;
+	return shell;
 }
 
 //after using this function at the beginning, this func ensures that the 'shell' is no longer 'null'
@@ -23,7 +24,7 @@ t_shell *get_shell(void)
 	static t_shell *shell = NULL;
 	if (shell == NULL)
 	{
-		shell = init_shell_info();
+		shell = init_shell_struct();
 	}
 	return (shell);
 }

@@ -34,15 +34,18 @@ typedef enum s_tenum
 	TOKEN_DQOUTE,		//string in "
 	TOKEN_VAR,			//$ variable
 	TOKEN_EOF,			//End of input
-
-	SLASH				// bin/ls
 }	t_token_type;
 
 typedef struct s_token //struct being allocated for each token from input
 {
 	t_token_type	type;
-	char			*value;
+	char			*value; //need to change name
+	char			*cmd;
+	char			**args;
+	struct			s_pipe *pipe_head;
+	struct			s_pipe *pipe_tail;
 	struct			s_token *next;
+	struct			s_token *prev;
 }	t_token;
 
 // typedef struct s_main
@@ -51,16 +54,16 @@ typedef struct s_token //struct being allocated for each token from input
 // 	t_shell *shell;
 // }	t_main;
 
-//memo may be cedric doesnt need it .
-// typedef struct s_cmd
-// {
-// 	int				last_status_exit;
-// 	char			*cmd;
-// 	char			*flags;  //idont know could be delete
-// 	struct s_cmd	*next;   //"ls -l"
-// }t_cmd;
-
 /***********************************************************************/
+
+typedef struct s_pipe
+{
+	int		*pipefd;
+	int		prev_read_end_fd; //pipe 초기값은 -1로.
+	int		cur_fd_write_end;
+	t_pipe	*next;
+	t_pipe	*prev;
+}	t_pipe;
 
 typedef struct s_shell
 {
@@ -69,6 +72,7 @@ typedef struct s_shell
 	char	*old_dir;
 	int		last_status_exit;
 }	t_shell;
+
 
 // like this 
 // t_token *first;
@@ -94,7 +98,7 @@ typedef struct s_shell
 //-----------------------------EXECUTION------------------------------------
 
 //init.c
-t_shell	*init_shell_info(void);
+t_shell	*init_shell_struct(void);
 t_shell *get_shell(void);
 
 //memo copy_envp.c  -- ok!
@@ -130,6 +134,10 @@ void	ft_echo(char **argv, t_shell *sehll);
 
 //memo pipe
 void echo_Hello_pipe_cat_pipe_wc(t_shell *shell);
+
+
+//memo exe_utils.c
+void	is_exited(void *failed, t_gc_list *gc_lst);
 
 //built_in
 //pwd
