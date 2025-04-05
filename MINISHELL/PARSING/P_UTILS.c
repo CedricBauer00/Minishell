@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 17:53:21 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/04 12:38:23 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/04 12:54:42 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,16 +106,17 @@ int	check_char(t_main *main, int i, int ind)
 	if (ind == 0)
 	{
 		if (ft_isspace(main->line[i]))
-			return (0);
+			return (1);
 	}
 	else
 	{
 		if (ft_isspace(main->line[i]))
-			return (0);
+			return (1);
 		if (main->line[i] == '|' || main->line[i] == '<' || main->line[i] == '>'
 			|| main->line[i] == '$' || main->line[i] == '"' || main->line[i] == '\'')
 			return (1);
 	}
+	return (0);
 }
 
 int is_quote(t_main *main, int i)
@@ -126,11 +127,17 @@ int is_quote(t_main *main, int i)
 	j = 0;
 	while (1)
 	{
-		if (j == 0 && (main->line[i] == '"' || main->line[i] == '\''))
+		if (main->line[i])
+			return (i);
+		else if (j == 1 && main->line[i] == c)
+			j = 0;
+		else if (j == 0 && (main->line[i] == '"' || main->line[i] == '\''))
 		{
 			c = main->line[i];
 			j = 1;
 		}
-		else if (j == 0 && )
+		else if (j == 0 && (main->line[i] == '|' || main->line[i] == '<' || main->line[i] == '>'))
+			break ;
 	}
+	return (i);
 }

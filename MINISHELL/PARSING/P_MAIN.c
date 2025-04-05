@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/04 11:38:38 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/05 10:55:04 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ int main(int argc, char **argv, char **envp)
 	t_shell *shell;
 	t_gc_list *gc_list;
 	
+	using_history();
 	set_default(&main);
 	gc_list = init_gc_list();
 	main.envp = copy_envp(gc_list, envp);
@@ -125,7 +126,10 @@ int main(int argc, char **argv, char **envp)
 				all_free(&gc_list);
 			exit(0);
 		}
-		add_history(main.line);
+		if (ft_strncmp(main.line, "history -c", 10) == 0)
+			clear_history();
+		else
+			add_history(main.line);
 		while (main.line[i])
 		{
 			
@@ -167,8 +171,11 @@ int main(int argc, char **argv, char **envp)
 				i += 2;
 			}
 				//checking for alpanumeric main.words (commands, arguments)
-			else if (ft_isalnum(main.line[i]) || main.line[i] == '_')
+			else if (ft_isalnum(main.line[i]) || main.line[i] == '_' || main.line[i] == '-')
+			{
+				write(1, "here!!\n", 7);
 				words(&main, &i, ws, gc_list);
+			}
 			else if (main.line[i] == '$')
 			{
 				if (expands(&main, &i, gc_list) < 0)

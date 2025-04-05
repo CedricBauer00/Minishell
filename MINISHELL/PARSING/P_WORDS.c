@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 11:23:13 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/01 17:03:42 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/05 10:57:25 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@ void	words(t_main *main, int *i, int ws, t_gc_list *gc_list)
 	int	len;
 	
 	ws = *i;
-	while (main->line[*i] && (ft_isalnum(main->line[*i]) || main->line[*i] == '_'))
+	while (main->line[*i] && (ft_isalnum(main->line[*i]) || main->line[*i] == '_' || main->line[*i] == '-'))
 		(*i)++;
+	
 	len = *i - ws;
 	main->word = gc_strndup(main->line + ws, len, gc_list);
 	if (is_built_in(main) == 1)
