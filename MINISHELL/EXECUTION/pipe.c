@@ -209,10 +209,8 @@ int	first_pipe_cmd(t_command *command)
     }
 	if (pid == 0)
 	{
-		if (command->infile_name && command->type == TOKEN_REDIRECT_IN) //todo think about this case.
-		{
-			re_dir_in(command);
-		}
+		//todo call it .
+		handle_re_dir();
 		//todo if theres redirection i need to call re_dir_in
 		close(command->pipe->pipefd[0]);
 		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->pipefd[0]);

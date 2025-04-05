@@ -70,7 +70,9 @@ int	re_dir_out(t_command *command)
 void	handle_re_dir(t_command *command)
 {
 	if(command->type & TOKEN_REDIRECT_IN)
-		
+		re_dir_in(command);
+	if (command->type & (TOKEN_REDIRECT_OUT))
+		re_dir_out(command);
 }
 
 
