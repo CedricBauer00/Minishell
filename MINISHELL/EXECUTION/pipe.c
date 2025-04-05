@@ -109,7 +109,7 @@
 	add_pipe를 언제 호출해야하는지 생각해보기 -> in exe function.
 */
 
-void	add_pipe(t_token **token, t_gc_list *gc_lst)
+void	add_pipe(t_command **command, t_gc_list *gc_lst)
 {
 	t_pipe *new_pipe_node;
 	t_pipe *lastnode;
@@ -124,21 +124,22 @@ void	add_pipe(t_token **token, t_gc_list *gc_lst)
         all_free(gc_lst);
         exit(EXIT_FAILURE);
     }
-	if (!(*token)->pipe_head && !(*token)->pipe_tail)
-		init_pipe_list(); //todo Ich muss darüber nachdenken, wo ich die Funktion einsetzen soll. 
-	if ((*token)->pipe_head->next == NULL)
+	if (!(*command)->pipe)
+		(*command)->pipe = init_pipe_list(gc_lst); //todo Ich muss darüber nachdenken, wo ich die Funktion einsetzen soll. 
+	if ((*command)->pipe == NULL)
 	{
-		(*token)->pipe_head->next = new_pipe_node;
-		new_pipe_node->next = (*token)->pipe_tail;
-		new_pipe_node->prev = (*token)->pipe_head;
+		(*command)->pipe = new_pipe_node;
+		new_pipe_node->prev = NULL;
 	}
 	else
 	{
-		new_pipe_node->prev = (*token)->pipe_tail->prev;
-		(*token)->pipe_tail->prev->next = new_pipe_node;
-		(*token)->pipe_tail->prev = new_pipe_node;
-		new_pipe_node->next = (*token)->pipe_tail;
+		lastnode = (*command)->pipe;
+        while (lastnode)
+            lastnode = lastnode->next;
+        lastnode->next = new_pipe_node;
+        new_pipe_node->prev = lastnode;
 	}
+	new_pipe_node->next = NULL;
 }
 
 // int	create_pipe(t_token **token, t_gc_list *gc_lst)
@@ -183,84 +184,88 @@ bool	is_last_pipe_cmd(int fd_prev_read_end, int cur_fd_write_end) // prev->read_
 	return false;
 }
 
-bool	is_single_pipe(t_token *token) //in disenfall muss ich nur first and last aufrufen.
+bool	is_single_pipe(t_command *command) //in disenfall muss ich nur first and last aufrufen.
 {
-	return (is_first_pipe(token) && is_last_pipe(token));
+	return (is_first_pipe(command) && is_last_pipe(command));
 }
 
-bool	is_multiple_pipe(t_token *token) //in diesenfall muss ich alle aufrufen.
+bool	is_multiple_pipe(t_command *command) //in diesenfall muss ich alle aufrufen.
 {
-	return (is_middle_pipe(token));
+	return (is_middle_pipe(command));
 }
 
-int	first_pipe_cmd(t_token *token)
+int	first_pipe_cmd(t_command *command)
 {
 	pid_t	pid;
 
 	pid = fork();
 
 	//todo i think this if statment also could be in exe function later. not here.
-	if (token->next && token->next->type == TOKEN_PIPE && is_first_pipe_cmd())
+	if (command->next && command->next->type == TOKEN_PIPE && is_first_pipe_cmd(command->pipe->pipefd))
     {
-        add_pipe(&token, gc_lst);
+        add_pipe(&command, gc_lst);
         fprintf(YELLOW"Created pipe_fd: read_end=%d, write_end=%d\n"DEFAULT,
-            token->pipe_head->pipefd[0], token->pipe_head->pipefd[1]);
+            command->pipe->pipefd[0], command->pipe->pipefd[1]);
     }
 	if (pid == 0)
 	{
+		if (command->infile_name && command->type == TOKEN_REDIRECT_IN) //todo think about this case.
+		{
+			re_dir_in(command);
+		}
 		//todo if theres redirection i need to call re_dir_in
-		close(token->pipe_head->pipefd[0]);
-		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), token->pipe_head->pipefd[0]);
-		if (dup2( token->pipe_head->pipefd[1], STDOUT_FILENO) == -1)
+		close(command->pipe->pipefd[0]);
+		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->pipefd[0]);
+		if (dup2( command->pipe->pipefd[1], STDOUT_FILENO) == -1)
 			perror(RED"first cmd dup2 error\n"DEFAULT);
-		fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), token->pipe_head->pipefd[1], STDOUT_FILENO);
+		fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), command->pipe->pipefd[1], STDOUT_FILENO);
 		fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
-		close( token->pipe_head->pipefd[1]);
-		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(),  token->pipe_head->pipefd[1]);
+		close( command->pipe->pipefd[1]);
+		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(),  command->pipe->pipefd[1]);
 		//todo execve();
 		exit(0);
 		fprintf(stderr, YELLOW "exited with 0\n" DEFAULT);
 	}
 	else
 	{
-		token->pipe_head->prev_read_end_fd = token->pipe_head->pipefd[0];
-		token->pipe_head->cur_fd_write_end = token->pipe_head->pipefd[1];
-		close(token->pipe_head->pipefd[1]);
-		fprintf(stderr, YELLOW "[%d], close[%d]\n" DEFAULT, getpid(),  token->pipe_head->pipefd[1]);
+		command->pipe->prev_read_end_fd = command->pipe->pipefd[0];
+		command->pipe->cur_fd_write_end = command->pipe->pipefd[1];
+		close(command->pipe->pipefd[1]);
+		fprintf(stderr, YELLOW "[%d], close[%d]\n" DEFAULT, getpid(),  command->pipe->pipefd[1]);
 	}
 	return (1);
 }
 
 //memo if its multiple pipe lines...
-int	middle_pipe_cmd(t_token *token, t_shell *shell)
+int	middle_pipe_cmd(t_command *command, t_shell *shell)
 {
 	pid_t	pid;
 
 	//todo i think this if statment also could be in exe function later. not here.
-	if (token->next && token->next->type == TOKEN_PIPE && is_middle_pipe_cmd())
+	if (command->next && command->next->type == TOKEN_PIPE && is_middle_pipe_cmd(command->pipe->prev_read_end_fd,command->pipe->cur_fd_write_end))
     {
-        add_pipe(&token, gc_lst);
+        add_pipe(&command, gc_lst);
         fprintf(YELLOW"Created pipe_fd: read_end=%d, write_end=%d\n"DEFAULT,
-            token->pipe_head->pipefd[0], token->pipe_head->pipefd[1]);
+            command->pipe->pipefd[0], command->pipe->pipefd[1]);
     }
 	pid = fork();
 	//todo if cur && cur ->next ->type  == TOKENTYPEPIPE && cur->next->next
 	if (pid == 0)
 	{
-		if (dup2(token->pipe_head->prev_read_end_fd , STDIN_FILENO) == -1)
+		if (dup2(command->pipe->prev_read_end_fd , STDIN_FILENO) == -1)
 			perror(RED"SE dup2 ERROR\n"DEFAULT);
-		fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), token->pipe_head->prev_read_end_fd , STDIN_FILENO);
+		fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), command->pipe->prev_read_end_fd , STDIN_FILENO);
 		fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
-		close(token->pipe_head->prev_read_end_fd );
-		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), token->pipe_head->prev_read_end_fd );
-		close(token->pipe_head->pipefd[0]);
-		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), token->pipe_head->pipefd[0]);
-		if (dup2(token->pipe_head->pipefd[1], STDOUT_FILENO) == -1)
+		close(command->pipe->prev_read_end_fd );
+		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->prev_read_end_fd );
+		close(command->pipe->pipefd[0]);
+		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->pipefd[0]);
+		if (dup2(command->pipe->pipefd[1], STDOUT_FILENO) == -1)
 			perror(RED"SE dup2 ERROR\n"DEFAULT);
-		fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), token->pipe_head->pipefd[1], STDOUT_FILENO);
+		fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), command->pipe->pipefd[1], STDOUT_FILENO);
 		fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
-		close(token->pipe_head->pipefd[1]);
-		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), token->pipe_head->pipefd[1]);
+		close(command->pipe->pipefd[1]);
+		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->pipefd[1]);
 		if (execve("/bin/cat", args, shell->my_envp) == -1)
 			perror(RED"cat failed\n"DEFAULT);
 		fprintf(stderr, YELLOW "[pid %d], execve cat \n" DEFAULT, getpid());
@@ -268,33 +273,36 @@ int	middle_pipe_cmd(t_token *token, t_shell *shell)
 	}
 	else
 	{
-		close(token->pipe_head->prev_read_end_fd);
-		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), token->pipe_head->prev_read_end_fd);
-		token->pipe_head->prev_read_end_fd = token->pipe_head->pipefd[0];
-		token->pipe_head->cur_fd_write_end = token->pipe_head->pipefd[1];
-		close(token->pipe_head->pipefd[1]);
-		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), token->pipe_head->pipefd[1]);
+		close(command->pipe->prev_read_end_fd);
+		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->prev_read_end_fd);
+		command->pipe->prev_read_end_fd = command->pipe->pipefd[0];
+		command->pipe->cur_fd_write_end = command->pipe->pipefd[1];
+		close(command->pipe->pipefd[1]);
+		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->pipefd[1]);
 	}
 	return 1;
 }
 
-int	last_pipe_cmd(t_token *token, t_shell *shell)
+int	last_pipe_cmd(t_command *command, t_shell *shell)
 {
 	pid_t	pid;
 
 	//todo i think this if statment also could be in exe function later. not here.
-	if (is_last_pipe_cmd())
+	if (is_last_pipe_cmd(command->pipe->prev_read_end_fd, command->pipe->cur_fd_write_end))
+	{
+		printf(YELLOW"last_pipe_cd\n"DEFAULT);
 
+	}
 	pid = fork();
 	fprintf(stderr, YELLOW "fork() = %d\n" DEFAULT, pid);
 	if (pid == 0) //todo fix if condition
 	{
 		//todo if theres re_dir_out then i need to call re_dir_out()
-		dup2(token->pipe_head->prev_read_end_fd, STDIN_FILENO);
-		fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), token->pipe_head->prev_read_end_fd, STDIN_FILENO);
+		dup2(command->pipe->prev_read_end_fd, STDIN_FILENO);
+		fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), command->pipe->prev_read_end_fd, STDIN_FILENO);
 		fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
-		close(token->pipe_head->prev_read_end_fd);
-		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), token->pipe_head->prev_read_end_fd);
+		close(command->pipe->prev_read_end_fd);
+		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->prev_read_end_fd);
 		if (execve("/usr/bin/wc", args , shell->my_envp) ==-1)
 			perror(RED"WC ERROR\n"DEFAULT);
 		fprintf(stderr, YELLOW "[pid %d], execve wc \n" DEFAULT, getpid());
@@ -302,8 +310,8 @@ int	last_pipe_cmd(t_token *token, t_shell *shell)
 	}
 	else
 	{
-		close(token->pipe_head->prev_read_end_fd);
-		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), token->pipe_head->prev_read_end_fd);
+		close(command->pipe->prev_read_end_fd);
+		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->prev_read_end_fd);
 		fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
 	}
 	return (1);

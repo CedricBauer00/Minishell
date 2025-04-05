@@ -16,6 +16,41 @@ t_shell	*init_shell_struct(void)
 	return shell;
 }
 
+t_pipe *init_pipe_list(t_gc_list *gc_lst)
+{
+	t_pipe *pipe;
+	pipe = do_alloc(gc_lst, sizeof(t_pipe), TYPE_SINGLE_PTR);
+	if (!pipe)
+	{
+		return (NULL);
+	}
+	pipe->pipefd = NULL;
+	pipe->prev_read_end_fd = -1;
+	pipe->cur_fd_write_end = -1;
+	pipe->next = NULL;
+	pipe->prev = NULL;
+	return pipe;
+}
+
+t_command *init_command_struct(t_gc_list *gc_lst)
+{
+	t_command *cmd;
+	cmd = do_alloc(gc_lst, sizeof(t_command), TYPE_SINGLE_PTR);
+	if (!cmd)
+	{
+		return (NULL);
+	}
+	cmd->value = NULL;
+	cmd->cmd = NULL;
+	cmd->args = NULL;
+	cmd->infile_name = NULL;
+	cmd->outfile_name = NULL;
+	cmd->pipe = NULL;
+	cmd->next = NULL;
+	cmd->prev = NULL;
+	return (cmd);
+}
+
 //after using this function at the beginning, this func ensures that the 'shell' is no longer 'null'
 //because it has already been initialized as a static var.
 //static var is initialized just only at once when it called and assigned in data area.
