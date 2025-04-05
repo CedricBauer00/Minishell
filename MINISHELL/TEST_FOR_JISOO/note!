@@ -1,0 +1,10 @@
+"Wenn ich in der Minishell eine andere Minishell ausführe, sollte ich fork() und execve() verwenden!"!
+
+durchfuehren : 수행하다?
+ausfuheren : 실행하다?
+
+만약 내가 파이프 리스트까지 스태틱으로한다면,,
+각 명령어때마다 프리해줘야하지.
+
+
+< > << >> 이것모두 자식에서 해야함.
