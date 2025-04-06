@@ -1,28 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strndrup.c                                      :+:      :+:    :+:   */
+/*   p_utils2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 15:19:46 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/28 17:38:21 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/06 10:31:10 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../INCLUDE/libft/libft.h"
 #include <stdio.h>
-
-
-// size_t	ft_strlen(const char *str)
-// {
-// 	int	counter;
-
-// 	counter = 0;
-// 	while (str[counter] != '\0')
-// 		counter++;
-// 	return (counter);
-// }
 
 char	*ft_strndup(const char *str, size_t n)
 {
@@ -46,13 +34,3 @@ char	*ft_strndup(const char *str, size_t n)
 	return (ptr);
 }
 
-// int main()
-// {
-// 	int i = 5;
-// 	char *str = "Helloooo!";
-// 	char *s;
-
-// 	s = ft_strndup(str, i);
-// 	printf("%s\n", s);
-// 	return (0);
-// }
