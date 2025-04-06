@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 09:58:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/05 12:15:24 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/06 10:41:32 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ int	expands(t_main *main, int *i, int ws, t_gc_list *gc_list) // $PATH=HELLo // 
 	(*i)++;
 	if (main->line[*i] && main->line[*i] == '?')
 	{
-		write(1, "here1\n", 6);
 		value = ft_itoa(shell->last_status_exit);
 		if (!value)
 			return (-1);
@@ -43,7 +42,6 @@ int	expands(t_main *main, int *i, int ws, t_gc_list *gc_list) // $PATH=HELLo // 
 	}
 	else if (main->line[*i] && main->line[*i] == '$')
 	{
-		write(1, "here2\n", 6);
 		value = ft_itoa(getpid());
 		if (!value)
 			return (-1);
@@ -58,7 +56,6 @@ int	expands(t_main *main, int *i, int ws, t_gc_list *gc_list) // $PATH=HELLo // 
 			(*i)++;
 		if ((*i) - ws - 1 <= 0)
 		{
-			write(1, "this is here!\n", 14);
 			main->error = create_token(&main->tokens, TOKEN_WORD, "$", gc_list);
 			if (value)
 				free(value);
@@ -92,7 +89,6 @@ int	expands(t_main *main, int *i, int ws, t_gc_list *gc_list) // $PATH=HELLo // 
 			value = ft_strdup("");
 		if (value)
 		{
-			write(1, "is var\n", 7);
 			main->error = create_token(&main->tokens, TOKEN_VAR, value, gc_list);
 			free(value);
 		}

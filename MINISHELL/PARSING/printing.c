@@ -43,21 +43,21 @@ void print_token(t_token *tokens)
 {
 	if (!tokens)
 		return ;
-	if (tokens->type == 0)
+	if (tokens->type & TOKEN_WORD)
 		printf("Token Type: %s, Value: %s\n", "word", tokens->value);
-	else if (tokens->type == 4)
+	else if (tokens->type & TOKEN_BUILT_IN)
 		printf("Token Type: %s, Value: %s\n", "Built-in", tokens->value);
-	else if (tokens->type == 5)
+	else if (tokens->type & TOKEN_PIPE)
 		printf("Token Type: %s, Value: %s\n", "pipe", tokens->value);
-	else if (tokens->type == 6)
+	else if (tokens->type & TOKEN_REDIRECT_IN)
 		printf("Token Type: %s, Value: %s\n", "redirect_in", tokens->value);
-	else if (tokens->type == 7)
+	else if (tokens->type & TOKEN_REDIRECT_OUT)
 		printf("Token Type: %s, Value: %s\n", "redirect_out", tokens->value);
-	else if (tokens->type == 8)
+	else if (tokens->type & TOKEN_APPEND)
 		printf("Token Type: %s, Value: %s\n", "append", tokens->value);
-	else if (tokens->type == 9)
+	else if (tokens->type & TOKEN_HEREDOC)
 		printf("Token Type: %s, Value: %s\n", "heredoc", tokens->value);
-	else if (tokens->type == 10)
+	else if (tokens->type & TOKEN_VAR)
 		printf("Token Type: %s, Value: %s\n", "VAR", tokens->value);
 	else
 		printf("Token Type: UNKNOWN (%d), Value: %s\n", tokens->type, tokens->value);

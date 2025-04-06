@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 11:35:00 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/05 15:13:35 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/06 11:40:54 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,4 +126,39 @@ int main(int argc, char **argv, char **envp)
 	if (gc_list)
 		all_free(&gc_list);
 	write(1, "\n", 1);
+}
+
+int dquotes(t_main *main, int *i, t_gc_list *gc_list) // "HEELLOO $PATH" not working - multiple $VARs - $VAR=... not working 
+{
+	int ws;
+
+	(*i)++;
+	ws = *i;
+	while (main->line[*i])
+	{
+		while (main->line[*i] && main->line[*i] != '"') // Find closing quote
+			(*i)++;
+		if (main->line[*i] == '"') // If closing quote is found
+		{
+			main->word = gc_strndup(main->line + ws, *i - ws, gc_list);
+			if (!main->word)
+				return (-1);
+			if (is_built_in(main) == 1)
+				main->error = create_token(&main->tokens, TOKEN_BUILT_IN, main->word, gc_list);
+			else if (main->line[ws] == '$')
+			{
+				if (expands(main, &ws, 0, gc_list) < 0)
+					return (perror("ERROR\nExpand failed!\n"), -1);
+			}
+			else
+				main->error = create_token(&main->tokens, TOKEN_WORD, main->word, gc_list);
+			if (main->error < 0)
+				return (-1);
+			(*i)++; // Move past the closing quote
+			return 0; // Successfully processed one quoted segment
+		}
+		else
+			return (printf(RED"ERROR\nUnclosed quotes!\n"DEFAULT), 0);
+	}
+	return 0; // Return success if no errors occurred
 }

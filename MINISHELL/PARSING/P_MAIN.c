@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/06 10:23:31 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/06 10:42:47 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,6 @@ int main(int argc, char **argv, char **envp)
 	main.envp = copy_envp(gc_list, envp);
 	shell = get_shell(gc_list);
 	len = 0;
-	int j = 0;
 	while (1)
 	{
 		if (main_helper(&main, gc_list) < 0)
@@ -182,8 +181,6 @@ int main(int argc, char **argv, char **envp)
 		i = 0;
 		while (main.line[i])
 		{
-			j++;
-			printf("looping count %d\n", j);
 			if (check_operator(&main, &i, gc_list) < 0)
 				return (printf("ERROR\nCheck_operator failed!\n"), all_free(&gc_list), -1);
 		}

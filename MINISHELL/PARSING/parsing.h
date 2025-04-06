@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/06 09:56:11 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/06 12:12:50 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
+
 # include "libft.h"
 
 
@@ -38,22 +39,40 @@
 #define YELLOW "\033[0;33m" //
 #define DEFAULT "\033[0m"   //
 
+// typedef enum s_tenum
+// {
+//     TOKEN_WORD = 0,         //word
+//     TOKEN_CMD = 1,          //Command
+//     TOKEN_ARG = 2,
+//     TOKEN_FLAGS = 3,        // -l, -a
+//     TOKEN_BUILT_IN = 4,     // cd, pwd, export, ...
+//     TOKEN_PIPE = 5,         //Symbol: |
+//     TOKEN_REDIRECT_IN = 6,  //Symbol: <
+//     TOKEN_REDIRECT_OUT = 7, //Symbol: >
+//     TOKEN_APPEND = 8,       //Symbol: >>
+//     TOKEN_HEREDOC = 9,      //Symbol: <<
+//     TOKEN_VAR = 10,          //$ variable
+//     TOKEN_EOF = 11,          //End of input
+//     SLASH               // bin/ls
+// }   t_token_type;
+
 typedef enum s_tenum
 {
-    TOKEN_WORD = 0,         //word
-    TOKEN_CMD = 1,          //Command
-    TOKEN_ARG = 2,
-    TOKEN_FLAGS = 3,        // -l, -a
-    TOKEN_BUILT_IN = 4,     // cd, pwd, export, ...
-    TOKEN_PIPE = 5,         //Symbol: |
-    TOKEN_REDIRECT_IN = 6,  //Symbol: <
-    TOKEN_REDIRECT_OUT = 7, //Symbol: >
-    TOKEN_APPEND = 8,       //Symbol: >>
-    TOKEN_HEREDOC = 9,      //Symbol: <<
-    TOKEN_VAR = 10,          //$ variable
-    TOKEN_EOF = 11,          //End of input
-    SLASH               // bin/ls
+    TOKEN_NONE = 0x0000,
+    TOKEN_WORD = 0x0001,         //word
+    TOKEN_CMD = 0x0002,          //Command
+    TOKEN_FLAGS = 0x0004,
+    TOKEN_BUILT_IN = 0x0008,     // cd, pwd, export, ...
+    TOKEN_PIPE = 0x0010,         //Symbol: |
+    TOKEN_REDIRECT_IN = 0x0020,  //Symbol: <
+    TOKEN_REDIRECT_OUT = 0x0040, //Symbol: >
+    TOKEN_APPEND = 0x0080,       //Symbol: >>
+    TOKEN_HEREDOC = 0x0100,      //Symbol: <<
+    TOKEN_VAR = 0x0200,          //$ variable
+    TOKEN_EOF = 0x0400,          //End of input
 }   t_token_type;
+
+
 
 typedef struct s_token //struct being allocated for each token from input
 {

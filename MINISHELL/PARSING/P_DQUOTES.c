@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 09:42:44 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/05 14:44:11 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/06 12:57:59 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,36 +14,40 @@
 
 int dquotes(t_main *main, int *i, t_gc_list *gc_list) // "HEELLOO $PATH" not working - multiple $VARs - $VAR=... not working 
 {
-	int ws;
+	int		ws;
+	char	subst;
 
 	(*i)++;
 	ws = *i;
-	printf("i = %c\n", main->line[*i]);
-	printf("ws = %c\n", main->line[ws]);
+	main->word = gc_strdup("", gc_list);
+	if (!main->word)
+		return (-1);
 	while (main->line[*i])
 	{
 		while (main->line[*i] && main->line[*i] != '"') // Find closing quote
+		{
+			if (main->line[*i] == '$')
+			{
+				subst = gc_strndup(&main->line[ws], *i - ws, gc_list);
+				if (!subst)
+					return (-1);
+				main.
+				if (expands(main, &ws, 0, gc_list) < 0)
+					return (perror("ERROR\nExpand failed!\n"), -1);
+			}
 			(*i)++;
-		printf("i in dquote = %d\n", *i);
+
+			
+		}
 		if (main->line[*i] == '"') // If closing quote is found
 		{
 			main->word = gc_strndup(main->line + ws, *i - ws, gc_list);
 			if (!main->word)
 				return (-1);
-			printf("str = %s\n", main->word);
-			// Create token for the extracted word
 			if (is_built_in(main) == 1)
 				main->error = create_token(&main->tokens, TOKEN_BUILT_IN, main->word, gc_list);
-			else if (main->line[ws] == '$')
-			{
-				if (expands(main, &ws, 0, gc_list) < 0)
-					return (perror("ERROR\nExpand failed!\n"), -1);
-			}
 			else
-			{
-				write(1, "word\n", 5); 
 				main->error = create_token(&main->tokens, TOKEN_WORD, main->word, gc_list);
-			}
 			if (main->error < 0)
 				return (-1);
 			(*i)++; // Move past the closing quote
@@ -100,3 +104,38 @@ int dquotes(t_main *main, int *i, t_gc_list *gc_list) // "HEELLOO $PATH" not wor
 // 	main->next_line = NULL;
 // }
 // return (0);
+
+int dquotes(t_main *main, int *i, t_gc_list *gc_list) // "HEELLOO $PATH" not working - multiple $VARs - $VAR=... not working 
+{
+	int ws;
+
+	(*i)++;
+	ws = *i;
+	while (main->line[*i])
+	{
+		while (main->line[*i] && main->line[*i] != '"') // Find closing quote
+			(*i)++;
+		if (main->line[*i] == '"') // If closing quote is found
+		{
+			main->word = gc_strndup(main->line + ws, *i - ws, gc_list);
+			if (!main->word)
+				return (-1);
+			if (is_built_in(main) == 1)
+				main->error = create_token(&main->tokens, TOKEN_BUILT_IN, main->word, gc_list);
+			else if (main->line[ws] == '$')
+			{
+				if (expands(main, &ws, 0, gc_list) < 0)
+					return (perror("ERROR\nExpand failed!\n"), -1);
+			}
+			else
+				main->error = create_token(&main->tokens, TOKEN_WORD, main->word, gc_list);
+			if (main->error < 0)
+				return (-1);
+			(*i)++; // Move past the closing quote
+			return 0; // Successfully processed one quoted segment
+		}
+		else
+			return (printf(RED"ERROR\nUnclosed quotes!\n"DEFAULT), 0);
+	}
+	return 0; // Return success if no errors occurred
+}
