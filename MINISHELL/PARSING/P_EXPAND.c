@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   P_EXPAND.c                                         :+:      :+:    :+:   */
+/*   p_expand.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 09:58:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/06 10:41:32 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/06 15:19:52 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,16 +33,6 @@ int	expands(t_main *main, int *i, int ws, t_gc_list *gc_list) // $PATH=HELLo // 
 	if (main->line[*i] && main->line[*i] == '?')
 	{
 		value = ft_itoa(shell->last_status_exit);
-		if (!value)
-			return (-1);
-		main->error = create_token(&main->tokens, TOKEN_WORD, value, gc_list);
-		(*i)++;
-		if (value)
-			free(value);
-	}
-	else if (main->line[*i] && main->line[*i] == '$')
-	{
-		value = ft_itoa(getpid());
 		if (!value)
 			return (-1);
 		main->error = create_token(&main->tokens, TOKEN_WORD, value, gc_list);
@@ -97,3 +87,15 @@ int	expands(t_main *main, int *i, int ws, t_gc_list *gc_list) // $PATH=HELLo // 
 	}
 	return (0);
 }
+
+
+	// else if (main->line[*i] && main->line[*i] == '$')
+	// {
+	// 	value = ft_itoa(getpid()); // mistake
+	// 	if (!value)
+	// 		return (-1);
+	// 	main->error = create_token(&main->tokens, TOKEN_WORD, value, gc_list);
+	// 	(*i)++;
+	// 	if (value)
+	// 		free(value);
+	// }

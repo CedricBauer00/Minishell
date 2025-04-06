@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/06 12:12:50 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/06 16:23:57 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ typedef enum s_tenum
     TOKEN_HEREDOC = 0x0100,      //Symbol: <<
     TOKEN_VAR = 0x0200,          //$ variable
     TOKEN_EOF = 0x0400,          //End of input
+    SPACES
 }   t_token_type;
 
 
@@ -168,6 +169,8 @@ int	quotes(t_main *main,int *i, t_gc_list *gc_list);
 // ----------------------------------------------------------------------
 
 int dquotes(t_main *main, int *i, t_gc_list *gc_list);
+int	read_word(t_main *main, int *i, t_gc_list *gc_list);
+int	get_spaces(t_main *main, int *i, t_gc_list *gc_list);
 
 // ----------------------------------------------------------------------
 // 							  PIPES

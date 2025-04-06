@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   P_MAIN.c                                           :+:      :+:    :+:   */
+/*   p_main.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/06 10:42:47 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/06 16:50:23 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,15 +117,13 @@ int	check_operator2(t_main *main, int *i, t_gc_list *gc_list)
 		main->error = create_token(&main->tokens, TOKEN_EOF, "EOF", gc_list);
 		*i += 2;
 	}
-	else if (ft_isalnum(main->line[*i]) || main->line[*i] == '_' || main->line[*i] == '-')
-	{
-		words(main, i, 0, gc_list);
-	}
 	else if (main->line[*i] == '$')
 	{
 		if (expands(main, i, 0, gc_list) < 0)
 			return (perror("ERROR\nExpand failed!\n"), -1);
 	}
+	else if (!ft_isspace(main->line[*i]))
+		words(main, i, 0, gc_list);
 	else
 		printf("Warning: Unrecognized character '%c' at position %d\n", main->line[*i], *i);
 	return (0);
@@ -133,8 +131,12 @@ int	check_operator2(t_main *main, int *i, t_gc_list *gc_list)
 
 int	check_operator(t_main *main, int *i, t_gc_list *gc_list)
 {
+	if (ft_isspace(main->line[*i]))
+		main->error = create_token(&main->tokens, SPACES, " ", gc_list);
 	while (main->line[*i] && ft_isspace(main->line[*i]))
 		(*i)++;
+	if (main->line[*i] == '\0')
+		return (0);
 	if (main->line[*i] == '>' && main->line[*i + 1] == '>')
 		*i += operator(main, 2, main->line[*i], gc_list);
 	else if (main->line[*i] == '<' && main->line[*i + 1] == '<') //fix
@@ -150,11 +152,8 @@ int	check_operator(t_main *main, int *i, t_gc_list *gc_list)
 		if (quotes(main, i, gc_list) < 0)
 			return (printf("ERROR\nQuotes failed!\n"), all_free(&gc_list), -1);
 	}
-	else
-	{
-		if (check_operator2(main, i, gc_list) < 0)
-			return (-1);
-	}
+	else if (check_operator2(main, i, gc_list) < 0)
+		return (-1);
 	return (0);
 }
 

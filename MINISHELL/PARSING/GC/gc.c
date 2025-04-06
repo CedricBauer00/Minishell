@@ -97,7 +97,7 @@ void	delete_node(t_gc_list **gc_lst, t_gc_list *to_delete)
 	{
 		if (cur == to_delete)
 		{
-			printf("delete node();%p is free, type is %d\n", cur->data , cur->type);
+			// printf("delete node();%p is free, type is %d\n", cur->data , cur->type);
 			free_data_type(cur->data, cur->type);
 			prev ->next = cur ->next;
 			free(cur);
