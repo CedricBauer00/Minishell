@@ -32,10 +32,10 @@ t_pipe *init_pipe_list(t_gc_list *gc_lst)
 	return pipe;
 }
 
-t_command *init_command_struct(t_gc_list *gc_lst)
+t_token *init_command_struct(t_gc_list *gc_lst)
 {
-	t_command *cmd;
-	cmd = do_alloc(gc_lst, sizeof(t_command), TYPE_SINGLE_PTR);
+	t_token *cmd;
+	cmd = do_alloc(gc_lst, sizeof(t_token), TYPE_SINGLE_PTR);
 	if (!cmd)
 	{
 		return (NULL);
@@ -45,9 +45,15 @@ t_command *init_command_struct(t_gc_list *gc_lst)
 	cmd->args = NULL;
 	cmd->infile_name = NULL;
 	cmd->outfile_name = NULL;
-	cmd->pipe = NULL;
+	cmd->pipe = do_alloc(gc_lst, sizeof(t_pipe), TYPE_SINGLE_PTR);
+	if (!cmd->pipe)
+	{
+		all_free(&gc_lst);
+		return NULL;
+	}
 	cmd->next = NULL;
 	cmd->prev = NULL;
+	cmd->type = TOKEN_NONE;
 	return (cmd);
 }
 

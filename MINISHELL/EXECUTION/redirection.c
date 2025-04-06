@@ -1,33 +1,14 @@
 # include "../INCLUDE/main.h"
 
 //todo both redirection must be called in child!
+// todo need to change if 
 
-/*
-	if(cur ->prev && cur->prev->type->TOKEN_REDIRECT_IN)
-	{
-		pid_t;
-
-		pid = fork();
-		if (pid == 0)
-		{
-			re_dir_in(token);
-			execve(cmd);
-		}
-		else
-		{
-
-		}
-	}
-	
-	
-*/
- // todo need to change if 
-int	re_dir_in(t_command *command)
+int	re_dir_in(t_token *token)
 {
-	t_command *cur;
+	t_token *cur;
 	int		fd;
 
-	cur = command;
+	cur = token;
 	fd = open(cur->next->infile_name, O_RDONLY);
 	if (fd == -1)
 	{
@@ -45,12 +26,12 @@ int	re_dir_in(t_command *command)
 }
 
 //todo need to change if 
-int	re_dir_out(t_command *command)
+int	re_dir_out(t_token *token)
 {
-	t_command *cur;
+	t_token *cur;
 	int		fd;
 
-	cur = command;
+	cur = token;
 	fd = open(cur->next->outfile_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
@@ -67,12 +48,13 @@ int	re_dir_out(t_command *command)
 	return 1;
 }
 
-void	handle_re_dir(t_command *command)
+int	handle_re_dir(t_token *token)
 {
-	if(command->type & TOKEN_REDIRECT_IN)
-		re_dir_in(command);
-	if (command->type & (TOKEN_REDIRECT_OUT))
-		re_dir_out(command);
+	if(token->type & TOKEN_REDIRECT_IN)
+		re_dir_in(token);
+	if (token->type & (TOKEN_REDIRECT_OUT))
+		re_dir_out(token);
+	return 0;
 }
 
 

@@ -109,32 +109,32 @@
 	add_pipe를 언제 호출해야하는지 생각해보기 -> in exe function.
 */
 
-void	add_pipe(t_command **command, t_gc_list *gc_lst)
+void	add_pipe(t_token **token, t_gc_list *gc_lst)
 {
 	t_pipe *new_pipe_node;
 	t_pipe *lastnode;
 
-	new_pipe_node = do_alloc(gc_lst, sizeof(t_pipe), TYPE_SINGLE_PTR);
-		is_exited(new_pipe_node,gc_lst);
+	new_pipe_node = init_pipe_list(gc_lst);
 	new_pipe_node->pipefd = do_alloc(gc_lst, sizeof(int) * 2, TYPE_SINGLE_PTR);
 		is_exited(new_pipe_node->pipefd,gc_lst);
 	if (pipe(new_pipe_node->pipefd) == -1) 
 	{
         perror("Error creating pipe");
-        all_free(gc_lst);
+        all_free(&gc_lst);
         exit(EXIT_FAILURE);
     }
-	if (!(*command)->pipe)
-		(*command)->pipe = init_pipe_list(gc_lst); //todo Ich muss darüber nachdenken, wo ich die Funktion einsetzen soll. 
-	if ((*command)->pipe == NULL)
+	if (!(*token)->pipe)
+		(*token)->pipe = init_pipe_list(gc_lst); //todo Ich muss darüber nachdenken, wo ich die Funktion einsetzen soll. 
+	if ((*token)->pipe == NULL)
 	{
-		(*command)->pipe = new_pipe_node;
+		(*token)->pipe = new_pipe_node;
 		new_pipe_node->prev = NULL;
 	}
 	else
 	{
-		lastnode = (*command)->pipe;
-        while (lastnode)
+		lastnode = (*token)->pipe;
+		printf("lastnode ->next : %p\n",  lastnode->next);
+        while (lastnode->next)
             lastnode = lastnode->next;
         lastnode->next = new_pipe_node;
         new_pipe_node->prev = lastnode;
@@ -184,45 +184,30 @@ bool	is_last_pipe_cmd(int fd_prev_read_end, int cur_fd_write_end) // prev->read_
 	return false;
 }
 
-bool	is_single_pipe(t_command *command) //in disenfall muss ich nur first and last aufrufen.
+// bool	is_single_pipe(t_command *command) //in disenfall muss ich nur first and last aufrufen.
+// {
+// 	return (is_first_pipe(command) && is_last_pipe(command));
+// }
+
+// bool	is_multiple_pipe(t_command *command) //in diesenfall muss ich alle aufrufen.
+// {
+// 	return (is_middle_pipe(command));
+// }
+
+int	first_pipe_cmd(t_token *command, t_shell *shell, t_gc_list *gc_lst)
 {
-	return (is_first_pipe(command) && is_last_pipe(command));
-}
-
-bool	is_multiple_pipe(t_command *command) //in diesenfall muss ich alle aufrufen.
-{
-	return (is_middle_pipe(command));
-}
-
-int	first_pipe_cmd(t_command *command)
-{
-	pid_t	pid;
-
-	pid = fork();
-
-	//todo i think this if statment also could be in exe function later. not here.
-	if (command->next && command->next->type == TOKEN_PIPE && is_first_pipe_cmd(command->pipe->pipefd))
-    {
-        add_pipe(&command, gc_lst);
-        fprintf(YELLOW"Created pipe_fd: read_end=%d, write_end=%d\n"DEFAULT,
-            command->pipe->pipefd[0], command->pipe->pipefd[1]);
-    }
 	if (pid == 0)
 	{
-		//todo call it .
-		handle_re_dir();
-		//todo if theres redirection i need to call re_dir_in
+		//handle_re_dir(command);
 		close(command->pipe->pipefd[0]);
 		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->pipefd[0]);
 		if (dup2( command->pipe->pipefd[1], STDOUT_FILENO) == -1)
 			perror(RED"first cmd dup2 error\n"DEFAULT);
 		fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), command->pipe->pipefd[1], STDOUT_FILENO);
-		fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
+		
 		close( command->pipe->pipefd[1]);
 		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(),  command->pipe->pipefd[1]);
-		//todo execve();
-		exit(0);
-		fprintf(stderr, YELLOW "exited with 0\n" DEFAULT);
+		fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
 	}
 	else
 	{
@@ -235,26 +220,16 @@ int	first_pipe_cmd(t_command *command)
 }
 
 //memo if its multiple pipe lines...
-int	middle_pipe_cmd(t_command *command, t_shell *shell)
+int	middle_pipe_cmd(t_token *command, t_shell *shell, t_gc_list *gc_lst)
 {
-	pid_t	pid;
-
-	//todo i think this if statment also could be in exe function later. not here.
-	if (command->next && command->next->type == TOKEN_PIPE && is_middle_pipe_cmd(command->pipe->prev_read_end_fd,command->pipe->cur_fd_write_end))
-    {
-        add_pipe(&command, gc_lst);
-        fprintf(YELLOW"Created pipe_fd: read_end=%d, write_end=%d\n"DEFAULT,
-            command->pipe->pipefd[0], command->pipe->pipefd[1]);
-    }
-	pid = fork();
-	//todo if cur && cur ->next ->type  == TOKENTYPEPIPE && cur->next->next
 	if (pid == 0)
 	{
+		//handle_re_dir(command);
 		if (dup2(command->pipe->prev_read_end_fd , STDIN_FILENO) == -1)
 			perror(RED"SE dup2 ERROR\n"DEFAULT);
 		fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), command->pipe->prev_read_end_fd , STDIN_FILENO);
 		fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
-		close(command->pipe->prev_read_end_fd );
+		close(command->pipe->prev_read_end_fd);
 		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->prev_read_end_fd );
 		close(command->pipe->pipefd[0]);
 		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->pipefd[0]);
@@ -264,10 +239,6 @@ int	middle_pipe_cmd(t_command *command, t_shell *shell)
 		fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
 		close(command->pipe->pipefd[1]);
 		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->pipefd[1]);
-		if (execve("/bin/cat", args, shell->my_envp) == -1)
-			perror(RED"cat failed\n"DEFAULT);
-		fprintf(stderr, YELLOW "[pid %d], execve cat \n" DEFAULT, getpid());
-		exit(0);
 	}
 	else
 	{
@@ -281,19 +252,10 @@ int	middle_pipe_cmd(t_command *command, t_shell *shell)
 	return 1;
 }
 
-int	last_pipe_cmd(t_command *command, t_shell *shell)
+int	last_pipe_cmd(t_token *command, t_shell *shell)
 {
-	pid_t	pid;
 
-	//todo i think this if statment also could be in exe function later. not here.
-	if (is_last_pipe_cmd(command->pipe->prev_read_end_fd, command->pipe->cur_fd_write_end))
-	{
-		printf(YELLOW"last_pipe_cd\n"DEFAULT);
-
-	}
-	pid = fork();
-	fprintf(stderr, YELLOW "fork() = %d\n" DEFAULT, pid);
-	if (pid == 0) //todo fix if condition
+	if (pid == 0)
 	{
 		//todo if theres re_dir_out then i need to call re_dir_out()
 		dup2(command->pipe->prev_read_end_fd, STDIN_FILENO);
@@ -301,10 +263,6 @@ int	last_pipe_cmd(t_command *command, t_shell *shell)
 		fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
 		close(command->pipe->prev_read_end_fd);
 		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->prev_read_end_fd);
-		if (execve("/usr/bin/wc", args , shell->my_envp) ==-1)
-			perror(RED"WC ERROR\n"DEFAULT);
-		fprintf(stderr, YELLOW "[pid %d], execve wc \n" DEFAULT, getpid());
-		exit(0);
 	}
 	else
 	{
@@ -314,3 +272,56 @@ int	last_pipe_cmd(t_command *command, t_shell *shell)
 	}
 	return (1);
 }
+
+// int	main(int argc, char **argv, char **envp)
+// {
+// 	(void)argc;
+// 	(void)argv;
+// 	t_gc_list *gc_lst = init_gc_list();
+// 	t_shell *shell = get_shell();
+
+// 	//todo copy_envp should put into init_shell func.
+// 	shell->my_envp = copy_envp(gc_lst, envp);
+	
+// 	// export(argv, shell);
+// 	// printf("argv[1]%s, argv[2]%s\n", argv[1],argv[2]);
+// 	// unset(argv, shell);
+	
+// 	// ft_echo(argv, shell);
+
+// 	//test
+// 	// int i = 0;
+// 	// while (shell->my_envp[i])
+// 	// {
+// 	// 	printf(BLUE"%p,  %s\n"DEFAULT, shell->my_envp[i], shell->my_envp[i]);
+// 	// 	i++;
+// 	// }
+// 	//echo_Hello_pipe_cat_pipe_wc(shell);
+// 	char *args1[] = {"echo","hello", NULL};
+// 	t_token *command1 = add_token(gc_lst, args1[0], args1, TOKEN_CMD);
+
+// 	t_token *command2 = add_token(gc_lst, NULL, NULL, TOKEN_PIPE);
+
+// 	char *args2[] = {"cat" , NULL};
+// 	t_token *command3 = add_token(gc_lst, args2[0], args2, TOKEN_CMD);
+
+// 	t_token *command4 = add_token(gc_lst, NULL, NULL, TOKEN_PIPE);
+
+// 	char *args3[] = {"wc" , NULL};
+// 	t_token *command5 = add_token(gc_lst, args3[0], args3, TOKEN_CMD);
+
+// 	command1->next = command2;
+// 	command2->prev = command1;
+// 	command2->next =command3;
+// 	command3->prev = command2;
+// 	command3->next = command4;
+// 	command4->prev = command3;
+// 	command4->next = command5;
+// 	command5->prev = command4;
+// 	command5->next = NULL;
+
+// 	first_pipe_cmd(command1,shell,gc_lst);
+// 	middle_pipe_cmd(command2,shell,gc_lst);
+// 	last_pipe_cmd(command3,shell);
+// }
+
