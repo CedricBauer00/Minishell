@@ -17,14 +17,14 @@ int	heredoc(t_main *main, int i, t_gc_list *gc_list)
 	int	j;
 	int	ws;
 	char	*str;
-	//|| ft_isspace(main->line[i + 2])
+
 	if (!main->line[i + 2])
 		return (printf("ERROR\nHeredoc missing delimiter!\n"), -1);
 	j = i + 2;
 	printf("j1 = %c\n", main->line[j]);
 	printf("j1 = %d\n", j);
 
-	while (check_char(main, j, 0) == 0)
+	while (main->line[j] && check_char(main, j, 0) == 0)
 		j++;
 	ws = j;
 	j = is_quote(main, j);
@@ -32,11 +32,10 @@ int	heredoc(t_main *main, int i, t_gc_list *gc_list)
 
 	printf("j2 = %c\n", main->line[j]);
 	printf("j2 = %d\n", j);
-	while (!ft_isspace(main->line[j]))
+	while (main->line[j] && !ft_isspace(main->line[j]))
 		j++;
 	printf("j3 = %c\n", main->line[j]);
 	printf("j3 = %d\n", j);
 	main->error = create_token(&main->tokens, TOKEN_HEREDOC, "<<", gc_list);
-	// main->error = create_token(&main->tokens, TOKEN_WORD, str, gc_list);
 	return (i += 2);
 }

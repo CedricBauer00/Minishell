@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 11:35:34 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/04 10:38:49 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/05 12:19:44 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,7 @@ int quotes(t_main *main, int *i, t_gc_list *gc_list)
 	while (main->line[*i]) // Loop through the input line
 	{
 		while (main->line[*i] && main->line[*i] != '\'') // Find closing quote
-		{
 			(*i)++;
-		}
 		if (main->line[*i] == '\'') // If closing quote is found
 		{
 			// Extract the word between quotes
@@ -41,7 +39,7 @@ int quotes(t_main *main, int *i, t_gc_list *gc_list)
 			return 0;
 		}
 		else
-			return (printf(RED"ERROR\nUnfinished quotes!\n"DEFAULT), -1);
+			return (printf(RED"ERROR\nUnfinished quotes!\n"DEFAULT), 0);
 	}
 	return 0; // Return success if no errors occurred
 }

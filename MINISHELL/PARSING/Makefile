@@ -29,11 +29,8 @@ SOURCES = P_MAIN.c \
 		P_BUILTINS.c \
 		P_QUOTES.c \
 		P_DQUOTES.c \
-		P_PIPE.c \
 		P_REDIRECTS.c \
-		P_APPEND.c \
 		P_HEREDOC.c \
-		P_VAR.c \
 		P_EXPAND.c \
 		GC/gc.c \
 		copy_envp.c \

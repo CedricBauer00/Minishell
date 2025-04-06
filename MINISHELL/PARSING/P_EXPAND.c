@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 09:58:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/03 17:02:07 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/05 12:15:24 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,9 @@ int is_valid_char(char c)
     return (ft_isalnum(c) || c == '_');
 }
 
-int	expands(t_main *main, int *i, t_gc_list *gc_list)
+int	expands(t_main *main, int *i, int ws, t_gc_list *gc_list) // $PATH=HELLo // multiple
 {
-	write(1, "expand\n", 7);
-	printf("line = %s\n", main->line);
 	t_shell *shell = get_shell(gc_list);
-	int		ws;
 	int		j;
 	char	*var;
 	int		len;

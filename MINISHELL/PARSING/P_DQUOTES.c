@@ -6,13 +6,13 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 09:42:44 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/03 17:03:36 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/05 14:44:11 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-int dquotes(t_main *main, int *i, t_gc_list *gc_list)
+int dquotes(t_main *main, int *i, t_gc_list *gc_list) // "HEELLOO $PATH" not working - multiple $VARs - $VAR=... not working 
 {
 	int ws;
 
@@ -36,7 +36,7 @@ int dquotes(t_main *main, int *i, t_gc_list *gc_list)
 				main->error = create_token(&main->tokens, TOKEN_BUILT_IN, main->word, gc_list);
 			else if (main->line[ws] == '$')
 			{
-				if (expands(main, &ws, gc_list) < 0)
+				if (expands(main, &ws, 0, gc_list) < 0)
 					return (perror("ERROR\nExpand failed!\n"), -1);
 			}
 			else
@@ -50,7 +50,7 @@ int dquotes(t_main *main, int *i, t_gc_list *gc_list)
 			return 0; // Successfully processed one quoted segment
 		}
 		else
-			return (printf(RED"ERROR\nUnclosed quotes!\n"DEFAULT), -1);
+			return (printf(RED"ERROR\nUnclosed quotes!\n"DEFAULT), 0);
 	}
 	return 0; // Return success if no errors occurred
 }

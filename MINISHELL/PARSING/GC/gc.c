@@ -30,7 +30,7 @@ void	*do_alloc(t_gc_list *gc_lst, size_t howmuch, t_data_type data_type)
 		free (new_node);
 		return NULL;
 	}
-	new_node->data = data;              
+	new_node->data = data;
 	new_node->next = gc_lst->next;
 	new_node->type = data_type;
 	//new_node->ref_count = 1;

@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/04 12:53:05 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/06 09:56:11 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,16 +157,10 @@ int dquotes(t_main *main, int *i, t_gc_list *gc_list);
 int	pipes(t_main *main, t_gc_list *gc_list, int i);
 
 // ----------------------------------------------------------------------
-// 							REDIRECT_IN
+// 							REDIRECTS
 // ----------------------------------------------------------------------
 
-int	redirect_in(t_main *main, int i, t_gc_list *gc_list); //<
-
-// ----------------------------------------------------------------------
-// 							REDIRECT_OUT
-// ----------------------------------------------------------------------
-
-int	redirect_out(t_main *main, int i, t_gc_list *gc_list); //>
+int	operator(t_main *main, int i, char c, t_gc_list *gc_list);
 
 // ----------------------------------------------------------------------
 // 							  APPEND
@@ -187,7 +181,7 @@ int is_quote(t_main *main, int i);
 // ----------------------------------------------------------------------
 
 int is_valid_char(char c);
-int	expands(t_main *main, int *i, t_gc_list *gc_list);
+int	expands(t_main *main, int *i, int ws, t_gc_list *gc_list);
 void	variables(t_main *main, int i, int ws, int len, t_gc_list *gc_list);
 
 
@@ -200,6 +194,10 @@ t_shell *get_shell(t_gc_list *gc_list);
 void print_tokens(t_token *tokens);
 void print_token(t_token *tokens);
 t_token	*get_last_token(t_token *tokens);
+
+// int	check_operator(t_main *main, int *i, t_gc_list *gc_list);
+// int	check_operator2(t_main *main, int *i, t_gc_list *gc_list);
+
 
 
 // copy_envp.c  -- ok! 
