@@ -6,58 +6,12 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/06 16:50:23 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/07 15:27:47 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-void	set_default(t_main *main)
-{
-	main->tokens = NULL;
-	main->line = NULL;
-	main->last_status_exit = 0;
-	main->envp = NULL;
-	main->next_line = NULL;
-	main->new = NULL;
-	main->word = NULL;
-	main->temp_for_line = NULL;
-	main->error = 0;
-	return ;
-}
-
-void	free_tokens(t_token *tokens)
-{
-	t_token *temp;
-	while (tokens)
-	{
-		temp = tokens;
-		tokens = tokens->next;
-		free(temp->value);
-		free(temp);
-	}
-}
-
-int	append_token(t_token **tokens, t_token *new_token)
-{
-	t_token	*current;
-	
-	if (!new_token)
-	{
-		free(new_token);
-		return (-1);
-	}
-	if (!*tokens)
-	{
-		*tokens = new_token;
-		return (0);
-	}
-	current = *tokens;
-	while (current->next)
-		current = current->next;
-	current->next = new_token;
-	return (0);
-}
 
 int	create_token(t_token **tokens, t_token_type type, char *str, t_gc_list *gc_list)
 {
@@ -132,7 +86,10 @@ int	check_operator2(t_main *main, int *i, t_gc_list *gc_list)
 int	check_operator(t_main *main, int *i, t_gc_list *gc_list)
 {
 	if (ft_isspace(main->line[*i]))
-		main->error = create_token(&main->tokens, SPACES, " ", gc_list);
+	{
+		write(1, "here!\n", 6);
+		main->error = create_token(&main->tokens, TOKEN_SPACES, " ", gc_list);
+	}
 	while (main->line[*i] && ft_isspace(main->line[*i]))
 		(*i)++;
 	if (main->line[*i] == '\0')
@@ -182,7 +139,10 @@ int main(int argc, char **argv, char **envp)
 		{
 			if (check_operator(&main, &i, gc_list) < 0)
 				return (printf("ERROR\nCheck_operator failed!\n"), all_free(&gc_list), -1);
+			// printf("[i] = %c\n", main.line[i]);
 		}
+		// if (check_for_node_spaces(&main, main.tokens, gc_list) < 0)
+		// 	return (printf("ERROR\nChecking nodes failed!\n"), all_free(&gc_list), -1);
 		print_tokens(main.tokens);
 	}
 	if (gc_list)

@@ -26,6 +26,7 @@ LIBFT = $(LIBFT_DIR)/libft.a
 SOURCES = p_main.c \
 		p_words.c \
 		p_utils.c \
+		p_utils2.c \
 		p_builtins.c \
 		p_quotes.c \
 		p_dquotes.c \

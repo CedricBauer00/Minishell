@@ -59,6 +59,8 @@ void print_token(t_token *tokens)
 		printf("Token Type: %s, Value: %s\n", "heredoc", tokens->value);
 	else if (tokens->type & TOKEN_VAR)
 		printf("Token Type: %s, Value: %s\n", "VAR", tokens->value);
+	else if (tokens->type & TOKEN_SPACES)
+		printf("Token Type: %s, Value: %s\n", "SPACE", tokens->value);
 	else
 		printf("Token Type: UNKNOWN (%d), Value: %s\n", tokens->type, tokens->value);
 	// printf("Token Type: %d, Value: %s\n", tokens->type, tokens->value);

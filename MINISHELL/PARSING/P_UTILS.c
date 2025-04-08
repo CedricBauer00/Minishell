@@ -6,13 +6,11 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 17:53:21 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/06 13:01:04 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/07 13:14:07 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "../INCLUDE/parsing.h"
 #include "parsing.h"
-
 
 int	ft_isspace(char c)
 {
@@ -78,9 +76,7 @@ char	*gc_strjoin(char const *s1, char const *s2, t_gc_list *gc_list)
 	size_t	i;
 
 	if (s1[0] == '\0' && s2[0] == '\0')
-	{
 		return (gc_strdup("", gc_list));
-	}
 	len = ft_strlen(s1) + ft_strlen(s2);
 	newstr = (char *)do_alloc(gc_list, (len + 1) * sizeof(char),TYPE_SINGLE_PTR);
 	if (!newstr)
@@ -95,45 +91,4 @@ char	*gc_strjoin(char const *s1, char const *s2, t_gc_list *gc_list)
 	 	// free((void *)s2);
 	newstr[counter] = '\0';
 	return (newstr);
-}
-
-int	check_char(t_main *main, int i, int ind)
-{
-	if (ind == 0)
-	{
-		if (ft_isspace(main->line[i]))
-			return (1);
-	}
-	else
-	{
-		if (ft_isspace(main->line[i]))
-			return (1);
-		if (main->line[i] == '|' || main->line[i] == '<' || main->line[i] == '>'
-			|| main->line[i] == '$' || main->line[i] == '"' || main->line[i] == '\'')
-			return (1);
-	}
-	return (0);
-}
-
-int is_quote(t_main *main, int i)
-{
-	int		j;
-	char	c;
-	
-	j = 0;
-	while (1)
-	{
-		if (main->line[i])
-			return (i);
-		else if (j == 1 && main->line[i] == c)
-			j = 0;
-		else if (j == 0 && (main->line[i] == '"' || main->line[i] == '\''))
-		{
-			c = main->line[i];
-			j = 1;
-		}
-		else if (j == 0 && (main->line[i] == '|' || main->line[i] == '<' || main->line[i] == '>'))
-			break ;
-	}
-	return (i);
 }

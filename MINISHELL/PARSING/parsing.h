@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/06 16:23:57 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/07 16:59:19 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ typedef enum s_tenum
     TOKEN_HEREDOC = 0x0100,      //Symbol: <<
     TOKEN_VAR = 0x0200,          //$ variable
     TOKEN_EOF = 0x0400,          //End of input
-    SPACES
+    TOKEN_SPACES = 0x0800
 }   t_token_type;
 
 
@@ -80,6 +80,7 @@ typedef struct s_token //struct being allocated for each token from input
     t_token_type    type;
     char            *value;
     struct          s_token *next;
+    struct          s_token *prev;
 }   t_token;
 
 typedef struct s_main
@@ -205,6 +206,8 @@ int is_quote(t_main *main, int i);
 int is_valid_char(char c);
 int	expands(t_main *main, int *i, int ws, t_gc_list *gc_list);
 void	variables(t_main *main, int i, int ws, int len, t_gc_list *gc_list);
+int	special_character(t_main *main, int *i, char *value, t_gc_list *gc_list);
+int	expand_helper(t_main *main, int *i, int ws, t_gc_list *gc_list);
 
 
 t_shell	*init_shell_info(t_gc_list *gc_list);
@@ -216,6 +219,11 @@ t_shell *get_shell(t_gc_list *gc_list);
 void print_tokens(t_token *tokens);
 void print_token(t_token *tokens);
 t_token	*get_last_token(t_token *tokens);
+
+int	check_for_node_spaces(t_main *main, t_token *temp, t_gc_list *gc_list);
+int	node_spaces_helper(t_token *temp, t_gc_list *gc_list);
+
+
 
 // int	check_operator(t_main *main, int *i, t_gc_list *gc_list);
 // int	check_operator2(t_main *main, int *i, t_gc_list *gc_list);

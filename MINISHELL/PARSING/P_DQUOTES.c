@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 09:42:44 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/06 15:17:30 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/07 18:15:55 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,7 +209,7 @@ int dquotes(t_main *main, int *i, t_gc_list *gc_list) //- $VAR=... not working
 	}
 	if (main->line[*i] != '"')
 		return (printf(RED"ERROR\nUnclosed quotes!\n"DEFAULT), 0);
-	
+	if (main->line[*i] != '\0')
+		(*i)++;
 	return (0);
 }
-
