@@ -10,6 +10,7 @@
 
 /* free함수를 사용하기위한 헤더 */
 # include <stdlib.h>
+
 /*
 
 */
@@ -61,23 +62,28 @@ char *get_terminal_path(int fd)
 int	heredoc(char *tty_path)
 {
 	int	fd;
-	if (isatty(STDIN_FILENO)) 
-	{   
-    	printf(GREEN"input from terminal\n"DEFAULT);
-		fd = open(tty_path, O_RDWR);
+	// if (isatty(STDIN_FILENO)) 
+	// {   
+    // 	printf(GREEN"input from terminal\n"DEFAULT);
+	// 	fd = open(tty_path, O_RDWR);
+	// 	if (fd == -1)
+	// 	{
+	// 		perror(RED"failed to open tty"DEFAULT);
+	// 		return -1;
+	// 	}
+	// 	if (dup2(fd, STDIN_FILENO) == -1)
+	// 	{
+	// 		perror(RED"failed to dup2() in heredoc()"DEFAULT);
+	// 		close(fd);
+	// 		return -1;
+	// 	}
+
+		fd = open("temp_heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd == -1)
 		{
-			perror(RED"failed to open tty"DEFAULT);
+			perror(RED"failed to open temp_heredoc"DEFAULT);
 			return -1;
 		}
-		if (dup2(fd, STDIN_FILENO) == -1)
-		{
-			perror(RED"failed to dup2() in heredoc()"DEFAULT);
-			close(fd);
-			return -1;
-		}
-		close(fd);
-
 		while(1)
 		{
 			char *line;
@@ -88,29 +94,49 @@ int	heredoc(char *tty_path)
 				free(line);
 				break;
 			}
-			
+			write(fd, line, strlen(line));
+			write(fd, "\n", 1);
 			free(line);
 		}
-	}
-	else 
-	{
- 	   printf("input from not terminal\n");
-	   return -1;
-	}
+		int fd_org_read = dup(STDIN_FILENO);
+		if (fd_org_read == -1)
+		{
+			clase(fd);
+			return -1;
+		}
+		close(fd);
+		//if (builtin)
+		//{
+			//execute builtin	
+		//}
+		//todo think where should i recover it 
+		if (dup2(fd_org_read, STDIN_FILENO) == -1)
+		{
+			close(fd_org_read);
+			return -1;
+		}
+		close(fd_org_read);
+		//if (cmd)
+	// }
+	// else 
+	// {
+ 	//    printf("input from not terminal\n");
+	//    return -1;
+	// }
 	return 1;
 }
 
-void	*make_file_on_mem(char *filepath)
-{
-	int fd;
+// void	*make_file_on_mem()
+// {
+// 	int fd;
 
-	fd = open(filepath, O_RDONLY);
-	if (fd == -1)
-	{
-		perror("open heredoc file is faield");
-		return NULL;
-	}
-}
+// 	fd = open("../", O_RDONLY);
+// 	if (fd == -1)
+// 	{
+// 		perror("open heredoc file is faield");
+// 		return NULL;
+// 	}
+// }
 
 int main()
 {

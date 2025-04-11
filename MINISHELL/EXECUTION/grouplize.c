@@ -8,14 +8,14 @@
 */
 
 //Divided by command
-void grouplize(t_token *token, t_gc_list *gc_lst)
+void grouplize(t_token *token, t_cmd_block *cmd_block, t_gc_list *gc_lst)
 {
 	if (!token)
 		return ;
 	
 	while (token != NULL)
 	{
-		merge_to_one_cmd(&token, gc_lst);
+		merge_to_one_cmd(&token, &cmd_block, gc_lst);
 		if(token && token->type == TOKEN_PIPE)
 			token = token->next;
 		if (token == NULL)
@@ -23,69 +23,109 @@ void grouplize(t_token *token, t_gc_list *gc_lst)
 	}
 }
 
-void	merge_to_one_cmd(t_token **token, t_gc_list *gc_lst)
+//todo do not assign just address otherwise use strdup for makking cmd_block list's node.
+void	merge_to_one_cmd(t_token **token, t_cmd_block **cmd_block, t_gc_list *gc_lst)
 {
-	t_command_node *new_c_node;
+	t_cmd_block *new_cmd_block;
+	t_io_streams_list *new_io_streams;
 	t_token *cur;
 	
 	cur = *token;
-	new_c_node = init_command_struct();
-	is_exited((t_command_node*)new_c_node, gc_lst);
+	new_cmd_block = init_command_struct(gc_lst);
+	is_exited((t_cmd_block*)new_cmd_block, gc_lst);
+	if (!(*cmd_block))
+	{
+		*cmd_block = new_cmd_block;
+	}
+	else
+	{
+		t_cmd_block *last = *cmd_block;
+		while(last->next)
+		{
+			last = last->next;
+		}
+		last -> next = new_cmd_block;
+	}
+
 	while(cur && cur->type != TOKEN_PIPE)
 	{
 		if (cur && cur->type == TOKEN_CMD)
 		{
-			new_c_node->cmd = cur->value;
+			new_cmd_block->cmd = gc_strdup(cur->value, gc_lst);
 		}
 		if (cur && cur->type == TOKEN_FLAGS)
 		{
-			//todo : new_c_node->args do_alloc
+			int count = 0;
+			t_token *temp = cur;
+			while (temp && temp->type == TOKEN_FLAGS)
+			{
+				count++;
+				temp = temp->next;
+			}
+			new_cmd_block->args = do_alloc(gc_lst, count + 1, TYPE_DOUBLE_PTR);
 			int i = 0;
 			while(cur && cur->type == TOKEN_FLAGS)
 			{
-				new_c_node->args[i] = cur->value;
+				new_cmd_block->args[i] = gc_strdup(cur->value, gc_lst);
 				i++;
 				cur = cur->next;
 			}
-			new_c_node->args[i] = NULL;
+			new_cmd_block->args[i] = NULL;
 		}
+
 		if (cur && cur->type == TOKEN_BUILT_IN)
 		{
-			new_c_node->built_in = cur->value;
+			new_cmd_block->built_in = gc_strdup(cur->value, gc_lst);
 		}
-		if (cur && cur->type == TOKEN_REDIRECT_IN)  //token->value : < filename
+
+		if (cur && (cur->type == TOKEN_REDIRECT_IN || cur->type == TOKEN_REDIRECT_OUT || cur->type == TOKEN_APPEND))  //token->value : < filename
 		{
+			new_io_streams = init_io_stream_struct(gc_lst);
+			if(!new_cmd_block->io_streams)
+				new_cmd_block->io_streams = new_io_streams;
+			else
+			{
+				t_io_streams_list *last;
+				last = new_cmd_block->io_streams;
+				while(last->next)
+				{
+					last = last->next;
+				}
+				last->next = new_io_streams;
+			}
 			if(cur->next && cur->next->type == TOKEN_WORD)
 			{
-				new_c_node->infile_name = cur->next->value;
-				if (cur->next->next)
-					cur = cur->next->next;
+				if (cur->type == TOKEN_REDIRECT_IN)
+					new_cmd_block->io_streams->infile_name = gc_strdup(cur->next->value, gc_lst);
+				else if (cur->type == TOKEN_REDIRECT_OUT)
+					new_cmd_block->io_streams->outfile_name = gc_strdup(cur->next->value, gc_lst);
+				else if (cur->type == TOKEN_APPEND)
+					new_cmd_block->io_streams->outfile_name = gc_strdup(cur->next->value, gc_lst);
+			
+				cur = cur->next;
 				continue;
 			}
 			else
 			{
-				fprintf(stderr,"syntax error near unexpected token `newline'");
+				fprintf(stderr, "syntax error near unexpected token `newline'");
 			}
 		}
-		if (cur && cur->type == TOKEN_REDIRECT_OUT) //token->value : >
+
+		if (cur && cur->type == TOKEN_HEREDOC)
 		{
-			if(cur->next && cur->next->type == TOKEN_WORD)
+			int heredoc_result;
+			heredoc_result = heredoc();
+			if (heredoc_result == -1)
 			{
-				new_c_node->outfile_name = cur->next->value;
-				if (cur->next->next)
-					cur = cur->next->next; 
-				continue;
-			}
-			else
-			{
-				fprintf(stderr,"syntax error near unexpected token `newline'");
+				//todo handle error case!
 			}
 		}
 		cur = cur->next;
 	}
 	*token = cur;
-	//todo 연결리스트로 연결 !
 }
+
+
 
 //redirection
 //ok cmd < filename < fileanme
