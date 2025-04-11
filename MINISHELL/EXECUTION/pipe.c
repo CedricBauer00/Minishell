@@ -109,37 +109,33 @@
 	add_pipe를 언제 호출해야하는지 생각해보기 -> in exe function.
 */
 
-void	add_pipe(t_token **token, t_gc_list *gc_lst)
+void	add_pipe(t_cmd_block **cmd_block, t_gc_list *gc_lst)
 {
 	t_pipe *new_pipe_node;
-	t_pipe *lastnode;
+	// t_pipe *lastnode;
 
-	new_pipe_node = init_pipe_list(gc_lst);
-	new_pipe_node->pipefd = do_alloc(gc_lst, sizeof(int) * 2, TYPE_SINGLE_PTR);
-		is_exited(new_pipe_node->pipefd,gc_lst);
-	if (pipe(new_pipe_node->pipefd) == -1) 
+	if (!cmd_block || !*cmd_block)
+		return ;
+	new_pipe_node = init_pipe(gc_lst);
+	if ((*cmd_block)->pipe == NULL)
 	{
-        perror("Error creating pipe");
-        all_free(&gc_lst);
-        exit(EXIT_FAILURE);
-    }
-	if (!(*token)->pipe)
-		(*token)->pipe = init_pipe_list(gc_lst); //todo Ich muss darüber nachdenken, wo ich die Funktion einsetzen soll. 
-	if ((*token)->pipe == NULL)
-	{
-		(*token)->pipe = new_pipe_node;
-		new_pipe_node->prev = NULL;
+		(*cmd_block)->pipe = new_pipe_node;
 	}
-	else
-	{
-		lastnode = (*token)->pipe;
-		printf("lastnode ->next : %p\n",  lastnode->next);
-        while (lastnode->next)
-            lastnode = lastnode->next;
-        lastnode->next = new_pipe_node;
-        new_pipe_node->prev = lastnode;
-	}
-	new_pipe_node->next = NULL;
+	// if ((*command)->pipe == NULL)
+	// {
+	// 	(*command)->pipe = new_pipe_node;
+	// 	new_pipe_node->prev = NULL;
+	// }
+	// else
+	// {
+	// 	lastnode = (*command)->pipe;
+	// 	printf("lastnode ->next : %p\n",  lastnode->next);
+    //     while (lastnode->next)
+    //         lastnode = lastnode->next;
+    //     lastnode->next = new_pipe_node;
+    //     new_pipe_node->prev = lastnode;
+	// }
+	// new_pipe_node->next = NULL;
 }
 
 // int	create_pipe(t_token **token, t_gc_list *gc_lst)
@@ -194,7 +190,7 @@ bool	is_last_pipe_cmd(int fd_prev_read_end, int cur_fd_write_end) // prev->read_
 // 	return (is_middle_pipe(command));
 // }
 
-int	first_pipe_cmd(t_token *command, t_shell *shell, t_gc_list *gc_lst)
+int	first_pipe_cmd(t_cmd_block *command, t_shell *shell, t_gc_list *gc_lst)
 {
 	if (pid == 0)
 	{
@@ -220,7 +216,7 @@ int	first_pipe_cmd(t_token *command, t_shell *shell, t_gc_list *gc_lst)
 }
 
 //memo if its multiple pipe lines...
-int	middle_pipe_cmd(t_token *command, t_shell *shell, t_gc_list *gc_lst)
+int	middle_pipe_cmd(t_cmd_block *command, t_shell *shell, t_gc_list *gc_lst)
 {
 	if (pid == 0)
 	{
@@ -252,7 +248,7 @@ int	middle_pipe_cmd(t_token *command, t_shell *shell, t_gc_list *gc_lst)
 	return 1;
 }
 
-int	last_pipe_cmd(t_token *command, t_shell *shell)
+int	last_pipe_cmd(t_cmd_block *command, t_shell *shell)
 {
 
 	if (pid == 0)
