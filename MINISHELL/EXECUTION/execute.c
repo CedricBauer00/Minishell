@@ -11,7 +11,8 @@ void	execute_cmds(t_cmd_block *cmd, t_gc_list *gc_lst, t_shell *shell)
 	cur = cmd;
 	while(cur)
 	{
-		if (cur->next && cur->next->type == TOKEN_PIPE)
+		//TODO denk mal ueber if Bedingung nach cur->next || oder cur->next->type == TOKEN_PIPE	weil wenn es naechste node gibt,heisst das, es gibt pipe auch!
+		if (cur->next && cur->next->type == TOKEN_PIPE) 
 		{
 			add_pipe(&cur, gc_lst);
 			fprintf(stderr, YELLOW"Created pipe_fd: read_end=%d, write_end=%d\n"DEFAULT,
@@ -36,11 +37,11 @@ void	execute_cmds(t_cmd_block *cmd, t_gc_list *gc_lst, t_shell *shell)
 				execve(cur->cmd, )
 				// if (pid == 0)
 				// {
-				// 	if (cur->pipe && cur->pipe->prev_read_end_fdb == -1 && cur->pipe->cur_fd_write_end == -1)
+				// 	if (cur->next && cur->pipe->prev_read_end_fdb == -1 && cur->pipe->cur_fd_write_end == -1)
 				// 		first_pipe_cmd(token, shell, gc_lst);
-				// 	if (cur->pipe && cur->pipe->prev_read_end_fd != -1 && cur->pipe->cur_fd_write_end != -1)
+				// 	if (cur->next && cur->pipe->prev_read_end_fd != -1 && cur->pipe->cur_fd_write_end != -1)
 				// 		middle_pipe_cmd(token, shell, gc_lst);
-				// 	if (cur->pipe && cur->pipe->prev_read_end_fd != -1 && cur->pipe->cur_fd_write_end == -1)
+				// 	if (cur->next && cur->pipe->prev_read_end_fd != -1 && cur->pipe->cur_fd_write_end == -1)
 				// 		last_pipe_cmd(token, shell);
 				// }
 				// else
