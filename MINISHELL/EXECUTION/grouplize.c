@@ -39,7 +39,6 @@ void grouplize(t_token *token, t_cmd_block **cmd_block, t_gc_list *gc_lst)
 t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc_list *gc_lst)
 {
 	t_cmd_block *new_cmd_block;
-	//t_cmd_block *last = *cmd_block;
 	t_io_streams_list *new_io_streams;
 	t_token *cur;
 	
@@ -114,6 +113,7 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc_list *gc_lst)
 				fprintf(stderr, "syntax error near unexpected token `newline'");
 			}
 		}
+		//memo ich finde ich muss heredoc in here ausfuehren.
 		// if (cur && cur->type == TOKEN_HEREDOC)
 		// {
 		// 	int heredoc_result;
@@ -143,10 +143,10 @@ t_token *create_token(t_token_type type, char *value)
 
 int main()
 {
-	t_token *t1 = create_token(TOKEN_BUILT_IN, "echo");
-	t_token *t2 = create_token(TOKEN_REDIRECT_OUT, ">");
+	t_token *t1 = create_token(TOKEN_BUILT_IN, "cat");
+	t_token *t2 = create_token(TOKEN_REDIRECT_IN, "<");
 	t_token *t3 = create_token(TOKEN_WORD, "file2");
-	t_token *t4 = create_token(TOKEN_REDIRECT_OUT, ">");
+	t_token *t4 = create_token(TOKEN_REDIRECT_IN, "<");
 	t_token *t5 = create_token(TOKEN_WORD, "file3");
 	t_token *t6 = create_token(TOKEN_PIPE, "|");
 	t_token *t7 = create_token(TOKEN_CMD, "wc");
