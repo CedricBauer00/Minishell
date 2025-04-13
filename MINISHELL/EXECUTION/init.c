@@ -1,6 +1,5 @@
 # include "../INCLUDE/main.h"
 
-
 t_shell	*init_shell_struct(void)
 {
 	t_shell *shell;
@@ -16,43 +15,63 @@ t_shell	*init_shell_struct(void)
 	return shell;
 }
 
-t_pipe *init_pipe_list(t_gc_list *gc_lst)
+t_pipe *init_pipe(t_gc_list *gc_lst)
 {
-	t_pipe *pipe;
-	pipe = do_alloc(gc_lst, sizeof(t_pipe), TYPE_SINGLE_PTR);
-	if (!pipe)
+	t_pipe *p_pipe;
+	p_pipe = do_alloc(gc_lst, sizeof(t_pipe), TYPE_SINGLE_PTR);
+	if (!p_pipe)
 	{
 		return (NULL);
 	}
-	pipe->pipefd = NULL;
-	pipe->prev_read_end_fd = -1;
-	pipe->cur_fd_write_end = -1;
-	pipe->next = NULL;
-	pipe->prev = NULL;
-	return pipe;
+	p_pipe->pipefd = do_alloc(gc_lst, sizeof(int) * 2, TYPE_SINGLE_PTR);
+	if (!p_pipe->pipefd)
+	{
+		return (NULL);
+	}
+	if (pipe(p_pipe->pipefd) == -1)
+	{
+		perror("init_pipe()");
+		all_free(&gc_lst);
+		return (NULL);
+	}
+	p_pipe->prev_read_end_fd = -1;
+	p_pipe->cur_fd_write_end = -1;
+	// p_pipe->next = NULL;
+	// p_pipe->prev = NULL;
+	return p_pipe;
 }
 
-t_token *init_command_struct(t_gc_list *gc_lst)
+t_io_streams_list *init_io_stream_struct(t_gc_list *gc_lst)
 {
-	t_token *cmd;
-	cmd = do_alloc(gc_lst, sizeof(t_token), TYPE_SINGLE_PTR);
+	t_io_streams_list	*io_streams_lst;
+	io_streams_lst = do_alloc(gc_lst, sizeof(t_io_streams_list), TYPE_SINGLE_PTR);
+	if (!io_streams_lst)
+	{
+		return (NULL);
+	}
+	io_streams_lst->infile_name = NULL;
+	io_streams_lst->outfile_name = NULL;
+	io_streams_lst->fd_in_file = 0;
+	io_streams_lst->fd_in_file = 0;
+	io_streams_lst->next = NULL;
+	return (io_streams_lst);
+}
+
+t_cmd_block *init_command_struct(t_gc_list *gc_lst)
+{
+	t_cmd_block *cmd;
+	cmd = do_alloc(gc_lst, sizeof(t_cmd_block), TYPE_SINGLE_PTR);
 	if (!cmd)
 	{
 		return (NULL);
 	}
-	cmd->value = NULL;
+	//cmd->value = NULL;
+	cmd->built_in = NULL;
 	cmd->cmd = NULL;
 	cmd->args = NULL;
-	cmd->infile_name = NULL;
-	cmd->outfile_name = NULL;
-	cmd->pipe = do_alloc(gc_lst, sizeof(t_pipe), TYPE_SINGLE_PTR);
-	if (!cmd->pipe)
-	{
-		all_free(&gc_lst);
-		return NULL;
-	}
+	cmd->io_streams = NULL;
+	cmd->pipe = NULL;
 	cmd->next = NULL;
-	cmd->prev = NULL;
 	cmd->type = TOKEN_NONE;
 	return (cmd);
 }

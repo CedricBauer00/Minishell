@@ -28,10 +28,10 @@ void grouplize(t_token *token, t_cmd_block **cmd_block, t_gc_list *gc_lst)
 			}
 			last->next = new_cmd_block;
 		}
-		if(token == NULL)
-			break;
 		if(token && token->type == TOKEN_PIPE)
 			token = token->next;
+		// if(token == NULL)
+		// 	break;
 	}
 }
 

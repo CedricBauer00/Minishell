@@ -9,6 +9,8 @@
 			error;
 
 */
+//after
+
 int	validate_syntax(t_token *token)
 {
 	t_token *cur;
@@ -31,27 +33,24 @@ int	validate_syntax(t_token *token)
 				perror(RED"syntax error"DEFAULT);
 			}
 		}
-
-		//ㅊheck if a TOKEN_WORD follows after a redirection
+		
+		//heck if a TOKEN_WORD follows after a redirection
 		if (cur->type & (TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT | TOKEN_APPEND))
 		{
 			if (!cur->next || cur->next->type != TOKEN_WORD)
 			{
 				perror(RED"syntax error"DEFAULT);
-
 			}
 		}
 
-		//ㅊheck if a TOKEN_EOF follows after a TOKEN_HEREDOC
+		//heck if a TOKEN_EOF follows after a TOKEN_HEREDOC
 		if (cur->type == TOKEN_HEREDOC)
 		{
 			if(cur->next->type != TOKEN_EOF)
 			{
 				perror(RED"syntax error"DEFAULT);
-
 			}
 		}
-		
 		//memo ich muss nicht es hier auschecken, weil TOKEN_FLAGS mit ACCESS funktion ueberprueft werden kann.
 		// if (cur->type == TOKEN_CMD || cur->type == TOKEN_FLAGS)
 		// {

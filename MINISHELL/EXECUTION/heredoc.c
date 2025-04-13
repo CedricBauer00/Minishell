@@ -47,21 +47,21 @@ heredoc 처리는 보통 명령 실행 전, 부모 프로세스에서 처리함.
 
 */
 //fd sollte einfach STDIN_FILENO
-char *get_terminal_path(int fd)
-{
-	char *tty_path;
+// char *get_terminal_path(int fd)
+// {
+// 	char *tty_path;
 	
-	if (fd < 0)
-		return (NULL);
-	tty_path = ttyname(fd);
-	if (!tty_path)
-		return (NULL);
-	return (tty_path);
-}
+// 	if (fd < 0)
+// 		return (NULL);
+// 	tty_path = ttyname(fd);
+// 	if (!tty_path)
+// 		return (NULL);
+// 	return (tty_path);
+// }
 
-int	heredoc(char *tty_path)
+int	heredoc()
 {
-	int	fd;
+	int	fd_heredoc;
 	// if (isatty(STDIN_FILENO)) 
 	// {   
     // 	printf(GREEN"input from terminal\n"DEFAULT);
@@ -77,46 +77,45 @@ int	heredoc(char *tty_path)
 	// 		close(fd);
 	// 		return -1;
 	// 	}
+	int fd_org_read = dup(STDIN_FILENO);
+	if (fd_org_read == -1)
+	{
+		return -1;
+	}
+	fd_heredoc = open("temp_heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd_heredoc == -1)
+	{
+		perror(RED"failed to open temp_heredoc"DEFAULT);
+		return -1;
+	}
+	while(1)
+	{
+		char *line;
 
-		fd = open("temp_heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (fd == -1)
+		line = readline("> ");
+		if (!line || strcmp(line, "eof") == 0)
 		{
-			perror(RED"failed to open temp_heredoc"DEFAULT);
-			return -1;
-		}
-		while(1)
-		{
-			char *line;
-
-			line = readline("> ");
-			if (!line || strcmp(line, "eof") == 0)
-			{
-				free(line);
-				break;
-			}
-			write(fd, line, strlen(line));
-			write(fd, "\n", 1);
 			free(line);
+			break;
 		}
-		int fd_org_read = dup(STDIN_FILENO);
-		if (fd_org_read == -1)
-		{
-			clase(fd);
-			return -1;
-		}
-		close(fd);
-		//if (builtin)
-		//{
-			//execute builtin	
-		//}
-		//todo think where should i recover it 
-		if (dup2(fd_org_read, STDIN_FILENO) == -1)
-		{
-			close(fd_org_read);
-			return -1;
-		}
+		write(fd_heredoc, line, strlen(line));
+		write(fd_heredoc, "\n", 1);
+		free(line);
+	}
+
+	close(fd_heredoc);
+	//if (builtin)
+	//{
+		//execute builtin	
+	//}
+	//todo think where should i recover it 
+	if (dup2(fd_org_read, STDIN_FILENO) == -1)
+	{
 		close(fd_org_read);
-		//if (cmd)
+		return -1;
+	}
+	close(fd_org_read);
+	//if (cmd)
 	// }
 	// else 
 	// {
@@ -126,21 +125,9 @@ int	heredoc(char *tty_path)
 	return 1;
 }
 
-// void	*make_file_on_mem()
+
+//bei der durchfuehrung des cmd muss ich den FD des temporäre Datei umleiten.
+// int main()
 // {
-// 	int fd;
-
-// 	fd = open("../", O_RDONLY);
-// 	if (fd == -1)
-// 	{
-// 		perror("open heredoc file is faield");
-// 		return NULL;
-// 	}
+// 	heredoc();
 // }
-
-int main()
-{
-	char *tty_path = get_terminal_path(STDIN_FILENO);
-	heredoc(tty_path);
-	printf("tty_path : %s\n", tty_path);
-}

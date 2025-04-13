@@ -62,9 +62,9 @@ int	out_redir_file_open(t_cmd_block *cmd_block, char *out_filename)
 
 int	handle_re_dir(t_cmd_block *cmd_block)
 {
-	if(cmd_block->type & TOKEN_REDIRECT_IN)
+	if(cmd_block->io_streams->fd_in_file)
 		re_dir_in(cmd_block);
-	if (cmd_block->type & (TOKEN_REDIRECT_OUT))
+	if (cmd_block->io_streams->fd_out_file)
 		re_dir_out(cmd_block);
 	return 0;
 }
