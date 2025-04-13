@@ -16,6 +16,15 @@ void	set_redirection(t_cmd_block *cmd, t_gc_list *gc_lst, t_shell *shell)
 		if (cur->next)
 		{
 			add_pipe(&cur, gc_lst);
+			if (is_first_pipe_cmd(cur->pipe->pipefd))
+			{
+				if (cur->pipe->stage == NONE)
+				{
+					cur->pipe->stage = FIRST;
+				}
+			}
+			if (is_middle_pipe_cmd(cur->pipe->prev_read_end_fd, cur->pipe->cur_fd_write_end))
+				middle_pipe_cmd(cur, shell, gc_lst);
 			pid = fork();
 			if (pid == 0)
 			{
@@ -38,10 +47,13 @@ void	set_redirection(t_cmd_block *cmd, t_gc_list *gc_lst, t_shell *shell)
 						cur->io_streams = cur->io_streams->next;
 					}
 				}
+				// fprintf(stderr, YELLOW"Created pipe_fd: read_end=%d, write_end=%d\n"DEFAULT,
+				// 	cmd->pipe->pipefd[0], cmd->pipe->pipefd[1]);
 			}
-			
-			fprintf(stderr, YELLOW"Created pipe_fd: read_end=%d, write_end=%d\n"DEFAULT,
-				cmd->pipe->pipefd[0], cmd->pipe->pipefd[1]);
+			else
+			{
+
+			}
 		}
 
 		//single command!
@@ -49,8 +61,6 @@ void	set_redirection(t_cmd_block *cmd, t_gc_list *gc_lst, t_shell *shell)
 		{
 
 		}
-		
-	
 		cur = cur->next;
 	}
 }
