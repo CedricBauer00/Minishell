@@ -28,6 +28,7 @@ void	set_redirection(t_cmd_block *cmd, t_gc_list *gc_lst, t_shell *shell)
 			pid = fork();
 			if (pid == 0)
 			{
+				// need to change if statemnet
 				if (is_first_pipe_cmd(cur->pipe->pipefd))
 					first_pipe_cmd(cur, shell, gc_lst);
 				if (is_middle_pipe_cmd(cur->pipe->prev_read_end_fd, cur->pipe->cur_fd_write_end))
