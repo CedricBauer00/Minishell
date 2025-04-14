@@ -17,11 +17,11 @@ typedef enum	e_data_type
 
 //todo i have to change die struct wie? Aufteilung in zwei Listen.
 
-typedef struct s_gc_list
+typedef struct s_gc
 {
 	t_gc_node	*temp;
 	t_gc_node	*shell;
-}	t_gc_list;
+}	t_gc;
 
 typedef struct	s_gc_list  //-->change to s_gc_node
 {
