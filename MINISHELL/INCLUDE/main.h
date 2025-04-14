@@ -32,8 +32,16 @@ typedef enum s_tenum
 	TOKEN_APPEND = 0x0080,			//Symbol: >>
 	TOKEN_HEREDOC = 0x0100,			//Symbol: <<
 	TOKEN_VAR = 0x0200,				//$ variable
-	TOKEN_EOF = 0x0400,				//End of input
+	//TOKEN_EOF = 0x0400,				//End of input
 }	t_token_type;
+
+// typedef enum	e_pipe_stage
+// {
+// 	NONE,
+// 	FIRST,
+// 	MIDDLE,
+// 	LAST,
+// }	t_pipe_stage;
 
 // typedef struct s_token_type
 // {
@@ -68,13 +76,14 @@ typedef struct s_token
 
 typedef struct s_cmd_block //struct being allocated for each token from input
 {
-	t_token_type				type;		//todo vilt ,,i can delete?
+	//t_token_type				type;		//todo vilt ,,i can delete?
 	char						*built_in; //need to change name
 	char						*cmd;
 	char						**args;
 	struct s_io_streams_list	*io_streams;
 	// pid_t					*pid;
 	struct s_pipe				*pipe;
+	struct s_cmd_block			*prev;
 	struct s_cmd_block			*next;
 }	t_cmd_block;
 /***********************************************************************/
@@ -93,6 +102,7 @@ typedef struct s_io_streams_list //> < > <
 
 typedef struct s_pipe
 {
+	t_pipe_stage		stage;
 	int					*pipefd;
 	int					prev_read_end_fd; //pipe 초기값은 -1로.
 	int					cur_fd_write_end;
@@ -171,18 +181,18 @@ void	ft_echo(char **argv, t_shell *sehll);
 
 
 //memo pipe
-void	add_pipe(t_cmd_block **token, t_gc_list *gc_lst);
+void	add_pipe(t_cmd_block **cmd_block, t_gc_list *gc_lst);
 bool	is_first_pipe_cmd(int *pipefd);
 bool	is_middle_pipe_cmd(int fd_prev_read_end, int cur_fd_write_end);
 bool	is_last_pipe_cmd(int fd_prev_read_end, int cur_fd_write_end);
-int		first_pipe_cmd(t_cmd_block *token, t_shell *shell, t_gc_list *gc_lst);
-int		middle_pipe_cmd(t_cmd_block *token, t_shell *shell, t_gc_list *gc_lst);
-int		last_pipe_cmd(t_cmd_block *token, t_shell *shell);
+int		first_pipe_cmd(t_cmd_block *cmd_block, t_shell *shell, t_gc_list *gc_lst);
+int		middle_pipe_cmd(t_cmd_block *cmd_block, t_shell *shell, t_gc_list *gc_lst);
+int		last_pipe_cmd(t_cmd_block *cmd_block, t_shell *shell);
 
 //memo redirection.c
-int	handle_re_dir(t_cmd_block *token);
-int	re_dir_out(t_cmd_block *token);
-int	re_dir_in(t_cmd_block *token);
+int	handle_re_dir(t_cmd_block *cmd_block);
+int	re_dir_out(t_cmd_block *cmd_block);
+int	re_dir_in(t_cmd_block *cmd_block);
 
 //memo exe_utils.c
 void	is_exited(void *failed, t_gc_list *gc_lst);

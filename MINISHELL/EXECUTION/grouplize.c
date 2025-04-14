@@ -14,6 +14,9 @@ void grouplize(t_token *token, t_cmd_block **cmd_block, t_gc_list *gc_lst)
 		return ;
 	while (token != NULL)
 	{
+		if(token && token->type == TOKEN_PIPE)
+			token = token->next;
+		
 		t_cmd_block *new_cmd_block = merge_to_one_cmd(&token, gc_lst);
 		if (*cmd_block == NULL)
 		{
@@ -27,9 +30,8 @@ void grouplize(t_token *token, t_cmd_block **cmd_block, t_gc_list *gc_lst)
 				last = last->next;
 			}
 			last->next = new_cmd_block;
+			new_cmd_block->prev = last;
 		}
-		if(token && token->type == TOKEN_PIPE)
-			token = token->next;
 		// if(token == NULL)
 		// 	break;
 	}

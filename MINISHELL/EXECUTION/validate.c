@@ -46,11 +46,12 @@ int	validate_syntax(t_token *token)
 		//heck if a TOKEN_EOF follows after a TOKEN_HEREDOC
 		if (cur->type == TOKEN_HEREDOC)
 		{
-			if(cur->next->type != TOKEN_EOF)
+			if(!cur->next)
 			{
 				perror(RED"syntax error"DEFAULT);
 			}
 		}
+
 		//memo ich muss nicht es hier auschecken, weil TOKEN_FLAGS mit ACCESS funktion ueberprueft werden kann.
 		// if (cur->type == TOKEN_CMD || cur->type == TOKEN_FLAGS)
 		// {
