@@ -53,11 +53,12 @@ t_gc_list	*init_gc_list(void)
 	head->data = NULL;
 	head->next = NULL;
 	head->type = 0;
+	head->id = 0;
 	//head->ref_count = 0;
 	return head;
 }
 
-void	*do_alloc(t_gc_list **gc_lst, size_t howmuch, t_data_type data_type)
+void	*do_alloc(t_gc_list **gc_lst, size_t howmuch, t_data_type data_type, char *id)
 {
 	t_gc_list	*new_node = malloc(sizeof(t_gc_list));
 	if (!new_node)
@@ -71,9 +72,10 @@ void	*do_alloc(t_gc_list **gc_lst, size_t howmuch, t_data_type data_type)
 		free (new_node);
 		return NULL;
 	}
-	new_node->data = data;              
+	new_node->data = data;
 	new_node->next = NULL;
 	new_node->type = data_type;
+	new_node->id = id;
 	//new_node->ref_count = 1;
 	if (*gc_lst)
 		(*gc_lst)->next = new_node;
@@ -121,6 +123,24 @@ t_gc_list	*find_node(t_gc_list *gc_lst, void *target)
 	}
 	return NULL;
 }
+
+t_gc_list	*find_node_with_id(t_gc_list *gc_lst, char *id)
+{
+	t_gc_list	*cur;
+
+	cur = gc_lst->next;
+	while(cur)
+	{
+		if(ft_strcmp(cur->id, id) == 0)
+		{
+			printf("----------find : %p in garbage--------\n",target);
+			return cur;
+		}
+		cur = cur->next;
+	}
+	return NULL;
+}
+
 
 void	delete_node(t_gc_list **gc_lst, t_gc_list *to_delete)
 {
