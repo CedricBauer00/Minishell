@@ -102,7 +102,6 @@ typedef struct s_io_streams_list //> < > <
 
 typedef struct s_pipe
 {
-	t_pipe_stage		stage;
 	int					*pipefd;
 	int					prev_read_end_fd; //pipe 초기값은 -1로.
 	int					cur_fd_write_end;

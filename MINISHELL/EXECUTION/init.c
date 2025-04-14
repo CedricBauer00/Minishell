@@ -34,7 +34,6 @@ t_pipe *init_pipe(t_gc_list *gc_lst)
 		all_free(&gc_lst);
 		return (NULL);
 	}
-	p_pipe->stage = NONE;
 	p_pipe->prev_read_end_fd = -1;
 	p_pipe->cur_fd_write_end = -1;
 	// p_pipe->next = NULL;
