@@ -76,6 +76,7 @@ void	*do_alloc(t_gc_list **gc_lst, size_t howmuch, t_data_type data_type, char *
 	new_node->next = NULL;
 	new_node->type = data_type;
 	new_node->id = id;
+	new_node->level = gc->level;
 	//new_node->ref_count = 1;
 	if (*gc_lst)
 		(*gc_lst)->next = new_node;
@@ -188,6 +189,38 @@ void	all_free(t_gc_list **gc_lst)
 	printf("at last %p is free\n", *gc_lst);
 	free(*gc_lst);
  	*gc_lst = NULL;
+}
+
+void	gc_level_up(t_gc *gc)
+{
+	gc->level++;
+}
+
+void	gc_free_by_level(t_gc *gc)
+{
+	t_gc_list *cur;
+	t_gc_list *prev;
+
+	prev = gc->temp->head;
+	cur = gc->temp->head->next;
+
+	while (cur)
+	{
+		if(cur->level == gc->level)
+		{
+			t_gc_list *to_free = cur;
+			prev->next = cur->next;
+			cur = cur->next;
+			free_data_type(void *data, t_data_type data_type);
+			free(to_free);
+		}
+		else
+		{
+			prev = cur;
+			cur = cur->next;
+		}
+	}
+	gc->level--;
 }
 
 void	gc_free(t_gc *gc)
