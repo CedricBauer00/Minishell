@@ -30,7 +30,15 @@ t_gc	*init_gc(void)
 		return (NULL);
 	}
 	gc->temp = init_gc_list();
+	if (!gc->temp)
+		free(gc);
 	gc->shell = init_gc_list();
+	if (!gc->shell)
+	{
+		free(gc->temp);
+		free(gc);
+		return (NULL);
+	}
 	return gc;
 }
 
@@ -159,7 +167,7 @@ void	all_free(t_gc_list **gc_lst)
 	}
 	printf("at last %p is free\n", *gc_lst);
 	free(*gc_lst);
-    *gc_lst = NULL;
+ 	*gc_lst = NULL;
 }
 
 void	gc_free(t_gc *gc)
