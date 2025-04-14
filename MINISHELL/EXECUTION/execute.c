@@ -65,7 +65,7 @@ bool	is_middle_pipe(t_cmd_block *cmd)
 
 bool	is_last_pipe(t_cmd_block *cmd)
 {
-	
+
 }
 
 void	set_redirection(t_cmd_block *cmd, t_gc_list *gc_lst, t_shell *shell)
