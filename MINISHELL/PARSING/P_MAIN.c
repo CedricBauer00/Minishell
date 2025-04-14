@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/07 15:27:47 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/09 19:28:15 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,22 +86,15 @@ int	check_operator2(t_main *main, int *i, t_gc_list *gc_list)
 int	check_operator(t_main *main, int *i, t_gc_list *gc_list)
 {
 	if (ft_isspace(main->line[*i]))
-	{
-		write(1, "here!\n", 6);
 		main->error = create_token(&main->tokens, TOKEN_SPACES, " ", gc_list);
-	}
 	while (main->line[*i] && ft_isspace(main->line[*i]))
 		(*i)++;
 	if (main->line[*i] == '\0')
 		return (0);
 	if (main->line[*i] == '>' && main->line[*i + 1] == '>')
 		*i += operator(main, 2, main->line[*i], gc_list);
-	else if (main->line[*i] == '<' && main->line[*i + 1] == '<') //fix
-	{
-		*i = heredoc(main, *i, gc_list); // *i += heredoch()????? L!
-		if (*i < 0)
-			return(perror("ERROR\nHeredoc failed!\n"), all_free(&gc_list), -1);
-	}
+	else if (main->line[*i] == '<' && main->line[*i + 1] == '<')
+		*i += operator(main, 2, main->line[*i], gc_list);
 	else if (main->line[*i] == '<' || main->line[*i] == '>' || main->line[*i] == '|')
 		*i += operator(main, 1, main->line[*i], gc_list);
 	else if (main->line[*i] == '\'')
@@ -133,7 +126,7 @@ int main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		if (main_helper(&main, gc_list) < 0)
-			return (printf("ERROR\nMain helper failed!\n"), -1);
+			return (printf("exit\n"), all_free(&gc_list), 0);
 		i = 0;
 		while (main.line[i])
 		{
@@ -141,11 +134,12 @@ int main(int argc, char **argv, char **envp)
 				return (printf("ERROR\nCheck_operator failed!\n"), all_free(&gc_list), -1);
 			// printf("[i] = %c\n", main.line[i]);
 		}
-		// if (check_for_node_spaces(&main, main.tokens, gc_list) < 0)
-		// 	return (printf("ERROR\nChecking nodes failed!\n"), all_free(&gc_list), -1);
+		if (check_for_node_spaces(&main, main.tokens, gc_list) < 0)
+			return (printf("ERROR\nChecking nodes failed!\n"), all_free(&gc_list), -1);
 		print_tokens(main.tokens);
 	}
 	if (gc_list)
 		all_free(&gc_list);
 	write(1, "\n", 1);
 }
+

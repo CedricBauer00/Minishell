@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   P_REDIRECTS.c                                      :+:      :+:    :+:   */
+/*   p_operators.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 10:25:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/05 13:03:16 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/09 19:13:04 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,9 @@ int	operator(t_main *main, int i, char c, t_gc_list *gc_list)
 		main->error = create_token(&main->tokens, TOKEN_REDIRECT_OUT, ">", gc_list);
 	else if (c == '|' && i == 1)
 		main->error = create_token(&main->tokens, TOKEN_PIPE, "|", gc_list);
-	else if (i == 2)
-	{
+	else if (i == 2 && c == '>')
 		main->error = create_token(&main->tokens, TOKEN_APPEND, ">>", gc_list);
-		write(1, "apppendd\n", 9);
-	}
+	else if (i == 2 && c == '<')
+		main->error = create_token(&main->tokens, TOKEN_HEREDOC, "<<", gc_list);
 	return (i);
 }

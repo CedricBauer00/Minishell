@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/07 16:59:19 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/08 17:26:07 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,8 +196,10 @@ int	append(t_main *main, int i, t_gc_list *gc_list);
 // ----------------------------------------------------------------------
 
 int	heredoc(t_main *main, int i, t_gc_list *gc_list);
-int	check_char(t_main *main, int i, int ind);
+int	check_char(t_main *main, int i, int indic);
 int is_quote(t_main *main, int i);
+char	*heredoc_input(char *del, t_gc_list *gc_list);
+int	heredoc_exec(char *input, t_main *main);
 
 // ----------------------------------------------------------------------
 // 							EXPAND
