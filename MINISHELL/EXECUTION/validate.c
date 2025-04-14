@@ -24,10 +24,9 @@ int	validate_syntax(t_token *token)
 			perror(RED"syntax error"DEFAULT);
 			//todo all_Free 
 		}
-
 		//ensure that pipe is not the beginning
 		//todo think , what if pipe is at the end
-		if (cur->type == TOKEN_PIPE)
+		else if (cur->type == TOKEN_PIPE)
 		{
 			// if(!cur->prev || !cur->next || cur->next->type == TOKEN_PIPE)
 			// {
@@ -40,7 +39,7 @@ int	validate_syntax(t_token *token)
 		}
 		
 		//heck if a TOKEN_WORD follows after a redirection
-		if (cur->type & (TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT | TOKEN_APPEND))
+		else if (cur->type & (TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT | TOKEN_APPEND))
 		{
 			if (!cur->next || cur->next->type != TOKEN_WORD)
 			{
@@ -49,7 +48,7 @@ int	validate_syntax(t_token *token)
 		}
 
 		//heck if a TOKEN_EOF follows after a TOKEN_HEREDOC
-		if (cur->type == TOKEN_HEREDOC)
+		else if (cur->type == TOKEN_HEREDOC)
 		{
 			if(!cur->next)
 			{

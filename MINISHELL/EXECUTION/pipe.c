@@ -303,6 +303,15 @@ void	close_pipefd(t_cmd_block *cmd)
 		close_last_pipefd(cmd);
 }
 
+void	processing_pipe(t_cmd_block *cmd, t_shell *shell, t_gc_list* gc_lst)
+{
+	if (is_first_pipe(cmd))
+		first_pipe_cmd(cmd, shell, gc_lst);
+	else if (is_middle_pipe(cmd))
+		middle_pipe_cmd(cmd, shell, gc_lst);
+	else if (is_last_pipe(cmd))
+		last_pipe_cmd(cmd, shell);
+}
 
 // int	main(int argc, char **argv, char **envp)
 // {
