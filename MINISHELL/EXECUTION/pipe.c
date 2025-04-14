@@ -207,10 +207,10 @@ int	first_pipe_cmd(t_cmd_block *command, t_shell *shell, t_gc_list *gc_lst)
 	//}
 	// else
 	// {
-		command->pipe->prev_read_end_fd = command->pipe->pipefd[0];
-		command->pipe->cur_fd_write_end = command->pipe->pipefd[1];
-		close(command->pipe->pipefd[1]);
-		fprintf(stderr, YELLOW "[%d], close[%d]\n" DEFAULT, getpid(),  command->pipe->pipefd[1]);
+		// command->pipe->prev_read_end_fd = command->pipe->pipefd[0];
+		// command->pipe->cur_fd_write_end = command->pipe->pipefd[1];
+		// close(command->pipe->pipefd[1]);
+		// fprintf(stderr, YELLOW "[%d], close[%d]\n" DEFAULT, getpid(),  command->pipe->pipefd[1]);
 	// }
 	return (1);
 }
@@ -238,12 +238,12 @@ int	middle_pipe_cmd(t_cmd_block *command, t_shell *shell, t_gc_list *gc_lst)
 	// }
 	// else
 	// {
-		close(command->pipe->prev_read_end_fd);
-		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->prev_read_end_fd);
-		command->pipe->prev_read_end_fd = command->pipe->pipefd[0];
-		command->pipe->cur_fd_write_end = command->pipe->pipefd[1];
-		close(command->pipe->pipefd[1]);
-		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->pipefd[1]);
+		// close(command->pipe->prev_read_end_fd);
+		// fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->prev_read_end_fd);
+		// command->pipe->prev_read_end_fd = command->pipe->pipefd[0];
+		// command->pipe->cur_fd_write_end = command->pipe->pipefd[1];
+		// close(command->pipe->pipefd[1]);
+		// fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->pipefd[1]);
 	// }
 	return 1;
 }
@@ -261,12 +261,48 @@ int	last_pipe_cmd(t_cmd_block *command, t_shell *shell)
 	// }
 	// else
 	// {
-		close(command->pipe->prev_read_end_fd);
-		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->prev_read_end_fd);
-		fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
+		// close(command->pipe->prev_read_end_fd);
+		// fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->prev_read_end_fd);
+		// fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
 	//}
 	return (1);
 }
+
+void	close_first_pipefd(t_cmd_block *cmd)
+{
+	cmd->pipe->prev_read_end_fd = cmd->pipe->pipefd[0];
+	cmd->pipe->cur_fd_write_end = cmd->pipe->pipefd[1];
+	close(cmd->pipe->pipefd[1]);
+	fprintf(stderr, YELLOW "[%d], close[%d]\n" DEFAULT, getpid(),  cmd->pipe->pipefd[1]);
+}
+
+void	close_middle_pipefd(t_cmd_block *cmd)
+{
+	close(cmd->pipe->prev_read_end_fd);
+	fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), cmd->pipe->prev_read_end_fd);
+	cmd->pipe->prev_read_end_fd = cmd->pipe->pipefd[0];
+	cmd->pipe->cur_fd_write_end = cmd->pipe->pipefd[1];
+	close(cmd->pipe->pipefd[1]);
+	fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), cmd->pipe->pipefd[1]);
+}
+
+void	close_last_pipefd(t_cmd_block *cmd)
+{
+	close(cmd->pipe->prev_read_end_fd);
+	fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), cmd->pipe->prev_read_end_fd);
+	fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
+}
+
+void	close_pipefd(t_cmd_block *cmd)
+{
+	if (!cmd->prev && cmd->next)
+		close_first_pipefd(cmd);
+	else if (cmd->prev && cmd->next)
+		close_middle_pipefd(cmd);
+	else if (cmd->prev && !cmd->next)
+		close_last_pipefd(cmd);
+}
+
 
 // int	main(int argc, char **argv, char **envp)
 // {

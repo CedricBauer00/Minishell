@@ -68,5 +68,3 @@ int	handle_re_dir(t_cmd_block *cmd_block)
 		re_dir_out(cmd_block);
 	return 0;
 }
-
-

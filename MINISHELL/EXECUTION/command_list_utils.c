@@ -1,5 +1,6 @@
 #include "../INCLUDE/main.h"
 
+//todo fix it where i use it? idk
 t_cmd_block *add_command(t_gc_list *gc_lst, char *cmd, char **args, t_token_type type)
 {
 	t_cmd_block *new_cmd = init_command_struct(gc_lst);
@@ -10,6 +11,6 @@ t_cmd_block *add_command(t_gc_list *gc_lst, char *cmd, char **args, t_token_type
 	}
 	new_cmd->args = args;
 	new_cmd->cmd = cmd;
-	new_cmd->type = type;
+	//new_cmd->type = type;
 	return new_cmd;
 }

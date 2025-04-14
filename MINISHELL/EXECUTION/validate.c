@@ -26,9 +26,14 @@ int	validate_syntax(t_token *token)
 		}
 
 		//ensure that pipe is not the beginning
+		//todo think , what if pipe is at the end
 		if (cur->type == TOKEN_PIPE)
 		{
-			if(!cur->prev || !cur->next || cur->next->type == TOKEN_PIPE)
+			// if(!cur->prev || !cur->next || cur->next->type == TOKEN_PIPE)
+			// {
+			// 	perror(RED"syntax error"DEFAULT);
+			// }
+			if(!cur->prev || cur->next->type == TOKEN_PIPE)
 			{
 				perror(RED"syntax error"DEFAULT);
 			}
@@ -51,19 +56,6 @@ int	validate_syntax(t_token *token)
 				perror(RED"syntax error"DEFAULT);
 			}
 		}
-
-		//memo ich muss nicht es hier auschecken, weil TOKEN_FLAGS mit ACCESS funktion ueberprueft werden kann.
-		// if (cur->type == TOKEN_CMD || cur->type == TOKEN_FLAGS)
-		// {
-		// 	cur->next file.
-		// 	cur->next flags 
-		// 	cur->next >>
-		// 	cur->next <<
-		// 	cur->next <
-		// 	cur->next >
-		// 	cur->next |
-		// 	cur->next 
-		// }
 		cur = cur->next;
 	}
 }

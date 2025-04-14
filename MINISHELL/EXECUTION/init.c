@@ -34,6 +34,7 @@ t_pipe *init_pipe(t_gc_list *gc_lst)
 		all_free(&gc_lst);
 		return (NULL);
 	}
+	p_pipe->stage = NONE;
 	p_pipe->prev_read_end_fd = -1;
 	p_pipe->cur_fd_write_end = -1;
 	// p_pipe->next = NULL;
@@ -72,7 +73,8 @@ t_cmd_block *init_command_struct(t_gc_list *gc_lst)
 	cmd->io_streams = NULL;
 	cmd->pipe = NULL;
 	cmd->next = NULL;
-	cmd->type = TOKEN_NONE;
+	cmd->prev = NULL;
+	//cmd->type = TOKEN_NONE;
 	return (cmd);
 }
 
