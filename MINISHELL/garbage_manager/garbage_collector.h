@@ -33,6 +33,7 @@ void	free_data_type(void *data, t_data_type data_type);
 void	all_free(t_gc_list **gc_lst);
 void	print_list(t_gc_list *gc_lst);
 t_gc_list	*find_node(t_gc_list *gc_lst, void *target);
+char	*gc_strdup(const char *str, t_gc_list *gc_lst);
 
 
 // void	gc_inc_ref_count(t_gc_list *gc_lst, void *ptr)
