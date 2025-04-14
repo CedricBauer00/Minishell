@@ -1,2 +1,16 @@
 외부 명령어 구현시 PATH가 있는지 먼저 확인해야할것!
 또한 env 도 구현시 PATH가 있는지 먼저 확인!
+
+항상 시작하기에 앞서 
+
+dup 으로 original stdin 과 stdout 복원해놓기!
+
+dup2(oldfd, newfd);
+
+
+if everythings correct before merging
+first i have to set all redirections up before execution.
+
+check it is valid cmd..
+
+think about ''
