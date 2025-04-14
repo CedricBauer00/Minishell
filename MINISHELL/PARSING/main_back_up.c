@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/31 14:42:43 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/14 15:10:38 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ int	create_token(t_token **tokens, t_token_type type, char *str, t_gc_list *gc_l
 
 void print_tokens(t_token *tokens)
 {
+	if (!tokens)
+		return ;
 	printf("\n---- Token List ----\n");
 	while (tokens)
 	{

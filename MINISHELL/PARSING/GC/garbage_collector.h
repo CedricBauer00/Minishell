@@ -6,6 +6,14 @@
 # include <stdlib.h>
 # include <string.h>
 
+
+#define RED "\033[0;31m"    //error
+#define GREEN "\033[0;32m"  //
+#define BLUE "\033[0;34m"   //ok
+#define YELLOW "\033[0;33m" //
+#define DEFAULT "\033[0m"   //
+
+
 typedef enum	e_data_type
 {
 	TYPE_SINGLE_PTR,
@@ -32,6 +40,7 @@ void	free_data_type(void *data, t_data_type data_type);
 void	all_free(t_gc_list **gc_lst);
 void	print_list(t_gc_list *gc_lst);
 t_gc_list	*find_node(t_gc_list *gc_lst, void *target);
+void	null_gc_node_free(t_gc_list **gc_lst);
 
 
 // void	gc_inc_ref_count(t_gc_list *gc_lst, void *ptr)

@@ -137,24 +137,24 @@
 // }
 
 
-int	heredoc(t_main *main, int i, t_gc_list *gc_list) //why exit when press enter
-{
-	int		j;
-	int		end;
-	char	*word;
+// int	heredoc(t_main *main, int i, t_gc_list *gc_list) //why exit when press enter
+// {
+// 	int		j;
+// 	int		end;
+// 	char	*word;
 
-	printf("i = %d\n", i);
-	if (main->line[i + 2] == '\0')
-		return (-1);
-	j = i + 2;
-	while (main->line[j] && check_char(main, j, 0) == 1)
-		j++;
-	printf("j = %d\n", j);
-	end = is_quote(main, j);
-	word = gc_strndup(&main->line[j], end - j, gc_list);
-	if (!word)
-		return (-1);
-	main->error = create_token(&main->tokens, TOKEN_HEREDOC, word, gc_list);
-	return (end);
-}
-//remove quotes for heredoc execution 
+// 	// printf("i = %d\n", i);
+// 	if (main->line[i + 2] == '\0')
+// 		return (-1);
+// 	j = i + 2;
+// 	while (main->line[j] && check_char(main, j, 0) == 1)
+// 		j++;
+// 	// printf("j = %d\n", j);
+// 	end = is_quote(main, j);
+// 	word = gc_strndup(&main->line[j], end - j, gc_list);
+// 	if (!word)
+// 		return (-1);
+// 	main->error = create_token(&main->tokens, TOKEN_HEREDOC, word, gc_list);
+// 	return (end);
+// }
+// //remove quotes for heredoc execution 

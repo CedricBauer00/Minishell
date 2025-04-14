@@ -136,6 +136,32 @@ void	all_free(t_gc_list **gc_lst)
 	
 }
 
+void	null_gc_node_free(t_gc_list **gc_lst)
+{
+	if (!gc_lst || !(*gc_lst) || !(*gc_lst)->next)
+		return ;
+
+	t_gc_list	*cur;
+	t_gc_list	*prev;
+	
+	cur = (*gc_lst)->next;
+	prev = NULL;
+	while (cur)
+    {
+        if (prev == NULL)
+		{
+
+			printf(RED"%p\n"DEFAULT, cur);
+			e(cur);
+		}
+		else
+		{
+			
+		}
+        cur = cur->next;;
+    }
+}
+
 void	print_list(t_gc_list *gc_lst)
 {
 	t_gc_list	*cur;

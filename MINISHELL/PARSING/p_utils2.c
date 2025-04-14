@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 15:19:46 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/14 13:24:47 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/14 14:15:15 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int is_quote(t_main *main, int i)
 	--i;
 	while (main->line[++i] != '\0')
 	{
-		printf("i = %d\n", i);
+		// printf("i = %d\n", i);
 		if (j == 1 && main->line[i] == c)
 			j = 0;
 		else if (j == 0 && (main->line[i] == '"' || main->line[i] == '\''))
