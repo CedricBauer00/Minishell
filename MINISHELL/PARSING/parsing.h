@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/14 14:17:36 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/14 17:02:10 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,6 +226,7 @@ int	check_for_node_spaces(t_main *main, t_token *temp, t_gc_list *gc_list);
 int	node_spaces_helper(t_token *temp, t_gc_list *gc_list);
 int	check_quote(t_main *main);
 int	validate_syntax(t_token *token);
+void null_node_all_free(t_gc_list **gc_lst);
 
 
 

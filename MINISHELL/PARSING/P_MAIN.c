@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/14 16:13:26 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/14 17:02:51 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,11 +170,11 @@ int main(int argc, char **argv, char **envp)
 			//t_gc_list *find;
 			// find = find_node(gc_list, main.tokens->value);
 			// delete_node(&gc_list, find);
-			null_gc_node_free(&gc_list);
-			print_list(gc_list);
+			null_node_all_free(&gc_list);
+			//print_list(gc_list);
 			//continue ;
 		}
-		
+		print_list(gc_list);
 	}
 	if (gc_list)
 		all_free(&gc_list);

@@ -135,31 +135,33 @@ void	all_free(t_gc_list **gc_lst)
     *gc_lst = NULL;
 	
 }
-
-void	null_gc_node_free(t_gc_list **gc_lst)
+void null_node_all_free(t_gc_list **gc_lst)
 {
-	if (!gc_lst || !(*gc_lst) || !(*gc_lst)->next)
+	if (!gc_lst || !(*gc_lst))
 		return ;
 
 	t_gc_list	*cur;
 	t_gc_list	*prev;
-	
-	cur = (*gc_lst)->next;
-	prev = NULL;
-	while (cur)
-    {
-        if (prev == NULL)
-		{
 
-			printf(RED"%p\n"DEFAULT, cur);
-			e(cur);
+	prev = (*gc_lst);
+	cur = (*gc_lst)->next;
+
+	while(cur)
+	{
+		t_gc_list *next = cur->next;
+		if (cur->data == NULL)
+		{
+			printf("%p is free, type is %d\n", cur->data , cur->type);
+			prev->next = next;
+			free(cur);
 		}
 		else
 		{
-			
+			prev = cur;
 		}
-        cur = cur->next;;
-    }
+		cur = next;
+	}
+	printf("at last %p is free\n", *gc_lst);
 }
 
 void	print_list(t_gc_list *gc_lst)
