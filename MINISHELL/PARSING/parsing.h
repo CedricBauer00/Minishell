@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/08 17:26:07 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/14 13:11:57 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ int     ft_isspace(char c);
 char	*gc_strndup(const char *str, size_t n, t_gc_list *gc_list);
 char	*gc_strdup(const char *str, t_gc_list *gc_list);
 char	*gc_strjoin(char const *s1, char const *s2, t_gc_list *gc_list);
-int     valid_char(int c);
+int	valid_char(int c, int indic);
 char	**copy_envp(t_gc_list *gc_lst, char **envp);
 int	    get_envp_count(char **envp);
 
@@ -224,6 +224,7 @@ t_token	*get_last_token(t_token *tokens);
 
 int	check_for_node_spaces(t_main *main, t_token *temp, t_gc_list *gc_list);
 int	node_spaces_helper(t_token *temp, t_gc_list *gc_list);
+int	check_quote(t_main *main);
 
 
 

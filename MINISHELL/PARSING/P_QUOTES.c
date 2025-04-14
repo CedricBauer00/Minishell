@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   P_QUOTES.c                                         :+:      :+:    :+:   */
+/*   p_quotes.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 11:35:34 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/05 12:19:44 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/14 13:19:54 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int quotes(t_main *main, int *i, t_gc_list *gc_list)
 	{
 		while (main->line[*i] && main->line[*i] != '\'') // Find closing quote
 			(*i)++;
-		if (main->line[*i] == '\'') // If closing quote is found
+		if (main->line[*i] == '\'' || main->line[*i] == '\0') // If closing quote is found
 		{
 			// Extract the word between quotes
 			main->word = gc_strndup(main->line + ws, *i - ws, gc_list);

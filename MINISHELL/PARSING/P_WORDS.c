@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 11:23:13 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/06 16:46:28 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/14 10:54:48 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	words(t_main *main, int *i, int ws, t_gc_list *gc_list)
 	int	len;
 	
 	ws = *i;
-	while (main->line[*i] && (valid_char(main->line[*i]) == 1 || main->line[*i] == '_'))
+	while (main->line[*i] && (valid_char(main->line[*i], 1) == 0 || main->line[*i] == '_'))
 		(*i)++;
 	len = *i - ws;
 	main->word = gc_strndup(main->line + ws, len, gc_list);

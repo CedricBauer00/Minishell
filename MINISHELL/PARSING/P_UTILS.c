@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 17:53:21 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/07 13:14:07 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/14 10:53:20 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,17 @@ char	*gc_strndup(const char *str, size_t n, t_gc_list *gc_list)
 	return (ptr);
 }
 
-int	valid_char(int c)
+int	valid_char(int c, int indic)
 {
-	if (c >= 33 && c <= 126)
-		return (1);
+	if (indic == 0)
+		return (ft_isspace(c));
+	else
+	{
+		if (c == '\'' || c == '"' || c == '|' || c == '<' || c == '>' || c == '$')
+			return (1);
+		if (ft_isspace(c) == 1)
+			return (1);
+	}
 	return (0);
 }
 

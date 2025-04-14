@@ -27,7 +27,7 @@
 // 			str = readline("> ");
 // 			if (!str)
 // 				return (input);
-// 			if (str && ft_strncmp(str, del, ft_strlen(str)) == 0 && ft_strlen(str) == ft_strlen(del))
+// 			if (str && ft_strlen(str) == ft_strlen(del) && ft_strncmp(str, del, ft_strlen(del)) == 0)
 // 			{
 // 				printf("str = %s , %zu\n", str, ft_strlen(str));
 // 				printf("del = %s, %zu\n", del, ft_strlen(del));
@@ -82,12 +82,12 @@
 // 	input = heredoc_input( del, gc_list);
 // 	if (!input)
 // 		return (printf("ERROR\nHeredoc_exec failed!\n"), -1);
-// 	if (ft_strncmp(input, "minishell", 9) == 0)
-// 	{
-// 		if (heredoc_exec(input, main) < 0)
-// 			return (-1);
-// 	}
-// 	if (del && main->line[i + 2] != '\0')
+// 	// if (ft_strncmp(input, "minishell", 9) == 0)
+// 	// {
+// 	// 	if (heredoc_exec(input, main) < 0)
+// 	// 		return (-1);
+// 	// }
+// 	if (main->line[i + 2] != '\0')
 // 		main->error = create_token(&main->tokens, TOKEN_HEREDOC, "<<", gc_list);
 // 	return (i += 2);
 // }
@@ -135,3 +135,26 @@
 // 	}
 // 	return (input);
 // }
+
+
+int	heredoc(t_main *main, int i, t_gc_list *gc_list) //why exit when press enter
+{
+	int		j;
+	int		end;
+	char	*word;
+
+	printf("i = %d\n", i);
+	if (main->line[i + 2] == '\0')
+		return (-1);
+	j = i + 2;
+	while (main->line[j] && check_char(main, j, 0) == 1)
+		j++;
+	printf("j = %d\n", j);
+	end = is_quote(main, j);
+	word = gc_strndup(&main->line[j], end - j, gc_list);
+	if (!word)
+		return (-1);
+	main->error = create_token(&main->tokens, TOKEN_HEREDOC, word, gc_list);
+	return (end);
+}
+//remove quotes for heredoc execution 

@@ -69,30 +69,16 @@ void print_token(t_token *tokens)
 
 void print_tokens(t_token *tokens)
 {
-	static t_token *last_printed_token = NULL;
     printf("\n---- Token List ----\n");
     t_token *current;
 
 	current = tokens;
 
-	if (!last_printed_token)
-	{
 		while (current)
 		{
 			print_token(current);
 			current = current->next;
 		}
-	}
-	else
-	{
-		while (current && current != last_printed_token->next)
-			current = current->next;
-		while (current)
-		{
-			print_token(current);
-			current = current->next;
-		}
-	}
 
 	// while (tokens->next)
     //     tokens = tokens->next;
@@ -110,5 +96,4 @@ void print_tokens(t_token *tokens)
         //     default: printf("Token Type: UNKNOWN (%d), Value: %s\n", tokens->type, tokens->value); break;
         // }
     printf("--------------------\n");
-	last_printed_token = get_last_token(tokens);
 }

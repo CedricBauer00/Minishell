@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 15:19:46 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/09 19:21:49 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/14 13:24:47 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,21 +80,46 @@ int is_quote(t_main *main, int i)
 	char	c;
 	
 	j = 0;
-	while (1)
+	--i;
+	while (main->line[++i] != '\0')
 	{
-		if (main->line[i] == '\0')
-			return (i);
-		else if (j == 1 && main->line[i] == c)
+		printf("i = %d\n", i);
+		if (j == 1 && main->line[i] == c)
 			j = 0;
 		else if (j == 0 && (main->line[i] == '"' || main->line[i] == '\''))
 		{
 			c = main->line[i];
 			j = 1;
 		}
-		else if (j == 0 && (main->line[i] == '|' || main->line[i] == '<' || main->line[i] == '>'))
+		else if (j == 0 && (main->line[i] == '|' || main->line[i] == '$'
+			|| main->line[i] == '<' || main->line[i] == '>' || valid_char(c, 0) == 1))
 			break ;
 	}
 	return (i);
+}
+
+int	check_quote(t_main *main)
+{
+	int		i;
+	int		j;
+	char	c;
+	
+	i = 0;
+	j = 0;
+	while (main->line[i])
+	{
+		if (j == 0 && (main->line[i] == '"' || main->line[i] == '\''))
+		{
+			c = main->line[i];
+			j = 1;
+		}
+		else if (j == 1 && main->line[i] == c)
+			j = 0;
+		i++;
+	}
+	if (j == 1)
+		return (printf(RED"ERROR\nUnclosed quotes!\n"DEFAULT), -1);
+	return (0);
 }
 
 void	set_default(t_main *main)
@@ -126,7 +151,7 @@ void	free_tokens(t_token *tokens)
 int	node_spaces_helper(t_token *temp, t_gc_list *gc_list)
 {
 	temp->value = gc_strjoin(temp->value, temp->next->value, gc_list);
-	if (temp->value)
+	if (!temp->value)
 		return (-1);
 	temp->next = temp->next->next;
 	return (0);
@@ -138,7 +163,7 @@ int	check_for_node_spaces(t_main *main, t_token *temp, t_gc_list *gc_list)
 	{
 		main->tokens = temp->next;
 		temp = temp->next;
-	}	 
+	}
 	while (temp)
 	{
 		if (temp->type == TOKEN_SPACES)
@@ -148,7 +173,7 @@ int	check_for_node_spaces(t_main *main, t_token *temp, t_gc_list *gc_list)
 				temp->next->prev = temp->prev;
 			temp = temp->next;
 		}
-		else if (temp->next != NULL && temp->next->type != TOKEN_SPACES)
+		else if (temp->next != NULL && temp->next->type != TOKEN_SPACES && temp->next->type != TOKEN_HEREDOC)
 		{
 			write(1, "else if\n", 8);
 			while (temp->next != NULL && temp->next->type != TOKEN_SPACES)
