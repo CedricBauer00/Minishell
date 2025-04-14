@@ -18,14 +18,14 @@ t_gc	*init_gc_list(void)
 	{
 		return (NULL);
 	}
-	gc->temp = NULL;
-	gc->shell = NULL;
-	//head->ref_count = 0;
+	gc->temp = init_gc_list();
+	gc->shell = init_gc_list();
 	return gc;
 }
 
 t_gc_list	*init_gc_list(void)
 {
+	//this gonna be dummy node,which just indicate first node of list, it is nothing!
 	t_gc_list *head = malloc(sizeof(t_gc_list));
 	if (!head)
 	{
@@ -38,7 +38,7 @@ t_gc_list	*init_gc_list(void)
 	return head;
 }
 
-void	*do_alloc(t_gc_list *gc_lst, size_t howmuch, t_data_type data_type)
+void	*do_alloc(t_gc_list **gc_lst, size_t howmuch, t_data_type data_type)
 {
 	t_gc_list	*new_node = malloc(sizeof(t_gc_list));
 	if (!new_node)
@@ -53,10 +53,11 @@ void	*do_alloc(t_gc_list *gc_lst, size_t howmuch, t_data_type data_type)
 		return NULL;
 	}
 	new_node->data = data;              
-	new_node->next = gc_lst->next;
+	new_node->next = NULL;
 	new_node->type = data_type;
 	//new_node->ref_count = 1;
-	gc_lst->next = new_node;
+	if (*gc_lst)
+		(*gc_lst)->next = new_node;
 	return (data);
 }
 
@@ -84,6 +85,7 @@ void	free_data_type(void *data, t_data_type data_type)
 	}
 	//todo add case for struct
 }
+
 void null_node_all_free(t_gc_list **gc_lst)
 {
 	if (!gc_lst || !(*gc_lst))
@@ -176,6 +178,16 @@ void	all_free(t_gc_list **gc_lst)
 	printf("at last %p is free\n", *gc_lst);
 	free(*gc_lst);
     *gc_lst = NULL;
+}
+
+void	gc_free(t_gc *gc)
+{
+	if (!gc)
+		return ;
+	all_free(gc->temp);
+	all_free(gc->shell);
+	free(gc);
+	gc = NULL;
 }
 
 void	print_list(t_gc_list *gc_lst)
