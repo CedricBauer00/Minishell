@@ -27,6 +27,7 @@ typedef struct	s_gc_list  //-->change to s_gc_node
 	void				*data;
 	struct s_gc_list		*next;
 	t_data_type			type;
+	char				*id;
 	//int					ref_count;
 }	t_gc_list;
 
@@ -35,6 +36,7 @@ typedef struct	s_gc_node  //-->change to s_gc_node
 	void				*data;
 	struct s_gc_list		*next;
 	t_data_type			type;
+	char				*id;
 	//int					ref_count;
 }	t_gc_node;
 
