@@ -112,7 +112,7 @@ void	set_redirection(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 				// 	cmd->pipe->pipefd[0], cmd->pipe->pipefd[1]);
 				if (cur->built_in || cur->cmd)
 				{
-					
+
 				}
 				if (cur->cmd)
 				{
@@ -121,11 +121,27 @@ void	set_redirection(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 			}
 			else
 			{
+				int status;
+				pid_t child_pid = wait4(-1, &status, 0 ,NULL);
+				if (child_pid > 0)
+				{
+					if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
+					{
+						printf(GREEN"exited with %d\n"DEFAULT, WEXITSTATUS(status));
+						shell->last_status_exit = WEXITSTATUS(status);
+					}
+					//todo stduy about that 
+					else if (WIFSIGNALED(status))
+					{
+						printf(RED "terminated by signal %d (%s)\n" DEFAULT, WTERMSIG(status), strsignal(WTERMSIG(status)));
+						shell->last_status_exit = 128 + WTERMSIG(status);
+					}
+				}
+				while (waitpid(-1, NULL, WNOHANG) > 0);
 				close_pipefd(cur);
 			}
 		}
 		//single command!
-
 		else if(!cur->next && !cur->pipe)
 		{
 			if (cur->built_in)
