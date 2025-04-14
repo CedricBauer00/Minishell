@@ -26,14 +26,9 @@ int	validate_syntax(t_token *token)
 		}
 
 		//ensure that pipe is not the beginning
-		// todo handle if pipe is at the end
 		if (cur->type == TOKEN_PIPE)
 		{
-			// if(!cur->prev || !cur->next || cur->next->type == TOKEN_PIPE)
-			// {
-			// 	perror(RED"syntax error"DEFAULT);
-			// }
-			if(!cur->prev || cur->next->type == TOKEN_PIPE)
+			if(!cur->prev || !cur->next || cur->next->type == TOKEN_PIPE)
 			{
 				perror(RED"syntax error"DEFAULT);
 			}
@@ -51,7 +46,7 @@ int	validate_syntax(t_token *token)
 		//heck if a TOKEN_EOF follows after a TOKEN_HEREDOC
 		if (cur->type == TOKEN_HEREDOC)
 		{
-			if(!cur->value)
+			if(!cur->next)
 			{
 				perror(RED"syntax error"DEFAULT);
 			}
