@@ -59,7 +59,7 @@ heredoc 처리는 보통 명령 실행 전, 부모 프로세스에서 처리함.
 // 	return (tty_path);
 // }
 
-int	heredoc()
+int	process_heredoc(t_io_streams_list *io_streams)
 {
 	int	fd_heredoc;
 	// if (isatty(STDIN_FILENO)) 
@@ -102,8 +102,9 @@ int	heredoc()
 		write(fd_heredoc, "\n", 1);
 		free(line);
 	}
-
+	io_streams->heredoc_fd = fd_heredoc;
 	close(fd_heredoc);
+	
 	//if (builtin)
 	//{
 		//execute builtin	

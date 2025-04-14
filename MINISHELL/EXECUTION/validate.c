@@ -73,4 +73,5 @@ int	validate_cmd_block(t_cmd_block *cmd_b)
 		}
 		cur = cur->next;
 	}
+	if(cur->heredoc_fd)
 }

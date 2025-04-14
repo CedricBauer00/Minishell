@@ -31,6 +31,7 @@
 	}
 */
 
+//todo here if heredoc then just run it here 
 void	set_io_streams(t_cmd_block *cmd)	
 {
 	t_io_streams_list *io_streams;
@@ -47,6 +48,10 @@ void	set_io_streams(t_cmd_block *cmd)
 		if (io_streams->fd_out_file && io_streams->outfile_name)
 		{
 			re_dir_out(io_streams);
+		}
+		if (io_streams->heredoc_fd)
+		{
+			//todo call heredoc
 		}
 		io_streams = io_streams->next;
 	}
@@ -166,3 +171,15 @@ void	set_redirection(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 	}
 }
 
+// void	execute(t_cmd_block *cmd_block, t_gc_list *gc_list)
+// {
+// 	int	i;
+// 	t_shell *shell;
+
+// 	i = 0;
+// 	shell = get_shell();
+// 	while(shell->my_envp[i])
+// 	{
+// 		if (access())
+// 	}
+// }
