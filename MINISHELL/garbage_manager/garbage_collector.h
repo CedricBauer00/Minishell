@@ -15,12 +15,11 @@ typedef enum	e_data_type
 	TYPE_END
 }	t_data_type;
 
-//todo i have to change die struct wie? Aufteilung in zwei Listen.
-
+//todo i have to change die struct wie? Aufteilung in mehre Listen
 typedef struct s_gc
 {
-	t_gc_node	*temp;
-	t_gc_node	*shell;
+	t_gc_node	*temp; //for the parsing
+	t_gc_node	*shell; //even if syntax error happend, we have to hold it
 }	t_gc;
 
 typedef struct	s_gc_list  //-->change to s_gc_node
