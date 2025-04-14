@@ -1,6 +1,17 @@
 # include "garbage_collector.h"
 
 //memo when you initialize it use this!
+t_gc	*get_garbage_collector(void)
+{
+	static t_gc *gc = {0};
+	if (!gc)
+	{
+		gc = init_gc();
+	}
+	return (gc);
+}
+
+//memo when you initialize it use this!
 t_gc_list	*get_garbage_collector(void)
 {
 	static t_gc_list *gc_list = {0};
@@ -11,7 +22,7 @@ t_gc_list	*get_garbage_collector(void)
 	return (gc_list);
 }
 
-t_gc	*init_gc_list(void)
+t_gc	*init_gc(void)
 {
 	t_gc *gc = malloc(sizeof(t_gc));
 	if (!gc)
