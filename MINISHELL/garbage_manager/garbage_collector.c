@@ -71,6 +71,34 @@ void	free_data_type(void *data, t_data_type data_type)
 	}
 	//todo add case for struct
 }
+void null_node_all_free(t_gc_list **gc_lst)
+{
+	if (!gc_lst || !(*gc_lst))
+		return ;
+
+	t_gc_list	*cur;
+	t_gc_list	*prev;
+
+	prev = (*gc_lst);
+	cur = (*gc_lst)->next;
+
+	while(cur)
+	{
+		t_gc_list *next = cur->next;
+		if (cur->data == NULL)
+		{
+			printf("%p is free, type is %d\n", cur->data , cur->type);
+			prev->next = next;
+			free(cur);
+		}
+		else
+		{
+			prev = cur;
+		}
+		cur = next;
+	}
+	printf("at last %p is free\n", *gc_lst);
+}
 
 t_gc_list	*find_node(t_gc_list *gc_lst, void *target)
 {
