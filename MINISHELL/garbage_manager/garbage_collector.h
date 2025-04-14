@@ -15,13 +15,29 @@ typedef enum	e_data_type
 	TYPE_END
 }	t_data_type;
 
-typedef struct	s_gc_list
+//todo i have to change die struct wie? Aufteilung in zwei Listen.
+
+typedef struct s_gc_list
+{
+	t_gc_node	*temp;
+	t_gc_node	*shell;
+}	t_gc_list;
+
+typedef struct	s_gc_list  //-->change to s_gc_node
 {
 	void				*data;
-	struct s_gc_list	*next;
+	struct s_gc_list		*next;
 	t_data_type			type;
 	//int					ref_count;
 }	t_gc_list;
+
+typedef struct	s_gc_node  //-->change to s_gc_node
+{
+	void				*data;
+	struct s_gc_list		*next;
+	t_data_type			type;
+	//int					ref_count;
+}	t_gc_node;
 
 //empty node, just a head node as dummy.
 
