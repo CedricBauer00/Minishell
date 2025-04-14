@@ -11,6 +11,19 @@ t_gc_list	*get_garbage_collector(void)
 	return (gc_list);
 }
 
+t_gc	*init_gc_list(void)
+{
+	t_gc *gc = malloc(sizeof(t_gc));
+	if (!gc)
+	{
+		return (NULL);
+	}
+	gc->temp = NULL;
+	gc->shell = NULL;
+	//head->ref_count = 0;
+	return gc;
+}
+
 t_gc_list	*init_gc_list(void)
 {
 	t_gc_list *head = malloc(sizeof(t_gc_list));
