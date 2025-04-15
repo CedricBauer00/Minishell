@@ -23,16 +23,16 @@ LIBFT_DIR = libft
 
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SOURCES = p_main.c \
-		p_words.c \
-		p_utils.c \
+SOURCES = m_main.c \
+		m_words.c \
+		m_utils.c \
 		p_utils2.c \
-		p_builtins.c \
-		p_quotes.c \
-		p_dquotes.c \
+		m_builtins.c \
+		m_quotes.c \
+		m_dquotes.c \
 		p_operators.c \
-		p_heredoc.c \
-		p_expand.c \
+		m_heredoc.c \
+		m_expand.c \
 		GC/gc.c \
 		copy_envp.c \
 		init.c \
