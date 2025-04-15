@@ -75,8 +75,6 @@ void	*do_alloc(t_gc_list **gc_lst, size_t howmuch, t_data_type data_type, char *
 	new_node->data = data;
 	new_node->next = NULL;
 	new_node->type = data_type;
-	new_node->id = id;
-	new_node->level = (*gc_lst)->level;
 	//new_node->ref_count = 1;
 	if (*gc_lst)
 		(*gc_lst)->next = new_node;
@@ -125,24 +123,6 @@ t_gc_list	*find_node(t_gc_list *gc_lst, void *target)
 	return NULL;
 }
 
-t_gc_list	*find_node_with_id(t_gc_list *gc_lst, char *id)
-{
-	t_gc_list	*cur;
-
-	cur = gc_lst->next;
-	while(cur)
-	{
-		if(ft_strcmp(cur->id, id) == 0)
-		{
-			printf("----------find : %s in garbage--------\n",id);
-			return cur;
-		}
-		cur = cur->next;
-	}
-	return NULL;
-}
-
-
 void	delete_node(t_gc_list **gc_lst, t_gc_list *to_delete)
 {
 	if (!gc_lst || !(*gc_lst))
@@ -189,48 +169,6 @@ void	all_free(t_gc_list **gc_lst)
 	printf("at last %p is free\n", *gc_lst);
 	free(*gc_lst);
  	*gc_lst = NULL;
-}
-
-void	gc_level_up(t_gc_list *gc_list)
-{
-	gc_list->level++;
-}
-
-void	gc_free_by_level(t_gc_list *gc_list)
-{
-	t_gc_list *cur;
-	t_gc_list *prev;
-
-	prev = gc_list;
-	cur = gc_list->next;
-
-	while (cur)
-	{
-		if(cur->level == gc_list->level)
-		{
-			t_gc_list *to_free = cur;
-			prev->next = cur->next;
-			cur = cur->next;
-			free_data_type(to_free->data, to_free->type);
-			free(to_free);
-		}
-		else
-		{
-			prev = cur;
-			cur = cur->next;
-		}
-	}
-	gc_list->level--;
-}
-
-void	gc_free(t_gc *gc)
-{
-	if (!gc)
-		return ;
-	all_free(gc->temp);
-	all_free(gc->shell);
-	free(gc);
-	gc = NULL;
 }
 
 void	print_list(t_gc_list *gc_lst)

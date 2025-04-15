@@ -20,15 +20,16 @@ typedef struct s_gc
 {
 	t_gc_node	*temp; //for the parsing
 	t_gc_node	*shell; //even if syntax error happend, we have to hold it
+	int		level;
 }	t_gc;
 
 typedef struct	s_gc_list  //-->change to s_gc_node
 {
 	void				*data;
-	struct s_gc_list	*next;
+	struct s_gc_list		*next;
 	t_data_type			type;
 	char				*id;
-	int					level;
+
 	//int					ref_count;
 }	t_gc_list;
 
