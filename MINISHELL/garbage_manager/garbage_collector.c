@@ -1,6 +1,17 @@
 # include "garbage_collector.h"
 
 //memo when you initialize it use this!
+t_gc	*get_garbage_collector(void)
+{
+	static t_gc *gc = {0};
+	if (!gc)
+	{
+		gc = init_gc();
+	}
+	return (gc);
+}
+
+//memo when you initialize it use this!
 t_gc_list	*get_garbage_collector(void)
 {
 	static t_gc_list *gc_list = {0};
@@ -11,8 +22,29 @@ t_gc_list	*get_garbage_collector(void)
 	return (gc_list);
 }
 
+t_gc	*init_gc(void)
+{
+	t_gc *gc = malloc(sizeof(t_gc));
+	if (!gc)
+	{
+		return (NULL);
+	}
+	gc->temp = init_gc_list();
+	if (!gc->temp)
+		free(gc);
+	gc->shell = init_gc_list();
+	if (!gc->shell)
+	{
+		free(gc->temp);
+		free(gc);
+		return (NULL);
+	}
+	return gc;
+}
+
 t_gc_list	*init_gc_list(void)
 {
+	//this gonna be dummy node,which just indicate first node of list, it is nothing!
 	t_gc_list *head = malloc(sizeof(t_gc_list));
 	if (!head)
 	{
@@ -21,11 +53,12 @@ t_gc_list	*init_gc_list(void)
 	head->data = NULL;
 	head->next = NULL;
 	head->type = 0;
+	head->id = 0;
 	//head->ref_count = 0;
 	return head;
 }
 
-void	*do_alloc(t_gc_list *gc_lst, size_t howmuch, t_data_type data_type)
+void	*do_alloc(t_gc_list **gc_lst, size_t howmuch, t_data_type data_type, char *id)
 {
 	t_gc_list	*new_node = malloc(sizeof(t_gc_list));
 	if (!new_node)
@@ -39,11 +72,14 @@ void	*do_alloc(t_gc_list *gc_lst, size_t howmuch, t_data_type data_type)
 		free (new_node);
 		return NULL;
 	}
-	new_node->data = data;              
-	new_node->next = gc_lst->next;
+	new_node->data = data;
+	new_node->next = NULL;
 	new_node->type = data_type;
+	new_node->id = id;
+	new_node->level = (*gc_lst)->level;
 	//new_node->ref_count = 1;
-	gc_lst->next = new_node;
+	if (*gc_lst)
+		(*gc_lst)->next = new_node;
 	return (data);
 }
 
@@ -71,34 +107,6 @@ void	free_data_type(void *data, t_data_type data_type)
 	}
 	//todo add case for struct
 }
-void null_node_all_free(t_gc_list **gc_lst)
-{
-	if (!gc_lst || !(*gc_lst))
-		return ;
-
-	t_gc_list	*cur;
-	t_gc_list	*prev;
-
-	prev = (*gc_lst);
-	cur = (*gc_lst)->next;
-
-	while(cur)
-	{
-		t_gc_list *next = cur->next;
-		if (cur->data == NULL)
-		{
-			printf("%p is free, type is %d\n", cur->data , cur->type);
-			prev->next = next;
-			free(cur);
-		}
-		else
-		{
-			prev = cur;
-		}
-		cur = next;
-	}
-	printf("at last %p is free\n", *gc_lst);
-}
 
 t_gc_list	*find_node(t_gc_list *gc_lst, void *target)
 {
@@ -116,6 +124,24 @@ t_gc_list	*find_node(t_gc_list *gc_lst, void *target)
 	}
 	return NULL;
 }
+
+t_gc_list	*find_node_with_id(t_gc_list *gc_lst, char *id)
+{
+	t_gc_list	*cur;
+
+	cur = gc_lst->next;
+	while(cur)
+	{
+		if(ft_strcmp(cur->id, id) == 0)
+		{
+			printf("----------find : %s in garbage--------\n",id);
+			return cur;
+		}
+		cur = cur->next;
+	}
+	return NULL;
+}
+
 
 void	delete_node(t_gc_list **gc_lst, t_gc_list *to_delete)
 {
@@ -162,7 +188,49 @@ void	all_free(t_gc_list **gc_lst)
 	}
 	printf("at last %p is free\n", *gc_lst);
 	free(*gc_lst);
-    *gc_lst = NULL;
+ 	*gc_lst = NULL;
+}
+
+void	gc_level_up(t_gc_list *gc_list)
+{
+	gc_list->level++;
+}
+
+void	gc_free_by_level(t_gc_list *gc_list)
+{
+	t_gc_list *cur;
+	t_gc_list *prev;
+
+	prev = gc_list;
+	cur = gc_list->next;
+
+	while (cur)
+	{
+		if(cur->level == gc_list->level)
+		{
+			t_gc_list *to_free = cur;
+			prev->next = cur->next;
+			cur = cur->next;
+			free_data_type(to_free->data, to_free->type);
+			free(to_free);
+		}
+		else
+		{
+			prev = cur;
+			cur = cur->next;
+		}
+	}
+	gc_list->level--;
+}
+
+void	gc_free(t_gc *gc)
+{
+	if (!gc)
+		return ;
+	all_free(gc->temp);
+	all_free(gc->shell);
+	free(gc);
+	gc = NULL;
 }
 
 void	print_list(t_gc_list *gc_lst)
