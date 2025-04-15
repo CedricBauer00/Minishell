@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 09:58:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/15 10:35:42 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/15 11:17:39 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ int	expand_helper(t_main *main, int *i, int ws, t_gc_list *gc_list)
 		main->error = create_token(&main->tokens, TOKEN_VAR, value, gc_list);
 		free(value);
 	}
-	if (var)
-		free(var);
+	// if (var) /// do we need this idk???? because its causing heap-use-after-free
+	// 	free(var);
 	return (0);
 }
 
@@ -84,6 +84,16 @@ int	special_character(t_main *main, int *i, char *value, t_gc_list *gc_list)
 		free(value);
 	return (0);
 }
+//issiue
+// minishell> "$USER"=Hello
+// ERROR
+// Unclosed quotes!
+
+// ---- Token List ----
+// Token Type: VAR, Value: cbauer
+// --------------------
+
+
 
 int	expands(t_main *main, int *i, int ws, t_gc_list *gc_list) // $PATH=HELLo // expand ausführen wenn string in $VAR steht der vorher mit export set wurde
 {

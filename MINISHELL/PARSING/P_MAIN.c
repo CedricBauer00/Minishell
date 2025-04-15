@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/15 10:47:59 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/15 11:15:53 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ int main(int argc, char **argv, char **envp)
 			//print_list(gc_list);
 			//continue ;
 		}
-		print_list(gc_list);
+		// print_list(gc_list);
 		//int i = 0;
 		// while (main.envp[i])
 		// {
