@@ -62,7 +62,7 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc_list *gc_lst)
 				count++;
 				temp = temp->next;
 			}
-			new_cmd_block->args = do_alloc(gc_lst, count + 1, TYPE_DOUBLE_PTR);
+			new_cmd_block->args = do_alloc(&gc_lst, count + 1, TYPE_DOUBLE_PTR, "new_cmd_block->args");
 			int i = 0;
 			while(cur && cur->type == TOKEN_FLAGS)
 			{
@@ -116,15 +116,12 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc_list *gc_lst)
 			}
 		}
 		//memo ich finde ich muss heredoc in here ausfuehren.
-		// if (cur && cur->type == TOKEN_HEREDOC)
-		// {
-		// 	int heredoc_result;
-		// 	heredoc_result = heredoc();
-		// 	if (heredoc_result == -1)
-		// 	{
-		// 		//todo handle error case!
-		// 	}
-		// }
+		if (cur && cur->type == TOKEN_HEREDOC && cur->value != NULL)
+		{
+			int heredoc_result;
+			heredoc_result = heredoc();
+			//cat << heredoc 
+		}
 		cur = cur->next;
 	}
 	*token = cur;

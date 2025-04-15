@@ -50,7 +50,7 @@ int	validate_syntax(t_token *token)
 		//heck if a TOKEN_EOF follows after a TOKEN_HEREDOC
 		else if (cur->type == TOKEN_HEREDOC)
 		{
-			if(!cur->next)
+			if(cur->value == NULL)
 			{
 				perror(RED"syntax error"DEFAULT);
 			}
@@ -59,19 +59,30 @@ int	validate_syntax(t_token *token)
 	}
 }
 
+
 int	validate_cmd_block(t_cmd_block *cmd_b)
 {
 	t_cmd_block *cur;
+	bool is_valid;
 
+	is_valid = false;
 	cur = cmd_b;
 	while(cur)
 	{
-		if (!cur->cmd && !cur->built_in)
+		if (cur->cmd || cur->built_in)
 		{
-			perror(RED"no cmd validate_cmd_block()"DEFAULT);
-			//todo all free
+			is_valid = true;
 		}
 		cur = cur->next;
 	}
-	if(cur->heredoc_fd)
+	return is_valid;
 }
+
+/*
+token -> validate_syntax -> merge to one cmd_block -> validate_cmd_block(atm if theres heredoc excute heredoc)
+
+-> redir set -> check_is_valid_cmd -> excute
+
+tracking child process -> waitpid -> wait4 -> waitpid(WNOHANG)
+
+*/

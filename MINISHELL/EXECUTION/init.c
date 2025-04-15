@@ -18,12 +18,12 @@ t_shell	*init_shell_struct(void)
 t_pipe *init_pipe(t_gc_list *gc_lst)
 {
 	t_pipe *p_pipe;
-	p_pipe = do_alloc(gc_lst, sizeof(t_pipe), TYPE_SINGLE_PTR);
+	p_pipe = do_alloc(&gc_lst, sizeof(t_pipe), TYPE_SINGLE_PTR, "pipe_list");
 	if (!p_pipe)
 	{
 		return (NULL);
 	}
-	p_pipe->pipefd = do_alloc(gc_lst, sizeof(int) * 2, TYPE_SINGLE_PTR);
+	p_pipe->pipefd = do_alloc(&gc_lst, sizeof(int) * 2, TYPE_SINGLE_PTR, "pipefd");
 	if (!p_pipe->pipefd)
 	{
 		return (NULL);
@@ -31,7 +31,7 @@ t_pipe *init_pipe(t_gc_list *gc_lst)
 	if (pipe(p_pipe->pipefd) == -1)
 	{
 		perror("init_pipe()");
-		all_free(&gc_lst);
+		//gc_free(&gc_lst);
 		return (NULL);
 	}
 	p_pipe->prev_read_end_fd = -1;
@@ -44,7 +44,7 @@ t_pipe *init_pipe(t_gc_list *gc_lst)
 t_io_streams_list *init_io_stream_struct(t_gc_list *gc_lst)
 {
 	t_io_streams_list	*io_streams_lst;
-	io_streams_lst = do_alloc(gc_lst, sizeof(t_io_streams_list), TYPE_SINGLE_PTR);
+	io_streams_lst = do_alloc(&gc_lst, sizeof(t_io_streams_list), TYPE_SINGLE_PTR, "io_streams_list");
 	if (!io_streams_lst)
 	{
 		return (NULL);
@@ -60,7 +60,7 @@ t_io_streams_list *init_io_stream_struct(t_gc_list *gc_lst)
 t_cmd_block *init_command_struct(t_gc_list *gc_lst)
 {
 	t_cmd_block *cmd;
-	cmd = do_alloc(gc_lst, sizeof(t_cmd_block), TYPE_SINGLE_PTR);
+	cmd = do_alloc(&gc_lst, sizeof(t_cmd_block), TYPE_SINGLE_PTR, "cmd_block");
 	if (!cmd)
 	{
 		return (NULL);

@@ -57,43 +57,29 @@ void	set_io_streams(t_cmd_block *cmd)
 	}
 }
 
-bool	is_first_pipe(t_cmd_block *cmd)
-{
-	if (!cmd->prev && cmd->next)
-		return true;
-	else
-		return false;
-}
-
-bool	is_middle_pipe(t_cmd_block *cmd)
-{
-	if (cmd->prev && cmd->next)
-		return true;
-	else
-		return false;
-}
-
-bool	is_last_pipe(t_cmd_block *cmd)
-{
-	if (cmd->prev && !cmd->next)
-		return true;
-	else
-		return false;
-}
-
-void	set_redirection(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
+//cmd block has only just one child process
+/*
+	[ls -l] | [wc -l] | [cat]
+*/
+void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 {
 	t_cmd_block *cur;
 	pid_t	pid;
 
 	t_shell *shell = get_shell();
 	cur = cmd_block;
+	if (validate_cmd_block(cur) == 0)
+	{
+		//todo all free
+		perror(RED"non valid cmd"DEFAULT);
+	}
 	while(cur)
 	{
 		//TODO denk mal ueber if Bedingung nach cur->next || oder cur->next->type == TOKEN_PIPE	weil wenn es naechste node gibt, bedeutet das, es gibt pipe auch!
 		if (cur->next)
 		{
 			add_pipe(&cur, gc_lst);
+			cur->child_pids = do_alloc(&gc_lst, sizeof(pid_t), TYPE_SINGLE_PTR, "child PID");
 			pid = fork();
 			if (pid == 0)
 			{
@@ -113,15 +99,20 @@ void	set_redirection(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 				// 	}
 				// }
 				set_io_streams(cur);
+				if (cur->io_streams->heredoc_fd)
+				{
+					//todo run heredoc
+				}
+
 				// fprintf(stderr, YELLOW"Created pipe_fd: read_end=%d, write_end=%d\n"DEFAULT,
 				// 	cmd->pipe->pipefd[0], cmd->pipe->pipefd[1]);
-				if (cur->built_in || cur->cmd)
+				if (cur->built_in)
 				{
-
+					execute_builtin();
 				}
 				if (cur->cmd)
 				{
-
+					execute_cmd();
 				}
 			}
 			else
@@ -142,10 +133,12 @@ void	set_redirection(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 						shell->last_status_exit = 128 + WTERMSIG(status);
 					}
 				}
+				//todo stduy about that 
 				while (waitpid(-1, NULL, WNOHANG) > 0);
 				close_pipefd(cur);
 			}
 		}
+
 		//single command!
 		else if(!cur->next && !cur->pipe)
 		{
@@ -154,6 +147,7 @@ void	set_redirection(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 				set_io_streams(cur);
 				execute_builtin();
 			}
+			
 			else if(cur->cmd)
 			{
 				pid = fork();

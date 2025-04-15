@@ -159,26 +159,26 @@ void	add_pipe(t_cmd_block **cmd_block, t_gc_list *gc_lst)
 // 	return (pipe_count);
 // }
 
-bool	is_first_pipe_cmd(int *pipefd)
-{
-	if (!pipefd)
-		return true;
-	return false;
-}
+// bool	is_first_pipe_cmd(t_cmd_block *cmd)
+// {
+// 	if (cmd->next && !cmd->prev)
+// 		return true;
+// 	return false;
+// }
 
-bool	is_middle_pipe_cmd(int fd_prev_read_end, int cur_fd_write_end) //prev->read_end->fd exist
-{
-	if (fd_prev_read_end != -1 && cur_fd_write_end != -1)
-		return true;
-	return false;
-}
+// bool	is_middle_pipe_cmd(t_cmd_block *cmd) //prev->read_end->fd exist
+// {
+// 	if (cmd->prev && cmd->next)
+// 		return true;
+// 	return false;
+// }
 
-bool	is_last_pipe_cmd(int fd_prev_read_end, int cur_fd_write_end) // prev->read_end->fd exist
-{
-	if (fd_prev_read_end != -1 && cur_fd_write_end == -1)
-		return true;
-	return false;
-}
+// bool	is_last_pipe_cmd(t_cmd_block *cmd) // prev->read_end->fd exist
+// {
+// 	if(cmd->prev && !cmd->next)
+// 		return true;
+// 	return false;
+// }
 
 // bool	is_single_pipe(t_command *command) //in disenfall muss ich nur first and last aufrufen.
 // {
@@ -189,6 +189,30 @@ bool	is_last_pipe_cmd(int fd_prev_read_end, int cur_fd_write_end) // prev->read_
 // {
 // 	return (is_middle_pipe(command));
 // }
+
+bool	is_first_pipe(t_cmd_block *cmd)
+{
+	if (!cmd->prev && cmd->next)
+		return true;
+	else
+		return false;
+}
+
+bool	is_middle_pipe(t_cmd_block *cmd)
+{
+	if (cmd->prev && cmd->next)
+		return true;
+	else
+		return false;
+}
+
+bool	is_last_pipe(t_cmd_block *cmd)
+{
+	if (cmd->prev && !cmd->next)
+		return true;
+	else
+		return false;
+}
 
 int	first_pipe_cmd(t_cmd_block *command, t_shell *shell, t_gc_list *gc_lst)
 {
