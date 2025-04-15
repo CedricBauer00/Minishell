@@ -6,49 +6,21 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/14 17:02:51 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/15 10:47:59 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-int	create_token(t_token **tokens, t_token_type type, char *str, t_gc_list *gc_list)
-{
-	t_token *new_token;
-	
-	if (!str)
-		return (perror("ERROR\nStr is NULL!\n"), -1);
-	new_token = (t_token *)do_alloc(gc_list, sizeof(t_token),TYPE_SINGLE_PTR);
-	printf("create allocated token\n");
-	if (!new_token)
-		return (perror("ERROR\nMalloc failed!\n"), -1);
-	new_token->type = type;
-	new_token->value = gc_strdup(str, gc_list);
-	if (!new_token->value)
-	{
-		free(new_token);
-		return (perror("ERROR\nMalloc for new_token->value failed!\n"), -1);
-	}
-	new_token->next = NULL;
-	return (append_token(tokens, new_token));
-}
 // void checkleak(void)
 // {
 // 	system(RED"leask "DEFAULT);
 // }
 // atexit(&checkleak);
+
 int	main_helper(t_main *main, t_gc_list *gc_list)
 {
-	// t_token	*temp;
 	main->temp_for_line = readline(YELLOW"minishell> "DEFAULT);
-	// temp = main->tokens;
-	// while (1)
-	// {
-	// 	if (temp == NULL)
-	// 		break ;
-	// 	printf("main.tokens = %s\n", temp->value);
-	// 	temp = temp->next;
-	// }
 	if(!main->temp_for_line)
 		return (-1);
 	main->line = do_alloc(gc_list, ft_strlen(main->temp_for_line) + 1, TYPE_SINGLE_PTR);
@@ -130,6 +102,8 @@ int main(int argc, char **argv, char **envp)
 	
 	using_history();
 	set_default(&main);
+	signal(SIGINT, signal_func);
+	signal(SIGQUIT, SIG_IGN);
 	gc_list = init_gc_list();
 	main.envp = copy_envp(gc_list, envp);
 	shell = get_shell(gc_list);
@@ -138,31 +112,20 @@ int main(int argc, char **argv, char **envp)
 	{
 		main.tokens = NULL;
 		if (main_helper(&main, gc_list) < 0)
-		{
-			printf("1\n");
 			return (printf("exit\n"), all_free(&gc_list), 0);
-		}
 		if (check_quote(&main) < 0)
-		{
-			printf("2\n");
 			continue ;
-		}
 		i = 0;
 		while (main.line[i])
 		{
-			printf("3\n");
 			if (check_operator(&main, &i, gc_list) < 0 || i < 0)
 			{
 				printf("6\n");
 				return (printf("ERROR\nCheck_operator failed!\n"), all_free(&gc_list), -1);
 			}
-			// printf("[i] = %c\n", main.line[i]);
 		}
-		if (check_for_node_spaces(&main, main.tokens, gc_list) < 0)
-		{
-			printf("5\n");	
+		if (main.tokens && check_for_node_spaces(&main, main.tokens, gc_list) < 0)
 			return (printf("ERROR\nChecking nodes failed!\n"), all_free(&gc_list), -1);
-		}
 		print_tokens(main.tokens);
 		if (validate_syntax(main.tokens) < 0)
 		{
@@ -170,11 +133,17 @@ int main(int argc, char **argv, char **envp)
 			//t_gc_list *find;
 			// find = find_node(gc_list, main.tokens->value);
 			// delete_node(&gc_list, find);
-			null_node_all_free(&gc_list);
+			// null_node_all_free(&gc_list);
 			//print_list(gc_list);
 			//continue ;
 		}
 		print_list(gc_list);
+		//int i = 0;
+		// while (main.envp[i])
+		// {
+		// 	printf("main.envp[i] : %s\n", main.envp[i]);
+		// 	i++;
+		// }
 	}
 	if (gc_list)
 		all_free(&gc_list);

@@ -75,7 +75,7 @@ t_gc_list	*find_node(t_gc_list *gc_lst, void *target)
 	{
 		if(cur->data == target)
 		{
-			printf("----------find : %p in garbage--------\n",target);
+			// printf("----------find : %p in garbage--------\n",target);
 			return cur;
 		}
 		cur = cur->next;
@@ -151,7 +151,7 @@ void null_node_all_free(t_gc_list **gc_lst)
 		t_gc_list *next = cur->next;
 		if (cur->data == NULL)
 		{
-			printf("%p is free, type is %d\n", cur->data , cur->type);
+			// printf("%p is free, type is %d\n", cur->data , cur->type);
 			prev->next = next;
 			free(cur);
 		}
@@ -161,7 +161,7 @@ void null_node_all_free(t_gc_list **gc_lst)
 		}
 		cur = next;
 	}
-	printf("at last %p is free\n", *gc_lst);
+	// printf("at last %p is free\n", *gc_lst);
 }
 
 void	print_list(t_gc_list *gc_lst)

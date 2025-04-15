@@ -37,7 +37,9 @@ SOURCES = p_main.c \
 		copy_envp.c \
 		init.c \
 		printing.c \
-		p_syntax.c
+		p_syntax.c \
+		p_signal.c \
+		p_token_handling.c
 
 OBJECTS := $(SOURCES:.c=.o)
 

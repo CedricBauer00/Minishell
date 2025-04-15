@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 09:58:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/07 17:05:10 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/15 10:35:42 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ int	expand_helper(t_main *main, int *i, int ws, t_gc_list *gc_list)
 		free(var);
 	return (0);
 }
-
 
 int	special_character(t_main *main, int *i, char *value, t_gc_list *gc_list)
 {

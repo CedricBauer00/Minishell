@@ -136,6 +136,7 @@
 // 	return (input);
 // }
 
+//latest one
 
 // int	heredoc(t_main *main, int i, t_gc_list *gc_list) //why exit when press enter
 // {

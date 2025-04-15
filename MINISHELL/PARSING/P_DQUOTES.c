@@ -6,11 +6,101 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 09:42:44 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/07 18:15:55 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/15 10:36:30 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
+
+int	get_spaces(t_main *main, int *i, t_gc_list *gc_list)
+{
+	int		j;
+	int		k;
+	char	*str;
+	
+	j = 0;
+	k = 0;
+	while (ft_isspace(main->line[*i]))
+	{
+		j++;
+		(*i)++;
+	}
+	str = do_alloc(gc_list, j + 1, TYPE_SINGLE_PTR);
+	if (!str)
+		return (-1);
+	str[j] = '\0';
+	while (k < j)
+	{
+		str[k] = ' ';
+		k++;
+	}
+	main->error = create_token(&main->tokens, TOKEN_WORD, str, gc_list);
+	return (0);
+}
+
+int	read_word(t_main *main, int *i, t_gc_list *gc_list)
+{
+	int		j;
+	int		k;
+	int		m;
+	char	*str;
+
+	j = 0;
+	k = 0;
+	m = *i;
+	while (main->line[m] && main->line[m] != '"' && !ft_isspace(main->line[m]) && main->line[m] != '$')
+	{
+		j++;
+		m++;
+	}
+	str = do_alloc(gc_list, j + 1, TYPE_SINGLE_PTR);
+	if (!str)
+		return (-1);
+	str[j] = '\0';
+	while (k < j)
+	{
+		str[k] = main->line[*i];
+		k++;
+		(*i)++;
+	}
+	main->error = create_token(&main->tokens, TOKEN_WORD, str, gc_list);
+	return (0);
+}
+
+int dquotes(t_main *main, int *i, t_gc_list *gc_list)
+{
+	int ws;
+	
+	(*i)++;
+	ws = *i;
+	while (main->line[*i] && main->line[*i] != '"')
+	{
+		if (main->line[*i] == ' ')
+		{
+			if (get_spaces(main, i, gc_list) < 0)
+				return (-1);
+		}
+		if (main->line[*i] == '$')
+		{
+			if (expands(main, i, 0, gc_list) < 0)
+				return (perror("ERROR\nExpand failed!\n"), -1);
+			while (main->line[*i] && !ft_isspace(main->line[*i]))
+				(*i)++;
+		}
+		if (main->line[*i] && main->line[*i] != '"' && !ft_isspace(main->line[*i]) && main->line[*i] != '$')
+		{
+			if (read_word(main, i, gc_list) < 0)
+				return (-1);
+		}
+	}
+	if (main->line[*i] != '"')
+		return (printf(RED"ERROR\nUnclosed quotes!\n"DEFAULT), 0);
+	if (main->line[*i] != '\0')
+		(*i)++;
+	return (0);
+}
+
+//- $VAR=... not working 
 
 // int dquotes(t_main *main, int *i, t_gc_list *gc_list) // "HEELLOO $PATH" not working - multiple $VARs - $VAR=... not working 
 // {
@@ -125,91 +215,3 @@
 // 	main->next_line = NULL;
 // }
 // return (0);
-
-int	get_spaces(t_main *main, int *i, t_gc_list *gc_list)
-{
-	int		j;
-	int		k;
-	char	*str;
-	
-	j = 0;
-	k = 0;
-	while (ft_isspace(main->line[*i]))
-	{
-		j++;
-		(*i)++;
-	}
-	str = do_alloc(gc_list, j + 1, TYPE_SINGLE_PTR);
-	if (!str)
-		return (-1);
-	str[j] = '\0';
-	while (k < j)
-	{
-		str[k] = ' ';
-		k++;
-	}
-	main->error = create_token(&main->tokens, TOKEN_WORD, str, gc_list);
-	return (0);
-}
-
-int	read_word(t_main *main, int *i, t_gc_list *gc_list)
-{
-	int		j;
-	int		k;
-	int		m;
-	char	*str;
-
-	j = 0;
-	k = 0;
-	m = *i;
-	while (main->line[m] && main->line[m] != '"' && !ft_isspace(main->line[m]) && main->line[m] != '$')
-	{
-		j++;
-		m++;
-	}
-	str = do_alloc(gc_list, j + 1, TYPE_SINGLE_PTR);
-	if (!str)
-		return (-1);
-	str[j] = '\0';
-	while (k < j)
-	{
-		str[k] = main->line[*i];
-		k++;
-		(*i)++;
-	}
-	main->error = create_token(&main->tokens, TOKEN_WORD, str, gc_list);
-	return (0);
-}
-
-int dquotes(t_main *main, int *i, t_gc_list *gc_list) //- $VAR=... not working 
-{
-	int ws;
-	
-	(*i)++;
-	ws = *i;
-	while (main->line[*i] && main->line[*i] != '"')
-	{
-		if (main->line[*i] == ' ')
-		{
-			if (get_spaces(main, i, gc_list) < 0)
-				return (-1);
-		}
-		if (main->line[*i] == '$')
-		{
-			if (expands(main, i, 0, gc_list) < 0)
-				return (perror("ERROR\nExpand failed!\n"), -1);
-			while (main->line[*i] && !ft_isspace(main->line[*i]))
-				(*i)++;
-		}
-		if (main->line[*i] && main->line[*i] != '"' && !ft_isspace(main->line[*i]) && main->line[*i] != '$')
-		{
-			if (read_word(main, i, gc_list) < 0)
-				return (-1);
-		}
-	}
-	if (main->line[*i] != '"')
-		return (printf(RED"ERROR\nUnclosed quotes!\n"DEFAULT), 0);
-	if (main->line[*i] != '\0')
-		(*i)++;
-	return (0);
-}

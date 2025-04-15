@@ -26,15 +26,12 @@ char	**copy_envp(t_gc_list *gc_lst, char **envp)
 		return (NULL);
 	}
 	count = get_envp_count(envp);
-	//printf("%d\n", count);
 	my_envp = do_alloc(gc_lst, sizeof(char *) * count, TYPE_DOUBLE_PTR);
 	if (!my_envp)
 	{
 		printf(RED "copy_envp()edge case\n" DEFAULT);
 		return (NULL);
 	}
-	//my_envp[count - 1 ] = NULL;
-	printf("my_nevp %p\n", my_envp);
 	while (envp[i])
 	{
 		my_envp[i] = gc_strdup(envp[i], gc_lst);
@@ -48,7 +45,6 @@ char	**copy_envp(t_gc_list *gc_lst, char **envp)
 		}
 		i++;
 	}
-	printf("%d\n", i);
 	my_envp[i -1] = NULL;
 	return (my_envp);
 }

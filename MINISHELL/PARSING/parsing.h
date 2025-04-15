@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/14 17:02:10 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/15 10:40:38 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@
 # include <fcntl.h>
 # include <errno.h>
 # include <sys/stat.h>
-// # include <stdio.h>
+# include <stdio.h>
+# include <signal.h>
 // # include "/Users/cbauer/Documents/03_Circle/privat_mini/MINISHELL/PARSING/GC/garbage_collector.h"
 # include "GC/garbage_collector.h"
 
@@ -174,25 +175,25 @@ int	read_word(t_main *main, int *i, t_gc_list *gc_list);
 int	get_spaces(t_main *main, int *i, t_gc_list *gc_list);
 
 // ----------------------------------------------------------------------
-// 							  PIPES
+// 							    PIPES
 // ----------------------------------------------------------------------
 
 int	pipes(t_main *main, t_gc_list *gc_list, int i);
 
 // ----------------------------------------------------------------------
-// 							REDIRECTS
+// 							  REDIRECTS
 // ----------------------------------------------------------------------
 
 int	operator(t_main *main, int i, char c, t_gc_list *gc_list);
 
 // ----------------------------------------------------------------------
-// 							  APPEND
+// 							   APPEND
 // ----------------------------------------------------------------------
 
 int	append(t_main *main, int i, t_gc_list *gc_list);
 
 // ----------------------------------------------------------------------
-// 							 HEREDOC
+// 							   HEREDOC
 // ----------------------------------------------------------------------
 
 int	heredoc(t_main *main, int i, t_gc_list *gc_list);
@@ -202,7 +203,7 @@ char	*heredoc_input(char *del, t_gc_list *gc_list);
 int	heredoc_exec(char *input, t_main *main);
 
 // ----------------------------------------------------------------------
-// 							EXPAND
+// 							   EXPANDS
 // ----------------------------------------------------------------------
 
 int is_valid_char(char c);
@@ -211,6 +212,9 @@ void	variables(t_main *main, int i, int ws, int len, t_gc_list *gc_list);
 int	special_character(t_main *main, int *i, char *value, t_gc_list *gc_list);
 int	expand_helper(t_main *main, int *i, int ws, t_gc_list *gc_list);
 
+// ----------------------------------------------------------------------
+// 							 SHELL_INFO
+// ----------------------------------------------------------------------
 
 t_shell	*init_shell_info(t_gc_list *gc_list);
 t_shell *get_shell(t_gc_list *gc_list);
@@ -220,20 +224,16 @@ t_shell *get_shell(t_gc_list *gc_list);
 // -------printing-------
 void print_tokens(t_token *tokens);
 void print_token(t_token *tokens);
-t_token	*get_last_token(t_token *tokens);
 
 int	check_for_node_spaces(t_main *main, t_token *temp, t_gc_list *gc_list);
 int	node_spaces_helper(t_token *temp, t_gc_list *gc_list);
 int	check_quote(t_main *main);
 int	validate_syntax(t_token *token);
 void null_node_all_free(t_gc_list **gc_lst);
-
-
+void	signal_func(int sig);
 
 // int	check_operator(t_main *main, int *i, t_gc_list *gc_list);
 // int	check_operator2(t_main *main, int *i, t_gc_list *gc_list);
-
-
 
 // copy_envp.c  -- ok! 
 // char    **copy_envp(t_gc_list *gc_lst, char **envp);

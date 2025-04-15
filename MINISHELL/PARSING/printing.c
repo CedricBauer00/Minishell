@@ -30,15 +30,6 @@
 // 	printf("--------------------\n");
 // }
 
-t_token	*get_last_token(t_token *tokens)
-{
-	if (!tokens)
-		return (NULL);
-	while (tokens->next)
-		tokens = tokens->next;
-	return (tokens);
-}
-
 void print_token(t_token *tokens)
 {
 	if (!tokens)
