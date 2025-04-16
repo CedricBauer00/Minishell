@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 09:42:44 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/15 11:55:43 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/16 14:57:47 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,39 +67,8 @@ int	read_word(t_main *main, int *i, t_gc_list *gc_list)
 	return (0);
 }
 
-// int	quotes_helper(t_main *main, int *i, t_gc_list *gc_list)
-// {
-// 	while (main->line[*i] && main->line[*i] != '"')
-// 	{
-// 		if (main->line[*i] == ' ')
-// 		{
-// 			if (get_spaces(main, i, gc_list) < 0)
-// 				return (-1);
-// 		}
-// 		if (main->line[*i] == '$')
-// 		{
-// 			if (expands(main, i, 0, gc_list) < 0)
-// 				return (perror("ERROR\nExpand failed!\n"), -1);
-// 			while (main->line[*i] && !ft_isspace(main->line[*i]))
-// 				(*i)++;
-// 		}
-// 		if (main->line[*i] && main->line[*i] != '"' && !ft_isspace(main->line[*i]) && main->line[*i] != '$')
-// 		{
-// 			if (read_word(main, i, gc_list) < 0)
-// 				return (-1);
-// 		}
-// 	}
-// 	return (0);
-// }
-
-int dquotes(t_main *main, int *i, t_gc_list *gc_list)
+int	quotes_helper(t_main *main, int *i, t_gc_list *gc_list)
 {
-	int ws;
-	
-	(*i)++;
-	ws = *i;
-	// if (quotes_helper(main, i, gc_list) < 0)
-	// 	return (-1);
 	while (main->line[*i] && main->line[*i] != '"')
 	{
 		if (main->line[*i] == ' ')
@@ -111,8 +80,6 @@ int dquotes(t_main *main, int *i, t_gc_list *gc_list)
 		{
 			if (expands(main, i, 0, gc_list) < 0)
 				return (perror("ERROR\nExpand failed!\n"), -1);
-			while (main->line[*i] && !ft_isspace(main->line[*i]))
-				(*i)++;
 		}
 		if (main->line[*i] && main->line[*i] != '"' && !ft_isspace(main->line[*i]) && main->line[*i] != '$')
 		{
@@ -120,6 +87,19 @@ int dquotes(t_main *main, int *i, t_gc_list *gc_list)
 				return (-1);
 		}
 	}
+	return (0);
+}
+
+int dquotes(t_main *main, int *i, t_gc_list *gc_list)
+{
+	int ws;
+	
+	(*i)++;
+	ws = *i;
+	if (quotes_helper(main, i, gc_list) < 0)
+		return (-1);
+	
+
 	if (main->line[*i] != '"')
 		return (printf(RED"ERROR\nUnclosed quotes!\n"DEFAULT), 0);
 	if (main->line[*i] != '\0')
@@ -242,3 +222,4 @@ int dquotes(t_main *main, int *i, t_gc_list *gc_list)
 // 	main->next_line = NULL;
 // }
 // return (0);
+

@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/15 16:36:52 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/16 15:38:55 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,13 @@
 int	main_helper(t_main *main, t_gc_list *gc_list)
 {
 	main->temp_for_line = readline(YELLOW"minishell> "DEFAULT);
-	if(!main->temp_for_line)
+	if (!main->temp_for_line)
+	{
+		// Entferne den Prompt und gib "exit" auf der gleichen Zeile aus
+		write(1, "\033[1A\033[2K\r", 8); // Cursor eine Zeile nach oben, lösche die Zeile und setze den Cursor an den Anfang
+		printf("exit\n");
 		return (-1);
+	}
 	main->line = do_alloc(&gc_list, ft_strlen(main->temp_for_line) + 1, TYPE_SINGLE_PTR, "input");
 	if (!main->line)
 		return (-1);
@@ -86,6 +91,23 @@ int	check_operator(t_main *main, int *i, t_gc_list *gc_list)
 	return (0);
 }
 
+void	lex_tokens_correctly(t_token *tokens)
+{
+	int	cmd;
+	
+	cmd = 0;
+	while (tokens)
+	{
+		if (tokens->type & (TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT)
+			&& tokens->next != NULL)
+			tokens->next->type = TOKEN_FILE;
+		// if (cmd == 0 && !(tokens->type & (TOKEN_APPEND | TOKEN_HEREDOC
+		// 	| TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT)))
+	}
+}
+
+
+
 int main(int argc, char **argv, char **envp)
 {
 	(void)argc;
@@ -108,7 +130,7 @@ int main(int argc, char **argv, char **envp)
 	{
 		main.tokens = NULL;
 		if (main_helper(&main, gc->temp) < 0)
-			return (printf("exit\n"), gc_free(gc), 0);
+			return (gc_free(gc), 0);
 		if (check_quote(&main) < 0)
 			continue ;
 		i = 0;
@@ -120,6 +142,7 @@ int main(int argc, char **argv, char **envp)
 		if (main.tokens && check_for_node_spaces(&main, main.tokens, gc->temp) < 0)
 			return (printf("ERROR\nChecking nodes failed!\n"), gc_free(gc), -1);
 		print_tokens(main.tokens);
+		lex_tokens_correctly(main.tokens);
 		if (validate_syntax(main.tokens) < 0)
 		{
 			perror(RED"syntax error"DEFAULT);

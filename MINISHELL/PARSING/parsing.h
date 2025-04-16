@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/15 14:17:34 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/16 15:39:17 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,9 @@
 typedef enum s_tenum
 {
     TOKEN_NONE = 0x0000,
-    TOKEN_WORD = 0x0001,         //word
+    TOKEN_WORD = 0x0001,         //word/file
     TOKEN_CMD = 0x0002,          //Command
-    TOKEN_FLAGS = 0x0004,
+    TOKEN_ARG = 0x0004,
     TOKEN_BUILT_IN = 0x0008,     // cd, pwd, export, ...
     TOKEN_PIPE = 0x0010,         //Symbol: |
     TOKEN_REDIRECT_IN = 0x0020,  //Symbol: <
@@ -71,7 +71,8 @@ typedef enum s_tenum
     TOKEN_HEREDOC = 0x0100,      //Symbol: <<
     TOKEN_VAR = 0x0200,          //$ variable
     TOKEN_EOF = 0x0400,          //End of input
-    TOKEN_SPACES = 0x0800
+    TOKEN_FILE = 0x0800,         //file
+    TOKEN_SPACES = 0x1000,       //spaces
 }   t_token_type;
 
 
