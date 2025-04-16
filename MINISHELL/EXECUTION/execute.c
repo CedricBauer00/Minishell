@@ -31,35 +31,6 @@
 	}
 */
 
-//todo here if heredoc then just run it here 
-void	set_io_streams(t_cmd_block *cmd)	
-{
-	t_io_streams_list *io_streams;
-
-	if(!cmd)
-		return ;
-	io_streams = cmd->io_streams;
-
-	while (io_streams)
-	{
-		if (io_streams->fd_in_file && io_streams->infile_name)
-		{
-			re_dir_in(io_streams);
-		}
-		
-		if (io_streams->heredoc_fd)
-		{
-			//todo call heredoc
-			dup2(cmd->io_streams->heredoc_fd, STDIN_FILENO);
-		}
-
-		if (io_streams->fd_out_file && io_streams->outfile_name)
-		{
-			re_dir_out(io_streams);
-		}
-		io_streams = io_streams->next;
-	}
-}
 
 //cmd block has only just one child process
 /*
@@ -76,15 +47,15 @@ void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 	{
 		//todo all free
 		perror(RED"non valid cmd"DEFAULT);
+		//exit(1);
 	}
 	while(cur)
 	{
-		heredoc_exe(cur);
 		//TODO denk mal ueber if Bedingung nach cur->next || oder cur->next->type == TOKEN_PIPE	weil wenn es naechste node gibt, bedeutet das, es gibt pipe auch!
 		if (cur->next)
 		{
 			add_pipe(&cur, gc_lst);
-			cur->child_pids = do_alloc(&gc_lst, sizeof(pid_t), TYPE_SINGLE_PTR, "child PID");
+			//cur->child_pids = do_alloc(&gc_lst, sizeof(pid_t), TYPE_SINGLE_PTR, "child PID");
 			pid = fork();
 			if (pid == 0)
 			{
@@ -100,6 +71,7 @@ void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 				{
 					execute_cmd();
 				}
+				//wenn heredoc in child prozess ausfuehrt dann muss es hier recover werden.
 				exit(0);
 			}
 			else
@@ -111,30 +83,34 @@ void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 					if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
 					{
 						printf(GREEN"exited with %d\n"DEFAULT, WEXITSTATUS(status));
-						shell->last_status_exit = WEXITSTATUS(status);
+						shell->last_status_exit = WEXITSTATUS(status);  //parents get exit status 
 					}
 					//todo stduy about that 
+					/*
+						if child process exited by signal also abnormal
+						128 + signal_number
+						total siganl number is 31
+						max signal return number is 159
+					*/
 					else if (WIFSIGNALED(status))
 					{
 						printf(RED "terminated by signal %d (%s)\n" DEFAULT, WTERMSIG(status), strsignal(WTERMSIG(status)));
 						shell->last_status_exit = 128 + WTERMSIG(status);
 					}
 				}
-				//todo stduy about that 
-				while (waitpid(-1, NULL, WNOHANG) > 0);
 				close_pipefd(cur);
 			}
 		}
 
 		//single command!
-		else if(!cur->prev && !cur->next && !cur->pipe)
+		else if(!cur->prev && !cur->next)
 		{
 			if (cur->built_in)
 			{
 				set_io_streams(cur);
 				execute_builtin();
 			}
-			
+
 			else if(cur->cmd)
 			{
 				pid = fork();
@@ -145,7 +121,7 @@ void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 				}
 				else
 				{
-
+					
 				}
 			}
 		}
@@ -153,6 +129,10 @@ void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 	}
 }
 
+void	prevent_zombie_process()
+{
+	while (waitpid(-1, NULL, WNOHANG) > 0);
+}
 // void	execute(t_cmd_block *cmd_block, t_gc_list *gc_list)
 // {
 // 	int	i;

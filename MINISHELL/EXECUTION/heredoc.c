@@ -59,38 +59,19 @@ heredoc 처리는 보통 명령 실행 전, 부모 프로세스에서 처리함.
 // 	return (tty_path);
 // }
 
+//todo think about that mmap how it does work!
 int	process_heredoc(t_io_streams_list *io_streams)
 {
 	int	fd_heredoc;
-	// if (isatty(STDIN_FILENO)) 
-	// {   
-    // 	printf(GREEN"input from terminal\n"DEFAULT);
-	// 	fd = open(tty_path, O_RDWR);
-	// 	if (fd == -1)
-	// 	{
-	// 		perror(RED"failed to open tty"DEFAULT);
-	// 		return -1;
-	// 	}
-	// 	if (dup2(fd, STDIN_FILENO) == -1)
-	// 	{
-	// 		perror(RED"failed to dup2() in heredoc()"DEFAULT);
-	// 		close(fd);
-	// 		return -1;
-	// 	}
-
-
-	// int fd_org_read = dup(STDOUT_FILENO);
-	// if (fd_org_read == -1)
-	// {
-	// 	return -1;
-	// }
-	//todo ?? can we have multiples heredoc in one cmd_block?
-	while (io_streams)
+	
+	fd_heredoc = 0;
+	while (io_streams->heredoc_eof)
 	{
-		char filename[64];
+		//char filename[64];
 		//todo make multiples files;;;
 		//filename = "temp_heredoc";
 		//if multiples heredoc we need multiples filenames..
+
 		fd_heredoc = open("temp_heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd_heredoc == -1)
 		{
@@ -100,7 +81,7 @@ int	process_heredoc(t_io_streams_list *io_streams)
 		while(1)
 		{
 			char *line;
-	
+
 			line = readline("> ");
 			if (!line || strcmp(line, "eof") == 0)
 			{
@@ -126,35 +107,6 @@ int	process_heredoc(t_io_streams_list *io_streams)
 	return 1;
 }
 
-void	heredoc_exe(t_cmd_block *cmd_b)
-{
-	if (cmd_b->io_streams->heredoc_fd)
-		process_heredoc()
-}
-
-int	heredoc(t_main *main, int i, t_gc_list *gc_list) //why exit when press enter
-{
-	int		j;
-	int		end;
-	char	*word;
-
-	// printf("i = %d\n", i);
-	if (main->line[i + 2] == '\0')
-	{
-		main->error = create_token(&main->tokens, TOKEN_HEREDOC, NULL, gc_list);
-		return (i + 2);
-	}
-	j = i + 2;
-	while (main->line[j] && check_char(main, j, 0) == 1)
-		j++;
-	// printf("j = %d\n", j);
-	end = is_quote(main, j);
-	word = gc_strndup(&main->line[j], end - j, gc_list);
-	if (!word)
-		return (-1);
-	main->error = create_token(&main->tokens, TOKEN_HEREDOC, word, gc_list);
-	return (end);
-}
 
 //bei der durchfuehrung des cmd muss ich den FD des temporäre Datei umleiten.
 // int main()

@@ -191,9 +191,10 @@ int		middle_pipe_cmd(t_cmd_block *cmd_block, t_shell *shell, t_gc_list *gc_lst);
 int		last_pipe_cmd(t_cmd_block *cmd_block, t_shell *shell);
 
 //memo redirection.c
-int	handle_re_dir(t_cmd_block *cmd_block);
-int	re_dir_out(t_cmd_block *cmd_block);
-int	re_dir_in(t_cmd_block *cmd_block);
+int		handle_re_dir(t_cmd_block *cmd_block);
+int		re_dir_out(t_cmd_block *cmd_block);
+int		re_dir_in(t_cmd_block *cmd_block);
+void	set_io_streams(t_cmd_block *cmd);
 
 //memo exe_utils.c
 void	is_exited(void *failed, t_gc_list *gc_lst);

@@ -6,7 +6,12 @@
 dup 으로 original stdin 과 stdout 복원해놓기!
 
 dup2(oldfd, newfd);
-
+oldfd를 newfd로 복사 기존의 newfd는 닫힌후 새로운 oldfd
+ ****fd가 닫히는 게 아니라, "fd가 가리키고 있던 open file description과의 연결"이 끊기는 거예요.
+이때 **"복사"**라는 표현은 파일 디스크립터가 가리키는 파일을 연결하는 것을 의미합니다. 
+즉, oldfd와 newfd가 동일한 파일을 가리키게 된다는 뜻입니다. 
+즉 oldfd 가 가리키고있던 파일을 newfd도 가리키게된다.
+이때, 파일 디스크립터 자체는 복사되는 것이 아니라 파일 디스크립터가 가리키는 자원이 공유됩니다.
 
 if everythings correct before merging
 first i have to set all redirections up before execution.

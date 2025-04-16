@@ -68,3 +68,39 @@ int	handle_re_dir(t_cmd_block *cmd_block)
 		re_dir_out(cmd_block);
 	return 0;
 }
+
+
+//todo here if heredoc then just run it here 
+void	set_io_streams(t_cmd_block *cmd)	
+{
+	t_io_streams_list *io_streams;
+
+	if(!cmd)
+		return ;
+	io_streams = cmd->io_streams;
+
+	while (io_streams)
+	{
+		if (io_streams->fd_in_file && io_streams->infile_name)
+		{
+			re_dir_in(io_streams);
+		}
+		if (io_streams->heredoc_fd)
+		{
+			//todo call heredoc
+			dup2(cmd->io_streams->heredoc_fd, STDIN_FILENO);
+		}
+		if (io_streams->fd_out_file && io_streams->outfile_name)
+		{
+			re_dir_out(io_streams);
+		}
+		io_streams = io_streams->next;
+	}
+}
+
+/*
+		   3 		4
+	cat << eof < file.1
+
+	4
+*/

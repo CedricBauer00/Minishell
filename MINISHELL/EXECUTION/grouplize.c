@@ -111,7 +111,7 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc_list *gc_lst)
 					new_io_streams->outfile_name = gc_strdup(cur->prev->value, gc_lst);
 				else if (cur->type == TOKEN_HEREDOC)
 				{
-					new_io_streams->heredoc_file = gc_strdup(cur->prev->value, gc_lst);
+					new_cmd_block->cmd = gc_strdup(cur->prev->value, gc_lst);
 					new_io_streams->heredoc_eof = gc_strdup(cur->value, gc_lst);
 				}
 			}
