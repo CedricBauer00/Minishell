@@ -45,12 +45,12 @@ clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLDstr
 [pid   150] <... dup2 resumed>)         = 0
 [pid   147] <... close resumed>)        = -1 EBADF (Bad file descriptor)
 [pid   150] close(4 <unfinished ...>
-[pid   147] wait4(-1,  <unfinished ...>
+[pid   147] wait4(-1,  <unfinished ...> //memo wait
 [pid   150] <... close resumed>)        = 0
 [pid   147] <... wait4 resumed>[{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 148 //memo wait.
 
 [pid   150] execve("/usr/bin/wc", ["wc"], 0x55a28ee1e970 /* 8 vars */ <unfinished ...>
-[pid   147] wait4(-1,  <unfinished ...>
+[pid   147] wait4(-1,  <unfinished ...> //memo wait
 [pid   150] <... execve resumed>)       = 0
 [pid   149] openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
 [pid   149] close(3)                    = 0
@@ -94,7 +94,7 @@ clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLDstr
 <... wait4 resumed>[{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 150 //memo wait 
 
 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=150, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
-wait4(-1, 0x7ffc3690578c, WNOHANG, NULL) = -1 ECHILD (No child processes)
+wait4(-1, 0x7ffc3690578c, WNOHANG, NULL) = -1 ECHILD (No child processes) //memo wait 
 +++ exited with 0 +++
 
 #include <stdio.h>
