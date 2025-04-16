@@ -1,0 +1,7 @@
+TODO
+
+- expand fix
+- double quotes dix
+- syntax checking 
+- FLags -l -wc
+- distingtion between word cmd & file

@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/14 15:10:38 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/15 14:34:06 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	create_token(t_token **tokens, t_token_type type, char *str, t_gc_list *gc_l
 	
 	if (!str)
 		return (perror("ERROR\nStr is NULL!\n"), -1);
-	new_token = (t_token *)do_alloc(gc_list, sizeof(t_token),TYPE_SINGLE_PTR);
+	new_token = (t_token *)do_alloc(gc_list, sizeof(t_token),TYPE_SINGLE_PTR, );
 	if (!new_token)
 		return (perror("ERROR\nMalloc failed!\n"), -1);
 	printf(GREEN"new_token :%p\n"DEFAULT, new_token);

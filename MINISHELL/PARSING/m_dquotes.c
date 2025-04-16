@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   p_dquotes.c                                        :+:      :+:    :+:   */
+/*   m_dquotes.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 09:42:44 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/15 11:05:06 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/15 11:55:43 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	get_spaces(t_main *main, int *i, t_gc_list *gc_list)
 		j++;
 		(*i)++;
 	}
-	str = do_alloc(gc_list, j + 1, TYPE_SINGLE_PTR);
+	str = do_alloc(&gc_list, j + 1, TYPE_SINGLE_PTR, "get_spaces");
 	if (!str)
 		return (-1);
 	str[j] = '\0';
@@ -53,7 +53,7 @@ int	read_word(t_main *main, int *i, t_gc_list *gc_list)
 		j++;
 		m++;
 	}
-	str = do_alloc(gc_list, j + 1, TYPE_SINGLE_PTR);
+	str = do_alloc(&gc_list, j + 1, TYPE_SINGLE_PTR, "read_word");
 	if (!str)
 		return (-1);
 	str[j] = '\0';

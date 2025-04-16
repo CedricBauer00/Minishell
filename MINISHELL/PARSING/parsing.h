@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/15 10:40:38 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/15 14:17:34 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,7 +231,7 @@ int	check_quote(t_main *main);
 int	validate_syntax(t_token *token);
 void null_node_all_free(t_gc_list **gc_lst);
 void	signal_func(int sig);
-
+int	node_space_else_if(t_token **temp, t_gc_list *gc_list);
 // int	check_operator(t_main *main, int *i, t_gc_list *gc_list);
 // int	check_operator2(t_main *main, int *i, t_gc_list *gc_list);
 

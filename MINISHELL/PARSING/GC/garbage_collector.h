@@ -5,14 +5,8 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
-
-
-#define RED "\033[0;31m"    //error
-#define GREEN "\033[0;32m"  //
-#define BLUE "\033[0;34m"   //ok
-#define YELLOW "\033[0;33m" //
-#define DEFAULT "\033[0m"   //
-
+# include <stdbool.h>
+# include "../libft/libft.h"
 
 typedef enum	e_data_type
 {
@@ -22,25 +16,53 @@ typedef enum	e_data_type
 	TYPE_END
 }	t_data_type;
 
-typedef struct	s_gc_list
+typedef struct	s_gc_list  //-->change to s_gc_node
 {
 	void				*data;
 	struct s_gc_list	*next;
 	t_data_type			type;
+	char				*id;
+	int					level;
 	//int					ref_count;
 }	t_gc_list;
+
+//todo i have to change die struct wie? Aufteilung in mehre Listen
+typedef struct s_gc
+{
+	t_gc_list	*temp; //for the parsing
+	t_gc_list	*shell; //even if syntax error happend, we have to hold it
+}	t_gc;
+
+// typedef struct	s_gc_node  //-->change to s_gc_node
+// {
+// 	void				*data;
+// 	struct s_gc_list	*next;
+// 	t_data_type			type;
+// 	char				*id;
+// 	int					level;
+// 	//int					ref_count;
+// }	t_gc_node;
 
 //empty node, just a head node as dummy.
 
 t_gc_list	*init_gc_list(void);
+t_gc		*init_gc(void);
+t_gc		*get_gc(void);
 
-void	delete_node(t_gc_list **gc_lst, t_gc_list *to_delete);
-void	*do_alloc(t_gc_list *gc_lst, size_t howmuch, t_data_type data_type);
-void	free_data_type(void *data, t_data_type data_type);
-void	all_free(t_gc_list **gc_lst);
-void	print_list(t_gc_list *gc_lst);
+
+void		delete_node(t_gc_list **gc_lst, t_gc_list *to_delete);
+void		*do_alloc(t_gc_list **gc_lst, size_t howmuch, t_data_type data_type, char *id);
+void		free_data_by_type(void *data, t_data_type data_type);
+void		all_free(t_gc_list **gc_lst);
+void		print_list(t_gc_list *gc_lst);
 t_gc_list	*find_node(t_gc_list *gc_lst, void *target);
-void	null_gc_node_free(t_gc_list **gc_lst);
+t_gc_list	*find_node_with_id(t_gc_list *gc_lst, char *id);
+void		gc_free_by_level(t_gc_list *gc_list);
+void		gc_level_up(t_gc_list *gc_list);
+void		gc_free(t_gc *gc);
+t_gc		*get_garbage_collector(void);
+
+char		*gc_strdup(const char *str, t_gc_list *gc_lst);
 
 
 // void	gc_inc_ref_count(t_gc_list *gc_lst, void *ptr)

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   p_utils.c                                          :+:      :+:    :+:   */
+/*   m_utils.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 17:53:21 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/15 10:33:05 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/15 15:07:17 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*gc_strdup(const char *str, t_gc_list *gc_list)
 	if (!str)
 		return NULL;
 	len = ft_strlen(str);
-	ptr = do_alloc(gc_list, len * sizeof(char) + 1, TYPE_SINGLE_PTR);
+	ptr = do_alloc(&gc_list, len * sizeof(char) + 1, TYPE_SINGLE_PTR, "gc_strdup");
 	if (!ptr)
 		return (NULL);
 	counter = 0;
@@ -43,7 +43,7 @@ char	*gc_strndup(const char *str, size_t n, t_gc_list *gc_list)
 	len = ft_strlen(str);
 	if (n < len)
 		len = n;
-	ptr = do_alloc(gc_list, (len + 1) * sizeof(char),TYPE_DOUBLE_PTR);
+	ptr = do_alloc(&gc_list, (len + 1) * sizeof(char),TYPE_DOUBLE_PTR, "gc_strndup");
 	if (!ptr)
 		return (NULL);
 	counter = 0;
@@ -66,7 +66,7 @@ char	*gc_strjoin(char const *s1, char const *s2, t_gc_list *gc_list)
 	if (s1[0] == '\0' && s2[0] == '\0')
 		return (gc_strdup("", gc_list));
 	len = ft_strlen(s1) + ft_strlen(s2);
-	newstr = (char *)do_alloc(gc_list, (len + 1) * sizeof(char),TYPE_SINGLE_PTR);
+	newstr = (char *)do_alloc(&gc_list, (len + 1) * sizeof(char),TYPE_SINGLE_PTR, "gc_strjoin");
 	if (!newstr)
 		return (0);
 	counter = -1;

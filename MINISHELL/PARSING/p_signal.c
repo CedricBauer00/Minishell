@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:26:29 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/15 10:26:39 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/15 13:56:49 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,3 +20,5 @@ void	signal_func(int sig)
 	rl_on_new_line();
 	rl_redisplay();
 }
+// signals im Parentprozess (minishell) == ignore 
+// signals im Childprozess == SIG_DFL
