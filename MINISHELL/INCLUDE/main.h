@@ -81,8 +81,8 @@ typedef struct s_cmd_block //struct being allocated for each token from input
 	char						*cmd;
 	char						**args;
 	struct s_io_streams_list	*io_streams;
-	// pid_t					*pid;
 	struct s_pipe				*pipe;
+	pid_t						*child_pids;
 	struct s_cmd_block			*prev;
 	struct s_cmd_block			*next;
 }	t_cmd_block;
@@ -92,7 +92,9 @@ typedef struct s_io_streams_list //> < > <
 {
 	char						*infile_name;
 	char						*outfile_name;
-	//int						heredoc_fd;
+	int							heredoc_fd;
+	char						*heredoc_eof;
+	char						*heredoc_file;
 	int							fd_org_read;
 	int							fd_org_write;
 	int							fd_in_file;
@@ -181,9 +183,9 @@ void	ft_echo(char **argv, t_shell *sehll);
 
 //memo pipe
 void	add_pipe(t_cmd_block **cmd_block, t_gc_list *gc_lst);
-bool	is_first_pipe_cmd(int *pipefd);
-bool	is_middle_pipe_cmd(int fd_prev_read_end, int cur_fd_write_end);
-bool	is_last_pipe_cmd(int fd_prev_read_end, int cur_fd_write_end);
+bool	is_first_pipe(t_cmd_block *cmd);
+bool	is_middle_pipe(t_cmd_block *cmd);
+bool	is_last_pipe(t_cmd_block *cmd);
 int		first_pipe_cmd(t_cmd_block *cmd_block, t_shell *shell, t_gc_list *gc_lst);
 int		middle_pipe_cmd(t_cmd_block *cmd_block, t_shell *shell, t_gc_list *gc_lst);
 int		last_pipe_cmd(t_cmd_block *cmd_block, t_shell *shell);
