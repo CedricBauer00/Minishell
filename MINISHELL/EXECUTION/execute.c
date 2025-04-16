@@ -38,20 +38,24 @@ void	set_io_streams(t_cmd_block *cmd)
 
 	if(!cmd)
 		return ;
-	io_streams = cmd;
+	io_streams = cmd->io_streams;
+
 	while (io_streams)
 	{
 		if (io_streams->fd_in_file && io_streams->infile_name)
 		{
 			re_dir_in(io_streams);
 		}
-		if (io_streams->fd_out_file && io_streams->outfile_name)
-		{
-			re_dir_out(io_streams);
-		}
+		
 		if (io_streams->heredoc_fd)
 		{
 			//todo call heredoc
+			dup2(cmd->io_streams->heredoc_fd, STDIN_FILENO);
+		}
+
+		if (io_streams->fd_out_file && io_streams->outfile_name)
+		{
+			re_dir_out(io_streams);
 		}
 		io_streams = io_streams->next;
 	}
@@ -75,6 +79,7 @@ void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 	}
 	while(cur)
 	{
+		heredoc_exe(cur);
 		//TODO denk mal ueber if Bedingung nach cur->next || oder cur->next->type == TOKEN_PIPE	weil wenn es naechste node gibt, bedeutet das, es gibt pipe auch!
 		if (cur->next)
 		{
@@ -84,26 +89,7 @@ void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 			if (pid == 0)
 			{
 				processing_pipe(cur, shell, gc_lst);
-				// if (cur->io_streams)
-				// {
-				// 	t_io_streams_list *io_streams = cur;
-				// 	while(io_streams->fd_in_file && io_streams->infile_name)
-				// 	{
-				// 		re_dir_in(io_streams);
-				// 		io_streams = io_streams->next;
-				// 	}
-				// 	while(io_streams->fd_out_file && io_streams->outfile_name)
-				// 	{
-				// 		re_dir_out(io_streams);
-				// 		io_streams = io_streams->next;
-				// 	}
-				// }
 				set_io_streams(cur);
-				if (cur->io_streams->heredoc_fd)
-				{
-					//todo run heredoc
-				}
-
 				// fprintf(stderr, YELLOW"Created pipe_fd: read_end=%d, write_end=%d\n"DEFAULT,
 				// 	cmd->pipe->pipefd[0], cmd->pipe->pipefd[1]);
 				if (cur->built_in)
@@ -114,6 +100,7 @@ void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 				{
 					execute_cmd();
 				}
+				exit(0);
 			}
 			else
 			{
@@ -140,7 +127,7 @@ void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 		}
 
 		//single command!
-		else if(!cur->next && !cur->pipe)
+		else if(!cur->prev && !cur->next && !cur->pipe)
 		{
 			if (cur->built_in)
 			{
@@ -154,6 +141,7 @@ void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 				if (pid == 0)
 				{
 					set_io_streams(cur);
+					execute_cmd();
 				}
 				else
 				{

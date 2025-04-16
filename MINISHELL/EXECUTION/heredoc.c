@@ -77,55 +77,60 @@ int	process_heredoc(t_io_streams_list *io_streams)
 	// 		close(fd);
 	// 		return -1;
 	// 	}
-	int fd_org_read = dup(STDIN_FILENO);
-	if (fd_org_read == -1)
-	{
-		return -1;
-	}
-	fd_heredoc = open("temp_heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd_heredoc == -1)
-	{
-		perror(RED"failed to open temp_heredoc"DEFAULT);
-		return -1;
-	}
-	while(1)
-	{
-		char *line;
 
-		line = readline("> ");
-		if (!line || strcmp(line, "eof") == 0)
-		{
-			free(line);
-			break;
-		}
-		write(fd_heredoc, line, strlen(line));
-		write(fd_heredoc, "\n", 1);
-		free(line);
-	}
-	io_streams->heredoc_fd = fd_heredoc;
-	close(fd_heredoc);
-	
-	//if (builtin)
-	//{
-		//execute builtin	
-	//}
-	//todo think where should i recover it 
-	if (dup2(fd_org_read, STDIN_FILENO) == -1)
-	{
-		close(fd_org_read);
-		return -1;
-	}
-	close(fd_org_read);
-	//if (cmd)
-	// }
-	// else 
+
+	// int fd_org_read = dup(STDOUT_FILENO);
+	// if (fd_org_read == -1)
 	// {
- 	//    printf("input from not terminal\n");
-	//    return -1;
+	// 	return -1;
 	// }
+	//todo ?? can we have multiples heredoc in one cmd_block?
+	while (io_streams)
+	{
+		char filename[64];
+		//todo make multiples files;;;
+		//filename = "temp_heredoc";
+		//if multiples heredoc we need multiples filenames..
+		fd_heredoc = open("temp_heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (fd_heredoc == -1)
+		{
+			perror(RED"failed to open temp_heredoc"DEFAULT);
+			return -1;
+		}
+		while(1)
+		{
+			char *line;
+	
+			line = readline("> ");
+			if (!line || strcmp(line, "eof") == 0)
+			{
+				free(line);
+				break;
+			}
+			write(fd_heredoc, line, strlen(line));
+			write(fd_heredoc, "\n", 1);
+			free(line);
+		}
+		io_streams->heredoc_fd = fd_heredoc;
+		close(fd_heredoc);
+		io_streams = io_streams->next;
+	}
+
+	// //todo think where should i recover it 
+	// if (dup2(fd_org_read, STDOUT_FILENO) == -1)
+	// {
+	// 	close(fd_org_read);
+	// 	return -1;
+	// }
+	// close(fd_org_read);
 	return 1;
 }
 
+void	heredoc_exe(t_cmd_block *cmd_b)
+{
+	if (cmd_b->io_streams->heredoc_fd)
+		process_heredoc()
+}
 
 //bei der durchfuehrung des cmd muss ich den FD des temporäre Datei umleiten.
 // int main()

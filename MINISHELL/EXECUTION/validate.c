@@ -73,10 +73,14 @@ int	validate_cmd_block(t_cmd_block *cmd_b)
 		{
 			is_valid = true;
 		}
+
+		if (cur->)
 		cur = cur->next;
 	}
 	return is_valid;
 }
+
+
 
 /*
 token -> validate_syntax -> merge to one cmd_block -> validate_cmd_block(atm if theres heredoc excute heredoc)

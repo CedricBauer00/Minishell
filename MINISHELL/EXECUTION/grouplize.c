@@ -37,6 +37,7 @@ void grouplize(t_token *token, t_cmd_block **cmd_block, t_gc_list *gc_lst)
 	}
 }
 
+//think aobut that how can we distinguish cmd and word
 //todo do not assign just address otherwise use strdup for makking cmd_block list's node.
 t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc_list *gc_lst)
 {
@@ -78,7 +79,7 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc_list *gc_lst)
 			new_cmd_block->built_in = gc_strdup(cur->value, gc_lst);
 		}
 
-		if (cur && (cur->type == TOKEN_REDIRECT_IN || cur->type == TOKEN_REDIRECT_OUT || cur->type == TOKEN_APPEND))  //token->value : < filename
+		if (cur && (cur->type & (TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT | TOKEN_APPEND | TOKEN_HEREDOC)))  //token->value : < filename
 		{
 			new_io_streams = init_io_stream_struct(gc_lst);
 			if(!new_cmd_block->io_streams)
@@ -99,7 +100,6 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc_list *gc_lst)
 					new_io_streams->infile_name = gc_strdup(cur->next->value, gc_lst);
 				else if (cur->type == TOKEN_REDIRECT_OUT || cur->type == TOKEN_APPEND)
 					new_io_streams->outfile_name = gc_strdup(cur->next->value, gc_lst);
-			
 				cur = cur->next;
 				continue;
 			}
@@ -109,19 +109,18 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc_list *gc_lst)
 					new_io_streams->infile_name = gc_strdup(cur->prev->value, gc_lst);
 				else if(cur->type == TOKEN_REDIRECT_OUT || cur->type == TOKEN_APPEND)
 					new_io_streams->outfile_name = gc_strdup(cur->prev->value, gc_lst);
+				else if (cur->type == TOKEN_HEREDOC)
+				{
+					new_io_streams->heredoc_file = gc_strdup(cur->prev->value, gc_lst);
+					new_io_streams->heredoc_eof = gc_strdup(cur->value, gc_lst);
+				}
 			}
 			else
 			{
 				fprintf(stderr, "syntax error near unexpected token `newline'");
 			}
 		}
-		//memo ich finde ich muss heredoc in here ausfuehren.
-		if (cur && cur->type == TOKEN_HEREDOC && cur->value != NULL)
-		{
-			int heredoc_result;
-			heredoc_result = heredoc();
-			//cat << heredoc 
-		}
+
 		cur = cur->next;
 	}
 	*token = cur;
