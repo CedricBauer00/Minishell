@@ -36,6 +36,14 @@
 /*
 	[ls -l] | [wc -l] | [cat]
 */
+
+void	execute_cmd(t_cmd_block *cmd_block)
+{
+	char	**cmd_flags;
+	
+	cmd_flags = ft_split(cmd_block->args, ' ');
+	
+}
 void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 {
 	t_cmd_block *cur;
@@ -67,7 +75,7 @@ void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 				{
 					execute_builtin();
 				}
-				if (cur->cmd)
+				if (cur->args)
 				{
 					execute_cmd();
 				}

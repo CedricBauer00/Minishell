@@ -41,12 +41,12 @@ int	validate_syntax(t_token *token)
 		//heck if a TOKEN_WORD follows after a redirection
 		else if (cur->type & (TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT | TOKEN_APPEND))
 		{
-			if (!cur->next || cur->next->type != TOKEN_WORD)
+			if (!cur->next || cur->next->type != TOKEN_FILE)
 			{
 				perror(RED"syntax error"DEFAULT);
 			}
 		}
-
+ 
 		//heck if a TOKEN_EOF follows after a TOKEN_HEREDOC
 		else if (cur->type == TOKEN_HEREDOC)
 		{
@@ -55,6 +55,8 @@ int	validate_syntax(t_token *token)
 				perror(RED"syntax error"DEFAULT);
 			}
 		}
+
+		//< cmd -l -a 1.txt
 		cur = cur->next;
 	}
 }
