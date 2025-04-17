@@ -125,55 +125,7 @@ t_token *create_token(t_token_type type, char *value)
 	return new;
 }
 
-int main()
-{
-	t_token *t1 = create_token(TOKEN_ARGS, "cat");
-	t_token *t2 = create_token(TOKEN_REDIRECT_IN, "<");
-	t_token *t3 = create_token(TOKEN_FILE, "file2");
-	t_token *t4 = create_token(TOKEN_REDIRECT_IN, "<");
-	t_token *t5 = create_token(TOKEN_FILE, "file3");
-	t_token *t6 = create_token(TOKEN_PIPE, "|");
-	t_token *t7 = create_token(TOKEN_ARGS, "wc");
-	t1->next = t2;
-	t2->prev = t1;
-	t2->next = t3;
-	t3->prev = t2;
-	t3->next = t4;
-	t4->prev = t3;
-	t4->next = t5;
-	t5->prev = t4;
-	t5->next = t6;
-	t6->prev = t5;
-	t6->next = t7;
-	t7->prev = t6;
 
-
-	t_gc_list* gc_lst = init_gc_list();
-	t_cmd_block *cmd_block_list = NULL;
-	grouplize(t1, &cmd_block_list, gc_lst);
-	if(cmd_block_list)
-	{
-		printf("cmd_block_list->built_in %s\n", cmd_block_list->built_in);
-		printf("cmd_block_list->cmd %s\n", cmd_block_list->cmd);
-		
-		int i= 0;
-		while (cmd_block_list->args)
-		{
-			printf("cmd_block_list->args[%d] %s\n",i, cmd_block_list->args[i]);
-			i++;
-		}
-		printf("cmd_block_list->io_streams->infile_name %s\n", cmd_block_list->io_streams->infile_name);
-		printf("cmd_block_list->io_streams->next->infile_name %s\n", cmd_block_list->io_streams->next->infile_name);
-		printf("cmd_block_list->io_streams->outfile_name %s\n", cmd_block_list->io_streams->outfile_name);
-		printf("cmd_block_list->io_streams->next->outfile_name %s\n", cmd_block_list->io_streams->next->outfile_name);
-		printf("cmd_block_list->pipe %p\n", cmd_block_list->pipe);
-	}
-	if (cmd_block_list->next)
-	{
-		printf("cmd_block_list->next->cmd %p, %s\n",cmd_block_list->next, cmd_block_list->next->cmd);
-	}
-	return 0;
-}
 
 //redirection
 //ok cmd < filename < fileanme

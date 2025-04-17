@@ -67,8 +67,8 @@ t_cmd_block *init_command_struct(t_gc_list *gc_lst)
 	}
 	//cmd->value = NULL;
 	cmd->built_in = NULL;
-	cmd->cmd = NULL;
 	cmd->args = NULL;
+	cmd->cmd_flags = NULL;
 	cmd->io_streams = NULL;
 	cmd->pipe = NULL;
 	cmd->next = NULL;

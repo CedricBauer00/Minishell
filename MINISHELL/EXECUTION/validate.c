@@ -15,6 +15,7 @@ int	validate_syntax(t_token *token)
 {
 	t_token *cur;
 
+	// | <<
 	cur = token;
 	while (cur)
 	{
@@ -37,7 +38,7 @@ int	validate_syntax(t_token *token)
 				perror(RED"syntax error"DEFAULT);
 			}
 		}
-		
+
 		//heck if a TOKEN_WORD follows after a redirection
 		else if (cur->type & (TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT | TOKEN_APPEND))
 		{
@@ -62,19 +63,20 @@ int	validate_syntax(t_token *token)
 }
 
 //after grouplize calling
-int	validate_cmd_block(t_cmd_block *cmd_b)
+bool	is_validate_cmd_block(t_cmd_block *cmd_b)
 {
 	t_cmd_block *cur;
-	bool is_valid;
+	int			count;
 
-	is_valid = false;
+	count = 0;
 	cur = cmd_b;
 	while(cur)
 	{
-		if (cur->cmd || cur->built_in)
+		if (cur->args || cur->built_in)
 		{
-			is_valid = true;
+			count++;
 		}
+		
 		//todo separate this codes
 		if (cur->io_streams->heredoc_eof)
 		{
@@ -88,7 +90,9 @@ int	validate_cmd_block(t_cmd_block *cmd_b)
 		}
 		cur = cur->next;
 	}
-	return is_valid;
+	if (count == 1)
+		return true;
+	return false;
 }
 
 
