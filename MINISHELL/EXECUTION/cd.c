@@ -166,7 +166,7 @@ int	ft_setenv(const char *name, const char *value, int overwrite, t_shell *shell
 }
 
 
-void cd(char **argv, t_shell *shell)
+void cd(char **argv, t_shell *shell, t_gc_list *gc_list)
 {
 	shell->cur_dir = getcwd(NULL, 0);
 	if (!shell->cur_dir)
@@ -181,7 +181,7 @@ void cd(char **argv, t_shell *shell)
 		printf(RED"case just cd\n"DEFAULT);
 		char	*homedir;
 
-		homedir = getenv("HOME");
+		homedir = my_getenv(shell->my_envp, "HOME", 4, gc_list);
 		if (chdir(homedir) != 0)
 		{
 			perror(RED "chdir error for 'cd'\n"DEFAULT);
@@ -209,7 +209,7 @@ void cd(char **argv, t_shell *shell)
 		if(argv[2][0] == '-' && strlen(argv[2]) == 1)
 		{
 			printf(RED"get in for 'cd -'\n"DEFAULT);
-			shell->old_dir = getenv("OLDPWD");
+			shell->old_dir = my_getenv(shell->my_envp, "OLDPWD", 6, gc_list);
 			if (!shell->old_dir)
 			{
 				fprintf(stderr, RED"cd:OLDPWD not set\n"DEFAULT);

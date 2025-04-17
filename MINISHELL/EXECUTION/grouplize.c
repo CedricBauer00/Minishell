@@ -113,17 +113,6 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc_list *gc_lst)
 	return new_cmd_block;
 }
 
-t_token *create_token(t_token_type type, char *value)
-{
-	t_token *new = malloc(sizeof(t_token));
-	if (!new)
-		return NULL;
-	new->type = type;
-	new->value = strdup(value);
-	new->prev = NULL;
-	new->next = NULL;
-	return new;
-}
 
 
 

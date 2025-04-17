@@ -11,7 +11,7 @@
 	case for ""
 */
 
-void	ft_echo(char **argv, t_shell *shell)
+void	ft_echo(char **argv, t_shell *shell, t_gc_list *gc_list)
 {
 	int i  = 2;
 	bool is_newline = true;
@@ -25,13 +25,13 @@ void	ft_echo(char **argv, t_shell *shell)
 		while (argv[i] != NULL)
 		{
 			printf(YELLOW"%s", argv[i]);
-			if (argv[i + 1] != NULL)				//need to change to tokentype WORD
+			if (argv[i + 1] != NULL)		//need to change to tokentype WORD
 				printf(" ");
 			char *temp = ft_strchr(argv[i], '$');
 			if (temp != NULL)
 			{
 				char *var_name = temp + 1;
-				char *var = getenv("var_name");
+				char *var = my_getenv(shell->my_envp, var_name, ft_strlen(var_name), gc_list);
 				// search it,,
 				if (check_existing(shell->my_envp, var))
 				{

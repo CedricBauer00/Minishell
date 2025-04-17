@@ -49,7 +49,7 @@ void 	is_executable_cmd(t_cmd_block *cmd_block, t_gc_list *gc_lst)
 		//todo error handle;
 	}
 	//cmd_flags =>>> [ls] [-l] [-a] [-k]
-	char *path = my_getenv(path, "PATH", 4, gc_lst);
+	char *path = my_getenv(shell->my_envp, "PATH", 4, gc_lst);
 	if (!path)
 	{
 		//todo error handle
@@ -116,9 +116,9 @@ void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 	t_cmd_block *cur;
 	pid_t	pid;
 
-	t_shell *shell = get_shell();
+	//t_shell *shell = get_shell();
 	cur = cmd_block;
-	if (validate_cmd_block(cur) == 0)
+	if (is_validate_cmd_block(cur) == false)
 	{
 		//todo all free
 		perror(RED"non valid cmd"DEFAULT);
@@ -140,11 +140,13 @@ void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 				// 	cmd->pipe->pipefd[0], cmd->pipe->pipefd[1]);
 				if (cur->built_in)
 				{
-					execute_builtin();
+					//execute_builtin();
+					printf(RED"it is builtin we need to implement it\n"DEFAULT);
+					exit(0);
 				}
 				if (cur->args)
 				{
-					execute_cmd();
+					is_executable_cmd(cur, gc_lst);
 				}
 				//wenn heredoc in child prozess ausfuehrt dann muss es hier recover werden.
 				exit(0);
@@ -183,7 +185,7 @@ void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 			if (cur->built_in)
 			{
 				set_io_streams(cur);
-				execute_builtin();
+				//execute_builtin();
 			}
 
 			else if(cur->args)
@@ -192,7 +194,7 @@ void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 				if (pid == 0)
 				{
 					set_io_streams(cur);
-					execute_cmd();
+					is_executable_cmd(cur, gc_lst);
 				}
 				else
 				{
@@ -230,13 +232,28 @@ void	prevent_zombie_process()
 	while (waitpid(-1, NULL, WNOHANG) > 0);
 }
 
-int main()
+t_token *create_token(t_token_type type, char *value)
 {
-	t_token *t1 = create_token(TOKEN_ARGS, "cat");
+	t_token *new = malloc(sizeof(t_token));
+	if (!new)
+		return NULL;
+	new->type = type;
+	new->value = ft_strdup(value);
+	new->prev = NULL;
+	new->next = NULL;
+	return new;
+}
+
+//cat < 1.txt < 2.txt | wc
+int main(int ac, char *argv[], char *envp[])
+{
+	(void)ac;
+	(void)argv;
+	t_token *t1 = create_token(TOKEN_ARGS, "cat -e");
 	t_token *t2 = create_token(TOKEN_REDIRECT_IN, "<");
-	t_token *t3 = create_token(TOKEN_FILE, "file2");
+	t_token *t3 = create_token(TOKEN_FILE, "1.txt");
 	t_token *t4 = create_token(TOKEN_REDIRECT_IN, "<");
-	t_token *t5 = create_token(TOKEN_FILE, "file3");
+	t_token *t5 = create_token(TOKEN_FILE, "2.txt");
 	t_token *t6 = create_token(TOKEN_PIPE, "|");
 	t_token *t7 = create_token(TOKEN_ARGS, "wc");
 	t1->next = t2;
@@ -251,31 +268,30 @@ int main()
 	t6->prev = t5;
 	t6->next = t7;
 	t7->prev = t6;
-
-	t_gc_list* gc_lst = init_gc_list();
+	t_gc	*gc = get_gc();
+	// t_gc_list* gc_lst = init_gc_list();
 	t_cmd_block *cmd_block_list = NULL;
-	grouplize(t1, &cmd_block_list, gc_lst);
+	grouplize(t1, &cmd_block_list, gc->temp);
 	if(cmd_block_list)
 	{
-		printf("cmd_block_list->built_in %s\n", cmd_block_list->built_in);
-		printf("cmd_block_list->cmd %s\n", cmd_block_list->args);
-		
-		int i= 0;
-		while (cmd_block_list->args)
-		{
-			printf("cmd_block_list->args[%d] %s\n",i, cmd_block_list->args[i]);
-			i++;
-		}
-		printf("cmd_block_list->io_streams->infile_name %s\n", cmd_block_list->io_streams->infile_name);
-		printf("cmd_block_list->io_streams->next->infile_name %s\n", cmd_block_list->io_streams->next->infile_name);
-		printf("cmd_block_list->io_streams->outfile_name %s\n", cmd_block_list->io_streams->outfile_name);
-		printf("cmd_block_list->io_streams->next->outfile_name %s\n", cmd_block_list->io_streams->next->outfile_name);
-		printf("cmd_block_list->pipe %p\n", cmd_block_list->pipe);
+		if (cmd_block_list->built_in)
+			printf("cmd_block_list->built_in %s\n", cmd_block_list->built_in);
+		if (cmd_block_list->args)
+			printf("cmd_block_list->args %s\n", cmd_block_list->args);
+
+		printf("cmd_block_list->io_streams->infile_name : %s\n", cmd_block_list->io_streams->infile_name);
+		printf("cmd_block_list->io_streams->next->infile_name : %s\n", cmd_block_list->io_streams->next->infile_name);
+		printf("cmd_block_list->io_streams->outfile_name : %s\n", cmd_block_list->io_streams->outfile_name);
+		printf("cmd_block_list->io_streams->next->outfile_name :%s\n", cmd_block_list->io_streams->next->outfile_name);
+		printf("cmd_block_list->pipe : %p\n", cmd_block_list->pipe);
 	}
 	if (cmd_block_list->next)
 	{
-		printf("cmd_block_list->next->cmd %p, %s\n",cmd_block_list->next, cmd_block_list->next->args);
+		printf("cmd_block_list->next->cmd : %p, %s\n",cmd_block_list->next, cmd_block_list->next->args);
 	}
+	t_shell *shell = get_shell();
+	shell ->my_envp = copy_envp(gc->shell, envp);
+	execute(cmd_block_list, gc->temp, shell);
 	return 0;
 }
 // void	execute(t_cmd_block *cmd_block, t_gc_list *gc_list)
