@@ -22,17 +22,18 @@
 typedef enum s_tenum
 {
 	TOKEN_NONE	= 0x0000,  			//0000 0000
-	TOKEN_WORD	= 0x0001,
-	TOKEN_CMD	= 0x0002,			//Command
-	TOKEN_FLAGS = 0x0004,			// -l, -a
-	TOKEN_BUILT_IN = 0x0008,		// cd, pwd, export, ...
-	TOKEN_PIPE = 0x0010,			//Symbol: |
-	TOKEN_REDIRECT_IN = 0x0020,		//Symbol: <
-	TOKEN_REDIRECT_OUT = 0x0040,	//Symbol: >
-	TOKEN_APPEND = 0x0080,			//Symbol: >>
-	TOKEN_HEREDOC = 0x0100,			//Symbol: <<
-	TOKEN_VAR = 0x0200,				//$ variable
-	//TOKEN_EOF = 0x0400,				//End of input
+	TOKEN_ARGS	= 0x0001,
+	TOKEN_FILE  = 0x0002,
+
+	TOKEN_BUILT_IN = 0x0004,		// cd, pwd, export, ...
+	TOKEN_PIPE = 0x008,			//Symbol: |
+	TOKEN_REDIRECT_IN = 0x0010,		//Symbol: <
+	TOKEN_REDIRECT_OUT = 0x0020,	//Symbol: >
+	TOKEN_APPEND = 0x0040,			//Symbol: >>
+	TOKEN_HEREDOC = 0x0080,			//Symbol: <<
+
+	TOKEN_VAR = 0x0100,				//$variable
+	//TOKEN_EOF = 0x0400,			//End of input
 }	t_token_type;
 
 // typedef enum	e_pipe_stage
@@ -78,8 +79,8 @@ typedef struct s_cmd_block //struct being allocated for each token from input
 {
 	//t_token_type				type;		//todo vilt ,,i can delete?
 	char						*built_in; //need to change name
-	char						*cmd;
-	char						**args;
+	char						**cmd_flags;
+	char						*args;
 	struct s_io_streams_list	*io_streams;
 	struct s_pipe				*pipe;
 	pid_t						*child_pids;
@@ -101,6 +102,7 @@ typedef struct s_io_streams_list //> < > <
 	int							fd_out_file;
 	struct s_io_streams_list	*next;
 }	t_io_streams_list;
+
 
 typedef struct s_pipe
 {
@@ -164,7 +166,7 @@ char	**expand_envp(t_shell *shell, char *new_path);
 char	*create_new_path(const char *name, const char *value);
 int		check_existing(char **my_envp, const char *name);
 int		ft_setenv(const char *name, const char *value, int overwrite, t_shell *shell);
-void	cd(char **argv, t_shell *shell);
+void 	cd(char **argv, t_shell *shell, t_gc_list *gc_list);
 
 //memo export.c
 int		export(char **argv, t_shell *shell);
@@ -177,9 +179,7 @@ char	*extract_value(char *arg);
 void	unset(char **argv, t_shell *shell);
 
 //memo echo.c
-void	ft_echo(char **argv, t_shell *sehll);
-
-
+void	ft_echo(char **argv, t_shell *shell, t_gc_list *gc_list);
 
 //memo pipe
 void	add_pipe(t_cmd_block **cmd_block, t_gc_list *gc_lst);
@@ -189,18 +189,23 @@ bool	is_last_pipe(t_cmd_block *cmd);
 int		first_pipe_cmd(t_cmd_block *cmd_block, t_shell *shell, t_gc_list *gc_lst);
 int		middle_pipe_cmd(t_cmd_block *cmd_block, t_shell *shell, t_gc_list *gc_lst);
 int		last_pipe_cmd(t_cmd_block *cmd_block, t_shell *shell);
+void	processing_pipe(t_cmd_block *cmd, t_shell *shell, t_gc_list* gc_lst);
+void	close_pipefd(t_cmd_block *cmd);
+void	close_last_pipefd(t_cmd_block *cmd);
+void	close_middle_pipefd(t_cmd_block *cmd);
+void	close_first_pipefd(t_cmd_block *cmd);
 
 //memo redirection.c
 int		handle_re_dir(t_cmd_block *cmd_block);
-int		re_dir_out(t_cmd_block *cmd_block);
-int		re_dir_in(t_cmd_block *cmd_block);
+int		re_dir_out(t_io_streams_list *io_streams);
+int		re_dir_in(t_io_streams_list *io_streams);
 void	set_io_streams(t_cmd_block *cmd);
 
 //memo exe_utils.c
 void	is_exited(void *failed, t_gc_list *gc_lst);
 
 //memo command_list_utils.c
-t_cmd_block *add_token(t_gc_list *gc_lst, char *cmd, char **args, t_token_type type);
+//t_cmd_block *add_token(t_gc_list *gc_lst, char *cmd, char **args, t_token_type type);
 
 //memo grouplize.c
 void	grouplize(t_token *token, t_cmd_block **cmd_block, t_gc_list *gc_lst);
@@ -209,9 +214,24 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc_list *gc_lst);
 //memo heredoc.c
 int	heredoc();
 
+//memo builtin_utils.c
+char	*my_getenv(char **my_envp, char *find, size_t find_len, t_gc_list *gc_lst);
+
+//memo validate.c
+int		validate_syntax(t_token *token);
+bool	is_validate_cmd_block(t_cmd_block *cmd_b);
+
+//memo heredoc.c
+int	process_heredoc(t_io_streams_list *io_streams);
+
+//memo execute.c
+t_token *create_token(t_token_type type, char *value);
+void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell);
+void 	is_executable_cmd(t_cmd_block *cmd_block, t_gc_list *gc_lst);
 //built_in
 //pwd
 //cd
+
 
 #endif
 

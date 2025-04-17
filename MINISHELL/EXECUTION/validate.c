@@ -60,6 +60,7 @@ int	validate_syntax(t_token *token)
 		//< cmd -l -a 1.txt
 		cur = cur->next;
 	}
+	return 1;
 }
 
 //after grouplize calling

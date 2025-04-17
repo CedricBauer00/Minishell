@@ -45,11 +45,9 @@ typedef struct s_gc
 // }	t_gc_node;
 
 //empty node, just a head node as dummy.
-
 t_gc_list	*init_gc_list(void);
 t_gc		*init_gc(void);
 t_gc		*get_gc(void);
-
 
 void		delete_node(t_gc_list **gc_lst, t_gc_list *to_delete);
 void		*do_alloc(t_gc_list **gc_lst, size_t howmuch, t_data_type data_type, char *id);

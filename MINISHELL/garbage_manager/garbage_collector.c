@@ -1,7 +1,7 @@
 # include "garbage_collector.h"
 
 //memo when you initialize it use this!
-t_gc	*get_garbage_collector(void)
+t_gc	*get_gc(void)
 {
 	static t_gc *gc = {0};
 	if (!gc)

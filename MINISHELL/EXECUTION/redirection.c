@@ -3,11 +3,11 @@
 //todo both redirection must be called in child!
 // todo need to change if 
 
-int	re_dir_in(t_cmd_block *cmd_block)
+int	re_dir_in(t_io_streams_list *io_streams)
 {
 	int	fd;
 
-	fd = cmd_block->io_streams->fd_in_file;
+	fd = io_streams->fd_in_file;
 	if (dup2(fd, STDIN_FILENO) == -1)
 	{
 		perror(RED"dup2() for '<' error\n"DEFAULT);
@@ -19,11 +19,11 @@ int	re_dir_in(t_cmd_block *cmd_block)
 }
 
 //todo need to change if 
-int	re_dir_out(t_cmd_block *cmd_block)
+int	re_dir_out(t_io_streams_list *io_streams)
 {
 	int	fd;
 
-	fd = cmd_block->io_streams->fd_out_file;
+	fd = io_streams->fd_out_file;
 	if (dup2(fd, STDOUT_FILENO) == -1)
 	{
 		perror(RED"dup2() for '>' error\n"DEFAULT);
@@ -63,9 +63,9 @@ int	out_redir_file_open(t_cmd_block *cmd_block, char *out_filename)
 int	handle_re_dir(t_cmd_block *cmd_block)
 {
 	if(cmd_block->io_streams->fd_in_file)
-		re_dir_in(cmd_block);
+		re_dir_in(cmd_block->io_streams);
 	if (cmd_block->io_streams->fd_out_file)
-		re_dir_out(cmd_block);
+		re_dir_out(cmd_block->io_streams);
 	return 0;
 }
 

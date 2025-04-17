@@ -6,10 +6,10 @@
 # include <readline/history.h>
 
 /* printf함수를 사용하기위한 헤더 */
-# include <stdio.h>
+// # include <stdio.h>
 
-/* free함수를 사용하기위한 헤더 */
-# include <stdlib.h>
+// /* free함수를 사용하기위한 헤더 */
+// # include <stdlib.h>
 
 /*
 
