@@ -219,6 +219,7 @@ int	first_pipe_cmd(t_cmd_block *command, t_shell *shell, t_gc_list *gc_lst)
 	// if (pid == 0)
 	// {
 		//handle_re_dir(command);
+		fprintf(stderr,BLUE"first_pipe\n"DEFAULT);
 		close(command->pipe->pipefd[0]);
 		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->pipefd[0]);
 		if (dup2( command->pipe->pipefd[1], STDOUT_FILENO) == -1)
@@ -245,6 +246,7 @@ int	middle_pipe_cmd(t_cmd_block *command, t_shell *shell, t_gc_list *gc_lst)
 	// if (pid == 0)
 	// {
 		//handle_re_dir(command);
+		fprintf(stderr,BLUE"second_pipe\n"DEFAULT);
 		if (dup2(command->pipe->prev_read_end_fd , STDIN_FILENO) == -1)
 			perror(RED"SE dup2 ERROR\n"DEFAULT);
 		fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), command->pipe->prev_read_end_fd , STDIN_FILENO);
@@ -276,6 +278,7 @@ int	last_pipe_cmd(t_cmd_block *command, t_shell *shell)
 {
 	// if (pid == 0)
 	// {
+		fprintf(stderr,BLUE"last_pipe\n"DEFAULT);
 		//todo if theres re_dir_out then i need to call re_dir_out()
 		dup2(command->pipe->prev_read_end_fd, STDIN_FILENO);
 		fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), command->pipe->prev_read_end_fd, STDIN_FILENO);

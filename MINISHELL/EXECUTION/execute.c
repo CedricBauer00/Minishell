@@ -91,6 +91,7 @@ void 	is_executable_cmd(t_cmd_block *cmd_block, t_gc_list *gc_lst)
 		if (access(cmd_path, F_OK | X_OK) == -1)
 		{
 			//todo error handle
+			i++;
 			continue;
 		}
 		else
@@ -98,17 +99,21 @@ void 	is_executable_cmd(t_cmd_block *cmd_block, t_gc_list *gc_lst)
 			printf(GREEN"there is file\n"DEFAULT);
 			is_executable = true; 
 		}
-
 		if (is_executable == true)
 		{
+			fprintf(stderr, YELLOW"execve() %s\n"DEFAULT, cmd_path);
 			if (execve(cmd_path , cmd_flags, shell->my_envp) == -1)
 			{
-				
+				exit(1);
 			}
 		}
-		i++;
+		else
+		{
+			fprintf(stderr, RED"not found cmd_path %s"DEFAULT, cmd_path);
+			exit(1);
+		}
 	}
-
+	exit(0);
 }
 
 void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
@@ -121,21 +126,35 @@ void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 	if (is_validate_cmd_block(cur) == false)
 	{
 		//todo all free
-		perror(RED"non valid cmd"DEFAULT);
+		perror(RED"non valid cmd\n"DEFAULT);
 		//exit(1);
+	}
+	if (cur->io_streams->heredoc_eof)
+	{
+		process_heredoc(cur->io_streams);
+		if (dup2(cur->io_streams->heredoc_fd, STDIN_FILENO) == -1)
+		{
+			perror(RED"dup2() heredocfd failed in validate_cmd_block()"DEFAULT);
+			//todo free.
+			//exit(1);
+		}
 	}
 	while(cur)
 	{
-		//TODO denk mal ueber if Bedingung nach cur->next || oder cur->next->type == TOKEN_PIPE	weil wenn es naechste node gibt, bedeutet das, es gibt pipe auch!
+		//ERROR CUR->NEXT 
+		//[CAT - E] | [WC] in der fall, fuehrt es nicht naechsten node aus, also [wc] geht nicht
+		//weil es gibt keine node nach dem wc!
 		if (cur->next)
 		{
 			add_pipe(&cur, gc_lst);
+			fprintf(stderr, YELLOW"p_pipe->pipefd[0]: %d, p_pipe->pipefd[1]: %d\n"DEFAULT, cur->pipe->pipefd[0], cur->pipe->pipefd[1]);
 			//cur->child_pids = do_alloc(&gc_lst, sizeof(pid_t), TYPE_SINGLE_PTR, "child PID");
 			pid = fork();
 			if (pid == 0)
 			{
-				processing_pipe(cur, shell, gc_lst);
 				set_io_streams(cur);
+				processing_pipe(cur, shell, gc_lst);
+				
 				// fprintf(stderr, YELLOW"Created pipe_fd: read_end=%d, write_end=%d\n"DEFAULT,
 				// 	cmd->pipe->pipefd[0], cmd->pipe->pipefd[1]);
 				if (cur->built_in)
@@ -149,7 +168,51 @@ void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 					is_executable_cmd(cur, gc_lst);
 				}
 				//wenn heredoc in child prozess ausfuehrt dann muss es hier recover werden.
-				exit(0);
+			}
+			else
+			{
+				close_pipefd(cur);
+				int status;
+				pid_t child_pid = wait4(-1, &status, 0 ,NULL);
+				if (child_pid > 0)
+				{
+					if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
+					{
+						printf(GREEN"exited with %d\n"DEFAULT, WEXITSTATUS(status));
+						shell->last_status_exit = WEXITSTATUS(status);  //parents get exit status 
+					}
+					else if (WIFSIGNALED(status))
+					{
+						printf(RED "terminated by signal %d (%s)\n" DEFAULT, WTERMSIG(status), strsignal(WTERMSIG(status)));
+						shell->last_status_exit = 128 + WTERMSIG(status);
+					}
+				}
+			}
+			if()
+			{
+				
+			}
+		}
+		cur = cur->next;
+	}
+
+	//todo single command!
+	if(cur && !cur->prev && !cur->next)
+	{
+		fprintf(stderr,"isin here \n");
+		if (cur->built_in)
+		{
+			set_io_streams(cur);
+			//execute_builtin();
+		}
+		else if(cur->args)
+		{
+			pid = fork();
+			fprintf(stderr, YELLOW"fork() : %d \n"DEFAULT, pid);
+			if (pid == 0)
+			{
+				set_io_streams(cur);
+				is_executable_cmd(cur, gc_lst);
 			}
 			else
 			{
@@ -175,55 +238,8 @@ void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 						shell->last_status_exit = 128 + WTERMSIG(status);
 					}
 				}
-				close_pipefd(cur);
 			}
 		}
-
-		//single command!
-		else if(!cur->prev && !cur->next)
-		{
-			if (cur->built_in)
-			{
-				set_io_streams(cur);
-				//execute_builtin();
-			}
-
-			else if(cur->args)
-			{
-				pid = fork();
-				if (pid == 0)
-				{
-					set_io_streams(cur);
-					is_executable_cmd(cur, gc_lst);
-				}
-				else
-				{
-					int status;
-					pid_t child_pid = wait4(-1, &status, 0 ,NULL);
-					if (child_pid > 0)
-					{
-						if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
-						{
-							printf(GREEN"exited with %d\n"DEFAULT, WEXITSTATUS(status));
-							shell->last_status_exit = WEXITSTATUS(status);  //parents get exit status 
-						}
-						//todo stduy about that 
-						/*
-							if child process exited by signal also abnormal
-							128 + signal_number
-							total siganl number is 31
-							max signal return number is 159
-						*/
-						else if (WIFSIGNALED(status))
-						{
-							printf(RED "terminated by signal %d (%s)\n" DEFAULT, WTERMSIG(status), strsignal(WTERMSIG(status)));
-							shell->last_status_exit = 128 + WTERMSIG(status);
-						}
-					}
-				}
-			}
-		}
-		cur = cur->next;
 	}
 }
 
@@ -281,6 +297,7 @@ int main(int ac, char *argv[], char *envp[])
 
 		printf("cmd_block_list->io_streams->infile_name : %s\n", cmd_block_list->io_streams->infile_name);
 		printf("cmd_block_list->io_streams->next->infile_name : %s\n", cmd_block_list->io_streams->next->infile_name);
+		fprintf(stderr, "cmd->io_streams->heredoc_eof %s\n", cmd_block_list->io_streams->heredoc_eof);
 		printf("cmd_block_list->io_streams->outfile_name : %s\n", cmd_block_list->io_streams->outfile_name);
 		printf("cmd_block_list->io_streams->next->outfile_name :%s\n", cmd_block_list->io_streams->next->outfile_name);
 		printf("cmd_block_list->pipe : %p\n", cmd_block_list->pipe);
@@ -289,9 +306,14 @@ int main(int ac, char *argv[], char *envp[])
 	{
 		printf("cmd_block_list->next->cmd : %p, %s\n",cmd_block_list->next, cmd_block_list->next->args);
 	}
+	else
+	{
+		printf("no pipe\n");
+	}
 	t_shell *shell = get_shell();
 	shell ->my_envp = copy_envp(gc->shell, envp);
 	execute(cmd_block_list, gc->temp, shell);
+	gc_free(gc);
 	return 0;
 }
 // void	execute(t_cmd_block *cmd_block, t_gc_list *gc_list)

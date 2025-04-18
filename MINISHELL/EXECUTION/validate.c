@@ -73,32 +73,19 @@ bool	is_validate_cmd_block(t_cmd_block *cmd_b)
 	cur = cmd_b;
 	while(cur)
 	{
-		if (cur->args || cur->built_in)
+
+		if (cur->args && cur->built_in)
 		{
-			count++;
+			return false;
 		}
-		
+
 		//todo separate this codes
-		if (cur->io_streams->heredoc_eof)
-		{
-			process_heredoc(cur->io_streams);
-			if (dup2(cur->io_streams->heredoc_fd, STDIN_FILENO) == -1)
-			{
-				perror(RED"dup2() heredocfd failed in validate_cmd_block()"DEFAULT);
-				//todo free.
-				//exit(1);
-			}
-		}
 		cur = cur->next;
 	}
 	if (count == 1)
 		return true;
 	return false;
 }
-
-
-
-
 
 /*
 token -> validate_syntax -> merge to one cmd_block -> validate_cmd_block(atm if theres heredoc excute heredoc)

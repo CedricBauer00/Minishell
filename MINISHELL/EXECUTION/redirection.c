@@ -14,6 +14,7 @@ int	re_dir_in(t_io_streams_list *io_streams)
 		close(fd);
 		return -1;
 	}
+	fprintf(stderr, YELLOW"dup2(io_streams->fd_in_file : %d, STDIN_FILENO : %d)\n"DEFAULT,fd, STDIN_FILENO);
 	close(fd);
 	return 1;
 }
@@ -30,24 +31,26 @@ int	re_dir_out(t_io_streams_list *io_streams)
 		close(fd);
 		return (-1);
 	}
+	fprintf(stderr, YELLOW"dup2(io_streams->fd_out_file : %d, STDOUT_FILENO : %d)\n"DEFAULT, fd, STDOUT_FILENO);
 	close(fd);
 	return 1;
 }
 
-int	in_redir_file_open(t_cmd_block *cmd_block, char *in_filename)
+int	in_redir_file_open(t_io_streams_list *io_streams, char *in_filename)
 {
 	int		fd;
-	fd = open(in_filename, O_RDONLY);
+	fd = open(in_filename, O_RDONLY, O_CREAT);
 	if (fd == -1)
 	{
 		perror(RED" < file open faield\n"DEFAULT);
 		return -1;
 	}
-	cmd_block->io_streams->fd_in_file = fd;
+	fprintf(stderr, YELLOW"open(filename %s, io_streams->fd_in_filename,  %d)\n"DEFAULT,in_filename, fd);
+	io_streams->fd_in_file = fd;
 	return 1;
 }
 
-int	out_redir_file_open(t_cmd_block *cmd_block, char *out_filename)
+int	out_redir_file_open(t_io_streams_list *io_streams, char *out_filename)
 {
 	int		fd;
 	fd = open(out_filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -56,7 +59,8 @@ int	out_redir_file_open(t_cmd_block *cmd_block, char *out_filename)
 		perror(RED" > file open faield\n"DEFAULT);
 		return (-1);
 	}
-	cmd_block->io_streams->fd_out_file = fd;
+	fprintf(stderr, YELLOW"open(filename : %s, io_streams->fd_in_filename, %d)\n"DEFAULT, out_filename, fd);
+	io_streams->fd_out_file = fd;
 	return 1;
 }
 
@@ -78,11 +82,11 @@ void	set_io_streams(t_cmd_block *cmd)
 	if(!cmd)
 		return ;
 	io_streams = cmd->io_streams;
-
 	while (io_streams)
 	{
-		if (io_streams->fd_in_file && io_streams->infile_name)
+		if (io_streams->infile_name)
 		{
+			in_redir_file_open(io_streams, io_streams->infile_name);
 			re_dir_in(io_streams);
 		}
 		if (io_streams->heredoc_fd)
@@ -90,8 +94,9 @@ void	set_io_streams(t_cmd_block *cmd)
 			//todo call heredoc
 			dup2(cmd->io_streams->heredoc_fd, STDIN_FILENO);
 		}
-		if (io_streams->fd_out_file && io_streams->outfile_name)
+		if (io_streams->outfile_name)
 		{
+			out_redir_file_open(io_streams, io_streams->outfile_name);
 			re_dir_out(io_streams);
 		}
 		io_streams = io_streams->next;

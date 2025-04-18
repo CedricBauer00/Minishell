@@ -51,8 +51,16 @@ t_io_streams_list *init_io_stream_struct(t_gc_list *gc_lst)
 	}
 	io_streams_lst->infile_name = NULL;
 	io_streams_lst->outfile_name = NULL;
+	io_streams_lst->fd_in_file = -1;
+	io_streams_lst->fd_out_file = -1;
+	
+	io_streams_lst->heredoc_eof = NULL;
+	io_streams_lst->heredoc_file = NULL;
+	io_streams_lst->heredoc_fd = -1;
+	
+	io_streams_lst->fd_org_read = 0;
 	io_streams_lst->fd_in_file = 0;
-	io_streams_lst->fd_in_file = 0;
+
 	io_streams_lst->next = NULL;
 	return (io_streams_lst);
 }
