@@ -63,7 +63,7 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc_list *gc_lst)
 			new_cmd_block->built_in = gc_strdup(cur->value, gc_lst);
 		}
 
-		if (cur && (cur->type & (TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT | TOKEN_APPEND)))  //token->value : < filename
+		if (cur && (cur->type & (TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT | TOKEN_APPEND | TOKEN_HEREDOC)))  //token->value : < filename
 		{
 			new_io_streams = init_io_stream_struct(gc_lst);
 			if(!new_cmd_block->io_streams)
@@ -87,20 +87,26 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc_list *gc_lst)
 				cur = cur->next;
 				continue;
 			}
+
+			//TODO FIX IT 
+			else if(cur->type & (TOKEN_HEREDOC))
+			{
+				fprintf(stderr, RED"if heredoc in grouplize()\n"DEFAULT);
+				if (cur->prev->type == TOKEN_ARGS)
+				{
+					new_cmd_block->args = gc_strdup(cur->prev->value, gc_lst);
+				}
+				// new_io_streams->heredoc_eof = gc_strdup(cur->value, gc_lst);
+
+				//for the test
+				new_io_streams->heredoc_eof = gc_strdup("eof", gc_lst);
+			}
 			else if(cur->prev && cur->prev->type == TOKEN_FILE) // -a filename 
 			{
 				if (cur->type == TOKEN_REDIRECT_IN)
 					new_io_streams->infile_name = gc_strdup(cur->prev->value, gc_lst);
 				else if(cur->type == TOKEN_REDIRECT_OUT || cur->type == TOKEN_APPEND)
 					new_io_streams->outfile_name = gc_strdup(cur->prev->value, gc_lst);
-				else if (cur->type == TOKEN_HEREDOC)
-				{
-					if (cur->prev->type == TOKEN_ARGS)
-					{
-						new_cmd_block->args = gc_strdup(cur->prev->value, gc_lst);
-					}
-					new_io_streams->heredoc_eof = gc_strdup(cur->value, gc_lst);
-				}
 			}
 			else
 			{

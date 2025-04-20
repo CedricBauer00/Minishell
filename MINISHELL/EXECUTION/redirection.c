@@ -14,8 +14,9 @@ int	re_dir_in(t_io_streams_list *io_streams)
 		close(fd);
 		return -1;
 	}
-	fprintf(stderr, YELLOW"dup2(io_streams->fd_in_file : %d, STDIN_FILENO : %d)\n"DEFAULT,fd, STDIN_FILENO);
+	fprintf(stderr, YELLOW"[pid %d] dup2(io_streams->fd_in_file : %d, STDIN_FILENO : %d)\n"DEFAULT,getpid(),fd, STDIN_FILENO);
 	close(fd);
+	fprintf(stderr, YELLOW"[pid %d] close(%d)\n"DEFAULT, getpid(), fd);
 	return 1;
 }
 
@@ -31,8 +32,9 @@ int	re_dir_out(t_io_streams_list *io_streams)
 		close(fd);
 		return (-1);
 	}
-	fprintf(stderr, YELLOW"dup2(io_streams->fd_out_file : %d, STDOUT_FILENO : %d)\n"DEFAULT, fd, STDOUT_FILENO);
+	fprintf(stderr, YELLOW"[pid %d] dup2(io_streams->fd_out_file : %d, STDOUT_FILENO : %d)\n"DEFAULT, getpid(), fd, STDOUT_FILENO);
 	close(fd);
+	fprintf(stderr, YELLOW"[pid %d] close(%d)\n"DEFAULT, getpid(), fd);
 	return 1;
 }
 
@@ -45,7 +47,7 @@ int	in_redir_file_open(t_io_streams_list *io_streams, char *in_filename)
 		perror(RED" < file open faield\n"DEFAULT);
 		return -1;
 	}
-	fprintf(stderr, YELLOW"open(filename %s, io_streams->fd_in_filename,  %d)\n"DEFAULT,in_filename, fd);
+	fprintf(stderr, YELLOW"[pid %d] open(filename %s, io_streams->fd_in_filename,  %d)\n"DEFAULT,getpid(),in_filename, fd);
 	io_streams->fd_in_file = fd;
 	return 1;
 }
@@ -59,7 +61,7 @@ int	out_redir_file_open(t_io_streams_list *io_streams, char *out_filename)
 		perror(RED" > file open faield\n"DEFAULT);
 		return (-1);
 	}
-	fprintf(stderr, YELLOW"open(filename : %s, io_streams->fd_in_filename, %d)\n"DEFAULT, out_filename, fd);
+	fprintf(stderr, YELLOW"[pid %d]open(filename : %s, io_streams->fd_in_filename, %d)\n"DEFAULT, getpid(), out_filename, fd);
 	io_streams->fd_out_file = fd;
 	return 1;
 }

@@ -67,24 +67,17 @@ int	validate_syntax(t_token *token)
 bool	is_validate_cmd_block(t_cmd_block *cmd_b)
 {
 	t_cmd_block *cur;
-	int			count;
 
-	count = 0;
 	cur = cmd_b;
 	while(cur)
 	{
-
-		if (cur->args && cur->built_in)
+		if (cur->built_in && cur->args)
 		{
 			return false;
 		}
-
-		//todo separate this codes
 		cur = cur->next;
 	}
-	if (count == 1)
-		return true;
-	return false;
+	return true;
 }
 
 /*

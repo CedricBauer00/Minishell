@@ -65,13 +65,15 @@ int	process_heredoc(t_io_streams_list *io_streams)
 	int	fd_heredoc;
 	
 	fd_heredoc = 0;
-	while (io_streams->heredoc_eof)
+	if (!io_streams || !io_streams->heredoc_eof)
+		return 0;
+	while (io_streams)
 	{
 		//char filename[64];
 		//todo make multiples files;;;
 		//filename = "temp_heredoc";
 		//if multiples heredoc we need multiples filenames..
-
+		
 		fd_heredoc = open("temp_heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd_heredoc == -1)
 		{
@@ -83,6 +85,7 @@ int	process_heredoc(t_io_streams_list *io_streams)
 			char *line;
 
 			line = readline("> ");
+			//put new_io_streams->heredoc_ef instead of using "eof"
 			if (!line || strcmp(line, "eof") == 0)
 			{
 				free(line);
@@ -93,17 +96,9 @@ int	process_heredoc(t_io_streams_list *io_streams)
 			free(line);
 		}
 		io_streams->heredoc_fd = fd_heredoc;
-		close(fd_heredoc);
+		//close(fd_heredoc);
 		io_streams = io_streams->next;
 	}
-
-	// //todo think where should i recover it 
-	// if (dup2(fd_org_read, STDOUT_FILENO) == -1)
-	// {
-	// 	close(fd_org_read);
-	// 	return -1;
-	// }
-	// close(fd_org_read);
 	return 1;
 }
 

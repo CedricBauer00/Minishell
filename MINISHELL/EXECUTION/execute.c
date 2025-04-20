@@ -15,7 +15,6 @@
 		IF (LAST)
 			PROCESS LAST PIPE
 	}
-
 	ex )
 	if (cur->pipe->stage == NONE && is_first_pipe_cmd(cur->pipe->pipefd))
 	{
@@ -30,9 +29,94 @@
 		cur->pipe->stage = LAST;
 	}
 */
-
-
 //cmd block has only just one child process
+
+void	prevent_zombie_process()
+{
+	while (waitpid(-1, NULL, WNOHANG) > 0);
+}
+
+void	wait_for_child_and_update_status(t_cmd_block *cur)
+{
+	t_shell *shell = get_shell();
+	int status;
+	pid_t child_pid = wait4(-1, &status, 0 ,NULL);
+	fprintf(stderr ,BLUE"parent got this from wait4() child_pid : %d\n"DEFAULT, child_pid);
+	if (child_pid > 0)
+	{
+		if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
+		{
+			fprintf(stderr, GREEN"exited with %d\n"DEFAULT, WEXITSTATUS(status));
+			shell->last_status_exit = WEXITSTATUS(status);  //parents get exit status 
+		}
+		else if (WIFSIGNALED(status))
+		{
+			fprintf(stderr, RED"terminated by signal %d (%s)\n" DEFAULT, WTERMSIG(status), strsignal(WTERMSIG(status)));
+			shell->last_status_exit = 128 + WTERMSIG(status);
+		}
+	}
+	close_pipefd(cur);
+}
+	
+void	single_cmd_execute(t_cmd_block *cur, pid_t pid, t_gc_list *gc_lst)
+{
+	if (!pid || !cur)
+		return;
+	//todo single command!
+	fprintf(stderr,"isin here \n");
+	if (cur->built_in)
+	{
+		set_io_streams(cur);
+		//todo execute_builtin();
+	}
+	else if(cur->args) //if external cmd
+	{
+		pid = fork();
+		fprintf(stderr, YELLOW"fork() : %d \n"DEFAULT, pid);
+		if (pid == 0)
+		{
+			set_io_streams(cur);
+			is_executable_cmd(cur, gc_lst);
+		}
+		else
+			wait_for_child_and_update_status(cur);
+	}
+	//todo wenn heredoc in child prozess ausfuehrt dann muss es hier recover werden.
+}
+
+void	execute_child(pid_t pid, t_cmd_block *cur, t_gc_list *gc_lst, t_shell *shell)
+{
+	if (pid == 0)
+	{
+		set_io_streams(cur);
+		processing_pipe(cur, shell, gc_lst);
+		//TODO wenn heredoc in child prozess ausfuehrt dann muss es hier recover werden.
+		//error
+		if (cur->io_streams->heredoc_fd)
+		{
+			fprintf(stderr, "in execute_child cur->io_streams->heredoc_fd: %d\n", cur->io_streams->heredoc_fd);
+			fprintf(stderr, "in execute_child STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
+			if (dup2(cur->io_streams->heredoc_fd, STDIN_FILENO) == -1)
+			{
+				perror(RED"dup2() heredocfd failed in execute_child()"DEFAULT);
+				//todo free.
+				//exit(1);
+			}
+			//close(cur->io_streams->heredoc_fd);
+		}
+
+		if (cur->built_in)
+		{
+			printf(RED"it is builtin we need to implement it\n"DEFAULT);
+			exit(0);
+		}
+		if (cur->args)
+		{
+			is_executable_cmd(cur, gc_lst);
+		}
+		
+	}
+}
 
 void 	is_executable_cmd(t_cmd_block *cmd_block, t_gc_list *gc_lst)
 {
@@ -96,7 +180,7 @@ void 	is_executable_cmd(t_cmd_block *cmd_block, t_gc_list *gc_lst)
 		}
 		else
 		{
-			printf(GREEN"there is file\n"DEFAULT);
+			//printf(GREEN"there is file\n"DEFAULT);
 			is_executable = true; 
 		}
 		if (is_executable == true)
@@ -116,139 +200,81 @@ void 	is_executable_cmd(t_cmd_block *cmd_block, t_gc_list *gc_lst)
 	exit(0);
 }
 
-void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
+
+void	main_execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 {
 	t_cmd_block *cur;
 	pid_t	pid;
 
 	//t_shell *shell = get_shell();
 	cur = cmd_block;
+	t_cmd_block *heredoc_check = cmd_block;
 	if (is_validate_cmd_block(cur) == false)
 	{
 		//todo all free
-		perror(RED"non valid cmd\n"DEFAULT);
-		//exit(1);
+		perror(RED"non valid cmd"DEFAULT);
+		shell->last_status_exit = 1;
+		exit(1);
 	}
-	if (cur->io_streams->heredoc_eof)
+
+	while(heredoc_check)
 	{
-		process_heredoc(cur->io_streams);
-		if (dup2(cur->io_streams->heredoc_fd, STDIN_FILENO) == -1)
+		int	fd_org_read = dup(STDIN_FILENO);
+		printf("heredoc_check->io_streams->heredoc_eof %s\n", heredoc_check->io_streams->heredoc_eof);
+		if (heredoc_check->io_streams->heredoc_eof)
 		{
-			perror(RED"dup2() heredocfd failed in validate_cmd_block()"DEFAULT);
-			//todo free.
-			//exit(1);
+			process_heredoc(heredoc_check->io_streams);
+			printf(RED"heredocfd %d\n"DEFAULT, heredoc_check->io_streams->heredoc_fd);
+			// if (dup2(heredoc_check->io_streams->heredoc_fd, STDIN_FILENO) == -1)
+			// {
+			// 	perror(RED"dup2() heredocfd failed in validate_cmd_block()"DEFAULT);
+			// 	//todo free.
+			// 	//exit(1);
+			// }
 		}
+		heredoc_check = heredoc_check->next;
 	}
+
+
+	//memo if this signle cmd.
+	if(cur && !cur->prev && !cur->next)
+		single_cmd_execute(cur, pid, gc_lst);
+	
 	while(cur)
 	{
-		//ERROR CUR->NEXT 
-		//[CAT - E] | [WC] in der fall, fuehrt es nicht naechsten node aus, also [wc] geht nicht
-		//weil es gibt keine node nach dem wc!
 		if (cur->next)
 		{
 			add_pipe(&cur, gc_lst);
-			fprintf(stderr, YELLOW"p_pipe->pipefd[0]: %d, p_pipe->pipefd[1]: %d\n"DEFAULT, cur->pipe->pipefd[0], cur->pipe->pipefd[1]);
+			fprintf(stderr, YELLOW"[pid %d] p_pipe->pipefd[0]: %d, p_pipe->pipefd[1]: %d\n"DEFAULT,getpid(), cur->pipe->pipefd[0], cur->pipe->pipefd[1]);
 			//cur->child_pids = do_alloc(&gc_lst, sizeof(pid_t), TYPE_SINGLE_PTR, "child PID");
 			pid = fork();
+			fprintf(stderr,YELLOW"[pid %d] fork()\n"DEFAULT, getpid());
 			if (pid == 0)
 			{
-				set_io_streams(cur);
-				processing_pipe(cur, shell, gc_lst);
-				
-				// fprintf(stderr, YELLOW"Created pipe_fd: read_end=%d, write_end=%d\n"DEFAULT,
-				// 	cmd->pipe->pipefd[0], cmd->pipe->pipefd[1]);
-				if (cur->built_in)
-				{
-					//execute_builtin();
-					printf(RED"it is builtin we need to implement it\n"DEFAULT);
-					exit(0);
-				}
-				if (cur->args)
-				{
-					is_executable_cmd(cur, gc_lst);
-				}
-				//wenn heredoc in child prozess ausfuehrt dann muss es hier recover werden.
+				execute_child(pid, cur, gc_lst, shell);
 			}
+			wait_for_child_and_update_status(cur);
+		}
+		//memo if last cmd
+		else if(cur && cur->prev && !cur->next)
+		{
+			pid = fork();
+			if (pid == 0)
+				execute_child(pid, cur, gc_lst, shell);
 			else
-			{
-				close_pipefd(cur);
-				int status;
-				pid_t child_pid = wait4(-1, &status, 0 ,NULL);
-				if (child_pid > 0)
-				{
-					if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
-					{
-						printf(GREEN"exited with %d\n"DEFAULT, WEXITSTATUS(status));
-						shell->last_status_exit = WEXITSTATUS(status);  //parents get exit status 
-					}
-					else if (WIFSIGNALED(status))
-					{
-						printf(RED "terminated by signal %d (%s)\n" DEFAULT, WTERMSIG(status), strsignal(WTERMSIG(status)));
-						shell->last_status_exit = 128 + WTERMSIG(status);
-					}
-				}
-			}
-			if()
-			{
-				
-			}
+				wait_for_child_and_update_status(cur);
 		}
 		cur = cur->next;
 	}
-
-	//todo single command!
-	if(cur && !cur->prev && !cur->next)
-	{
-		fprintf(stderr,"isin here \n");
-		if (cur->built_in)
-		{
-			set_io_streams(cur);
-			//execute_builtin();
-		}
-		else if(cur->args)
-		{
-			pid = fork();
-			fprintf(stderr, YELLOW"fork() : %d \n"DEFAULT, pid);
-			if (pid == 0)
-			{
-				set_io_streams(cur);
-				is_executable_cmd(cur, gc_lst);
-			}
-			else
-			{
-				int status;
-				pid_t child_pid = wait4(-1, &status, 0 ,NULL);
-				if (child_pid > 0)
-				{
-					if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
-					{
-						printf(GREEN"exited with %d\n"DEFAULT, WEXITSTATUS(status));
-						shell->last_status_exit = WEXITSTATUS(status);  //parents get exit status 
-					}
-					//todo stduy about that 
-					/*
-						if child process exited by signal also abnormal
-						128 + signal_number
-						total siganl number is 31
-						max signal return number is 159
-					*/
-					else if (WIFSIGNALED(status))
-					{
-						printf(RED "terminated by signal %d (%s)\n" DEFAULT, WTERMSIG(status), strsignal(WTERMSIG(status)));
-						shell->last_status_exit = 128 + WTERMSIG(status);
-					}
-				}
-			}
-		}
-	}
+	prevent_zombie_process();
 }
 
-void	prevent_zombie_process()
-{
-	while (waitpid(-1, NULL, WNOHANG) > 0);
-}
 
-t_token *create_token(t_token_type type, char *value)
+
+
+
+//delete it later 
+static t_token *create_token(t_token_type type, char *value)
 {
 	t_token *new = malloc(sizeof(t_token));
 	if (!new)
@@ -260,7 +286,7 @@ t_token *create_token(t_token_type type, char *value)
 	return new;
 }
 
-//cat < 1.txt < 2.txt | wc
+//cat < 1.txt < 2.txt | cat -e << eof
 int main(int ac, char *argv[], char *envp[])
 {
 	(void)ac;
@@ -271,7 +297,13 @@ int main(int ac, char *argv[], char *envp[])
 	t_token *t4 = create_token(TOKEN_REDIRECT_IN, "<");
 	t_token *t5 = create_token(TOKEN_FILE, "2.txt");
 	t_token *t6 = create_token(TOKEN_PIPE, "|");
-	t_token *t7 = create_token(TOKEN_ARGS, "wc");
+	t_token *t7 = create_token(TOKEN_ARGS, "cat -e");
+	t_token *t7_1 = create_token(TOKEN_HEREDOC, "<<");
+
+	//t_token *t8 = create_token(TOKEN_PIPE, "|");
+	// t_token *t9 = create_token(TOKEN_ARGS, "ls -a");
+	// t_token *t10 = create_token(TOKEN_PIPE, "|");
+	// t_token *t11 = create_token(TOKEN_ARGS, "cat -b -e");
 	t1->next = t2;
 	t2->prev = t1;
 	t2->next = t3;
@@ -284,6 +316,16 @@ int main(int ac, char *argv[], char *envp[])
 	t6->prev = t5;
 	t6->next = t7;
 	t7->prev = t6;
+	t7->next = t7_1;
+	t7_1->prev = t7;
+	// t7->next = t8;
+	// t8->prev = t7;
+	// t8->next = t9;
+	// t9->prev = t8;
+	// t9->next = t10;
+	// t10->prev = t9;
+	// t10->next = t11;
+	// t11->prev = t10;
 	t_gc	*gc = get_gc();
 	// t_gc_list* gc_lst = init_gc_list();
 	t_cmd_block *cmd_block_list = NULL;
@@ -300,6 +342,9 @@ int main(int ac, char *argv[], char *envp[])
 		fprintf(stderr, "cmd->io_streams->heredoc_eof %s\n", cmd_block_list->io_streams->heredoc_eof);
 		printf("cmd_block_list->io_streams->outfile_name : %s\n", cmd_block_list->io_streams->outfile_name);
 		printf("cmd_block_list->io_streams->next->outfile_name :%s\n", cmd_block_list->io_streams->next->outfile_name);
+		
+		printf("cmd_block_list->next->io_streams->heredoc_eof : %s\n", cmd_block_list->next->io_streams->heredoc_eof);
+
 		printf("cmd_block_list->pipe : %p\n", cmd_block_list->pipe);
 	}
 	if (cmd_block_list->next)
@@ -312,7 +357,8 @@ int main(int ac, char *argv[], char *envp[])
 	}
 	t_shell *shell = get_shell();
 	shell ->my_envp = copy_envp(gc->shell, envp);
-	execute(cmd_block_list, gc->temp, shell);
+	main_execute(cmd_block_list, gc->temp, shell);
+	printf(YELLOW"shell->last_status_exit : %d\n"DEFAULT, shell->last_status_exit);
 	gc_free(gc);
 	return 0;
 }
