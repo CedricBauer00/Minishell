@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   p_syntax.c                                         :+:      :+:    :+:   */
+/*   m_syntax.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:01:32 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/18 15:51:32 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/20 13:11:43 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ int	syntax_redirects(t_token **cur)
 	}
 	else if ((*cur)->type == TOKEN_HEREDOC)
 	{
-		if((*cur)->next == NULL && ((*cur)->value == NULL
-			|| (*cur)->value[0] == '\0'))
+		if ((*cur)->next == NULL && ((*cur)->value == NULL
+				|| (*cur)->value[0] == '\0'))
 			return (choose_error_statement(1, NULL), -1);
 		else if ((*cur)->next != NULL && (*cur)->next->type == TOKEN_HEREDOC)
 			return (choose_error_statement(2, "<<"), -1);
@@ -37,11 +37,11 @@ int	syntax_redirects(t_token **cur)
 int	syntax_helper(t_token **cur)
 {
 	if (((*cur)->type & (TOKEN_APPEND | TOKEN_REDIRECT_IN
-		| TOKEN_REDIRECT_OUT)) && (!(*cur)->next))
+				| TOKEN_REDIRECT_OUT)) && (!(*cur)->next))
 		return (choose_error_statement(1, NULL), -1);
 	else if ((*cur)->type == TOKEN_PIPE || (*cur)->type == TOKEN_BONUS)
 	{
-		if((*cur)->type == TOKEN_PIPE && (!(*cur)->prev || !(*cur)->next))
+		if ((*cur)->type == TOKEN_PIPE && (!(*cur)->prev || !(*cur)->next))
 			return (choose_error_statement(2, (*cur)->value), -1);
 		else if (((*cur)->next != NULL && (*cur)->next->type == TOKEN_PIPE)
 			|| (*cur)->type == TOKEN_BONUS)
@@ -54,10 +54,10 @@ int	syntax_helper(t_token **cur)
 
 int	validate_syntax(t_token *token)
 {
-	if (!token)
-		return 1;
-	t_token *cur;
+	t_token	*cur;
 
+	if (!token)
+		return (1);
 	cur = token;
 	while (cur)
 	{
@@ -68,51 +68,15 @@ int	validate_syntax(t_token *token)
 	return (1);
 }
 
-
-
-// << | should be iinvalid
-
-
-
-// < null
-// > null
-// >> null
-// null | null
-// | null
-// null |
-// || 
-// if || valid -> bonus_error
-// if && valid -> bonus_error
-
-
-// int	validate_syntax(t_token *token)
-// {
-// 	if (!token)
-// 		return 1;
-// 	t_token *cur;
-
-// 	cur = token;
-// 	while (cur)
-// 	{
-// 		if ((cur->type & (TOKEN_APPEND | TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT)) && // mazbe issue
-// 			(!cur->next || cur->next->type == TOKEN_PIPE || cur->next->type == TOKEN_NONE))
-// 			return (-1);
-// 		else if (cur->type == TOKEN_PIPE)
-// 		{
-// 			if(!cur->prev || !cur->next || cur->next->type == TOKEN_PIPE)
-// 				return (-2);
-// 		}
-// 		else if (cur->type & (TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT | TOKEN_APPEND))
-// 		{
-// 			if (!cur->next || cur->next->type != TOKEN_ARG)
-// 				return (-1);
-// 		}
-// 		else if (cur->type == TOKEN_HEREDOC)
-// 		{
-// 			if(cur->value == NULL)
-// 				return (-1);
-// 		}
-// 		cur = cur->next;
-// 	}
-// 	return (1);
-// }
+/* 
+	<< | should be iinvalid
+	< null
+	> null
+	>> null
+	null | null
+	| null
+	null |
+	|| 
+	if || valid -> bonus_error
+	if && valid -> bonus_error
+*/

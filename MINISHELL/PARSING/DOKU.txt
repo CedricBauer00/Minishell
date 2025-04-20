@@ -1,8 +1,85 @@
 TODO
 
 - expand fix norm
-- syntax checking
+- was ist mit globaler variable für exitstatus/ signals
+- exitstatus
+
+- remove quotes for heredoc execution !!!!
+
+- SIGNALS : // signals im Parentprozess (minishell) == ignore 
+			// signals im Childprozess == SIG_DFL
+
+
+
+SHELL USE INSTRUCTIONS:
+
+//after using this function at the beginning, this func ensures that the 'shell' is no longer 'null'
+//because it has already been initialized as a static var.
+//static var is initialized just only at once when it called and assigned in data area.
+
+
 
 ERROR:
 
 - signals für childprozess (ctrl \) impkementation
+
+
+
+- macht hinter heredoc zu FILE_Token 	soll so?
+	minishell> YHis is >>stinrg | << h "$USER"'=hello'=world
+	var: USER
+
+	---- Token List ----
+	Token Type: Arg, Value: YHis
+	Token Type: Arg, Value: is
+	Token Type: append, Value: >>
+	Token Type: FILE, Value: stinrg
+	Token Type: pipe, Value: |
+	Token Type: heredoc, Value: h
+	Token Type: FILE, Value: cbauer=hello=world
+	--------------------
+
+- soll er ' ' mitnehmen in heredoc delimiter?
+	minishell> "$USER"=bvaccahr 'echo ' |<< 'echo'
+	var: USER
+
+	---- Token List ----
+	Token Type: Arg, Value: cbauer=bvaccahr
+	Token Type: Arg, Value: echo 
+	Token Type: pipe, Value: |
+	Token Type: heredoc, Value: 'echo'
+
+- richitg oder??
+	minishell> "$UR
+	minishell: unexpected EOF while looking for matching `"'
+	minishell: syntax error: unexpected end of file
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	norm changes : EXPAND expand_helper l.65
+	if (ft_strlen(var) == 0)
+	{
+		free(var);
+		return (0);
+	}
+
+	to 	if (ft_strlen(var) == 0)
+		return (free(var), 0);
+
+	working??

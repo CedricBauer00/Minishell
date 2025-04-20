@@ -1,67 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   p_token_handling.c                                 :+:      :+:    :+:   */
+/*   m_token_handling.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:30:51 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/18 13:07:28 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/20 12:26:03 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
-
-int	append_token(t_token **tokens, t_token *new_token) //create as double linked list
-{
-	t_token	*temp;
-	
-	if (!new_token)
-		return (-1);
-	if (!*tokens)
-	{
-		new_token->next = NULL;
-		new_token->prev = NULL;
-		*tokens = new_token;
-		return (0);
-	}
-	temp = *tokens;
-	while (temp->next)
-		temp = temp->next;
-	temp->next = new_token;
-	new_token->prev = temp;
-	return (0);
-}
-
-int	create_token(t_token **tokens, t_token_type type, char *str, t_gc_list *gc_list)
-{
-	t_token *new_token;
-	
-	new_token = (t_token *)do_alloc(&gc_list, sizeof(t_token),TYPE_SINGLE_PTR, "create_token");
-	if (!new_token)
-		return (perror("ERROR\nMalloc failed!\n"), -1);
-	new_token->type = type;
-	new_token->value = gc_strdup(str, gc_list);
-	if (!new_token->value && str != NULL)
-	{
-		free(new_token);
-		return (perror("ERROR\nMalloc for new_token->value failed!\n"), -1);
-	}
-	new_token->next = NULL;
-	return (append_token(tokens, new_token));
-}
-
-void	free_tokens(t_token *tokens) //maybe not needed
-{
-	t_token *temp;
-	while (tokens)
-	{
-		temp = tokens;
-		tokens = tokens->next;
-		free(temp->value);
-		free(temp);
-	}
-}
 
 int	node_spaces_helper(t_token *temp, t_gc_list *gc_list)
 {
@@ -74,7 +23,6 @@ int	node_spaces_helper(t_token *temp, t_gc_list *gc_list)
 
 int	node_space_else_if(t_token **temp, t_gc_list *gc_list)
 {
-	write(1, "else if\n", 8);
 	while ((*temp)->next != NULL && (*temp)->next->type != TOKEN_SPACES
 		&& (*temp)->next->type != TOKEN_PIPE
 		&& (*temp)->next->type != TOKEN_REDIRECT_IN

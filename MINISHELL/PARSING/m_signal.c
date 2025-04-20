@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   p_signal.c                                         :+:      :+:    :+:   */
+/*   m_signal.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:26:29 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/17 16:40:12 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/20 12:33:49 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,15 @@ void	signal_func(int sig)
 	rl_on_new_line();
 	rl_redisplay();
 }
-// signals im Parentprozess (minishell) == ignore 
-// signals im Childprozess == SIG_DFL
 
+int	ttyattr(void)
+{
+	struct termios	temp;
+
+	if (tcgetattr(0, &temp) < 0)
+		return (-1);
+	temp.c_lflag &= ~(ECHOCTL);
+	if (tcsetattr(0, TCSANOW, &temp) < 0)
+		return (-1);
+	return (0);
+}

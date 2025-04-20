@@ -6,18 +6,17 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 09:42:44 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/20 10:43:42 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/20 11:05:27 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-int	get_spaces(t_main *main, int *i, t_gc_list *gc_list)
+int	get_spaces(t_main *main, int *i, int k, t_gc_list *gc_list)
 {
 	int		j;
-	int		k;
 	char	*str;
-	
+
 	j = 0;
 	k = 0;
 	while (ft_isspace(main->line[*i]))
@@ -29,24 +28,19 @@ int	get_spaces(t_main *main, int *i, t_gc_list *gc_list)
 	if (!str)
 		return (-1);
 	str[j] = '\0';
-	while (k < j)
-	{
+	while (++k < j)
 		str[k] = ' ';
-		k++;
-	}
 	main->error = create_token(&main->tokens, TOKEN_ARG, str, gc_list);
 	return (0);
 }
 
-int	read_word(t_main *main, int *i, t_gc_list *gc_list)
+int	read_word(t_main *main, int *i, int k, t_gc_list *gc_list)
 {
 	int		j;
-	int		k;
 	int		m;
 	char	*str;
 
 	j = 0;
-	k = 0;
 	m = *i;
 	while (main->line[m] && main->line[m] != '"' && main->line[m] != '$')
 	{
@@ -57,10 +51,9 @@ int	read_word(t_main *main, int *i, t_gc_list *gc_list)
 	if (!str)
 		return (-1);
 	str[j] = '\0';
-	while (k < j)
+	while (++k < j)
 	{
 		str[k] = main->line[*i];
-		k++;
 		(*i)++;
 	}
 	if (is_built_in(str) == 1)
@@ -81,17 +74,17 @@ int	dquotes_helper(t_main *main, int *i, t_gc_list *gc_list)
 		}
 		if (main->line[*i] && main->line[*i] != '"' && main->line[*i] != '$')
 		{
-			if (read_word(main, i, gc_list) < 0)
+			if (read_word(main, i, -1, gc_list) < 0)
 				return (-1);
 		}
 	}
 	return (0);
 }
 
-int dquotes(t_main *main, int *i, t_gc_list *gc_list)
+int	dquotes(t_main *main, int *i, t_gc_list *gc_list)
 {
-	int ws;
-	
+	int	ws;
+
 	(*i)++;
 	ws = *i;
 	if (dquotes_helper(main, i, gc_list) < 0)

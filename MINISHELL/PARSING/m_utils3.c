@@ -1,16 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   m_utils.c                                          :+:      :+:    :+:   */
+/*   m_utils3.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/18 17:53:21 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/15 15:07:17 by cbauer           ###   ########.fr       */
+/*   Created: 2025/04/20 12:13:48 by cbauer            #+#    #+#             */
+/*   Updated: 2025/04/20 13:15:27 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	if (!s1 || !s2)
+		return (-1);
+	while (*s1 && *s2 && *s1 == *s2)
+	{
+		s1++;
+		s2++;
+	}
+	return (*s1 - *s2);
+}
 
 char	*gc_strdup(const char *str, t_gc_list *gc_list)
 {
@@ -19,9 +31,10 @@ char	*gc_strdup(const char *str, t_gc_list *gc_list)
 	char	*ptr;
 
 	if (!str)
-		return NULL;
+		return (NULL);
 	len = ft_strlen(str);
-	ptr = do_alloc(&gc_list, len * sizeof(char) + 1, TYPE_SINGLE_PTR, "gc_strdup");
+	ptr = do_alloc(&gc_list, len * sizeof(char) + 1, \
+		TYPE_SINGLE_PTR, "gc_strdup");
 	if (!ptr)
 		return (NULL);
 	counter = 0;
@@ -43,7 +56,8 @@ char	*gc_strndup(const char *str, size_t n, t_gc_list *gc_list)
 	len = ft_strlen(str);
 	if (n < len)
 		len = n;
-	ptr = do_alloc(&gc_list, (len + 1) * sizeof(char),TYPE_DOUBLE_PTR, "gc_strndup");
+	ptr = do_alloc(&gc_list, (len + 1) * sizeof(char), \
+		TYPE_DOUBLE_PTR, "gc_strndup");
 	if (!ptr)
 		return (NULL);
 	counter = 0;
@@ -66,7 +80,8 @@ char	*gc_strjoin(char const *s1, char const *s2, t_gc_list *gc_list)
 	if (s1[0] == '\0' && s2[0] == '\0')
 		return (gc_strdup("", gc_list));
 	len = ft_strlen(s1) + ft_strlen(s2);
-	newstr = (char *)do_alloc(&gc_list, (len + 1) * sizeof(char),TYPE_SINGLE_PTR, "gc_strjoin");
+	newstr = (char *)do_alloc(&gc_list, (len + 1) * sizeof(char), \
+		TYPE_SINGLE_PTR, "gc_strjoin");
 	if (!newstr)
 		return (0);
 	counter = -1;
@@ -75,27 +90,11 @@ char	*gc_strjoin(char const *s1, char const *s2, t_gc_list *gc_list)
 	i = 0;
 	while (s2[i] != '\0')
 		newstr[counter++] = s2[i++];
-	// if (s2)
-	 	// free((void *)s2);
 	newstr[counter] = '\0';
 	return (newstr);
 }
 
-int	valid_char(int c, int indic)
+int	is_valid_char(char c)
 {
-	if (indic == 0)
-		return (ft_isspace(c));
-	else
-	{
-		if (c == '\'' || c == '"' || c == '|' || c == '<' || c == '>' || c == '$')
-			return (1);
-		if (ft_isspace(c) == 1)
-			return (1);
-	}
-	return (0);
-}
-
-int	ft_isspace(char c)
-{
-	return (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f' || c == '\v');
+	return ((ft_isalnum(c) || c == '_') && c != '=' && c != '$');
 }

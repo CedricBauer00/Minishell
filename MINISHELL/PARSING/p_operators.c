@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 10:25:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/18 14:31:26 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/20 12:51:40 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,16 @@
 int	operator(t_main *main, int i, char c, t_gc_list *gc_list)
 {
 	if (c == '<' && i == 1)
-		main->error = create_token(&main->tokens, TOKEN_REDIRECT_IN, "<", gc_list);
+		main->error = create_token(&main->tokens, TOKEN_REDIRECT_IN, \
+			"<", gc_list);
 	else if (c == '>' && i == 1)
-		main->error = create_token(&main->tokens, TOKEN_REDIRECT_OUT, ">", gc_list);
+		main->error = create_token(&main->tokens, TOKEN_REDIRECT_OUT, \
+			">", gc_list);
 	else if (c == '|' && i == 1)
 		main->error = create_token(&main->tokens, TOKEN_PIPE, "|", gc_list);
 	else if (i == 2 && c == '>')
 		main->error = create_token(&main->tokens, TOKEN_APPEND, ">>", gc_list);
 	else if (i == 1 && c == '&')
 		main->error = create_token(&main->tokens, TOKEN_BONUS, "&", gc_list);
-	// else if (i == 2 && c == '<')
-	// 	main->error = create_token(&main->tokens, TOKEN_HEREDOC, "<<", gc_list);
 	return (i);
 }
-
-// ERROR CASES
-// ---- Token List ----
-// Token Type: redirect_out, Value: >cmd1>cmd2<cmd3
-// --------------------

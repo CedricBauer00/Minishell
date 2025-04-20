@@ -24,22 +24,25 @@ LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
 SOURCES = m_main.c \
-		m_words.c \
-		m_utils.c \
-		p_utils2.c \
-		m_builtins.c \
-		m_quotes.c \
-		m_dquotes.c \
-		p_operators.c \
-		m_heredoc.c \
-		m_expand.c \
+		m_utils1.c \
+		m_utils2.c \
+		m_utils3.c \
+		m_shell_init.c \
+		m_signal.c \
+		m_copy_envp.c \
+		m_set_up_tokens.c \
 		GC/gc.c \
-		copy_envp.c \
-		init.c \
-		printing.c \
-		p_syntax.c \
-		p_signal.c \
-		p_token_handling.c
+		p_words.c \
+		p_builtins.c \
+		p_quotes.c \
+		p_dquotes.c \
+		p_expand.c \
+		p_operators.c \
+		p_heredoc.c \
+		m_syntax.c \
+		m_token_handling.c \
+		m_sorting.c \
+		printing.c 
 
 OBJECTS := $(SOURCES:.c=.o)
 
