@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/20 13:28:26 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/20 14:13:13 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ int	main_loop(t_main *main, int i, t_gc *gc)
 			all_free(&gc->temp);
 			continue ;
 		}
-		print_tokens(main->tokens);
+		// print_tokens(main->tokens);
 	}
 	return (0);
 }
@@ -123,6 +123,8 @@ int	main_loop(t_main *main, int i, t_gc *gc)
 	heredoc exection
 	normal exection
 	right before print_tokens
+
+	printng.c in folder draggen wenn message
 */
 
 int	main(int argc, char **argv, char **envp)
@@ -139,7 +141,7 @@ int	main(int argc, char **argv, char **envp)
 	signal(SIGQUIT, SIG_IGN);
 	if (ttyattr() < 0)
 		return (printf("ERROR\nttyattr failed!\n"), -1);
-	gc = get_garbage_collector();
+	gc = get_gc();
 	main.envp = copy_envp(gc->shell, envp);
 	shell = get_shell(gc->shell);
 	if (main_loop(&main, 0, gc) < 0)

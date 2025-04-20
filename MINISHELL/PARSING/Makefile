@@ -31,7 +31,9 @@ SOURCES = m_main.c \
 		m_signal.c \
 		m_copy_envp.c \
 		m_set_up_tokens.c \
-		GC/gc.c \
+		GC/gc1.c \
+		GC/gc2.c \
+		GC/gc3.c \
 		p_words.c \
 		p_builtins.c \
 		p_quotes.c \
@@ -42,7 +44,7 @@ SOURCES = m_main.c \
 		m_syntax.c \
 		m_token_handling.c \
 		m_sorting.c \
-		printing.c 
+		# printing.c 
 
 OBJECTS := $(SOURCES:.c=.o)
 
