@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 10:34:00 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/18 11:59:34 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/20 10:40:01 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 int	is_built_in(char *value)
 {
-	
 	if ((ft_strcmp(value, "cd") == 0)
 		|| (ft_strcmp(value, "echo") == 0)
 		|| (ft_strcmp(value, "export") == 0)

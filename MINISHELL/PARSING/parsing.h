@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/18 15:59:30 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/20 10:42:53 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,7 @@ int 	quotes_helper(t_main *main, int *i, int ws, t_gc_list *gc_list);
 
 int     dquotes(t_main *main, int *i, t_gc_list *gc_list);
 int 	dquotes_helper(t_main *main, int *i, t_gc_list *gc_list);
-int 	read_word(t_main *main, int *i, t_gc_list *gc_list);
+int	    read_word(t_main *main, int *i, int k, t_gc_list *gc_list);
 int 	get_spaces(t_main *main, int *i, t_gc_list *gc_list);
 
 // ----------------------------------------------------------------------
