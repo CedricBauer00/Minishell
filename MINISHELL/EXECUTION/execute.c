@@ -92,6 +92,7 @@ void	execute_child(pid_t pid, t_cmd_block *cur, t_gc_list *gc_lst, t_shell *shel
 		processing_pipe(cur, shell, gc_lst);
 		//TODO wenn heredoc in child prozess ausfuehrt dann muss es hier recover werden.
 		//error
+		//ich kann in heredoc_temp datas eingeben.
 		if (cur->io_streams->heredoc_fd)
 		{
 			fprintf(stderr, "in execute_child cur->io_streams->heredoc_fd: %d\n", cur->io_streams->heredoc_fd);
