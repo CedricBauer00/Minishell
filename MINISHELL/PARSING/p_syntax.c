@@ -6,11 +6,51 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:01:32 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/16 10:44:25 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/18 15:51:32 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
+
+int	syntax_redirects(t_token **cur)
+{
+	if ((*cur)->type & (TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT | TOKEN_APPEND))
+	{
+		if ((*cur)->next && (*cur)->next->type == TOKEN_HEREDOC)
+			return (choose_error_statement(2, "<<"), -1);
+		else if ((*cur)->next && (*cur)->next->type != TOKEN_FILE)
+			return (choose_error_statement(2, (*cur)->next->value), -1);
+	}
+	else if ((*cur)->type == TOKEN_HEREDOC)
+	{
+		if((*cur)->next == NULL && ((*cur)->value == NULL
+			|| (*cur)->value[0] == '\0'))
+			return (choose_error_statement(1, NULL), -1);
+		else if ((*cur)->next != NULL && (*cur)->next->type == TOKEN_HEREDOC)
+			return (choose_error_statement(2, "<<"), -1);
+		else if ((*cur)->value == NULL || (*cur)->value[0] == '\0')
+			return (choose_error_statement(2, (*cur)->next->value), -1);
+	}
+	return (0);
+}
+
+int	syntax_helper(t_token **cur)
+{
+	if (((*cur)->type & (TOKEN_APPEND | TOKEN_REDIRECT_IN
+		| TOKEN_REDIRECT_OUT)) && (!(*cur)->next))
+		return (choose_error_statement(1, NULL), -1);
+	else if ((*cur)->type == TOKEN_PIPE || (*cur)->type == TOKEN_BONUS)
+	{
+		if((*cur)->type == TOKEN_PIPE && (!(*cur)->prev || !(*cur)->next))
+			return (choose_error_statement(2, (*cur)->value), -1);
+		else if (((*cur)->next != NULL && (*cur)->next->type == TOKEN_PIPE)
+			|| (*cur)->type == TOKEN_BONUS)
+			return (choose_error_statement(3, NULL), -1);
+	}
+	if (syntax_redirects(cur) < 0)
+		return (-1);
+	return (0);
+}
 
 int	validate_syntax(t_token *token)
 {
@@ -21,37 +61,28 @@ int	validate_syntax(t_token *token)
 	cur = token;
 	while (cur)
 	{
-		if ((cur->type & (TOKEN_PIPE | TOKEN_APPEND | TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT)) &&
-			(!cur->next || cur->next->type == TOKEN_PIPE || cur->next->type == TOKEN_NONE))
+		if (syntax_helper(&cur) < 0)
 			return (-1);
-		else if (cur->type == TOKEN_PIPE)
-		{
-			if(!cur->prev || !cur->next || cur->next->type == TOKEN_PIPE)
-				return (-1);
-		}
-		else if (cur->type & (TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT | TOKEN_APPEND))
-		{
-			if (!cur->next || cur->next->type != TOKEN_WORD)
-				return (-1);
-		}
-		else if (cur->type == TOKEN_HEREDOC)
-		{
-			if(cur->value == NULL)
-				return (-1);
-		}
 		cur = cur->next;
 	}
 	return (1);
 }
 
 
-// else if (cur->type == TOKEN_HEREDOC)
-// {
-// 	if(cur->next != NULL && cur->next->type != TOKEN_WORD)
-// 	{
-// 		return (-1);
-// 	}
-// }
+
+// << | should be iinvalid
+
+
+
+// < null
+// > null
+// >> null
+// null | null
+// | null
+// null |
+// || 
+// if || valid -> bonus_error
+// if && valid -> bonus_error
 
 
 // int	validate_syntax(t_token *token)
@@ -63,54 +94,24 @@ int	validate_syntax(t_token *token)
 // 	cur = token;
 // 	while (cur)
 // 	{
-// 		if ((cur->type & (TOKEN_PIPE | TOKEN_APPEND | TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT)) &&
+// 		if ((cur->type & (TOKEN_APPEND | TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT)) && // mazbe issue
 // 			(!cur->next || cur->next->type == TOKEN_PIPE || cur->next->type == TOKEN_NONE))
-// 		{
-// 			//perror(RED"syntax error"DEFAULT);
-// 			//todo all_Free 
 // 			return (-1);
-// 		}
-
-// 		//ensure that pipe is not the beginning or end
 // 		else if (cur->type == TOKEN_PIPE)
 // 		{
 // 			if(!cur->prev || !cur->next || cur->next->type == TOKEN_PIPE)
-// 			{
-// 				//perror(RED"syntax error"DEFAULT);
-// 				return (-1);
-// 			}
+// 				return (-2);
 // 		}
-		
-// 		//heck if a TOKEN_WORD follows after a redirection
 // 		else if (cur->type & (TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT | TOKEN_APPEND))
 // 		{
-// 			if (!cur->next || cur->next->type != TOKEN_WORD)
-// 			{
-// 				//perror(RED"syntax error"DEFAULT);
+// 			if (!cur->next || cur->next->type != TOKEN_ARG)
 // 				return (-1);
-// 			}
 // 		}
-
-// 		//heck if a TOKEN_EOF follows after a TOKEN_HEREDOC
 // 		else if (cur->type == TOKEN_HEREDOC)
 // 		{
 // 			if(cur->value == NULL)
-// 			{
 // 				return (-1);
-// 			}
 // 		}
-// 		//memo ich muss nicht es hier auschecken, weil TOKEN_FLAGS mit ACCESS funktion ueberprueft werden kann.
-// 		// if (cur->type == TOKEN_CMD || cur->type == TOKEN_FLAGS)
-// 		// {
-// 		// 	cur->next file.
-// 		// 	cur->next flags 
-// 		// 	cur->next >>
-// 		// 	cur->next <<
-// 		// 	cur->next <
-// 		// 	cur->next >
-// 		// 	cur->next |
-// 		// 	cur->next 
-// 		// }
 // 		cur = cur->next;
 // 	}
 // 	return (1);

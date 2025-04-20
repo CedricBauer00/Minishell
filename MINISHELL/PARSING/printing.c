@@ -34,8 +34,8 @@ void print_token(t_token *tokens)
 {
 	if (!tokens)
 		return ;
-	if (tokens->type & TOKEN_WORD)
-		printf("Token Type: %s, Value: %s\n", "word", tokens->value);
+	if (tokens->type & TOKEN_ARG)
+		printf("Token Type: %s, Value: %s\n", "Arg", tokens->value);
 	else if (tokens->type & TOKEN_BUILT_IN)
 		printf("Token Type: %s, Value: %s\n", "Built-in", tokens->value);
 	else if (tokens->type & TOKEN_PIPE)
@@ -52,6 +52,8 @@ void print_token(t_token *tokens)
 		printf("Token Type: %s, Value: %s\n", "VAR", tokens->value);
 	else if (tokens->type & TOKEN_SPACES)
 		printf("Token Type: %s, Value: %s\n", "SPACE", tokens->value);
+	else if (tokens->type & TOKEN_FILE)
+		printf("Token Type: %s, Value: %s\n", "FILE", tokens->value);
 	else
 		printf("Token Type: UNKNOWN (%d), Value: %s\n", tokens->type, tokens->value);
 	// printf("Token Type: %d, Value: %s\n", tokens->type, tokens->value);

@@ -1,47 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   p.c                                                :+:      :+:    :+:   */
+/*   m_quotes.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 11:35:34 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/14 14:11:00 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/18 12:59:32 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
+int	quotes_helper(t_main *main, int *i, int ws, t_gc_list *gc_list)
+{
+	main->word = gc_strndup(main->line + ws, *i - ws, gc_list);
+	if (!main->word)
+		return (-1);
+	if (is_built_in(main->word) == 1)
+		main->error = create_token(&main->tokens, TOKEN_BUILT_IN, main->word, gc_list);
+	else
+		main->error = create_token(&main->tokens, TOKEN_ARG, main->word, gc_list);
+	if (main->error < 0)
+		return (-1);
+	(*i)++;
+	return (0);
+}
+
 int quotes(t_main *main, int *i, t_gc_list *gc_list)
 {
 	int ws;
 
-	ws = *i + 1; // Start after the opening quote
-	(*i)++;	  // Move past the opening quote
-
-	while (main->line[*i]) // Loop through the input line
-	{
-		while (main->line[*i] && main->line[*i] != '\'') // Find closing quote
-			(*i)++;
-		if (main->line[*i] == '\'' || main->line[*i] == '\0') // If closing quote is found
-		{
-			// Extract the word between quotes
-			main->word = gc_strndup(main->line + ws, *i - ws, gc_list);
-			if (!main->word)
-				return (-1);
-			if (is_built_in(main) == 1)
-				main->error = create_token(&main->tokens, TOKEN_BUILT_IN, main->word, gc_list);
-			else
-				main->error = create_token(&main->tokens, TOKEN_WORD, main->word, gc_list);
-			if (main->error < 0)
-				return (-1);
-			(*i)++;
-			return 0;
-		}
-		else
-			return (printf(RED"ERROR\nUnfinished quotes!\n"DEFAULT), 0);
-	}
-	return 0; // Return success if no errors occurred
+	ws = *i + 1;
+	(*i)++;
+	while (main->line[*i] && main->line[*i] != '\'')
+		(*i)++;
+	if (quotes_helper(main, i, ws, gc_list) < 0)
+		return (-1);
+	return 0;
 }
 
 // ws = i + 1;

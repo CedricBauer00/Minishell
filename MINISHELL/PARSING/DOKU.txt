@@ -1,22 +1,8 @@
 TODO
 
 - expand fix norm
-- double quotes dix norm
-- syntax checking 
-- FLags -l -wc
-- distingtion between word cmd & file
-
+- syntax checking
 
 ERROR:
 
-minishell> "$USER="
-
----- Token List ----
-Token Type: VAR, Value: cbauer
---------------------	soll so?
-
-minishell> "HEllo world$USER "
----- Token List ----
-Token Type: word, Value: HEllo worldcbauer 
---------------------
-
+- signals für childprozess (ctrl \) impkementation

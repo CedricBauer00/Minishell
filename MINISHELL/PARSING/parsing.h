@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/16 15:39:17 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/18 15:59:30 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <sys/stat.h>
 # include <stdio.h>
 # include <signal.h>
+# include <termios.h>
 // # include "/Users/cbauer/Documents/03_Circle/privat_mini/MINISHELL/PARSING/GC/garbage_collector.h"
 # include "GC/garbage_collector.h"
 
@@ -60,19 +61,17 @@
 typedef enum s_tenum
 {
     TOKEN_NONE = 0x0000,
-    TOKEN_WORD = 0x0001,         //word/file
-    TOKEN_CMD = 0x0002,          //Command
-    TOKEN_ARG = 0x0004,
-    TOKEN_BUILT_IN = 0x0008,     // cd, pwd, export, ...
-    TOKEN_PIPE = 0x0010,         //Symbol: |
-    TOKEN_REDIRECT_IN = 0x0020,  //Symbol: <
-    TOKEN_REDIRECT_OUT = 0x0040, //Symbol: >
-    TOKEN_APPEND = 0x0080,       //Symbol: >>
-    TOKEN_HEREDOC = 0x0100,      //Symbol: <<
-    TOKEN_VAR = 0x0200,          //$ variable
-    TOKEN_EOF = 0x0400,          //End of input
-    TOKEN_FILE = 0x0800,         //file
-    TOKEN_SPACES = 0x1000,       //spaces
+    TOKEN_ARG = 0x0002,         //word
+    TOKEN_FILE = 0x0001,          //file
+    TOKEN_BUILT_IN = 0x0004,     // cd, pwd, export, ...
+    TOKEN_PIPE = 0x008,         //Symbol: |
+    TOKEN_REDIRECT_IN = 0x0010,  //Symbol: <
+    TOKEN_REDIRECT_OUT = 0x0020, //Symbol: >
+    TOKEN_APPEND = 0x0040,       //Symbol: >>
+    TOKEN_HEREDOC = 0x0080,      //Symbol: <<
+    TOKEN_VAR = 0x0100,          //$ variable
+    TOKEN_BONUS = 0x0200,          //End of input
+    TOKEN_SPACES = 0x0400,       //spaces
 }   t_token_type;
 
 
@@ -128,8 +127,7 @@ typedef struct s_shell
 // ----------------------------------------------------------------------
 
 int     main(int argc, char **argv, char **envp);
-// int     create_token(t_token **tokens, t_token_type type, char *str);
-int	create_token(t_token **tokens, t_token_type type, char *str, t_gc_list *gc_list);
+int	    create_token(t_token **tokens, t_token_type type, char *str, t_gc_list *gc_list);
 
 int     append_token(t_token **tokens, t_token *new_token);
 void    free_tokens(t_token *tokens);
@@ -140,11 +138,10 @@ void	set_default(t_main *main);
 // ----------------------------------------------------------------------
 
 int     ft_isspace(char c);
-// char	*ft_strndup(const char *str, size_t n);
 char	*gc_strndup(const char *str, size_t n, t_gc_list *gc_list);
 char	*gc_strdup(const char *str, t_gc_list *gc_list);
 char	*gc_strjoin(char const *s1, char const *s2, t_gc_list *gc_list);
-int	valid_char(int c, int indic);
+int 	valid_char(int c, int indic);
 char	**copy_envp(t_gc_list *gc_lst, char **envp);
 int	    get_envp_count(char **envp);
 
@@ -153,65 +150,67 @@ int	    get_envp_count(char **envp);
 // 							    WORDS
 // ----------------------------------------------------------------------
 
-void	words(t_main *main, int *i, int ws, t_gc_list *gc_list);
+void    words(t_main *main, int *i, int ws, t_gc_list *gc_list);
 
 // ----------------------------------------------------------------------
 // 							  BUILT-INS
 // ----------------------------------------------------------------------
 
-int	is_built_in(t_main *main);
+int	is_built_in(char *value);
 
 // ----------------------------------------------------------------------
 // 							SINGLE_QUOTES
 // ----------------------------------------------------------------------
 
-int	quotes(t_main *main,int *i, t_gc_list *gc_list);
+int     quotes(t_main *main,int *i, t_gc_list *gc_list);
+int 	quotes_helper(t_main *main, int *i, int ws, t_gc_list *gc_list);
 
 // ----------------------------------------------------------------------
 // 							DOUBLE_QUOTES
 // ----------------------------------------------------------------------
 
-int dquotes(t_main *main, int *i, t_gc_list *gc_list);
-int	read_word(t_main *main, int *i, t_gc_list *gc_list);
-int	get_spaces(t_main *main, int *i, t_gc_list *gc_list);
+int     dquotes(t_main *main, int *i, t_gc_list *gc_list);
+int 	dquotes_helper(t_main *main, int *i, t_gc_list *gc_list);
+int 	read_word(t_main *main, int *i, t_gc_list *gc_list);
+int 	get_spaces(t_main *main, int *i, t_gc_list *gc_list);
 
 // ----------------------------------------------------------------------
 // 							    PIPES
 // ----------------------------------------------------------------------
 
-int	pipes(t_main *main, t_gc_list *gc_list, int i);
+int	    pipes(t_main *main, t_gc_list *gc_list, int i);
 
 // ----------------------------------------------------------------------
 // 							  REDIRECTS
 // ----------------------------------------------------------------------
 
-int	operator(t_main *main, int i, char c, t_gc_list *gc_list);
+int 	operator(t_main *main, int i, char c, t_gc_list *gc_list);
 
 // ----------------------------------------------------------------------
 // 							   APPEND
 // ----------------------------------------------------------------------
 
-int	append(t_main *main, int i, t_gc_list *gc_list);
+int	    append(t_main *main, int i, t_gc_list *gc_list);
 
 // ----------------------------------------------------------------------
 // 							   HEREDOC
 // ----------------------------------------------------------------------
 
-int	heredoc(t_main *main, int i, t_gc_list *gc_list);
-int	check_char(t_main *main, int i, int indic);
-int is_quote(t_main *main, int i);
+int	    heredoc(t_main *main, int i, t_gc_list *gc_list);
+int	    check_char(t_main *main, int i, int indic);
+int     is_quote(t_main *main, int i);
 char	*heredoc_input(char *del, t_gc_list *gc_list);
-int	heredoc_exec(char *input, t_main *main);
+int	    heredoc_exec(char *input, t_main *main);
 
 // ----------------------------------------------------------------------
 // 							   EXPANDS
 // ----------------------------------------------------------------------
 
-int is_valid_char(char c);
-int	expands(t_main *main, int *i, int ws, t_gc_list *gc_list);
+int     is_valid_char(char c);
+int	    expands(t_main *main, int *i, int ws, t_gc_list *gc_list);
 void	variables(t_main *main, int i, int ws, int len, t_gc_list *gc_list);
-int	special_character(t_main *main, int *i, char *value, t_gc_list *gc_list);
-int	expand_helper(t_main *main, int *i, int ws, t_gc_list *gc_list);
+int	    special_character(t_main *main, int *i, char *value, t_gc_list *gc_list);
+int	    expand_helper(t_main *main, int *i, int ws, t_gc_list *gc_list);
 
 // ----------------------------------------------------------------------
 // 							 SHELL_INFO
@@ -233,13 +232,16 @@ int	validate_syntax(t_token *token);
 void null_node_all_free(t_gc_list **gc_lst);
 void	signal_func(int sig);
 int	node_space_else_if(t_token **temp, t_gc_list *gc_list);
+int	ft_strcmp(char *s1, char *s2);
+
+void	lex_tokens_correctly(t_token *tokens);
+int	check_for_command(t_token *tokens);
+int	syntax_helper(t_token **cur);
+
+void	print_err(char *s1, char *s2, char *s3, int indic);
+void	choose_error_statement(int indic, char *value);
+
 // int	check_operator(t_main *main, int *i, t_gc_list *gc_list);
 // int	check_operator2(t_main *main, int *i, t_gc_list *gc_list);
 
-// copy_envp.c  -- ok! 
-// char    **copy_envp(t_gc_list *gc_lst, char **envp);
-// int     get_envp_count(char **envp);
-//built_in
-//pwd
-//cd
 #endif

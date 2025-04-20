@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   p_words.c                                          :+:      :+:    :+:   */
+/*   m_words.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 11:23:13 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/14 10:54:48 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/18 12:00:35 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ void	words(t_main *main, int *i, int ws, t_gc_list *gc_list)
 		(*i)++;
 	len = *i - ws;
 	main->word = gc_strndup(main->line + ws, len, gc_list);
-	if (is_built_in(main) == 1)
+	if (is_built_in(main->word) == 1)
 		main->error = create_token(&main->tokens, TOKEN_BUILT_IN, main->word, gc_list);
 	else
-		main->error = create_token(&main->tokens, TOKEN_WORD, main->word, gc_list);
+		main->error = create_token(&main->tokens, TOKEN_ARG, main->word, gc_list);
 	t_gc_list *find = find_node(gc_list, main->word);
 	(void)find;
 	delete_node(&gc_list, find);

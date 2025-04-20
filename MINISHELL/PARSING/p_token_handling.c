@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:30:51 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/15 14:48:48 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/18 13:07:28 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,8 @@ int	node_space_else_if(t_token **temp, t_gc_list *gc_list)
 		&& (*temp)->next->type != TOKEN_REDIRECT_IN
 		&& (*temp)->next->type != TOKEN_REDIRECT_OUT
 		&& (*temp)->next->type != TOKEN_HEREDOC
-		&& (*temp)->next->type != TOKEN_APPEND)
+		&& (*temp)->next->type != TOKEN_APPEND
+		&& (*temp)->next->type != TOKEN_PIPE)
 	{
 		if (node_spaces_helper(*temp, gc_list) < 0)
 			return (-1);
@@ -97,6 +98,7 @@ int	check_tokens(t_token *temp)
 		&& temp->type != TOKEN_HEREDOC
 		&& temp->type != TOKEN_REDIRECT_IN
 		&& temp->type != TOKEN_REDIRECT_OUT
+		&& temp->type != TOKEN_PIPE
 		&& temp->next->type != TOKEN_SPACES)
 		return (0);
 	return (-1);

@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 09:58:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/16 14:49:03 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/16 16:32:58 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	*check_for_var(t_main *main, char *var, int len, t_gc_list *gc_list)
 
 int	only_$(t_main *main, t_gc_list *gc_list)
 {
-	main->error = create_token(&main->tokens, TOKEN_WORD, "$", gc_list);
+	main->error = create_token(&main->tokens, TOKEN_ARG, "$", gc_list);
 	return (0);
 }
 
@@ -86,7 +86,7 @@ int	special_character(t_main *main, int *i, char *value, t_gc_list *gc_list)
 	value = ft_itoa(shell->last_status_exit);
 	if (!value)
 		return (-1);
-	main->error = create_token(&main->tokens, TOKEN_WORD, value, gc_list);
+	main->error = create_token(&main->tokens, TOKEN_ARG, value, gc_list);
 	(*i)++;
 	if (value)
 		free(value);

@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/15 14:34:06 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/18 12:07:25 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	create_token(t_token **tokens, t_token_type type, char *str, t_gc_list *gc_l
 	return (append_token(tokens, new_token));
 }
 
-void print_tokens(t_token *tokens)
+void print_token(t_token *tokens)
 {
 	if (!tokens)
 		return ;
@@ -108,7 +108,7 @@ void print_tokens(t_token *tokens)
 		else if (tokens->type == 8)
 			printf("Token Type: %s, Value: %s\n", "append", tokens->value);
 		else if (tokens->type == 9)
-			printf("Token Type: %s, Value: %s\n", "heredoc", tokens->value);
+			printf("!!!!!!Token Type: %s, Value: %i\n", "heredoc", tokens->value[0]);
 		else if (tokens->type == 12)
 			printf("Token Type: %s, Value: %s\n", "VAR", tokens->value);
 		else
