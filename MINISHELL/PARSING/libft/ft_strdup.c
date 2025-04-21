@@ -1,36 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/17 13:46:52 by cbauer            #+#    #+#             */
-/*   Updated: 2024/10/18 15:09:45 by cbauer           ###   ########.fr       */
+/*   Created: 2024/10/08 13:58:21 by cbauer            #+#    #+#             */
+/*   Updated: 2025/03/28 12:51:36 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strdup(const char *str)
 {
-	char	*newstr;
 	size_t	len;
 	size_t	counter;
-	size_t	i;
+	char	*ptr;
 
-	if (s1[0] == '\0' && s2[0] == '\0')
-		return (ft_strdup(""));
-	len = ft_strlen(s1) + ft_strlen(s2);
-	newstr = (char *)malloc((len + 1) * sizeof(char));
-	if (!newstr)
-		return (0);
-	counter = -1;
-	while (s1[++counter] != '\0')
-		newstr[counter] = s1[counter];
-	i = 0;
-	while (s2[i] != '\0')
-		newstr[counter++] = s2[i++];
-	newstr[counter] = '\0';
-	return (newstr);
+	len = ft_strlen(str);
+	ptr = malloc(len * sizeof(char) + 1);
+	if (!ptr)
+		return (NULL);
+	counter = 0;
+	while (str[counter] != '\0')
+	{
+		ptr[counter] = str[counter];
+		counter++;
+	}
+	ptr[counter] = '\0';
+	return (ptr);
 }

@@ -1,58 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strndrup.c                                      :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/18 15:19:46 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/18 15:23:42 by cbauer           ###   ########.fr       */
+/*   Created: 2024/10/08 11:15:31 by cbauer            #+#    #+#             */
+/*   Updated: 2025/04/03 15:11:57 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../INCLUDE/libft/libft.h"
-#include <stdio.h>
-
+#include "libft.h"
 
 size_t	ft_strlen(const char *str)
 {
 	int	counter;
 
 	counter = 0;
+	if (!str)
+		return (0);
 	while (str[counter] != '\0')
 		counter++;
 	return (counter);
 }
 
-char	*ft_strndup(const char *str, size_t n)
-{
-	size_t	len;
-	size_t	counter;
-	char	*ptr;
-
-	len = ft_strlen(str);
-	if (n < len)
-		len = n;
-	ptr = malloc((len + 1) * sizeof(char));
-	if (!ptr)
-		return (NULL);
-	counter = 0;
-	while (counter < len && str[counter] != '\0')
-	{
-		ptr[counter] = str[counter];
-		counter++;
-	}
-	ptr[counter] = '\0';
-	return (ptr);
-}
-
-int main()
-{
-	int i = 5;
-	char *str = "Helloooo!";
-	char *s;
-
-	s = ft_strndup(str, i);
-	printf("%s\n", s);
-	return (0);
-}
+// int main()
+// {
+// 	printf("%d\n", ft_strlen("aasdfgg"));
+// 	return (0);
+// }

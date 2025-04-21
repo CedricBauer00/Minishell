@@ -1,33 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   m_builtins.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/08 13:58:21 by cbauer            #+#    #+#             */
-/*   Updated: 2024/10/24 10:37:51 by cbauer           ###   ########.fr       */
+/*   Created: 2025/03/31 10:34:00 by cbauer            #+#    #+#             */
+/*   Updated: 2025/04/20 10:40:01 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "parsing.h"
 
-char	*ft_strdup(const char *str)
+int	is_built_in(char *value)
 {
-	size_t	len;
-	size_t	counter;
-	char	*ptr;
-
-	len = ft_strlen(str);
-	ptr = malloc(len * sizeof(char) + 1);
-	if (!ptr)
-		return (NULL);
-	counter = 0;
-	while (str[counter] != '\0')
-	{
-		ptr[counter] = str[counter];
-		counter++;
-	}
-	ptr[counter] = '\0';
-	return (ptr);
+	if ((ft_strcmp(value, "cd") == 0)
+		|| (ft_strcmp(value, "echo") == 0)
+		|| (ft_strcmp(value, "export") == 0)
+		|| (ft_strcmp(value, "unset") == 0)
+		|| (ft_strcmp(value, "env") == 0)
+		|| (ft_strcmp(value, "pwd") == 0)
+		|| (ft_strcmp(value, "exit") == 0))
+		return (1);
+	else
+		return (0);
 }

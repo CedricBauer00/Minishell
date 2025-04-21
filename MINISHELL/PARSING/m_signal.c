@@ -1,18 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Lexer_utils.c                                      :+:      :+:    :+:   */
+/*   m_signal.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/18 17:53:21 by cbauer            #+#    #+#             */
-/*   Updated: 2025/03/18 17:53:38 by cbauer           ###   ########.fr       */
+/*   Created: 2025/04/15 10:26:29 by cbauer            #+#    #+#             */
+/*   Updated: 2025/04/20 12:33:49 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../INCLUDE/main.h"
+#include "parsing.h"
 
-int	ft_isspace(char c)
+void	signal_func(int sig)
 {
-	return (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f' || c == '\v');
+	(void)sig;
+	write(1, "\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+}
+
+int	ttyattr(void)
+{
+	struct termios	temp;
+
+	if (tcgetattr(0, &temp) < 0)
+		return (-1);
+	temp.c_lflag &= ~(ECHOCTL);
+	if (tcsetattr(0, TCSANOW, &temp) < 0)
+		return (-1);
+	return (0);
 }

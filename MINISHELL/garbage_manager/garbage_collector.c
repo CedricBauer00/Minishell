@@ -77,13 +77,13 @@ void	gc_free(t_gc_list **gc_lst, t_data_type data_type)
     *gc_lst = NULL;
 }
 
-void	print_list(t_gc_list *gc_lst)
+void	print_list(t_gc_list **gc_lst)
 {
 	t_gc_list	*cur;
 	int			i;
 
 	i = 1;
-	cur = gc_lst->next;
+	cur = (*gc_lst)->next;
 	while(cur != NULL)
 	{
 		printf("[%d]th NODE, %p\n",i, cur->data);
