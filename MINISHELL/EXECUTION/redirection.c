@@ -41,14 +41,14 @@ int	re_dir_out(t_io_streams_list *io_streams)
 int	in_redir_file_open(t_io_streams_list *io_streams, char *in_filename)
 {
 	int		fd;
-	fd = open(in_filename, O_RDONLY, O_CREAT);
+	fd = open(in_filename, O_RDONLY);
 	if (fd == -1)
 	{
 		perror(RED" < file open faield\n"DEFAULT);
 		return -1;
 	}
-	fprintf(stderr, YELLOW"[pid %d] open(filename %s, io_streams->fd_in_filename,  %d)\n"DEFAULT,getpid(),in_filename, fd);
 	io_streams->fd_in_file = fd;
+	fprintf(stderr, YELLOW"[pid %d] open() in_filename %s, io_streams->fd_in_filename,  %d)\n"DEFAULT,getpid(),in_filename, fd);
 	return 1;
 }
 
@@ -61,8 +61,22 @@ int	out_redir_file_open(t_io_streams_list *io_streams, char *out_filename)
 		perror(RED" > file open faield\n"DEFAULT);
 		return (-1);
 	}
-	fprintf(stderr, YELLOW"[pid %d]open(filename : %s, io_streams->fd_in_filename, %d)\n"DEFAULT, getpid(), out_filename, fd);
 	io_streams->fd_out_file = fd;
+	fprintf(stderr, YELLOW"[pid %d]open() out_filename : %s, io_streams->fd_out_filename, %d)\n"DEFAULT, getpid(), out_filename, fd);
+	return 1;
+}
+
+int	append_redir_file_open(t_io_streams_list *io_streams, char *appned_file_name)
+{
+	int		fd;
+	fd = open(appned_file_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (fd == -1)
+	{
+		perror(RED" > file open faield\n"DEFAULT);
+		return (-1);
+	}
+	io_streams->fd_out_file = fd;
+	fprintf(stderr, YELLOW"[pid %d]open() appned_file_name : %s, fd_out_filename, %d)\n"DEFAULT, getpid(), appned_file_name, fd);
 	return 1;
 }
 
@@ -74,7 +88,6 @@ int	handle_re_dir(t_cmd_block *cmd_block)
 		re_dir_out(cmd_block->io_streams);
 	return 0;
 }
-
 
 //todo here if heredoc then just run it here 
 void	set_io_streams(t_cmd_block *cmd)	
@@ -99,6 +112,11 @@ void	set_io_streams(t_cmd_block *cmd)
 		if (io_streams->outfile_name)
 		{
 			out_redir_file_open(io_streams, io_streams->outfile_name);
+			re_dir_out(io_streams);
+		}
+		if (io_streams->append_file_name)
+		{
+			append_redir_file_open(io_streams, io_streams->append_file_name);
 			re_dir_out(io_streams);
 		}
 		io_streams = io_streams->next;

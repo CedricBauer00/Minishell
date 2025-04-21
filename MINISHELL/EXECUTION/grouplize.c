@@ -36,8 +36,6 @@ void grouplize(t_token *token, t_cmd_block **cmd_block, t_gc_list *gc_lst)
 	}
 }
 
-//think aobut that how can we distinguish cmd and word
-//todo do not assign just address otherwise use strdup for makking cmd_block list's node.
 t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc_list *gc_lst)
 {
 	t_cmd_block *new_cmd_block;
@@ -49,20 +47,14 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc_list *gc_lst)
 	is_exited((t_cmd_block*)new_cmd_block, gc_lst);
 	while(cur && cur->type != TOKEN_PIPE)
 	{
-		//if token_args
-		// cat -e -l -a
 		if (cur && cur->type == TOKEN_ARGS)
 		{
 			new_cmd_block->args = gc_strdup(cur->value, gc_lst);
 		}
-		
-		//TOKEN_ARGS = cmd -a -l -k filename
-
 		if (cur && cur->type == TOKEN_BUILT_IN)
 		{
 			new_cmd_block->built_in = gc_strdup(cur->value, gc_lst);
 		}
-
 		if (cur && (cur->type & (TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT | TOKEN_APPEND | TOKEN_HEREDOC)))  //token->value : < filename
 		{
 			new_io_streams = init_io_stream_struct(gc_lst);
@@ -78,35 +70,23 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc_list *gc_lst)
 				}
 				last->next = new_io_streams;
 			}
-			if(cur->next && cur->next->type == TOKEN_FILE)
+			if(cur->type & (TOKEN_HEREDOC))
+			{
+				fprintf(stderr, RED"if heredoc in grouplize()\n"DEFAULT);
+				//todo i did it for the test later delete
+				new_io_streams->heredoc_eof = gc_strdup("eof", gc_lst);
+					// new_io_streams->heredoc_eof = gc_strdup(cur->value, gc_lst);
+			}
+			else if(cur->next && cur->next->type == TOKEN_FILE)
 			{
 				if (cur->type == TOKEN_REDIRECT_IN)
 					new_io_streams->infile_name = gc_strdup(cur->next->value, gc_lst);
-				else if (cur->type == TOKEN_REDIRECT_OUT || cur->type == TOKEN_APPEND)
+				else if (cur->type == TOKEN_REDIRECT_OUT)
 					new_io_streams->outfile_name = gc_strdup(cur->next->value, gc_lst);
+				else if (cur->type == TOKEN_APPEND)
+					new_io_streams->append_file_name = gc_strdup(cur->next->value, gc_lst);
 				cur = cur->next;
 				continue;
-			}
-
-			//TODO FIX IT 
-			else if(cur->type & (TOKEN_HEREDOC))
-			{
-				fprintf(stderr, RED"if heredoc in grouplize()\n"DEFAULT);
-				if (cur->prev->type == TOKEN_ARGS)
-				{
-					new_cmd_block->args = gc_strdup(cur->prev->value, gc_lst);
-				}
-				// new_io_streams->heredoc_eof = gc_strdup(cur->value, gc_lst);
-
-				//for the test
-				new_io_streams->heredoc_eof = gc_strdup("eof", gc_lst);
-			}
-			else if(cur->prev && cur->prev->type == TOKEN_FILE) // -a filename 
-			{
-				if (cur->type == TOKEN_REDIRECT_IN)
-					new_io_streams->infile_name = gc_strdup(cur->prev->value, gc_lst);
-				else if(cur->type == TOKEN_REDIRECT_OUT || cur->type == TOKEN_APPEND)
-					new_io_streams->outfile_name = gc_strdup(cur->prev->value, gc_lst);
 			}
 			else
 			{

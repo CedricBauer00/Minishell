@@ -55,33 +55,73 @@ void	wait_for_child_and_update_status(t_cmd_block *cur)
 			shell->last_status_exit = 128 + WTERMSIG(status);
 		}
 	}
-	close_pipefd(cur);
+	// close_pipefd(cur);
+}
+
+int heredoc_fd_offset_and_redir(t_cmd_block *cur)
+{
+	if (!cur)
+		return -1;
+	fprintf(stderr, RED"in execute_child cur->io_streams->heredoc_fd: %d\n"DEFAULT, cur->io_streams->heredoc_fd);
+	fprintf(stderr, RED"in execute_child STDIN_FILENO: %d, STDOUT_FILENO: %d\n"DEFAULT, STDIN_FILENO, STDOUT_FILENO);
+	cur->io_streams->heredoc_fd = open("temp_heredoc" ,O_RDWR, 0644);
+	if (cur->io_streams->heredoc_fd < 0)
+	{
+		return -1;
+	}
+	if (dup2(cur->io_streams->heredoc_fd, STDIN_FILENO) == -1)
+	{
+		close(cur->io_streams->heredoc_fd);
+		unlink("temp_heredoc");
+		return -1;
+	}
+	fprintf(stderr, RED"[pid %d] dup2(%d, %d)\n"DEFAULT, getpid(), cur->io_streams->heredoc_fd, STDIN_FILENO);
+	close(cur->io_streams->heredoc_fd);
+	unlink("temp_heredoc");
+	return 1;
 }
 	
 void	single_cmd_execute(t_cmd_block *cur, pid_t pid, t_gc_list *gc_lst)
 {
 	if (!pid || !cur)
 		return;
-	//todo single command!
-	fprintf(stderr,"isin here \n");
 	if (cur->built_in)
 	{
+		if (cur->io_streams && cur->io_streams->heredoc_eof)
+		{
+			if (heredoc_fd_offset_and_redir(cur) == -1)
+			{
+				perror("errror");
+				//todo free
+				exit(1);
+			}
+		}
 		set_io_streams(cur);
 		//todo execute_builtin();
+		//recover STDIN and STDOUT maybe. in hier? oder in der main_excute funktion? 
 	}
+
 	else if(cur->args) //if external cmd
 	{
 		pid = fork();
-		fprintf(stderr, YELLOW"fork() : %d \n"DEFAULT, pid);
+		fprintf(stderr, YELLOW" singlecmd fork() : %d \n"DEFAULT, pid);
 		if (pid == 0)
 		{
+			if (cur->io_streams && cur->io_streams->heredoc_eof)
+			{
+				if (heredoc_fd_offset_and_redir(cur) == -1)
+				{
+					perror("errror");
+					//todo free
+					exit(1);
+				}
+			}
 			set_io_streams(cur);
 			is_executable_cmd(cur, gc_lst);
 		}
 		else
 			wait_for_child_and_update_status(cur);
 	}
-	//todo wenn heredoc in child prozess ausfuehrt dann muss es hier recover werden.
 }
 
 void	execute_child(pid_t pid, t_cmd_block *cur, t_gc_list *gc_lst, t_shell *shell)
@@ -90,22 +130,15 @@ void	execute_child(pid_t pid, t_cmd_block *cur, t_gc_list *gc_lst, t_shell *shel
 	{
 		set_io_streams(cur);
 		processing_pipe(cur, shell, gc_lst);
-		//TODO wenn heredoc in child prozess ausfuehrt dann muss es hier recover werden.
-		//error
-		//ich kann in heredoc_temp datas eingeben.
-		if (cur->io_streams->heredoc_fd)
+		if (cur->io_streams && cur->io_streams->heredoc_eof)
 		{
-			fprintf(stderr, "in execute_child cur->io_streams->heredoc_fd: %d\n", cur->io_streams->heredoc_fd);
-			fprintf(stderr, "in execute_child STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
-			if (dup2(cur->io_streams->heredoc_fd, STDIN_FILENO) == -1)
+			if (heredoc_fd_offset_and_redir(cur) == -1)
 			{
-				perror(RED"dup2() heredocfd failed in execute_child()"DEFAULT);
-				//todo free.
-				//exit(1);
+				perror("errror");
+				//todo free
+				exit(1);
 			}
-			//close(cur->io_streams->heredoc_fd);
 		}
-
 		if (cur->built_in)
 		{
 			printf(RED"it is builtin we need to implement it\n"DEFAULT);
@@ -115,7 +148,6 @@ void	execute_child(pid_t pid, t_cmd_block *cur, t_gc_list *gc_lst, t_shell *shel
 		{
 			is_executable_cmd(cur, gc_lst);
 		}
-		
 	}
 }
 
@@ -220,18 +252,11 @@ void	main_execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 
 	while(heredoc_check)
 	{
-		int	fd_org_read = dup(STDIN_FILENO);
 		printf("heredoc_check->io_streams->heredoc_eof %s\n", heredoc_check->io_streams->heredoc_eof);
 		if (heredoc_check->io_streams->heredoc_eof)
 		{
 			process_heredoc(heredoc_check->io_streams);
 			printf(RED"heredocfd %d\n"DEFAULT, heredoc_check->io_streams->heredoc_fd);
-			// if (dup2(heredoc_check->io_streams->heredoc_fd, STDIN_FILENO) == -1)
-			// {
-			// 	perror(RED"dup2() heredocfd failed in validate_cmd_block()"DEFAULT);
-			// 	//todo free.
-			// 	//exit(1);
-			// }
 		}
 		heredoc_check = heredoc_check->next;
 	}
@@ -240,7 +265,7 @@ void	main_execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 	//memo if this signle cmd.
 	if(cur && !cur->prev && !cur->next)
 		single_cmd_execute(cur, pid, gc_lst);
-	
+
 	while(cur)
 	{
 		if (cur->next)
@@ -254,24 +279,37 @@ void	main_execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 			{
 				execute_child(pid, cur, gc_lst, shell);
 			}
-			wait_for_child_and_update_status(cur);
+			close_pipefd(cur);
+			//wait_for_child_and_update_status(cur);
 		}
+
 		//memo if last cmd
 		else if(cur && cur->prev && !cur->next)
 		{
 			pid = fork();
+			fprintf(stderr,YELLOW"[pid %d] fork()\n"DEFAULT, getpid());
 			if (pid == 0)
 				execute_child(pid, cur, gc_lst, shell);
-			else
-				wait_for_child_and_update_status(cur);
+			//wait_for_child_and_update_status(cur);
+			close_pipefd(cur);
 		}
 		cur = cur->next;
 	}
+	
+	cur = cmd_block;
+	wait_for_child_and_update_status(cur);
+// 	cur = cmd_block;
+//     while (cur)
+//     {
+//         if (cur->next == NULL)
+//         {
+//             wait_for_child_and_update_status(cur);
+//         }
+//         cur = cur->next;
+//     }
 	prevent_zombie_process();
+// 	fprintf(stderr, RED"-CHECK ORGINAL STDIN AND STDOUT-\n in execute_child STDIN_FILENO: %d, STDOUT_FILENO: %d\n"DEFAULT, STDIN_FILENO, STDOUT_FILENO);
 }
-
-
-
 
 
 //delete it later 
@@ -285,21 +323,30 @@ static t_token *create_token(t_token_type type, char *value)
 	new->prev = NULL;
 	new->next = NULL;
 	return new;
-}
+} 
 
-//cat < 1.txt < 2.txt | cat -e << eof
+//cat < 1 < 2 | cat -e >> 3
+//cat < 1 < 2 | ls > 3
+//cat < 1 < 2 | grep ehllo >> 4 >> 5
+//cat < 1 < 2 | grep hello >> 2
+//cat < 1 < 2 | cat -e >> 2 
+//cat << eof << eof | cat -e >> 2
 int main(int ac, char *argv[], char *envp[])
 {
 	(void)ac;
 	(void)argv;
-	t_token *t1 = create_token(TOKEN_ARGS, "cat -e");
+	t_token *t1 = create_token(TOKEN_ARGS, "sleep 3");
 	t_token *t2 = create_token(TOKEN_REDIRECT_IN, "<");
-	t_token *t3 = create_token(TOKEN_FILE, "1.txt");
+	t_token *t3 = create_token(TOKEN_FILE, "1");
 	t_token *t4 = create_token(TOKEN_REDIRECT_IN, "<");
-	t_token *t5 = create_token(TOKEN_FILE, "2.txt");
+	t_token *t5 = create_token(TOKEN_FILE, "2");
 	t_token *t6 = create_token(TOKEN_PIPE, "|");
-	t_token *t7 = create_token(TOKEN_ARGS, "cat -e");
-	t_token *t7_1 = create_token(TOKEN_HEREDOC, "<<");
+
+	t_token *t7 = create_token(TOKEN_ARGS, "sleep 10");
+	t_token *t7_1 = create_token(TOKEN_APPEND, ">>");
+	t_token *t7_2 = create_token(TOKEN_FILE, "2");
+
+
 
 	//t_token *t8 = create_token(TOKEN_PIPE, "|");
 	// t_token *t9 = create_token(TOKEN_ARGS, "ls -a");
@@ -319,6 +366,13 @@ int main(int ac, char *argv[], char *envp[])
 	t7->prev = t6;
 	t7->next = t7_1;
 	t7_1->prev = t7;
+	t7_1->next = t7_2;
+	t7_2->prev = t7_1;
+	// t7_2->next = t7_3;
+	// t7_3->prev = t7_2;
+	// t7_3->next = t7_4;
+	// t7_4->prev = t7_3;
+
 	// t7->next = t8;
 	// t8->prev = t7;
 	// t8->next = t9;
@@ -334,19 +388,17 @@ int main(int ac, char *argv[], char *envp[])
 	if(cmd_block_list)
 	{
 		if (cmd_block_list->built_in)
-			printf("cmd_block_list->built_in %s\n", cmd_block_list->built_in);
+			printf("cmd_block_list->built_in : %s\n", cmd_block_list->built_in);
 		if (cmd_block_list->args)
-			printf("cmd_block_list->args %s\n", cmd_block_list->args);
-
+			printf("cmd_block_list->args : %s\n", cmd_block_list->args);
 		printf("cmd_block_list->io_streams->infile_name : %s\n", cmd_block_list->io_streams->infile_name);
-		printf("cmd_block_list->io_streams->next->infile_name : %s\n", cmd_block_list->io_streams->next->infile_name);
-		fprintf(stderr, "cmd->io_streams->heredoc_eof %s\n", cmd_block_list->io_streams->heredoc_eof);
-		printf("cmd_block_list->io_streams->outfile_name : %s\n", cmd_block_list->io_streams->outfile_name);
-		printf("cmd_block_list->io_streams->next->outfile_name :%s\n", cmd_block_list->io_streams->next->outfile_name);
-		
-		printf("cmd_block_list->next->io_streams->heredoc_eof : %s\n", cmd_block_list->next->io_streams->heredoc_eof);
-
-		printf("cmd_block_list->pipe : %p\n", cmd_block_list->pipe);
+		// printf("cmd_block_list->io_streams->next->infile_name : %s\n", cmd_block_list->io_streams->next->infile_name);
+		// fprintf(stderr, "cmd->io_streams->heredoc_eof %s\n", cmd_block_list->io_streams->heredoc_eof);
+		// printf("cmd_block_list->io_streams->outfile_name : %s\n", cmd_block_list->io_streams->outfile_name);
+		// printf("cmd_block_list->io_streams->next->outfile_name :%s\n", cmd_block_list->io_streams->next->outfile_name);
+		// printf("cmd_block_list->next->io_streams->heredoc_eof : %s\n", cmd_block_list->next->io_streams->heredoc_eof);
+		// printf("cmd_block_list->pipe : %p\n", cmd_block_list->pipe);
+		printf("cmd_block_list->io_streams->append_filename : %s\n", cmd_block_list->io_streams->append_file_name);
 	}
 	if (cmd_block_list->next)
 	{

@@ -336,7 +336,6 @@ void	close_pipefd(t_cmd_block *cmd)
 		close_middle_pipefd(cmd);
 	else if (cmd->prev && !cmd->next)
 		close_last_pipefd(cmd);
-	
 }
 
 void	processing_pipe(t_cmd_block *cmd, t_shell *shell, t_gc_list* gc_lst)

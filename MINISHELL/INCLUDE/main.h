@@ -84,6 +84,8 @@ typedef struct s_cmd_block //struct being allocated for each token from input
 	struct s_io_streams_list	*io_streams;
 	struct s_pipe				*pipe;
 	pid_t						*child_pids;
+	int							prev_read_end_fd; //pipe 초기값은 -1로.
+	int							cur_fd_write_end;
 	struct s_cmd_block			*prev;
 	struct s_cmd_block			*next;
 }	t_cmd_block;
@@ -91,15 +93,16 @@ typedef struct s_cmd_block //struct being allocated for each token from input
 
 typedef struct s_io_streams_list //> < > <
 {
-	char						*infile_name;
-	char						*outfile_name;
-	int							heredoc_fd;
-	char						*heredoc_eof;
-	char						*heredoc_file;
-	int							fd_org_read;
-	int							fd_org_write;
-	int							fd_in_file;
-	int							fd_out_file;
+	char	*infile_name;
+	char	*outfile_name;
+	char	*append_file_name;
+	char	*heredoc_eof;
+	char	*heredoc_file;
+	int		heredoc_fd;
+	int		fd_org_read;
+	int		fd_org_write;
+	int		fd_in_file;
+	int		fd_out_file;
 	struct s_io_streams_list	*next;
 }	t_io_streams_list;
 
@@ -107,8 +110,6 @@ typedef struct s_io_streams_list //> < > <
 typedef struct s_pipe
 {
 	int					*pipefd;
-	int					prev_read_end_fd; //pipe 초기값은 -1로.
-	int					cur_fd_write_end;
 	// struct s_pipe		*next; //maybe i dont need list
 	// struct s_pipe		*prev; //maybe i dont need list
 }	t_pipe;
@@ -199,8 +200,10 @@ void	close_first_pipefd(t_cmd_block *cmd);
 int		handle_re_dir(t_cmd_block *cmd_block);
 int		re_dir_out(t_io_streams_list *io_streams);
 int		re_dir_in(t_io_streams_list *io_streams);
+int		in_redir_file_open(t_io_streams_list *io_streams, char *in_filename);
+int		out_redir_file_open(t_io_streams_list *io_streams, char *out_filename);
 void	set_io_streams(t_cmd_block *cmd);
-
+int		append_redir_file_open(t_io_streams_list *io_streams, char *appned_file_name);
 //memo exe_utils.c
 void	is_exited(void *failed, t_gc_list *gc_lst);
 
@@ -225,8 +228,8 @@ bool	is_validate_cmd_block(t_cmd_block *cmd_b);
 int	process_heredoc(t_io_streams_list *io_streams);
 
 //memo execute.c
-t_token *create_token(t_token_type type, char *value);
-void	execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell);
+
+void	main_execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell);
 void 	is_executable_cmd(t_cmd_block *cmd_block, t_gc_list *gc_lst);
 //built_in
 //pwd
