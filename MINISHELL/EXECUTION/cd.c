@@ -87,7 +87,6 @@ char	**expand_envp(t_shell *shell, char *new_path)
 	}
 	new_envp[env_count] = new_path;
 	new_envp[env_count + 1] = NULL;
-
 	return (new_envp);
 }
 
@@ -168,27 +167,27 @@ int	ft_setenv(const char *name, const char *value, int overwrite, t_shell *shell
 
 void cd(char **argv, t_shell *shell, t_gc_list *gc_list)
 {
-	shell->cur_dir = getcwd(NULL, 0);
-	if (!shell->cur_dir)
-	{
-		perror(RED"get shell->cur_dir failed"DEFAULT);
-		return ;
-	}
+	shell->cur_dir = my_getcwd(shell, gc_list);
+	// if (!shell->cur_dir)
+	// {
+	// 	perror(RED"get shell->cur_dir failed"DEFAULT);
+	// 	return ;
+	// }
 
-	//test just cd
+	//test just cd 
 	if ((strcmp(argv[1], "cd") == 0 && strlen(argv[1]) == 2) && argv[2] == NULL)
 	{
 		printf(RED"case just cd\n"DEFAULT);
 		char	*homedir;
 
-		homedir = my_getenv(shell->my_envp, "HOME", 4, gc_list);
+		homedir = find_var_in_env(shell->my_envp, "HOME", 4, gc_list);
 		if (chdir(homedir) != 0)
 		{
 			perror(RED "chdir error for 'cd'\n"DEFAULT);
 			free(shell->cur_dir);
 			return ;
 		}
-		char	*new_dir = getcwd(NULL, 0);
+		char	*new_dir = my_getcwd(shell, gc_list);
 		if (new_dir)
 		{
 			shell->old_dir = shell->cur_dir;
@@ -199,30 +198,30 @@ void cd(char **argv, t_shell *shell, t_gc_list *gc_list)
 		else
 		{
 			perror("getcwd error");
-			//free allocated variables;
+			//todo free allocated variables;
 		}
 	}
 
-	//test absolute path
+	//test cd -
 	else if (strcmp(argv[1], "cd") == 0 && strlen(argv[1]) == 2 && argv[2])
 	{
 		if(argv[2][0] == '-' && strlen(argv[2]) == 1)
 		{
 			printf(RED"get in for 'cd -'\n"DEFAULT);
-			shell->old_dir = my_getenv(shell->my_envp, "OLDPWD", 6, gc_list);
+			shell->old_dir = find_var_in_env(shell->my_envp, "OLDPWD", 6, gc_list);
 			if (!shell->old_dir)
 			{
 				fprintf(stderr, RED"cd:OLDPWD not set\n"DEFAULT);
-				free(shell->cur_dir);
+				//todo all free(shell->cur_dir);
 				return ;
 			}
 			if (chdir(shell->old_dir) != 0)
 			{
 				perror(RED "chdir error for cd - \n"DEFAULT);
-				free(shell->cur_dir);
+				//todo all free(shell->cur_dir);
 				return ;
 			}
-			char	*new_dir = getcwd(NULL, 0);
+			char	*new_dir = my_getcwd(shell, gc_list);
 			if (new_dir)
 			{
 				shell->old_dir = shell->cur_dir;
@@ -237,7 +236,7 @@ void cd(char **argv, t_shell *shell, t_gc_list *gc_list)
 			}
 		}
 
-		//test case for getting path
+		//test absolute path
 		else if(is_valid_dir(argv[2]))
 		{
 			printf(RED"argv[2]%s\n"DEFAULT,argv[2]);
@@ -246,7 +245,7 @@ void cd(char **argv, t_shell *shell, t_gc_list *gc_list)
 				perror(RED "chdir error for 'argv[2]' in cd func\n"DEFAULT);
 				free(shell->cur_dir);
 			}
-			char	*new_dir = getcwd(NULL, 0);
+			char	*new_dir = my_getcwd(shell, gc_list);
 			if (new_dir)
 			{
 				shell->old_dir = shell->cur_dir;

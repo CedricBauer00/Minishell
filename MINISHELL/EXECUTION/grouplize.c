@@ -36,25 +36,43 @@ void grouplize(t_token *token, t_cmd_block **cmd_block, t_gc_list *gc_lst)
 	}
 }
 
+
 t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc_list *gc_lst)
 {
 	t_cmd_block *new_cmd_block;
 	t_io_streams_list *new_io_streams;
 	t_token *cur;
+	int	i;
 	
 	cur = *token;
+	t_token *temp = cur;
 	new_cmd_block = init_command_struct(gc_lst);
 	is_exited((t_cmd_block*)new_cmd_block, gc_lst);
-	while(cur && cur->type != TOKEN_PIPE)
+	//todo add make new_cmd_block->**args not *args
+	while(temp && temp->type != TOKEN_PIPE)
+	{
+		if (temp && temp->type == TOKEN_ARGS)
+		{
+			i++;
+		}
+		temp = temp ->next;
+	}
+	new_cmd_block->args = (char**)do_alloc(&gc_lst, sizeof(char*) * (i + 1), TYPE_DOUBLE_PTR, "new_cmd_block->args");
+	is_exited(new_cmd_block->args, gc_lst);
+	i = 0;
+	while(cur && cur->type != TOKEN_PIPE) //[cat] [-e] [hello] [hello] [|]
 	{
 		if (cur && cur->type == TOKEN_ARGS)
 		{
-			new_cmd_block->args = gc_strdup(cur->value, gc_lst);
+			new_cmd_block->args[i] = gc_strdup(cur->value, gc_lst);
+			i++;
 		}
+		
 		if (cur && cur->type == TOKEN_BUILT_IN)
 		{
 			new_cmd_block->built_in = gc_strdup(cur->value, gc_lst);
 		}
+		
 		if (cur && (cur->type & (TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT | TOKEN_APPEND | TOKEN_HEREDOC)))  //token->value : < filename
 		{
 			new_io_streams = init_io_stream_struct(gc_lst);
@@ -93,6 +111,7 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc_list *gc_lst)
 				fprintf(stderr, "syntax error near unexpected token `newline'");
 			}
 		}
+		new_cmd_block->args[i] = NULL;
 		cur = cur->next;
 	}
 	*token = cur;

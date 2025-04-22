@@ -162,9 +162,58 @@ void	execute_child(pid_t pid, t_cmd_block *cur, t_gc_list *gc_lst, t_shell *shel
 	}
 }
 
+// char	**get_splitted_path()
+// {
+// 	t_shell	*shell;
+
+// 	shell = get_shell();
+// 	char *path = find_var_in_env(shell->my_envp, "PATH", 4, gc_lst);
+// 	if (!path)
+// 	{
+// 		//todo error handle
+// 		return NULL;
+// 	}
+//	splitted_path = ft_split(path, ':');
+// 	return splitted_path;
+// }
+
+// char	*get_cmd_path()
+// {
+// 	char	**splitted_path;
+// 	t_shell *shell;
+
+// 	shell = get_shell();
+// 	splitted_path = get_splitted_path();
+// 	int i = 0;
+// 	while(splitted_path[i])
+// 	{
+// 		char *attach_slash_to_cmd = ft_strjoin(splitted_path[i], "/");
+// 		if (!attach_slash_to_cmd)
+// 		{
+// 			//todo error handle
+// 		}
+// 		char *cmd_path = ft_strjoin(attach_slash_to_cmd, cmd_block->args[0]);
+// 		if (!cmd_path)
+// 		{
+// 			//todo error handle
+// 		}
+// 		if (access(cmd_path, F_OK | X_OK) == 0)
+// 		{
+// 			if (execve(cmd_path , cmd_block->args, shell->my_envp) == -1)
+// 			{
+// 				fprintf(stderr, RED"error\n"DEFAULT);
+// 				exit(1);
+// 			}
+// 			exit(0);
+// 		}
+// 		i++;
+// 	}
+// 	fprintf(stderr, RED"command not found: %s\n"DEFAULT, cmd_block->args[0]);
+// 	exit(127);
+//  }
+
 void 	is_executable_cmd(t_cmd_block *cmd_block, t_gc_list *gc_lst)
 {
-	char	**cmd_flags;
 	char	**splitted_path;
 	t_shell *shell;
 	bool 	is_executable;
@@ -176,64 +225,34 @@ void 	is_executable_cmd(t_cmd_block *cmd_block, t_gc_list *gc_lst)
 	{
 		//todo error handle
 	}
-
 	splitted_path = ft_split(path, ':');
-	/*
-		usr/local/bin
-		usr/bin
-		sbin/
-	*/
 	int i = 0;
 	while(splitted_path[i])
 	{
-		if (splitted_path[i] == NULL)
-			break;
-		/*
-		usr/local/bin/
-		usr/bin/
-		sbin/
-		*/
 		char *attach_slash_to_cmd = ft_strjoin(splitted_path[i], "/");
 		if (!attach_slash_to_cmd)
 		{
 			//todo error handle
 		}
-		/*
-		usr/local/bin/[cmd_flags[0]]
-		usr/bin/[cmd_flags[0]]
-		sbin/[cmd_flags[0]]
-		*/
 		char *cmd_path = ft_strjoin(attach_slash_to_cmd, cmd_block->args[0]);
 		if (!cmd_path)
 		{
 			//todo error handle
 		}
-		if (access(cmd_path, F_OK | X_OK) == -1)
+		if (access(cmd_path, F_OK | X_OK) == 0)
 		{
-			//todo error handle
-			i++;
-			continue;
-		}
-		else
-		{
-			//printf(GREEN"there is file\n"DEFAULT);
-			is_executable = true; 
-		}
-		if (is_executable == true)
-		{
-			fprintf(stderr, YELLOW"execve() %s\n"DEFAULT, cmd_path);
 			if (execve(cmd_path , cmd_block->args, shell->my_envp) == -1)
 			{
+				fprintf(stderr, RED"error\n"DEFAULT);
 				exit(1);
 			}
+			else
+				exit(0);
 		}
-		else
-		{
-			fprintf(stderr, RED"not found cmd_path %s"DEFAULT, cmd_path);
-			exit(1);
-		}
+		i++;
 	}
-	exit(0);
+	fprintf(stderr, RED"command not found: %s\n"DEFAULT, cmd_block->args[0]);
+	exit(127);
 }
 
 
@@ -253,8 +272,7 @@ void	main_execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 		exit(1);
 	}
 
-	//todo check again multiple heredoc 
-	while(heredoc_check->io_streams)
+	while(heredoc_check)
 	{
 		if (heredoc_check->io_streams && heredoc_check->io_streams->heredoc_eof)
 		{
@@ -264,15 +282,15 @@ void	main_execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 		}
 		else
 			break;
-		heredoc_check->io_streams = heredoc_check->io_streams->next;
+		heredoc_check = heredoc_check->next;
 	}
+
 
 	//memo if this single cmd
 	if(cur && !cur->prev && !cur->next)
 	{
 		fprintf(stderr, RED"1\n"DEFAULT);
 		single_cmd_execute(cur, pid, gc_lst);
-
 	}
 
 	while(cur)
@@ -326,27 +344,28 @@ static t_token *create_token(t_token_type type, char *value)
 //cat < 1 < 2 | cat -e >> 2 
 //cat << eof << eof | cat -e >> 2
 //cat < 1 < 2 | cat -e >> 2 | ls -a | cat -b -e
+//ls -a -n -l < 1 -R
 
-//cat -e -b -c < file -d
 
 int main(int ac, char *argv[], char *envp[])
 {
 	(void)ac;
 	(void)argv;
-	t_token *t1 = create_token(TOKEN_ARGS, "ls");
-	t_token *t1_2 = create_token(TOKEN_ARGS, "-a");
-	t_token *t1_3 = create_token(TOKEN_ARGS, "-n");
-	t_token *t1_4 = create_token(TOKEN_ARGS, "-l");
-	t_token *t1_5 = create_token(TOKEN_REDIRECT_IN, "<");
-	t_token *t1_6 = create_token(TOKEN_FILE, "1");
-	t_token *t1_7 = create_token(TOKEN_ARGS, "-R");
+	t_token *t1 = create_token(TOKEN_ARGS, "cat");
+	// t_token *t1_2 = create_token(TOKEN_ARGS, "-a");
+	// t_token *t1_3 = create_token(TOKEN_ARGS, "-n");
+	// t_token *t1_4 = create_token(TOKEN_ARGS, "-l");
+	// t_token *t1_5 = create_token(TOKEN_REDIRECT_IN, "<");
+	// t_token *t1_6 = create_token(TOKEN_FILE, "1");
+	// t_token *t1_7 = create_token(TOKEN_ARGS, "-R");
 	
-	// t_token *t2 = create_token(TOKEN_REDIRECT_IN, "<");
+	t_token *t2 = create_token(TOKEN_ARGS, "cat");
 	// t_token *t3 = create_token(TOKEN_FILE, "1");
-	// t_token *t4 = create_token(TOKEN_REDIRECT_IN, "<");
-	// t_token *t5 = create_token(TOKEN_FILE, "2");
-	// t_token *t6 = create_token(TOKEN_PIPE, "|");
-	// t_token *t7 = create_token(TOKEN_ARGS, "cat -e");
+	t_token *t4 = create_token(TOKEN_ARGS, "cat");
+	//t_token *t5 = create_token(TOKEN_FILE, "2");
+	t_token *t6 = create_token(TOKEN_PIPE, "|");
+	t_token *t7 = create_token(TOKEN_ARGS, "cat");
+	t_token *t8 = create_token(TOKEN_ARGS, "-e");
 	// t_token *t7_1 = create_token(TOKEN_APPEND, ">>");
 	// t_token *t7_2 = create_token(TOKEN_FILE, "2");
 	// t_token *t8 = create_token(TOKEN_PIPE, "|");
@@ -355,26 +374,31 @@ int main(int ac, char *argv[], char *envp[])
 	// t_token *t11 = create_token(TOKEN_ARGS, "cat -b -e");
 
 
-	t1->next = t1_2;
-	t1_2->prev = t1;
-	t1_2->next = t1_3;
-	t1_3->prev = t1_2;
-	t1_3->next = t1_4;
-	t1_4->prev = t1_3;
-	t1_4->next = t1_5;
-	t1_5->prev = t1_4;
-	t1_5->next = t1_6;
-	t1_6->prev = t1_5;
-	t1_6->next = t1_7;
-	t1_7->prev = t1_6;
-	// t1->next = t2;
-	// t2->prev = t1;
-	// t2->next = t3;
-	// t3->prev = t2;
-	// t3->next = t4;
-	// t4->prev = t3;
-	// t4->next = t5;
-	// t5->prev = t4;
+	// t1->next = t1_2;
+	// t1_2->prev = t1;
+	// t1_2->next = t1_3;
+	// t1_3->prev = t1_2;
+	// t1_3->next = t1_4;
+	// t1_4->prev = t1_3;
+	// t1_4->next = t1_5;
+	// t1_5->prev = t1_4;
+	// t1_5->next = t1_6;
+	// t1_6->prev = t1_5;
+	// t1_6->next = t1_7;
+	// t1_7->prev = t1_6;
+	t1->next = t2;
+	t2->prev = t1;
+
+	t2->next = t4;
+	t4->prev = t2;
+
+	t4->next = t6;
+	t6->prev = t4;
+
+	t6->next = t7;
+	t7->prev = t6;
+	t7->next = t8;
+	t8->prev = t7;
 	// t5->next = t6;
 	// t6->prev = t5;
 	// t6->next = t7;
@@ -399,23 +423,24 @@ int main(int ac, char *argv[], char *envp[])
 	grouplize(t1, &cmd_block_list, gc->temp);
 	int i = 0;
 	t_cmd_block *check = cmd_block_list;
-	while (check)
-	{
-		while (check->args && check->args[i])
-		{
-			if (check->args[i])
-				printf("args : %s\n", check->args[i]);
-			i++;
-		}
-		while (check->io_streams && check->io_streams->infile_name)
-		{
-			if (check->io_streams->infile_name)
-				printf("file : %s\n", check->io_streams->infile_name);
-				check->io_streams = check->io_streams->next;
-		}
-		printf("cmd_block_list %p\n",check);
-		check = check->next;
-	}
+	
+	// while (check)
+	// {
+	// 	while (check->args && check->args[i])
+	// 	{
+	// 		if (check->args && check->args[i])
+	// 			printf("args : %s\n", check->args[i]);
+	// 		i++;
+	// 	}
+	// 	while (check->io_streams && check->io_streams->infile_name)
+	// 	{
+	// 		if (check->io_streams->infile_name)
+	// 			printf("file : %s\n", check->io_streams->infile_name);
+	// 			check->io_streams = check->io_streams->next;
+	// 	}
+	// 	printf("cmd_block_list %p\n",check);
+	// 	check = check->next;
+	// }
 
 
 	// if(cmd_block_list)

@@ -31,7 +31,6 @@ char	**copy_envp(t_gc_list *gc_lst, char **envp)
 		printf(RED "copy_envp()edge case\n" DEFAULT);
 		return (NULL);
 	}
-	//printf("my_envp %p\n", my_envp);
 	while (i < count)
 	{
 		my_envp[i] = gc_strdup(envp[i], gc_lst);
