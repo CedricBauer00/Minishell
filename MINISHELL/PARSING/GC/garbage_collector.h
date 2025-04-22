@@ -6,12 +6,12 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:41:48 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/20 14:21:11 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/22 11:53:56 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GABAGE_COLLECTOR_H
-#define GABAGE_COLLECTOR_H
+#ifndef GARBAGE_COLLECTOR_H
+# define GARBAGE_COLLECTOR_H
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -19,7 +19,7 @@
 # include <stdbool.h>
 # include "../libft/libft.h"
 
-typedef enum	e_data_type
+typedef enum e_data_type
 {
 	TYPE_SINGLE_PTR,
 	TYPE_DOUBLE_PTR,
@@ -27,7 +27,7 @@ typedef enum	e_data_type
 	TYPE_END
 }	t_data_type;
 
-typedef struct	s_gc_list
+typedef struct s_gc_list
 {
 	void				*data;
 	struct s_gc_list	*next;
@@ -73,4 +73,4 @@ void		print_list(t_gc_list *gc_lst);
 
 char		*gc_strdup(const char *str, t_gc_list *gc_lst);
 
-# endif
+#endif
