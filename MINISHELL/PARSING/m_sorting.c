@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 12:21:35 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/20 13:07:46 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/22 16:40:43 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	lex_tokens_correctly(t_token *tokens)
 	while (tokens)
 	{
 		if (tokens->next != NULL && tokens->type & (TOKEN_REDIRECT_IN
-				| TOKEN_REDIRECT_OUT | TOKEN_APPEND | TOKEN_HEREDOC)
+				| TOKEN_REDIRECT_OUT | TOKEN_APPEND)
 			&& tokens->next->type & (TOKEN_ARG | TOKEN_BUILT_IN | TOKEN_VAR))
 			tokens->next->type = TOKEN_FILE;
 		else if (cmd == 0 && (tokens->type == TOKEN_ARG

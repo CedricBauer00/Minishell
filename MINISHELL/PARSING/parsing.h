@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/20 13:22:45 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/22 17:03:32 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,6 +200,8 @@ int		append(t_main *main, int i, t_gc_list *gc_list);
 int		heredoc(t_main *main, int i, t_gc_list *gc_list);
 char	*heredoc_input(char *del, t_gc_list *gc_list);
 int		heredoc_exec(char *input, t_main *main);
+char	*del_quote(char *word, int i, t_gc_list *gc_list);
+int		heredoc_quote_helper(char *word);
 
 // ----------------------------------------------------------------------
 // 							   EXPANDS
