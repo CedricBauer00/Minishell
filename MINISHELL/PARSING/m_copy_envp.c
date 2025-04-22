@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 12:56:46 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/20 12:57:42 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/22 11:59:57 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,7 @@ char	**copy_envp(t_gc_list *gc_lst, char **envp)
 		if (!my_envp[i])
 		{
 			while (--i >= 0)
-			{
 				free(my_envp[i]);
-			}
 			return (NULL);
 		}
 		i++;
