@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/23 14:20:20 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/23 14:57:57 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,9 @@ int		check_operator(t_main *main, int *i, t_gc_list *gc_list);
 int		main_loop(t_main *main, int i, t_gc *gc);
 int		main(int argc, char **argv, char **envp);
 int		main_loop_helper(t_main *main, int indic, t_gc *gc);
+int	incrmnt_shllvl(t_main *main, t_gc *gc);
+void	init_shllvl(char *str, int i);
+int	num_len(int n);
 
 
 // ----------------------------------------------------------------------
