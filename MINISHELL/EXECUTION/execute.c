@@ -82,16 +82,24 @@ int heredoc_fd_offset_and_redir(t_cmd_block *cur)
 }
 
 //todo mach die funktion fertig 
-// int	execute_builtin(t_cmd_block *cur, t_gc_list *gc_lst, t_shell *shell)
-// {
-// 	char *temp = cur->built_in;
-// 	char **argv = ft_split(temp, ' ');
-// 	if ((strcmp(argv[0], "echo") == 0))
-// 		ft_echo(argv, shell, gc_lst);
-// 	if ((strcmp(argv[0], "cd") == 0))
-// 		cd(argv, shell, gc_lst);
-	
-// }
+int	execute_builtin(t_cmd_block *cur, t_gc_list *gc_lst, t_shell *shell)
+{
+	char *temp = cur->built_in;
+	// char **argv = ft_split(cur->args, ' ');
+ 	if (strcmp(argv[0], "echo") == 0)
+ 		ft_echo(cur->args, shell, gc_lst);
+ 	if (strcmp(argv[0], "cd") == 0)
+ 		cd(cur->args, shell, gc_lst);
+	if (strcmp(argv[0], "pwd") == 0)
+		my_pwd(shell,gc_lst);
+	if (strcmp(argv[0], "env") == 0)
+		print_envp(shell, "env");
+	if (strcmp(argv[0], "export") == 0)
+		print_envp(shell, "export");
+	if (strcmp(argv[0], "unset") == 0)
+		unset(cur->args, shell);
+
+}
 	
 void	single_cmd_execute(t_cmd_block *cur, pid_t pid, t_gc_list *gc_lst)
 {
@@ -128,7 +136,7 @@ void	single_cmd_execute(t_cmd_block *cur, pid_t pid, t_gc_list *gc_lst)
 				}
 			}
 			set_io_streams(cur);
-			is_executable_cmd(cur, gc_lst);
+			run_execve(cur, gc_lst);
 		}
 		else
 			wait_for_child_and_update_status(cur);
@@ -157,62 +165,14 @@ void	execute_child(pid_t pid, t_cmd_block *cur, t_gc_list *gc_lst, t_shell *shel
 		}
 		if (cur->args)
 		{
-			is_executable_cmd(cur, gc_lst);
+			run_execve(cur, gc_lst);
 		}
 	}
 }
 
-// char	**get_splitted_path()
-// {
-// 	t_shell	*shell;
+//execve() ausfuehren -> der aktuelle Prozess wird in einen CMD-Przoess sowie bin/ls, bin/cat geaendert -> darin wird main in einem neuen prozess ausfuehrt -> und diese main wird exit(0) oder 0 return.
 
-// 	shell = get_shell();
-// 	char *path = find_var_in_env(shell->my_envp, "PATH", 4, gc_lst);
-// 	if (!path)
-// 	{
-// 		//todo error handle
-// 		return NULL;
-// 	}
-//	splitted_path = ft_split(path, ':');
-// 	return splitted_path;
-// }
-
-// char	*get_cmd_path()
-// {
-// 	char	**splitted_path;
-// 	t_shell *shell;
-
-// 	shell = get_shell();
-// 	splitted_path = get_splitted_path();
-// 	int i = 0;
-// 	while(splitted_path[i])
-// 	{
-// 		char *attach_slash_to_cmd = ft_strjoin(splitted_path[i], "/");
-// 		if (!attach_slash_to_cmd)
-// 		{
-// 			//todo error handle
-// 		}
-// 		char *cmd_path = ft_strjoin(attach_slash_to_cmd, cmd_block->args[0]);
-// 		if (!cmd_path)
-// 		{
-// 			//todo error handle
-// 		}
-// 		if (access(cmd_path, F_OK | X_OK) == 0)
-// 		{
-// 			if (execve(cmd_path , cmd_block->args, shell->my_envp) == -1)
-// 			{
-// 				fprintf(stderr, RED"error\n"DEFAULT);
-// 				exit(1);
-// 			}
-// 			exit(0);
-// 		}
-// 		i++;
-// 	}
-// 	fprintf(stderr, RED"command not found: %s\n"DEFAULT, cmd_block->args[0]);
-// 	exit(127);
-//  }
-
-void 	is_executable_cmd(t_cmd_block *cmd_block, t_gc_list *gc_lst)
+void 	run_execve(t_cmd_block *cmd_block, t_gc_list *gc_lst)
 {
 	char	**splitted_path;
 	t_shell *shell;
@@ -246,8 +206,6 @@ void 	is_executable_cmd(t_cmd_block *cmd_block, t_gc_list *gc_lst)
 				fprintf(stderr, RED"error\n"DEFAULT);
 				exit(1);
 			}
-			else
-				exit(0);
 		}
 		i++;
 	}
@@ -280,19 +238,17 @@ void	main_execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 			process_heredoc(heredoc_check->io_streams);
 			printf(RED"heredocfd %d\n"DEFAULT, heredoc_check->io_streams->heredoc_fd);
 		}
-		else
-			break;
 		heredoc_check = heredoc_check->next;
 	}
 
-
-	//memo if this single cmd
+	//memo mach es separat! if this single cmd
 	if(cur && !cur->prev && !cur->next)
 	{
 		fprintf(stderr, RED"1\n"DEFAULT);
 		single_cmd_execute(cur, pid, gc_lst);
 	}
 
+	//memo mach es separart! hanlde pipes_and_fork
 	while(cur)
 	{
 		if (cur->next)
@@ -305,7 +261,6 @@ void	main_execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 				execute_child(pid, cur, gc_lst, shell);
 			close_pipefd(cur);
 		}
-
 		//memo if last cmd
 		else if(cur && cur->prev && !cur->next)
 		{
@@ -324,6 +279,15 @@ void	main_execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 	fprintf(stderr, RED"-CHECK ORGINAL STDIN AND STDOUT-\n in execute_child STDIN_FILENO: %d, STDOUT_FILENO: %d\n"DEFAULT, STDIN_FILENO, STDOUT_FILENO);
 }
 
+
+
+
+
+
+
+
+
+/*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@TEST@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
 //delete it later 
 static t_token *create_token(t_token_type type, char *value)
 {
@@ -345,8 +309,6 @@ static t_token *create_token(t_token_type type, char *value)
 //cat << eof << eof | cat -e >> 2
 //cat < 1 < 2 | cat -e >> 2 | ls -a | cat -b -e
 //ls -a -n -l < 1 -R
-
-
 int main(int ac, char *argv[], char *envp[])
 {
 	(void)ac;

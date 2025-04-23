@@ -47,6 +47,13 @@ char	*my_getcwd(t_shell *shell, t_gc_list *gc_lst)
 	return cwd;
 }
 
+void	my_pwd(t_shell *shell, t_gc_list *gc_lst)
+{
+	char *pwd;
+	pwd = my_getcwd(shell, gc_lst);
+	printf(GREEN"%s\n"DEFAULT, pwd);
+	free(pwd);
+}
 // void	pwd(t_shell *shell, t_gc_list *gc_lst)
 // {
 // 	get_cwd();
