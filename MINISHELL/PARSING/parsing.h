@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/22 17:03:32 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/23 14:20:20 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ int		check_operator2(t_main *main, int *i, t_gc_list *gc_list);
 int		check_operator(t_main *main, int *i, t_gc_list *gc_list);
 int		main_loop(t_main *main, int i, t_gc *gc);
 int		main(int argc, char **argv, char **envp);
+int		main_loop_helper(t_main *main, int indic, t_gc *gc);
+
 
 // ----------------------------------------------------------------------
 // 							   UTILS_1
@@ -244,7 +246,7 @@ void	lex_tokens_correctly(t_token *tokens);
 
 int		syntax_redirects(t_token **cur);
 int		syntax_helper(t_token **cur);
-int		validate_syntax(t_token *token);
+int		validate_syntax(t_token *token, t_gc_list *gc_list);
 
 // ----------------------------------------------------------------------
 // 								PRINTING

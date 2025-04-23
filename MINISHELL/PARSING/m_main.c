@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/22 16:09:22 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/23 14:22:05 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,25 @@ int	check_operator(t_main *main, int *i, t_gc_list *gc_list)
 	return (0);
 }
 
+int	main_loop_helper(t_main *main, int indic, t_gc *gc)
+{
+	if (main->tokens && check_for_node_spaces(main, main->tokens, \
+		gc->temp) < 0)
+	return (printf("ERROR\nChecking nodes failed!\n"), \
+		gc_free(gc), -1);
+	lex_tokens_correctly(main->tokens);
+	indic = validate_syntax(main->tokens, gc->temp);
+	// printf("status = %d\n", get_shell(gc->temp)->last_status_exit);
+	if (indic == -1)
+		return (all_free(&gc->temp), -1);
+	if (indic == -2)
+		return (printf(RED"bonus error!\n"DEFAULT), all_free(&gc->temp), -1);
+	print_tokens(main->tokens);
+	return (0);
+}
+
 int	main_loop(t_main *main, int i, t_gc *gc)
 {
-	int	indic;
 	int	ret;
 
 	while (1)
@@ -97,24 +113,8 @@ int	main_loop(t_main *main, int i, t_gc *gc)
 				return (printf("ERROR\nCheck_operator failed!\n"), \
 					gc_free(gc), -1);
 		}
-		if (main->tokens && check_for_node_spaces(main, main->tokens, \
-				gc->temp) < 0)
-			return (printf("ERROR\nChecking nodes failed!\n"), \
-				gc_free(gc), -1);
-		lex_tokens_correctly(main->tokens);
-		indic = validate_syntax(main->tokens);
-		if (indic == -1)
-		{
-			all_free(&gc->temp);
+		if (main_loop_helper(main, 0, gc) < 0)
 			continue ;
-		}
-		if (indic == -2)
-		{
-			printf(RED"bonus error!\n"DEFAULT);
-			all_free(&gc->temp);
-			continue ;
-		}
-		print_tokens(main->tokens);
 	}
 	return (0);
 }

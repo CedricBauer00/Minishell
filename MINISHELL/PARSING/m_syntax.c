@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:01:32 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/22 17:15:15 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/23 13:59:19 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@ int	syntax_redirects(t_token **cur)
 	}
 	else if ((*cur)->type == TOKEN_HEREDOC)
 	{
-		// if ((*cur)->next == NULL && ((*cur)->value == NULL
-		// 		|| (*cur)->value[0] == '\0'))
-		// 	return (choose_error_statement(1, NULL), -1);
-		if ((*cur)->next != NULL && (*cur)->next->type == TOKEN_HEREDOC)
+		if ((*cur)->next == NULL && ((*cur)->value == NULL
+				|| (*cur)->value[0] == '\0'))
+			return (choose_error_statement(1, NULL), -1);
+		else if ((*cur)->next != NULL && (*cur)->next->type == TOKEN_HEREDOC)
 			return (choose_error_statement(2, "<<"), -1);
 		else if ((*cur)->value == NULL || (*cur)->value[0] == '\0')
-			return (write(1, "here\n", 5), choose_error_statement(2, (*cur)->next->value), -1);
+			return (choose_error_statement(2, (*cur)->next->value), -1);
 	}
 	return (0);
 }
@@ -52,7 +52,7 @@ int	syntax_helper(t_token **cur)
 	return (0);
 }
 
-int	validate_syntax(t_token *token)
+int	validate_syntax(t_token *token, t_gc_list *gc_list)
 {
 	t_token	*cur;
 
@@ -62,7 +62,10 @@ int	validate_syntax(t_token *token)
 	while (cur)
 	{
 		if (syntax_helper(&cur) < 0)
+		{
+			get_shell(gc_list)->last_status_exit = 258;
 			return (-1);
+		}
 		cur = cur->next;
 	}
 	return (1);

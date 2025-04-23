@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 10:54:17 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/22 17:04:54 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/23 10:14:32 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	heredoc_quote_helper(char *word)
 {
 	static int	quote = 0;
-	static char c;
+	static char	c;
 
 	if (quote == 0)
 	{
@@ -32,10 +32,10 @@ int	heredoc_quote_helper(char *word)
 	return (0);
 }
 
-char *del_quote(char *word, int i, t_gc_list *gc_list)
+char	*del_quote(char *word, int i, t_gc_list *gc_list)
 {
-	char *str;
-	char *ret;
+	char	*str;
+	char	*ret;
 
 	str = (char *)malloc(sizeof(char) * (ft_strlen(word) + 1));
 	if (!str)

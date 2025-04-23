@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 09:58:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/20 12:50:39 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/23 14:02:56 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,12 +72,9 @@ int	expand_helper(t_main *main, int *i, int ws, t_gc_list *gc_list)
 	return (0);
 }
 
-int	special_character(t_main *main, int *i, char *value, t_gc_list *gc_list)
-{
-	t_shell	*shell;
-
-	shell = get_shell(gc_list);
-	value = ft_itoa(shell->last_status_exit);
+int	special_character(t_main *main, int *i, char *value, t_gc_list *gc_list) // reset exit_status = 0 if executing was successfull
+{ //after successfull execution
+	value = ft_itoa(get_shell(gc_list)->last_status_exit);
 	if (!value)
 		return (-1);
 	main->error = create_token(&main->tokens, TOKEN_ARG, value, gc_list);
@@ -89,20 +86,11 @@ int	special_character(t_main *main, int *i, char *value, t_gc_list *gc_list)
 
 int	expands(t_main *main, int *i, int ws, t_gc_list *gc_list)
 {
-	int		j;
-	int		len;
-	char	*var;
-	char	*value;
-
 	ws = *i;
 	(*i)++;
-	j = 0;
-	var = NULL;
-	len = 0;
-	value = NULL;
 	if (main->line[*i] && main->line[*i] == '?')
 	{
-		if (special_character(main, i, value, gc_list) < 0)
+		if (special_character(main, i, NULL, gc_list) < 0)
 			return (-1);
 	}
 	else
