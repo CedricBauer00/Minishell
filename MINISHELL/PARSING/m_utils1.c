@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 17:53:21 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/20 12:18:49 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/24 18:10:40 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,33 +26,47 @@ void	set_default(t_main *main)
 	return ;
 }
 
-void	print_err(char *s1, char *s2, char *s3, int indic)
+int	check_operator2(t_main *main, int *i, t_gc_list *gc_list)
 {
-	if (indic == 0)
-		write(2, s1, ft_strlen(s1));
-	else if (indic == 1)
+	if (main->line[*i] == '"')
 	{
-		write(2, s1, ft_strlen(s1));
-		write(2, s2, ft_strlen(s2));
-		write(2, s3, ft_strlen(s3));
+		if (dquotes(main, i, gc_list) < 0)
+			return (fprintf(stderr, BLUE"ERROR\nQuotes failed!\n"DEFAULT), -1);
 	}
+	else if (main->line[*i] == '$')
+	{
+		if (expands(main, i, 0, gc_list) < 0)
+			return (perror("ERROR\nExpand failed!\n"), -1);
+	}
+	else if (!ft_isspace(main->line[*i]))
+		words(main, i, 0, gc_list);
+	else
+		printf("Warning: Unrecognized character '%c' at position %d\n", \
+			main->line[*i], *i);
+	return (0);
 }
 
-void	choose_error_statement(int indic, char *value)
+int	check_operator(t_main *main, int *i, t_gc_list *gc_list)
 {
-	if (indic == 1)
-		print_err("minishell: syntax error near unexpected token `newline'\n", \
-			NULL, NULL, 0);
-	if (indic == 2)
-		print_err("minihsell: syntax error near unexpected token `", \
-			value, "'\n", 1);
-	if (indic == 3)
-		print_err("minishell: bonus error!\n", NULL, NULL, 0);
-	if (indic == 4)
+	if (ft_isspace(main->line[*i]))
+		main->error = create_token(&main->tokens, TOKEN_SPACES, " ", gc_list);
+	while (main->line[*i] && ft_isspace(main->line[*i]))
+		(*i)++;
+	if (main->line[*i] == '\0')
+		return (0);
+	if (main->line[*i] == '>' && main->line[*i + 1] == '>')
+		*i += operator(main, 2, main->line[*i], gc_list);
+	else if (main->line[*i] == '<' && main->line[*i + 1] == '<')
+		*i = heredoc(main, *i, gc_list);
+	else if (main->line[*i] == '<' || main->line[*i] == '>'
+		|| main->line[*i] == '|' || main->line[*i] == '&')
+		*i += operator(main, 1, main->line[*i], gc_list);
+	else if (main->line[*i] == '\'')
 	{
-		print_err("minishell: unexpected EOF while looking for matching `", \
-			value, "'\n", 1);
-		print_err("minishell: syntax error: unexpected end of file\n", \
-			NULL, NULL, 0);
+		if (quotes(main, i, gc_list) < 0)
+			return (printf("ERROR\nQuotes failed!\n"), -1);
 	}
+	else if (check_operator2(main, i, gc_list) < 0)
+		return (-1);
+	return (0);
 }

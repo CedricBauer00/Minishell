@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/23 14:57:57 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/24 18:12:30 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,14 +93,9 @@ typedef struct s_shell
 // ----------------------------------------------------------------------
 
 int		main_helper(t_main *main, t_gc_list *gc_list);
-int		check_operator2(t_main *main, int *i, t_gc_list *gc_list);
-int		check_operator(t_main *main, int *i, t_gc_list *gc_list);
 int		main_loop(t_main *main, int i, t_gc *gc);
 int		main(int argc, char **argv, char **envp);
 int		main_loop_helper(t_main *main, int indic, t_gc *gc);
-int	incrmnt_shllvl(t_main *main, t_gc *gc);
-void	init_shllvl(char *str, int i);
-int	num_len(int n);
 
 
 // ----------------------------------------------------------------------
@@ -108,8 +103,8 @@ int	num_len(int n);
 // ----------------------------------------------------------------------
 
 void	set_default(t_main *main);
-void	print_err(char *s1, char *s2, char *s3, int indic);
-void	choose_error_statement(int indic, char *value);
+int		check_operator2(t_main *main, int *i, t_gc_list *gc_list);
+int		check_operator(t_main *main, int *i, t_gc_list *gc_list);
 
 // ----------------------------------------------------------------------
 // 								UTILS_2
@@ -132,11 +127,22 @@ char	*gc_strjoin(char const *s1, char const *s2, t_gc_list *gc_list);
 int		is_valid_char(char c);
 
 // ----------------------------------------------------------------------
-// 								ENVP
+// 								UTILS_3
+// ----------------------------------------------------------------------
+
+void	print_err(char *s1, char *s2, char *s3, int indic);
+void	choose_error_statement(int indic, char *value);
+
+
+// ----------------------------------------------------------------------
+// 							ENVP + SHLLVL
 // ----------------------------------------------------------------------
 
 char	**copy_envp(t_gc_list *gc_lst, char **envp);
 int		get_envp_count(char **envp);
+int		num_len(int n);
+void	init_shllvl(char *str, int i);
+int		incrmnt_shllvl(t_main *main, t_gc *gc);
 
 // ----------------------------------------------------------------------
 // 							 SHELL_INFO
