@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/24 18:12:30 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/24 18:17:55 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,6 @@ int		main_loop(t_main *main, int i, t_gc *gc);
 int		main(int argc, char **argv, char **envp);
 int		main_loop_helper(t_main *main, int indic, t_gc *gc);
 
-
 // ----------------------------------------------------------------------
 // 							   UTILS_1
 // ----------------------------------------------------------------------
@@ -132,7 +131,6 @@ int		is_valid_char(char c);
 
 void	print_err(char *s1, char *s2, char *s3, int indic);
 void	choose_error_statement(int indic, char *value);
-
 
 // ----------------------------------------------------------------------
 // 							ENVP + SHLLVL

@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 15:19:46 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/23 13:19:23 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/24 18:16:34 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	is_quote(t_main *main, int i)
 			j = 1;
 		}
 		else if (j == 0 && (main->line[i] == '|' || main->line[i] == '<'
-			|| main->line[i] == '>' || valid_char(main->line[i], 0) == 1))
+				|| main->line[i] == '>' || valid_char(main->line[i], 0) == 1))
 			break ;
 	}
 	return (i);

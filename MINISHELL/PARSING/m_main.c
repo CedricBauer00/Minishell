@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/24 18:11:49 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/24 18:16:05 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,13 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc)
 {
 	if (main->tokens && check_for_node_spaces(main, main->tokens, \
 		gc->temp) < 0)
-	return (printf("ERROR\nChecking nodes failed!\n"), \
+		return (printf("ERROR\nChecking nodes failed!\n"), \
 		gc_free(gc), -1);
 	lex_tokens_correctly(main->tokens);
 	indic = validate_syntax(main->tokens, gc->temp);
-	// printf("status = %d\n", get_shell(gc->temp)->last_status_exit);
+	/*
+	printf("status = %d\n", get_shell(gc->temp)->last_status_exit);
+	*/
 	if (indic == -1)
 		return (all_free(&gc->temp), -1);
 	if (indic == -2)

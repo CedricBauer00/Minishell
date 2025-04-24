@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 12:56:46 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/24 18:12:06 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/24 18:13:54 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,8 @@ int	incrmnt_shllvl(t_main *main, t_gc *gc)
 		}
 		i++;
 	}
-	main->envp[i] = do_alloc(&gc->shell, 7 + num_len(lvl), TYPE_SINGLE_PTR, "shllvl");
+	main->envp[i] = do_alloc(&gc->shell, 7 + num_len(lvl), \
+		TYPE_SINGLE_PTR, "shllvl");
 	if (!main->envp[i])
 		return (-1);
 	init_shllvl(main->envp[i], lvl);
