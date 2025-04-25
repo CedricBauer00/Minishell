@@ -33,27 +33,49 @@
 
 void	prevent_zombie_process()
 {
-	while (waitpid(-1, NULL, WNOHANG) > 0);
+	while (waitpid(-1, NULL, WNOHANG) > 0)
+	{
+		if(WIFEXITED(status))
+		{
+
+		}
+		else if (WIFSIGNALED(status))
+		{
+
+		}
+	}
+}
+
+void 	signal_handler()
+{
+
 }
 
 void	wait_for_child_and_update_status(t_cmd_block *cur)
 {
+	int i;
 	t_shell *shell = get_shell();
 	int status;
-	pid_t child_pid = wait4(-1, &status, 0 ,NULL);
-	fprintf(stderr ,BLUE"parent got this from wait4() child_pid : %d\n"DEFAULT, child_pid);
-	if (child_pid > 0)
+
+	i = 0;
+	while (cur->pids[i])
 	{
-		if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
+		pid_t child_pid = wait4(cur->pids[i], &status, 0 ,NULL);
+		fprintf(stderr ,BLUE"parent got this from wait4() child_pid : %d\n"DEFAULT, child_pid);
+		if (child_pid > 0)
 		{
-			fprintf(stderr, GREEN"exited with %d\n"DEFAULT, WEXITSTATUS(status));
-			shell->last_status_exit = WEXITSTATUS(status);  //parents get exit status 
+			if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
+			{
+				fprintf(stderr, GREEN"exited with %d\n"DEFAULT, WEXITSTATUS(status));
+				shell->last_status_exit = WEXITSTATUS(status);  //parents get exit status 
+			}
+			else if (WIFSIGNALED(status))
+			{
+				fprintf(stderr, RED"terminated by signal %d (%s)\n" DEFAULT, WTERMSIG(status), strsignal(WTERMSIG(status)));
+				shell->last_status_exit = 128 + WTERMSIG(status);
+			}
 		}
-		else if (WIFSIGNALED(status))
-		{
-			fprintf(stderr, RED"terminated by signal %d (%s)\n" DEFAULT, WTERMSIG(status), strsignal(WTERMSIG(status)));
-			shell->last_status_exit = 128 + WTERMSIG(status);
-		}
+		i++;
 	}
 }
 
@@ -84,8 +106,6 @@ int heredoc_fd_offset_and_redir(t_cmd_block *cur)
 //todo mach die funktion fertig 
 int	execute_builtin(t_cmd_block *cur, t_gc_list *gc_lst, t_shell *shell)
 {
-	char *temp = cur->built_in;
-	// char **argv = ft_split(cur->args, ' ');
  	if (strcmp(argv[0], "echo") == 0)
  		ft_echo(cur->args, shell, gc_lst);
  	if (strcmp(argv[0], "cd") == 0)
@@ -98,7 +118,6 @@ int	execute_builtin(t_cmd_block *cur, t_gc_list *gc_lst, t_shell *shell)
 		print_envp(shell, "export");
 	if (strcmp(argv[0], "unset") == 0)
 		unset(cur->args, shell);
-
 }
 	
 void	single_cmd_execute(t_cmd_block *cur, pid_t pid, t_gc_list *gc_lst)
@@ -161,6 +180,7 @@ void	execute_child(pid_t pid, t_cmd_block *cur, t_gc_list *gc_lst, t_shell *shel
 		if (cur->built_in)
 		{
 			printf(RED"it is builtin we need to implement it\n"DEFAULT);
+			//todo execute builtin
 			exit(0);
 		}
 		if (cur->args)
@@ -248,6 +268,20 @@ void	main_execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 		single_cmd_execute(cur, pid, gc_lst);
 	}
 
+	//memo zahlen wie viele pipe es gibt
+	t_cmd_block *temp;
+	temp = cmd_block;
+	int count = 0;
+	while(temp)
+	{
+		count++;
+		temp = temp->next;
+	}
+	//memo allocate gemaess der pipezahl
+	
+	cmd_block->pids = malloc(sizeof(pid_t) * count);
+
+	int i = 0;
 	//memo mach es separart! hanlde pipes_and_fork
 	while(cur)
 	{
@@ -270,6 +304,7 @@ void	main_execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 				execute_child(pid, cur, gc_lst, shell);
 			close_pipefd(cur);
 		}
+		cur->pids[i++] = pid;
 		cur = cur->next;
 	}
 	

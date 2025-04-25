@@ -230,7 +230,7 @@ int	process_heredoc(t_io_streams_list *io_streams);
 //memo execute.c
 
 void	main_execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell);
-void 	is_executable_cmd(t_cmd_block *cmd_block, t_gc_list *gc_lst);
+void 	run_execve(t_cmd_block *cmd_block, t_gc_list *gc_lst);
 //built_in
 //pwd
 //cd
