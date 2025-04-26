@@ -314,8 +314,96 @@ void	main_execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 	fprintf(stderr, RED"-CHECK ORGINAL STDIN AND STDOUT-\n in execute_child STDIN_FILENO: %d, STDOUT_FILENO: %d\n"DEFAULT, STDIN_FILENO, STDOUT_FILENO);
 }
 
+static void	validate_check()
+{
+	if (!cmd_block || is_validate_cmd_block(cur) == false)
+	{
+		//todo all free
+		perror(RED"non valid cmd"DEFAULT);
+		shell->last_status_exit = 1;
+		exit(1);
+	}
+}
 
+static void	hanlde_heredoc()
+{
+	t_cmc_block *cur = cmd_block;
+	while(cur)
+	{
+		if (cur->io_streams && cur->io_streams->cur)
+		{
+			printf("cur->io_streams->heredoc_eof %s\n", cur->io_streams->heredoc_eof);
+			process_heredoc(cur->io_streams);
+			printf(RED"heredocfd %d\n"DEFAULT, cur->io_streams->heredoc_fd);
+		}
+		cur = cur->next;
+	}
+}
 
+void	execute_single_command()
+{
+	pid_t pid;
+
+	if(cur && !cur->prev && !cur->next)
+	{
+		fprintf(stderr, RED"1\n"DEFAULT);
+		single_cmd_execute(cur, pid, gc_lst);
+	}
+}
+
+static int	count_command()
+{
+	t_cmd_block *temp;
+	temp = cmd_block;
+	int count = 0;
+	while(temp)
+	{
+		count++;
+		temp = temp->next;
+	}
+	return count;
+}
+
+static void	do_alloc_pids()
+{
+	int	count;
+	count = count_command();
+	cmd_block->pids = do_alloc(sizeof(pid_t) * count);
+	if(!cmd_block->pids)
+	{
+		free(gc)
+		exit(1);
+	}
+}
+
+void	fork_and_execute()
+{
+	
+	if (cur->next)
+	{
+		add_pipe(&cur, gc_lst);
+		fprintf(stderr, YELLOW"[pid %d] p_pipe->pipefd[0]: %d, p_pipe->pipefd[1]: %d\n"DEFAULT,getpid(), cur->pipe->pipefd[0], cur->pipe->pipefd[1]);
+	}
+	pid = fork();
+	fprintf(stderr,YELLOW"[pid %d] fork()\n"DEFAULT, getpid());
+	if (pid == 0)
+		execute_child(pid, cur, gc_lst, shell);
+		
+	close_pipefd(cur);
+	cur->pids[i++] = pid;
+}
+
+void	execute_pipeline()
+{
+	t_cmd_block *cur;
+
+	cur = cmd_block;
+	while(cur)
+	{
+		fork_and_excute();
+		cur = cur->next;
+	}
+}
 
 
 
