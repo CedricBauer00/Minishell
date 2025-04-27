@@ -465,6 +465,7 @@ void	do_alloc_pids(t_cmd_block* cmd_block)
 	}
 }
 
+//error index error!
 void	fork_and_execute(t_cmd_block *cmd_block, t_gc *gc, int *i)
 {
 	t_cmd_block *cur;
