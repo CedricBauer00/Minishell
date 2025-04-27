@@ -6,11 +6,11 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 18:06:46 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/24 18:08:17 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/27 12:37:54 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <parsing.h>
+#include "parsing.h"
 
 void	print_err(char *s1, char *s2, char *s3, int indic)
 {
