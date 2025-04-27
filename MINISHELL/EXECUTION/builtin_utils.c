@@ -1,6 +1,6 @@
 #include "../INCLUDE/main.h"
 
-char	*my_getenv(char **my_envp, char *find, size_t find_len, t_gc_list *gc_lst)
+char	*find_var_in_env(char **my_envp, char *find, size_t find_len, t_gc_list *gc_lst)
 {
 	int	i;
 	char *result;

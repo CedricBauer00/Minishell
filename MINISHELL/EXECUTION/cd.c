@@ -165,9 +165,9 @@ int	ft_setenv(const char *name, const char *value, int overwrite, t_shell *shell
 }
 
 
-void cd(char **argv, t_shell *shell, t_gc_list *gc_list)
+void cd(char **argv, t_shell *shell, t_gc *gc)
 {
-	shell->cur_dir = my_getcwd(shell, gc_list);
+	shell->cur_dir = my_getcwd(shell, gc);
 	// if (!shell->cur_dir)
 	// {
 	// 	perror(RED"get shell->cur_dir failed"DEFAULT);
@@ -180,14 +180,14 @@ void cd(char **argv, t_shell *shell, t_gc_list *gc_list)
 		printf(RED"case just cd\n"DEFAULT);
 		char	*homedir;
 
-		homedir = find_var_in_env(shell->my_envp, "HOME", 4, gc_list);
+		homedir = find_var_in_env(shell->my_envp, "HOME", 4, gc->temp);
 		if (chdir(homedir) != 0)
 		{
 			perror(RED "chdir error for 'cd'\n"DEFAULT);
 			free(shell->cur_dir);
 			return ;
 		}
-		char	*new_dir = my_getcwd(shell, gc_list);
+		char	*new_dir = my_getcwd(shell, gc);
 		if (new_dir)
 		{
 			shell->old_dir = shell->cur_dir;
@@ -208,7 +208,7 @@ void cd(char **argv, t_shell *shell, t_gc_list *gc_list)
 		if(argv[2][0] == '-' && strlen(argv[2]) == 1)
 		{
 			printf(RED"get in for 'cd -'\n"DEFAULT);
-			shell->old_dir = find_var_in_env(shell->my_envp, "OLDPWD", 6, gc_list);
+			shell->old_dir = find_var_in_env(shell->my_envp, "OLDPWD", 6, gc->temp);
 			if (!shell->old_dir)
 			{
 				fprintf(stderr, RED"cd:OLDPWD not set\n"DEFAULT);
@@ -221,7 +221,7 @@ void cd(char **argv, t_shell *shell, t_gc_list *gc_list)
 				//todo all free(shell->cur_dir);
 				return ;
 			}
-			char	*new_dir = my_getcwd(shell, gc_list);
+			char	*new_dir = my_getcwd(shell, gc);
 			if (new_dir)
 			{
 				shell->old_dir = shell->cur_dir;
@@ -245,7 +245,7 @@ void cd(char **argv, t_shell *shell, t_gc_list *gc_list)
 				perror(RED "chdir error for 'argv[2]' in cd func\n"DEFAULT);
 				free(shell->cur_dir);
 			}
-			char	*new_dir = my_getcwd(shell, gc_list);
+			char	*new_dir = my_getcwd(shell, gc);
 			if (new_dir)
 			{
 				shell->old_dir = shell->cur_dir;

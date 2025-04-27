@@ -1,11 +1,11 @@
 #include "../INCLUDE/main.h"
 
-void	is_exited(void *failed, t_gc_list *gc_lst)
+void	is_exited(void *failed, t_gc *gc)
 {
 	if (!failed)
 	{
 		perror(RED"in is_exited() making new_pipe in add_pipe()error\n"DEFAULT);
-		gc_lst_free(&gc_lst);
+		gc_free(gc);
 		exit(EXIT_FAILURE);
 	}
 	else

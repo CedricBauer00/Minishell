@@ -7,7 +7,8 @@
 // {
 // 	char	*cwd;
 
-// 	char *cwd = find_var_in_env(shell->my_envp, "PWD", 3, gc_lst);
+// char *cwd = find_var_in_env(shell->my_envp, "PWD", 3, gc_lst)
+// {
 // 	if (cwd == NULL)
 // 	{
 // 		char *temp = getcwd(NULL, 0);
@@ -24,6 +25,7 @@
 // 	return cwd;
 // }
 
+
 char	*my_getcwd(t_shell *shell, t_gc *gc)
 {
 	char	*cwd;
@@ -36,7 +38,7 @@ char	*my_getcwd(t_shell *shell, t_gc *gc)
 		//todo allfree
 		exit(1);
 	}
-	cwd = (char*)do_alloc(gc->shell, ft_strlen(temp) + 1, TYPE_SINGLE_PTR, "getcwd");
+	cwd = (char*)do_alloc(&gc->temp, ft_strlen(temp) + 1, TYPE_SINGLE_PTR, "getcwd");
 	if (!cwd)
 	{
 		free(temp);
@@ -47,10 +49,10 @@ char	*my_getcwd(t_shell *shell, t_gc *gc)
 	return cwd;
 }
 
-void	my_pwd(t_shell *shell, t_gc_list *gc_lst)
+void	my_pwd(t_shell *shell, t_gc *gc)
 {
 	char *pwd;
-	pwd = my_getcwd(shell, gc_lst);
+	pwd = my_getcwd(shell, gc);
 	printf(GREEN"%s\n"DEFAULT, pwd);
 	//todo
 	// t_gc_list *find = find_node();

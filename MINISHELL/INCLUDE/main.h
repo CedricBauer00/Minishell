@@ -79,11 +79,10 @@ typedef struct s_cmd_block //struct being allocated for each token from input
 {
 	//t_token_type				type;		//todo vilt ,,i can delete?
 	char						*built_in; //need to change name
-	char						**cmd_flags;
-	char						*args;
+	// char						**cmd_flags;
+	char						**args;
 	struct s_io_streams_list	*io_streams;
 	struct s_pipe				*pipe;
-	pid_t						*child_pids;
 	int							prev_read_end_fd; //pipe 초기값은 -1로.
 	int							cur_fd_write_end;
 	struct s_cmd_block			*prev;
@@ -117,6 +116,7 @@ typedef struct s_pipe
 typedef struct s_shell
 {
 	char	**my_envp;
+	int		*pids;
 	char	*cur_dir;
 	char	*old_dir;
 	int		last_status_exit;
@@ -158,7 +158,8 @@ char	**copy_envp(t_gc_list *gc_lst, char **envp);
 int		get_envp_count(char **envp);
 
 //memo pwd.c
-char	*pwd(void);
+char	*my_getcwd(t_shell *shell, t_gc *gc);
+void	my_pwd(t_shell *shell, t_gc *gc);
 
 //memo cd.c
 int		is_valid_dir(const char *path);
@@ -167,7 +168,7 @@ char	**expand_envp(t_shell *shell, char *new_path);
 char	*create_new_path(const char *name, const char *value);
 int		check_existing(char **my_envp, const char *name);
 int		ft_setenv(const char *name, const char *value, int overwrite, t_shell *shell);
-void 	cd(char **argv, t_shell *shell, t_gc_list *gc_list);
+void 	cd(char **argv, t_shell *shell, t_gc *gc);
 
 //memo export.c
 int		export(char **argv, t_shell *shell);
@@ -204,21 +205,22 @@ int		in_redir_file_open(t_io_streams_list *io_streams, char *in_filename);
 int		out_redir_file_open(t_io_streams_list *io_streams, char *out_filename);
 void	set_io_streams(t_cmd_block *cmd);
 int		append_redir_file_open(t_io_streams_list *io_streams, char *appned_file_name);
+
 //memo exe_utils.c
-void	is_exited(void *failed, t_gc_list *gc_lst);
+void	is_exited(void *failed, t_gc *gc);
 
 //memo command_list_utils.c
 //t_cmd_block *add_token(t_gc_list *gc_lst, char *cmd, char **args, t_token_type type);
 
 //memo grouplize.c
-void	grouplize(t_token *token, t_cmd_block **cmd_block, t_gc_list *gc_lst);
-t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc_list *gc_lst);
+void	grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc);
+t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc);
 
 //memo heredoc.c
 int	heredoc();
 
 //memo builtin_utils.c
-char	*my_getenv(char **my_envp, char *find, size_t find_len, t_gc_list *gc_lst);
+char	*find_var_in_env(char **my_envp, char *find, size_t find_len, t_gc_list *gc_lst);
 
 //memo validate.c
 int		validate_syntax(t_token *token);
@@ -228,9 +230,17 @@ bool	is_validate_cmd_block(t_cmd_block *cmd_b);
 int	process_heredoc(t_io_streams_list *io_streams);
 
 //memo execute.c
-
-void	main_execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell);
-void 	run_execve(t_cmd_block *cmd_block, t_gc_list *gc_lst);
+void	wait_for_child_and_update_status(t_cmd_block *cur, int i);
+void	main_execute(t_cmd_block *cmd_block, t_gc *gc, t_shell *shell);
+void 	run_execve(t_cmd_block *cmd_block, t_gc *gc);
+void	validate_check(t_cmd_block *cmd_block);
+void	hanlde_heredoc(t_cmd_block *cmd_block);
+void	single_cmd_execute(t_cmd_block *cur, pid_t pid, t_gc *gc);
+int		count_command(t_cmd_block *cmd_block);
+void	execute_single_command(t_cmd_block *cmd_block);
+void	do_alloc_pids(t_cmd_block* cmd_block);
+void	fork_and_execute(t_cmd_block *cmd_block, t_gc *gc, int *i);
+void	execute_pipeline(t_cmd_block *cmd_block);
 //built_in
 //pwd
 //cd

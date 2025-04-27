@@ -11,6 +11,7 @@ t_shell	*init_shell_struct(void)
 	shell->cur_dir = NULL;
 	shell->old_dir = NULL;
 	shell->my_envp = NULL;
+	shell->pids = NULL;
 	shell->last_status_exit = 0;
 	return shell;
 }
@@ -76,7 +77,7 @@ t_cmd_block *init_command_struct(t_gc_list *gc_lst)
 	//cmd->value = NULL;
 	cmd->built_in = NULL;
 	cmd->args = NULL;
-	cmd->cmd_flags = NULL;
+	//cmd->cmd_flags = NULL;
 	cmd->io_streams = NULL;
 	cmd->pipe = NULL;
 	cmd->prev_read_end_fd = -1;
