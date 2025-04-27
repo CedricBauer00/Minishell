@@ -24,7 +24,7 @@
 // 	return cwd;
 // }
 
-char	*my_getcwd(t_shell *shell, t_gc_list *gc_lst)
+char	*my_getcwd(t_shell *shell, t_gc *gc)
 {
 	char	*cwd;
 	char	*temp;
@@ -36,7 +36,7 @@ char	*my_getcwd(t_shell *shell, t_gc_list *gc_lst)
 		//todo allfree
 		exit(1);
 	}
-	cwd = (char*)do_alloc(&gc_lst, ft_strlen(temp) + 1, TYPE_SINGLE_PTR, "getcwd");
+	cwd = (char*)do_alloc(gc->shell, ft_strlen(temp) + 1, TYPE_SINGLE_PTR, "getcwd");
 	if (!cwd)
 	{
 		free(temp);
@@ -45,6 +45,16 @@ char	*my_getcwd(t_shell *shell, t_gc_list *gc_lst)
 	ft_strlcpy(cwd, temp, ft_strlen(temp) + 1);
 	free(temp);
 	return cwd;
+}
+
+void	my_pwd(t_shell *shell, t_gc_list *gc_lst)
+{
+	char *pwd;
+	pwd = my_getcwd(shell, gc_lst);
+	printf(GREEN"%s\n"DEFAULT, pwd);
+	//todo
+	// t_gc_list *find = find_node();
+	// delete_node(find);
 }
 
 // void	pwd(t_shell *shell, t_gc_list *gc_lst)

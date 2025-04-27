@@ -33,27 +33,49 @@
 
 void	prevent_zombie_process()
 {
-	while (waitpid(-1, NULL, WNOHANG) > 0);
+	while (waitpid(-1, NULL, WNOHANG) > 0)
+	{
+		if(WIFEXITED(status))
+		{
+
+		}
+		else if (WIFSIGNALED(status))
+		{
+
+		}
+	}
+}
+
+void 	signal_handler()
+{
+
 }
 
 void	wait_for_child_and_update_status(t_cmd_block *cur)
 {
+	int i;
 	t_shell *shell = get_shell();
 	int status;
-	pid_t child_pid = wait4(-1, &status, 0 ,NULL);
-	fprintf(stderr ,BLUE"parent got this from wait4() child_pid : %d\n"DEFAULT, child_pid);
-	if (child_pid > 0)
+
+	i = 0;
+	while (cur->pids[i])
 	{
-		if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
+		pid_t child_pid = wait4(cur->pids[i], &status, 0 ,NULL);
+		fprintf(stderr ,BLUE"parent got this from wait4() child_pid : %d\n"DEFAULT, child_pid);
+		if (child_pid > 0)
 		{
-			fprintf(stderr, GREEN"exited with %d\n"DEFAULT, WEXITSTATUS(status));
-			shell->last_status_exit = WEXITSTATUS(status);  //parents get exit status 
+			if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
+			{
+				fprintf(stderr, GREEN"exited with %d\n"DEFAULT, WEXITSTATUS(status));
+				shell->last_status_exit = WEXITSTATUS(status);  //parents get exit status 
+			}
+			else if (WIFSIGNALED(status))
+			{
+				fprintf(stderr, RED"terminated by signal %d (%s)\n" DEFAULT, WTERMSIG(status), strsignal(WTERMSIG(status)));
+				shell->last_status_exit = 128 + WTERMSIG(status);
+			}
 		}
-		else if (WIFSIGNALED(status))
-		{
-			fprintf(stderr, RED"terminated by signal %d (%s)\n" DEFAULT, WTERMSIG(status), strsignal(WTERMSIG(status)));
-			shell->last_status_exit = 128 + WTERMSIG(status);
-		}
+		i++;
 	}
 }
 
@@ -82,16 +104,21 @@ int heredoc_fd_offset_and_redir(t_cmd_block *cur)
 }
 
 //todo mach die funktion fertig 
-// int	execute_builtin(t_cmd_block *cur, t_gc_list *gc_lst, t_shell *shell)
-// {
-// 	char *temp = cur->built_in;
-// 	char **argv = ft_split(temp, ' ');
-// 	if ((strcmp(argv[0], "echo") == 0))
-// 		ft_echo(argv, shell, gc_lst);
-// 	if ((strcmp(argv[0], "cd") == 0))
-// 		cd(argv, shell, gc_lst);
-	
-// }
+int	execute_builtin(t_cmd_block *cur, t_gc_list *gc_lst, t_shell *shell)
+{
+ 	if (strcmp(argv[0], "echo") == 0)
+ 		ft_echo(cur->args, shell, gc_lst);
+ 	if (strcmp(argv[0], "cd") == 0)
+ 		cd(cur->args, shell, gc_lst);
+	if (strcmp(argv[0], "pwd") == 0)
+		my_pwd(shell,gc_lst);
+	if (strcmp(argv[0], "env") == 0)
+		print_envp(shell, "env");
+	if (strcmp(argv[0], "export") == 0)
+		print_envp(shell, "export");
+	if (strcmp(argv[0], "unset") == 0)
+		unset(cur->args, shell);
+}
 	
 void	single_cmd_execute(t_cmd_block *cur, pid_t pid, t_gc_list *gc_lst)
 {
@@ -128,7 +155,7 @@ void	single_cmd_execute(t_cmd_block *cur, pid_t pid, t_gc_list *gc_lst)
 				}
 			}
 			set_io_streams(cur);
-			is_executable_cmd(cur, gc_lst);
+			run_execve(cur, gc_lst);
 		}
 		else
 			wait_for_child_and_update_status(cur);
@@ -153,66 +180,19 @@ void	execute_child(pid_t pid, t_cmd_block *cur, t_gc_list *gc_lst, t_shell *shel
 		if (cur->built_in)
 		{
 			printf(RED"it is builtin we need to implement it\n"DEFAULT);
+			//todo execute builtin
 			exit(0);
 		}
 		if (cur->args)
 		{
-			is_executable_cmd(cur, gc_lst);
+			run_execve(cur, gc_lst);
 		}
 	}
 }
 
-// char	**get_splitted_path()
-// {
-// 	t_shell	*shell;
+//execve() ausfuehren -> der aktuelle Prozess wird in einen CMD-Przoess sowie bin/ls, bin/cat geaendert -> darin wird main in einem neuen prozess ausfuehrt -> und diese main wird exit(0) oder 0 return.
 
-// 	shell = get_shell();
-// 	char *path = find_var_in_env(shell->my_envp, "PATH", 4, gc_lst);
-// 	if (!path)
-// 	{
-// 		//todo error handle
-// 		return NULL;
-// 	}
-//	splitted_path = ft_split(path, ':');
-// 	return splitted_path;
-// }
-
-// char	*get_cmd_path()
-// {
-// 	char	**splitted_path;
-// 	t_shell *shell;
-
-// 	shell = get_shell();
-// 	splitted_path = get_splitted_path();
-// 	int i = 0;
-// 	while(splitted_path[i])
-// 	{
-// 		char *attach_slash_to_cmd = ft_strjoin(splitted_path[i], "/");
-// 		if (!attach_slash_to_cmd)
-// 		{
-// 			//todo error handle
-// 		}
-// 		char *cmd_path = ft_strjoin(attach_slash_to_cmd, cmd_block->args[0]);
-// 		if (!cmd_path)
-// 		{
-// 			//todo error handle
-// 		}
-// 		if (access(cmd_path, F_OK | X_OK) == 0)
-// 		{
-// 			if (execve(cmd_path , cmd_block->args, shell->my_envp) == -1)
-// 			{
-// 				fprintf(stderr, RED"error\n"DEFAULT);
-// 				exit(1);
-// 			}
-// 			exit(0);
-// 		}
-// 		i++;
-// 	}
-// 	fprintf(stderr, RED"command not found: %s\n"DEFAULT, cmd_block->args[0]);
-// 	exit(127);
-//  }
-
-void 	is_executable_cmd(t_cmd_block *cmd_block, t_gc_list *gc_lst)
+void 	run_execve(t_cmd_block *cmd_block, t_gc_list *gc_lst)
 {
 	char	**splitted_path;
 	t_shell *shell;
@@ -246,8 +226,6 @@ void 	is_executable_cmd(t_cmd_block *cmd_block, t_gc_list *gc_lst)
 				fprintf(stderr, RED"error\n"DEFAULT);
 				exit(1);
 			}
-			else
-				exit(0);
 		}
 		i++;
 	}
@@ -280,19 +258,31 @@ void	main_execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 			process_heredoc(heredoc_check->io_streams);
 			printf(RED"heredocfd %d\n"DEFAULT, heredoc_check->io_streams->heredoc_fd);
 		}
-		else
-			break;
 		heredoc_check = heredoc_check->next;
 	}
 
-
-	//memo if this single cmd
+	//memo mach es separat! if this single cmd
 	if(cur && !cur->prev && !cur->next)
 	{
 		fprintf(stderr, RED"1\n"DEFAULT);
 		single_cmd_execute(cur, pid, gc_lst);
 	}
 
+	//memo zahlen wie viele pipe es gibt
+	t_cmd_block *temp;
+	temp = cmd_block;
+	int count = 0;
+	while(temp)
+	{
+		count++;
+		temp = temp->next;
+	}
+	//memo allocate gemaess der pipezahl
+	
+	cmd_block->pids = malloc(sizeof(pid_t) * count);
+
+	int i = 0;
+	//memo mach es separart! hanlde pipes_and_fork
 	while(cur)
 	{
 		if (cur->next)
@@ -305,7 +295,6 @@ void	main_execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 				execute_child(pid, cur, gc_lst, shell);
 			close_pipefd(cur);
 		}
-
 		//memo if last cmd
 		else if(cur && cur->prev && !cur->next)
 		{
@@ -315,6 +304,7 @@ void	main_execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 				execute_child(pid, cur, gc_lst, shell);
 			close_pipefd(cur);
 		}
+		cur->pids[i++] = pid;
 		cur = cur->next;
 	}
 	
@@ -324,6 +314,103 @@ void	main_execute(t_cmd_block *cmd_block, t_gc_list *gc_lst, t_shell *shell)
 	fprintf(stderr, RED"-CHECK ORGINAL STDIN AND STDOUT-\n in execute_child STDIN_FILENO: %d, STDOUT_FILENO: %d\n"DEFAULT, STDIN_FILENO, STDOUT_FILENO);
 }
 
+static void	validate_check()
+{
+	if (!cmd_block || is_validate_cmd_block(cur) == false)
+	{
+		//todo all free
+		perror(RED"non valid cmd"DEFAULT);
+		shell->last_status_exit = 1;
+		exit(1);
+	}
+}
+
+static void	hanlde_heredoc()
+{
+	t_cmc_block *cur = cmd_block;
+	while(cur)
+	{
+		if (cur->io_streams && cur->io_streams->cur)
+		{
+			printf("cur->io_streams->heredoc_eof %s\n", cur->io_streams->heredoc_eof);
+			process_heredoc(cur->io_streams);
+			printf(RED"heredocfd %d\n"DEFAULT, cur->io_streams->heredoc_fd);
+		}
+		cur = cur->next;
+	}
+}
+
+void	execute_single_command()
+{
+	pid_t pid;
+
+	if(cur && !cur->prev && !cur->next)
+	{
+		fprintf(stderr, RED"1\n"DEFAULT);
+		single_cmd_execute(cur, pid, gc_lst);
+	}
+}
+
+static int	count_command()
+{
+	t_cmd_block *temp;
+	temp = cmd_block;
+	int count = 0;
+	while(temp)
+	{
+		count++;
+		temp = temp->next;
+	}
+	return count;
+}
+
+static void	do_alloc_pids()
+{
+	int	count;
+	count = count_command();
+	cmd_block->pids = do_alloc(sizeof(pid_t) * count);
+	if(!cmd_block->pids)
+	{
+		free(gc)
+		exit(1);
+	}
+}
+
+void	fork_and_execute()
+{
+	
+	if (cur->next)
+	{
+		add_pipe(&cur, gc_lst);
+		fprintf(stderr, YELLOW"[pid %d] p_pipe->pipefd[0]: %d, p_pipe->pipefd[1]: %d\n"DEFAULT,getpid(), cur->pipe->pipefd[0], cur->pipe->pipefd[1]);
+	}
+	pid = fork();
+	fprintf(stderr,YELLOW"[pid %d] fork()\n"DEFAULT, getpid());
+	if (pid == 0)
+		execute_child(pid, cur, gc_lst, shell);
+		
+	close_pipefd(cur);
+	cur->pids[i++] = pid;
+}
+
+void	execute_pipeline()
+{
+	t_cmd_block *cur;
+
+	cur = cmd_block;
+	while(cur)
+	{
+		fork_and_excute();
+		cur = cur->next;
+	}
+}
+
+
+
+
+
+
+/*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@TEST@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
 //delete it later 
 static t_token *create_token(t_token_type type, char *value)
 {
@@ -345,8 +432,6 @@ static t_token *create_token(t_token_type type, char *value)
 //cat << eof << eof | cat -e >> 2
 //cat < 1 < 2 | cat -e >> 2 | ls -a | cat -b -e
 //ls -a -n -l < 1 -R
-
-
 int main(int ac, char *argv[], char *envp[])
 {
 	(void)ac;
