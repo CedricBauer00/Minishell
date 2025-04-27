@@ -25,13 +25,13 @@ void	ft_echo(char **argv, t_shell *shell, t_gc_list *gc_list)
 		while (argv[i] != NULL)
 		{
 			printf(YELLOW"%s", argv[i]);
-			if (argv[i + 1] != NULL)		//need to change to tokentype WORD
+			if (argv[i + 1] != NULL)
 				printf(" ");
 			char *temp = ft_strchr(argv[i], '$');
 			if (temp != NULL)
 			{
 				char *var_name = temp + 1;
-				char *var = my_getenv(shell->my_envp, var_name, ft_strlen(var_name), gc_list);
+				char *var = find_var_in_env(shell->my_envp, var_name, ft_strlen(var_name), gc_list);
 				// search it,,
 				if (check_existing(shell->my_envp, var))
 				{
@@ -48,6 +48,7 @@ void	ft_echo(char **argv, t_shell *shell, t_gc_list *gc_list)
 		if (is_newline)
 			printf("\n"DEFAULT);
 	}
+	
 }
 
 
