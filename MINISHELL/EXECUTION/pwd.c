@@ -35,9 +35,10 @@ char	*my_getcwd(t_shell *shell, t_gc *gc)
 	if (!temp)
 	{
 		perror(RED"getcwd()failed"DEFAULT);
-		//todo allfree
+		gc_free(gc);
 		exit(1);
 	}
+	//think about that wo soll ich cwd specitern in gc->temp oder gc->shell
 	cwd = (char*)do_alloc(&gc->temp, ft_strlen(temp) + 1, TYPE_SINGLE_PTR, "getcwd");
 	if (!cwd)
 	{
