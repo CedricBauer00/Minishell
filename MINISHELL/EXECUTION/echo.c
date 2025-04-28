@@ -11,44 +11,53 @@
 	case for ""
 */
 
-void	ft_echo(char **argv, t_shell *shell, t_gc_list *gc_list)
+void	ft_echo(char **args, t_shell *shell)
 {
-	int i  = 2;
+	int i  = 0;
 	bool is_newline = true;
-	if ((strcmp(argv[1], "echo") == 0))
+	t_gc	*gc;
+
+	gc = get_gc();
+
+	if (ft_strncmp(args[0], "$", 1) == 0)
 	{
-		while (argv[i] && strcmp(argv[i], "-n") == 0)
+		//char *temp = ft_strdup(args[0] + 1);
+		if (*args + 1)
 		{
-			is_newline =false;
-			i++;
+			char *var_name = *args + 1;
+			char *var = find_var_in_env(shell->my_envp, var_name, ft_strlen(var_name), gc->temp);
+			printf(YELLOW"%s\n"DEFAULT, var);
+			// search it,,
+			// if (check_existing(shell->my_envp, var))
+			// {
+			// 	char *result = ft_strdup(shell->my_envp[ft_strlen(var)]);
+			// 	printf(BLUE"%s\n"DEFAULT, result);
+			// 	free (result);
+			// 	exit(0);
+			// }
+			// else
+			// {
+				printf("\n");
+			//}
 		}
-		while (argv[i] != NULL)
-		{
-			printf(YELLOW"%s", argv[i]);
-			if (argv[i + 1] != NULL)
-				printf(" ");
-			char *temp = ft_strchr(argv[i], '$');
-			if (temp != NULL)
-			{
-				char *var_name = temp + 1;
-				char *var = find_var_in_env(shell->my_envp, var_name, ft_strlen(var_name), gc_list);
-				// search it,,
-				if (check_existing(shell->my_envp, var))
-				{
-					char *result = ft_strdup(shell->my_envp[ft_strlen(var)]);
-					free (result);
-				}
-				else
-				{
-					printf("\n");
-				}
-			}
-			i++;
-		}
-		if (is_newline)
-			printf("\n"DEFAULT);
 	}
-	
+
+	while (args[i] && strcmp(args[i], "-n") == 0)
+	{
+		is_newline = false;
+		i++;
+	}
+
+	while (args[i] != NULL)
+	{
+		printf(YELLOW"%s", args[i]);
+		if (args[i + 1] != NULL)
+			printf(" ");
+		i++;
+	}
+
+	if (is_newline)
+		printf("\n"DEFAULT);
 }
 
 
