@@ -37,25 +37,25 @@ void	ft_echo(char **args, t_shell *shell)
 			// }
 			// else
 			// {
-				printf("\n");
+			printf("\n");
 			//}
 		}
 	}
-
-	while (args[i] && strcmp(args[i], "-n") == 0)
+	else
 	{
-		is_newline = false;
-		i++;
+		while (args[i] && strcmp(args[i], "-n") == 0)
+		{
+			is_newline = false;
+			i++;
+		}
+		while (args[i] != NULL)
+		{
+			printf(YELLOW"%s", args[i]);
+			if (args[i + 1] != NULL)
+				printf(" ");
+			i++;
+		}
 	}
-
-	while (args[i] != NULL)
-	{
-		printf(YELLOW"%s", args[i]);
-		if (args[i + 1] != NULL)
-			printf(" ");
-		i++;
-	}
-
 	if (is_newline)
 		printf("\n"DEFAULT);
 }
