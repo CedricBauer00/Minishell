@@ -54,20 +54,20 @@ void	export(char **args, t_shell *shell)
 	t_gc *gc;
 
 	gc = get_gc();
-	if ((strcmp(args[0], "export") == 0 )&& !args[1])
+	if ((strcmp(args[1], "export") == 0 )&& !args[2])
 	{
 		print_envp(shell, args);
 	}
-	if ((strcmp(args[0], "env") == 0 )&& !args[1])
+	if ((strcmp(args[1], "env") == 0 )&& !args[2])
 	{
 		print_envp(shell, args);
 	}
-	else if (strcmp(args[0], "export") == 0 && args[1] != NULL)
+	else if (strcmp(args[1], "export") == 0 && args[2] != NULL)
 	{
-		char	*name = extract_name(args[1]);
+		char	*name = extract_name(args[2]);
 		is_exited(name, gc);
 		printf("name:%s\n", name);
-		char	*value = extract_value(args[1]);
+		char	*value = extract_value(args[2]);
 		is_exited(value, gc);
 		printf("value:%s\n", value);
 		ft_setenv(name, value, 1 , shell);

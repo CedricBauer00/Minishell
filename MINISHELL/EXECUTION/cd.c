@@ -6,10 +6,6 @@
 	cd /: move to root dir;
 */
 
-/*
-	//todo think!
-	//how to free structure... using with garbage_colloector? or should i handle it separatly?
-*/
 #include "../INCLUDE/main.h"
 
 //stat(): check path, and check if its approchable. succesed return 0, failed: return -1
@@ -104,7 +100,7 @@ char *create_new_path(const char *name, const char *value)
 	if (!value)
 	{
 		namelen = ft_strlen(name);
-		char *new_path = do_alloc(&gc->shell, namelen + 1, TYPE_SINGLE_PTR, "new_path");
+		char *new_path = do_alloc(&gc->temp, namelen + 1, TYPE_SINGLE_PTR, "new_path");
 		if (!new_path)
 		{
 			perror("failed to create new_path");
@@ -145,7 +141,6 @@ void	ft_setenv(const char *name, const char *value, int overwrite, t_shell *shel
 	gc = get_gc();
 	index = check_existing(shell->my_envp, name);
 	new_path = create_new_path(name, value);
-	if (!new_path)
 	is_exited(new_path, gc);
 	//if already existed but, overwrite == 0 so maybe we can delete it
 	if(index >= 0 && overwrite == 0)
@@ -153,19 +148,19 @@ void	ft_setenv(const char *name, const char *value, int overwrite, t_shell *shel
 	//if existed , and want to overwrite to it.
 	if (index >= 0 && overwrite == 1)
 	{
-		t_gc_list *find = find_node(gc->shell, (char*)new_path);
-		delete_node(&gc->shell, find);
-		shell->my_envp[index] = new_path;
+		shell->my_envp[index] = gc_strdup(new_path, gc->shell);
+		t_gc_list *find = find_node(gc->temp, (char*)new_path);
+		delete_node(&gc->temp, find);
 	}
 	//even if is not existed then anyway we have to assign to it 
 	else
 	{
 		new_envp = expand_envp(shell, new_path);
+		//todo think about how to copy ?!
 		free(shell->my_envp);
 		shell->my_envp = new_envp;
 	}
 }
-
 
 void cd(char **args, t_shell *shell, t_gc *gc)
 {
@@ -203,10 +198,10 @@ void cd(char **args, t_shell *shell, t_gc *gc)
 			exit(1);
 		}
 	}
-	//todo maybe i have to modify it
 	else
 	{
-		target = gc_strdup(*args, gc->temp);
+		fprintf(stderr, RED"for 'cd others'\n"DEFAULT);
+		target = gc_strdup(args[0], gc->temp);
 		is_exited(target, gc);
 	}
 	if (chdir(target) != 0)
@@ -226,13 +221,10 @@ void cd(char **args, t_shell *shell, t_gc *gc)
 	delete_node(&gc->temp, find);
 	shell->old_dir = shell->cur_dir;
 	ft_setenv("OLDPWD", shell->cur_dir, 1, shell);
-	fprintf(stderr, RED"sell->old_dir : %s"DEFAULT, shell->old_dir);
+	fprintf(stderr, RED"sell->old_dir : %s\n"DEFAULT, shell->old_dir);
 	shell->cur_dir = new_dir;
 	ft_setenv("PWD", shell->cur_dir, 1, shell);
-
-
-	fprintf(stderr , RED"sell->cur_dir : %s"DEFAULT, shell->cur_dir);
-
+	fprintf(stderr , RED"sell->cur_dir : %s\n"DEFAULT, shell->cur_dir);
 }
 
 

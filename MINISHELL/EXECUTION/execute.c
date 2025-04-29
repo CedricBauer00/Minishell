@@ -69,9 +69,15 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
  	
 	fprintf(stderr, GREEN"execute_builtin()\n"DEFAULT);
  	if (strcmp(cur->built_in, "cd") == 0)
- 		cd(cur->args, shell, gc);
+	{
+		fprintf(stderr, RED"try to do 'cd' execute_builtin\n"DEFAULT);
+		cd(cur->args, shell, gc);
+	}
 	if (strcmp(cur->built_in, "echo") == 0)
- 		ft_echo(cur->args, shell);
+	{
+		fprintf(stderr, RED"try to do 'echo' execute_builtin\n"DEFAULT);
+		ft_echo(cur->args, shell);
+	}
 	// if (strcmp(cur->built_in, "export") == 0)
 	// 	export(shell, "export");
 	// if (strcmp(cur->built_in, "pwd") == 0)
@@ -107,6 +113,7 @@ void	single_cmd_execute(t_cmd_block *cur, pid_t pid, t_gc *gc)
 	}
 	else if(cur->args) //if external cmd
 	{
+		fprintf(stderr, "is in single_cmd_execute for child??\n");
 		pid = fork();
 		shell->pids[0] = pid;
 		fprintf(stderr, YELLOW" singlecmd fork() : %d , shell->pids[0] %d \n"DEFAULT, pid, shell->pids[0]) ;
@@ -216,7 +223,9 @@ void	main_execute(t_cmd_block *cmd_block, t_gc *gc, t_shell *shell)
 
 	do_alloc_pids(cmd_block);
 
-	execute_single_command(cur);
+	if (cur->is_built_in)
+		execute_single_command(cur);
+	
 	execute_pipeline(cur);
 
 	prevent_zombie_process();
@@ -236,27 +245,16 @@ static t_token *create_token(t_token_type type, char *value)
 	return new;
 } 
 
-//cat < 1 < 2 | cat -e >> 3
-//cat < 1 < 2 | ls > 3
-//cat < 1 < 2 | grep ehllo >> 4 >> 5
-//cat < 1 < 2 | grep hello >> 2
-//cat < 1 < 2 | cat -e >> 2 
-//cat << eof << eof | cat -e >> 2
-//cat < 1 < 2 | cat -e >> 2 | ls -a | cat -b -e
-//ls -a -n -l < 1 -R
-
-//ls | cat << | cat -e -b
-
 
 int main(int ac, char *argv[], char *envp[])
 {
 	(void)ac;
 	(void)argv;
-	t_token *t1 = create_token(TOKEN_ARGS, "ls");
-	t_token *t2 = create_token(TOKEN_ARGS, "-l");
+	t_token *t1 = create_token(TOKEN_BUILT_IN, "cd");
+	t_token *t2 = create_token(TOKEN_ARGS, "..");
 	t_token *t3 = create_token(TOKEN_PIPE, "|");
-	t_token *t4 = create_token(TOKEN_ARGS, "cat");
-	t_token *t5= create_token(TOKEN_ARGS, "-e");
+	t_token *t4 = create_token(TOKEN_BUILT_IN, "echo");
+	t_token *t5= create_token(TOKEN_ARGS, "hello");
 	// t_token *t6 = create_token(TOKEN_ARGS, "-e");
 	// t_token *t7 = create_token(TOKEN_APPEND, ">>");
 	// t_token *t8 = create_token(TOKEN_FILE, "2");
@@ -279,7 +277,7 @@ int main(int ac, char *argv[], char *envp[])
 	t4->prev = t3;
 	t4->next = t5;
 
-	t5->prev = t4;
+	// t5->prev = t4;
 	// t5->next = t6;
 
 	// t6->prev = t5;
@@ -314,7 +312,7 @@ int main(int ac, char *argv[], char *envp[])
 			i++;
 		}
 		t_io_streams_list *tmp = print->io_streams;
-		while (tmp	&& tmp->infile_name)
+		while (tmp&& tmp->infile_name)
 		{
 			if (tmp->infile_name)
 				printf("file : %s\n", tmp->infile_name);
@@ -388,7 +386,6 @@ void	execute_single_command(t_cmd_block *cmd_block)
 	}
 }
 
-//todo 
 int	count_command(t_cmd_block *cmd_block)
 {
 	t_cmd_block *temp;
@@ -446,6 +443,7 @@ void	fork_and_execute(t_cmd_block *cmd_block, t_gc *gc, int *i)
 	shell->pids[*i] = pid;
 }
 
+//error
 void	execute_pipeline(t_cmd_block *cmd_block)
 {
 	t_cmd_block *cur;
@@ -455,6 +453,7 @@ void	execute_pipeline(t_cmd_block *cmd_block)
 	i = 0;
 	gc = get_gc();
 	cur = cmd_block;
+
 	while(cur)
 	{
 		fork_and_execute(cur, gc, &i);

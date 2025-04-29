@@ -61,15 +61,16 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 	i = 0;
 	while(cur && cur->type != TOKEN_PIPE) //[cat] [-e] [hello] [hello] [|]
 	{
-		if (cur && cur->type == TOKEN_ARGS)
-		{
-			new_cmd_block->args[i] = gc_strdup(cur->value, gc->temp);
-			i++;
-		}
-		
 		if (cur && cur->type == TOKEN_BUILT_IN)
 		{
+			new_cmd_block->is_built_in = true;
 			new_cmd_block->built_in = gc_strdup(cur->value, gc->temp);
+			//new_cmd_block->args[i++] = gc_strdup(cur->value, gc->temp);
+		}
+
+		if (cur && cur->type == TOKEN_ARGS)
+		{
+			new_cmd_block->args[i++] = gc_strdup(cur->value, gc->temp);
 		}
 		
 		if (cur && (cur->type & (TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT | TOKEN_APPEND | TOKEN_HEREDOC)))  //token->value : < filename
