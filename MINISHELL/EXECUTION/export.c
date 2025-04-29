@@ -4,49 +4,30 @@
 // char	**expand_envp(t_shell *shell, char *new_path)
 // char *create_new_path(const char *name, const char *value)
 
-// char	*ft_strchr(char *str, char c)
-// {
-// 	if (!str || !c)
-// 		return NULL;
-// 	while(1)
-// 	{
-// 		if(*str == c)
-// 			return str;
-// 		if(*str == '\0')
-// 			break;
-// 		str++;
-// 	}
-// 	return (NULL);
-// }
-
-void	print_envp(t_shell *shell, char *flag)
+//export even  if no existed '=' it should works
+//if i use only with '=' we can see that var in env
+void	print_envp(t_shell *shell, char **args)
 {
 	int	i;
+	bool is_path = false;
+	int	j;
+	t_gc *gc;
 
 	i = 0;
-
+	j = 0;
 	if (!shell)
 		return ;
+
+	gc = get_gc();
+	is_path = check_existing(shell->my_envp, "PATH");
 	while(shell->my_envp[i])
 	{
-		if (strcmp(flag, "export") == 0)
+		if (strcmp(args[0], "export") == 0)
 			printf(YELLOW"declare -x %s\n"DEFAULT, shell->my_envp[i]);
-		else if (strcmp(flag, "env") == 0)
+		else if (strcmp(args[0], "env") == 0)
 		{
-			int j = 0;
-			bool is_path = false;
-			while (shell->my_envp[j] != NULL)
-			{
-				if (strncmp(shell->my_envp[j], "PATH=", 5) == 0)
-				{
-					is_path = true;
-					break;
-				}
-				j++;
-			}
 			if (is_path)
 			{
-				j = 0;
 				while (shell->my_envp[j] != NULL)
 				{
 					if(ft_strchr(shell->my_envp[j], '=') != NULL)
@@ -58,43 +39,41 @@ void	print_envp(t_shell *shell, char *flag)
 			}
 			else
 			{
-				printf(RED"env: No such file or directory\n"DEFAULT);
+				gc_free(gc);
+				fprintf(stderr, RED"env: No such file or directory\n"DEFAULT);
+				exit(1);
 			}
 		}
 		i++;
 	}
 }
 
-int	export(char **argv, t_shell *shell)
+//todo fix it!
+void	export(char **args, t_shell *shell)
 {
-	if ((strcmp(argv[1], "export") == 0 )&& argv[2] == NULL)
+	t_gc *gc;
+
+	gc = get_gc();
+	if ((strcmp(args[0], "export") == 0 )&& !args[1])
 	{
-		print_envp(shell, argv[1]);
-		return (1);
+		print_envp(shell, args);
 	}
-	if ((strcmp(argv[1], "env") == 0 )&& argv[2] == NULL)
+	if ((strcmp(args[0], "env") == 0 )&& !args[1])
 	{
-		print_envp(shell, argv[1]);
-		return (1);
+		print_envp(shell, args);
 	}
-	else if (strcmp(argv[1], "export") == 0 && argv[2] != NULL)
+	else if (strcmp(args[0], "export") == 0 && args[1] != NULL)
 	{
-		char	*name = extract_name(argv[2]);
+		char	*name = extract_name(args[1]);
+		is_exited(name, gc);
 		printf("name:%s\n", name);
-		char	*value = extract_value(argv[2]);
+		char	*value = extract_value(args[1]);
+		is_exited(value, gc);
 		printf("value:%s\n", value);
-		if (!name)
-			return (0);
-		else
-		{
-			int result = ft_setenv(name, value, 1 , shell);
-			free(name);
-			free(value);
-			return (result);
-		}
-		
+		ft_setenv(name, value, 1 , shell);
+		free(name);
+		free(value);
 	}
-	return 0;
 }
 
 char	*extract_name(char *arg)

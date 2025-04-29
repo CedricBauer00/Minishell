@@ -63,7 +63,7 @@ int	validate_syntax(t_token *token)
 	return 1;
 }
 
-//after grouplize calling
+//maybe we dont need it
 bool	is_validate_cmd_block(t_cmd_block *cmd_b)
 {
 	t_cmd_block *cur;

@@ -72,12 +72,15 @@ char	**expand_envp(t_shell *shell, char *new_path)
 {
 	int env_count;
 	int	i;
+	t_gc *gc;
 
+	gc = get_gc();
 	env_count = get_env_count(shell->my_envp);
 	char	**new_envp = malloc(sizeof(char*) * (env_count + 2));
 	if (!new_envp)
 	{
-		return(NULL);
+		gc_free(gc);
+		exit(1);
 	}
 	i = 0;
 	while(shell->my_envp[i])
@@ -129,7 +132,7 @@ char *create_new_path(const char *name, const char *value)
 	}
 }
 
-int	ft_setenv(const char *name, const char *value, int overwrite, t_shell *shell)
+void	ft_setenv(const char *name, const char *value, int overwrite, t_shell *shell)
 {
 	int		index;
 	char	*new_path;
@@ -137,38 +140,30 @@ int	ft_setenv(const char *name, const char *value, int overwrite, t_shell *shell
 	t_gc	*gc;
 
 	if(!name || *name == '\0')
-		return (0);
+		return ;
 
 	gc = get_gc();
 	index = check_existing(shell->my_envp, name);
 	new_path = create_new_path(name, value);
 	if (!new_path)
-		return (0);
-	//if already existed but, overwrite == 0
+	is_exited(new_path, gc);
+	//if already existed but, overwrite == 0 so maybe we can delete it
 	if(index >= 0 && overwrite == 0)
-		return (0);
+		return ;
 	//if existed , and want to overwrite to it.
 	if (index >= 0 && overwrite == 1)
 	{
 		t_gc_list *find = find_node(gc->shell, (char*)new_path);
 		delete_node(&gc->shell, find);
 		shell->my_envp[index] = new_path;
-		return (1);
 	}
+	//even if is not existed then anyway we have to assign to it 
 	else
 	{
-		//if ist not existed then anyway we have to assign to it 
 		new_envp = expand_envp(shell, new_path);
-		if(!new_envp)
-		{
-			free(new_path);
-			return 0;
-		}
 		free(shell->my_envp);
 		shell->my_envp = new_envp;
-		return (1);
 	}
-	return (0);
 }
 
 
@@ -184,123 +179,60 @@ void cd(char **args, t_shell *shell, t_gc *gc)
 		gc_free(gc);
 		return ;
 	}
-	//test just cd 
-	// if ((strcmp(args[0], "cd") == 0))
+	char	*target;
+	char	*temp;
+	if (args[0] == NULL || strcmp(args[0], "~") == 0)
 	{
-		char	*target;
-
-		if (args[0] == NULL || strcmp(args[0], "~") == 0)
+		fprintf(stderr, RED"case just cd\n"DEFAULT);
+		target = find_var_in_env(shell->my_envp, "HOME", 4, gc->temp);
+		if (!target)
 		{
-			fprintf(stderr, RED"case just cd\n"DEFAULT);
-			target = find_var_in_env(shell->my_envp, "HOME", 4, gc->temp);
-			if (!target)
-			{
-				perror(RED "chdir error for 'cd'\n"DEFAULT);
-				gc_free(gc);
-				exit(1);
-			}
-		}
-		else if (strcmp(args[0], "-") == 0)
-		{
-			fprintf(stderr, RED"for 'cd -'\n"DEFAULT);
-			target = find_var_in_env(shell->my_envp, "OLDPWD", 6, gc->temp);
-			if (!target)
-			{
-				fprintf(stderr, RED"cd:OLDPWD not set\n"DEFAULT);
-				gc_free(gc);
-				exit(1);
-			}
-		}
-		else
-			target = *args;
-
-		if (chdir(target) != 0)
-		{
-			perror(RED"cd () error"DEFAULT);
+			perror(RED "chdir error for 'cd'\n"DEFAULT);
 			gc_free(gc);
 			exit(1);
 		}
-
-		char	*new_dir = my_getcwd(shell, gc);
-		if (!new_dir)
-		{
-			perror(RED "chdir error for cd - \n"DEFAULT);
-			gc_free(gc);
-			exit(1);
-		}
-		t_gc_list *find = find_node(gc->temp, (char*)target);
-		delete_node(&gc->temp, find);
-		shell->old_dir = shell->cur_dir;
-		ft_setenv("OLDPWD", shell->cur_dir, 1, shell);
-		fprintf(stderr, RED"sell->old_dir : %s"DEFAULT, shell->old_dir);
-		shell->cur_dir = new_dir;
-		ft_setenv("PWD", shell->cur_dir, 1, shell);
-		fprintf(stderr , RED"sell->cur_dir : %s"DEFAULT, shell->cur_dir);
-		//todo print out env
 	}
+	else if (strcmp(args[0], "-") == 0)
+	{
+		fprintf(stderr, RED"for 'cd -'\n"DEFAULT);
+		target = find_var_in_env(shell->my_envp, "OLDPWD", 6, gc->temp);
+		if (!target)
+		{
+			fprintf(stderr, RED"cd:OLDPWD not set\n"DEFAULT);
+			gc_free(gc);
+			exit(1);
+		}
+	}
+	//todo maybe i have to modify it
+	else
+	{
+		target = gc_strdup(*args, gc->temp);
+		is_exited(target, gc);
+	}
+	if (chdir(target) != 0)
+	{
+		perror(RED"cd () error"DEFAULT);
+		gc_free(gc);
+		exit(1);
+	}
+	char	*new_dir = my_getcwd(shell, gc);
+	if (!new_dir)
+	{
+		perror(RED "chdir error for cd - \n"DEFAULT);
+		gc_free(gc);
+		exit(1);
+	}
+	t_gc_list *find = find_node(gc->temp, (char*)target);
+	delete_node(&gc->temp, find);
+	shell->old_dir = shell->cur_dir;
+	ft_setenv("OLDPWD", shell->cur_dir, 1, shell);
+	fprintf(stderr, RED"sell->old_dir : %s"DEFAULT, shell->old_dir);
+	shell->cur_dir = new_dir;
+	ft_setenv("PWD", shell->cur_dir, 1, shell);
 
-	//test cd -
-	// else if (strcmp(argv[0], "cd") == 0 && argv[1])
-	// {
-	// 	if(argv[1][0] == '-' && strlen(argv[1]) == 1)
-	// 	{
-	// 		printf(RED"get in for 'cd -'\n"DEFAULT);
-	// 		shell->old_dir = find_var_in_env(shell->my_envp, "OLDPWD", 6, gc->temp);
-	// 		if (!shell->old_dir)
-	// 		{
-	// 			fprintf(stderr, RED"cd:OLDPWD not set\n"DEFAULT);
-	// 			//todo all free(shell->cur_dir);
-	// 			return ;
-	// 		}
-	// 		if (chdir(shell->old_dir) != 0)
-	// 		{
-	// 			perror(RED "chdir error for cd - \n"DEFAULT);
-	// 			//todo all free(shell->cur_dir);
-	// 			return ;
-	// 		}
-	// 		char	*new_dir = my_getcwd(shell, gc);
-	// 		if (new_dir)
-	// 		{
-	// 			shell->old_dir = shell->cur_dir;
-	// 			ft_setenv("OLDPWD", shell->cur_dir, 1, shell);
-	// 			shell->cur_dir = new_dir;
-	// 			ft_setenv("PWD", shell->cur_dir, 1, shell);
-	// 		}
-	// 		else
-	// 		{
-	// 			perror("getcwd error");
-	// 			//free allocated variables;
-	// 		}
-	// 	}
 
-// 		//test absolute path
-// 		else if(is_valid_dir(argv[1]))
-// 		{
-// 			printf(RED"argv[1]%s\n"DEFAULT,argv[1]);
-// 			if (chdir(argv[1]) != 0)
-// 			{
-// 				perror(RED "chdir error for 'argv[2]' in cd func\n"DEFAULT);
-// 				free(shell->cur_dir);
-// 			}
-// 			char	*new_dir = my_getcwd(shell, gc);
-// 			if (new_dir)
-// 			{
-// 				shell->old_dir = shell->cur_dir;
-// 				ft_setenv("OLDPWD", shell->cur_dir, 1, shell);
-// 				shell->cur_dir = new_dir;
-// 				ft_setenv("PWD", shell->cur_dir, 1, shell);
-// 			}
-// 			else
-// 			{
-// 				perror("getcwd error");
-// 				//free allocated memories.
-// 			}
-// 		}
-// 	}
-// 	else
-// 	{
-// 		printf(RED"not found directory\n"DEFAULT);
-// 	}
+	fprintf(stderr , RED"sell->cur_dir : %s"DEFAULT, shell->cur_dir);
+
 }
 
 

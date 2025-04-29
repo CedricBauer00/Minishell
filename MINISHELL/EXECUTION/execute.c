@@ -14,11 +14,16 @@ void	wait_for_child_and_update_status(t_cmd_block *cur, int i)
 	idx = 0;
 	while(idx < i)
 	{
-		printf(RED"shell->pids[idx] %d\n"DEFAULT, shell->pids[idx]);
+		fprintf(stderr, RED"shell->pids[idx] %d\n"DEFAULT, shell->pids[idx]);
 		pid_t child_pid = wait4(shell->pids[idx], &status, 0 ,NULL);
 		fprintf(stderr ,RED"child_pid %d\n"DEFAULT, child_pid);
 		fprintf(stderr ,BLUE"parent got this from wait4() child_pid : %d\n"DEFAULT, child_pid);
 		if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
+		{
+			fprintf(stderr, GREEN"exited with %d\n"DEFAULT, WEXITSTATUS(status));
+			shell->last_status_exit = WEXITSTATUS(status);  //parents get exit status 
+		}
+		if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
 		{
 			fprintf(stderr, GREEN"exited with %d\n"DEFAULT, WEXITSTATUS(status));
 			shell->last_status_exit = WEXITSTATUS(status);  //parents get exit status 
@@ -30,7 +35,6 @@ void	wait_for_child_and_update_status(t_cmd_block *cur, int i)
 		}
 		idx++;
 	}
-	//todo if is single command ????
 }
 
 //todo change name becuz it doenst make offset or maybe i can make it to have it offset 
@@ -68,12 +72,13 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
  		cd(cur->args, shell, gc);
 	if (strcmp(cur->built_in, "echo") == 0)
  		ft_echo(cur->args, shell);
+	// if (strcmp(cur->built_in, "export") == 0)
+	// 	export(shell, "export");
 	// if (strcmp(cur->built_in, "pwd") == 0)
 	// 	my_pwd(shell, gc);
 	// if (strcmp(cur->built_in, "env") == 0)
 	// 	print_envp(shell, "env");
-	// if (strcmp(cur->built_in, "export") == 0)
-	// 	print_envp(shell, "export");
+	
 	// if (strcmp(cur->built_in, "unset") == 0)
 	// 	unset(cur->args, shell);
 }
@@ -99,12 +104,12 @@ void	single_cmd_execute(t_cmd_block *cur, pid_t pid, t_gc *gc)
 		}
 		set_io_streams(cur);
 		execute_builtin(cur, shell);
-		//todo recover STDIN and STDOUT maybe. in hier? oder in der main_excute funktion? 
 	}
 	else if(cur->args) //if external cmd
 	{
 		pid = fork();
-		fprintf(stderr, YELLOW" singlecmd fork() : %d \n"DEFAULT, pid);
+		shell->pids[0] = pid;
+		fprintf(stderr, YELLOW" singlecmd fork() : %d , shell->pids[0] %d \n"DEFAULT, pid, shell->pids[0]) ;
 		if (pid == 0)
 		{
 			if (cur->io_streams && cur->io_streams->heredoc_eof)
@@ -119,8 +124,8 @@ void	single_cmd_execute(t_cmd_block *cur, pid_t pid, t_gc *gc)
 			set_io_streams(cur);
 			run_execve(cur, gc);
 		}
-		// else
-		// 	wait_for_child_and_update_status(cur, 1);
+		else
+		 	wait_for_child_and_update_status(cur, 1);
 	}
 }
 
@@ -133,14 +138,14 @@ void	execute_child(pid_t pid, t_cmd_block *cur, t_gc *gc, t_shell *shell)
 		if (heredoc_fd_offset_and_redir(cur) == -1)
 		{
 			perror("errror");
-			//todo free
+			gc_free(gc);
 			exit(1);
 		}
 	}
 	if (cur->built_in)
 	{
 		execute_builtin(cur, shell);
-		exit(0);
+		//exit(0);
 	}
 	if (cur->args)
 	{
@@ -159,7 +164,8 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 	char *path = find_var_in_env(shell->my_envp, "PATH", 4, gc->temp);
 	if (!path)
 	{
-		//todo error handle
+		exit(1);
+		gc_free(gc);
 	}
 	splitted_path = ft_split(path, ':');
 	int i = 0;
@@ -168,22 +174,23 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 		char *attach_slash_to_cmd = ft_strjoin(splitted_path[i], "/");
 		if (!attach_slash_to_cmd)
 		{
-			//todo error handle
+			exit(1);
+			gc_free(gc);
 		}
 		char *cmd_path = ft_strjoin(attach_slash_to_cmd, cmd_block->args[0]);
 		if (!cmd_path)
 		{
-			//todo error handle
+			exit(1);
+			gc_free(gc);
 		}
 		if (access(cmd_path, F_OK | X_OK) == 0)
 		{
+			fprintf(stderr, "execve()\n");
 			if (execve(cmd_path , cmd_block->args, shell->my_envp) == -1)
 			{
 				fprintf(stderr, RED"error\n"DEFAULT);
 				exit(1);
 			}
-			else
-				exit(0);
 		}
 		i++;
 	}
@@ -203,17 +210,13 @@ void	main_execute(t_cmd_block *cmd_block, t_gc *gc, t_shell *shell)
 	
 	hanlde_heredoc(cur);
 
-	execute_single_command(cur);
-
 	//memo zahlen wie viele pipe es gibt
 	int	pid_counts = count_command(cmd_block);
-
 	printf("pid_counts %d\n", pid_counts);
-
 
 	do_alloc_pids(cmd_block);
 
-
+	execute_single_command(cur);
 	execute_pipeline(cur);
 
 	prevent_zombie_process();
@@ -249,11 +252,11 @@ int main(int ac, char *argv[], char *envp[])
 {
 	(void)ac;
 	(void)argv;
-	t_token *t1 = create_token(TOKEN_BUILT_IN, "echo");
-	t_token *t2 = create_token(TOKEN_ARGS, "$HOME");
-	// t_token *t3 = create_token(TOKEN_ARGS, "hello");
-	// t_token *t4 = create_token(TOKEN_PIPE, "|");
-	// t_token *t5= create_token(TOKEN_ARGS, "cat");
+	t_token *t1 = create_token(TOKEN_ARGS, "ls");
+	t_token *t2 = create_token(TOKEN_ARGS, "-l");
+	t_token *t3 = create_token(TOKEN_PIPE, "|");
+	t_token *t4 = create_token(TOKEN_ARGS, "cat");
+	t_token *t5= create_token(TOKEN_ARGS, "-e");
 	// t_token *t6 = create_token(TOKEN_ARGS, "-e");
 	// t_token *t7 = create_token(TOKEN_APPEND, ">>");
 	// t_token *t8 = create_token(TOKEN_FILE, "2");
@@ -268,15 +271,15 @@ int main(int ac, char *argv[], char *envp[])
 	t1->next = t2;
 
 	t2->prev = t1;
-	// t2->next = t3;
+	t2->next = t3;
 
-	// t3->prev = t2;
-	// t3->next = t4;
+	t3->prev = t2;
+	t3->next = t4;
 
-	// t4->prev = t3;
-	// t4->next = t5;
+	t4->prev = t3;
+	t4->next = t5;
 
-	// t5->prev = t4;
+	t5->prev = t4;
 	// t5->next = t6;
 
 	// t6->prev = t5;
@@ -337,7 +340,6 @@ int main(int ac, char *argv[], char *envp[])
 	return 0;
 }
 
-
 //memo refactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoring
 void	validate_check(t_cmd_block *cmd_block)
 {
@@ -386,6 +388,7 @@ void	execute_single_command(t_cmd_block *cmd_block)
 	}
 }
 
+//todo 
 int	count_command(t_cmd_block *cmd_block)
 {
 	t_cmd_block *temp;
@@ -400,6 +403,7 @@ int	count_command(t_cmd_block *cmd_block)
 	return count;
 }
 
+
 void	do_alloc_pids(t_cmd_block* cmd_block)
 {
 	int	count;
@@ -411,6 +415,7 @@ void	do_alloc_pids(t_cmd_block* cmd_block)
 	if (count == 0 || (count == 1 && cmd_block->built_in))
 		return ;
 	shell = get_shell();
+	printf("count : %d\n", count);
 	shell->pids = do_alloc(&gc->temp, sizeof(pid_t) * count, TYPE_SINGLE_PTR, "pids");
 	if(!shell->pids)
 	{
@@ -450,13 +455,11 @@ void	execute_pipeline(t_cmd_block *cmd_block)
 	i = 0;
 	gc = get_gc();
 	cur = cmd_block;
-	while(cur && cur->next)
+	while(cur)
 	{
 		fork_and_execute(cur, gc, &i);
 		i++;
 		cur = cur->next;
 	}
-
-	// t_cmd_block *temp = cmd_block;
 	wait_for_child_and_update_status(cmd_block, i);
 }

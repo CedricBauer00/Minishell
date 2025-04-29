@@ -24,9 +24,8 @@ typedef enum s_tenum
 	TOKEN_NONE	= 0x0000,  			//0000 0000
 	TOKEN_ARGS	= 0x0001,
 	TOKEN_FILE  = 0x0002,
-
 	TOKEN_BUILT_IN = 0x0004,		// cd, pwd, export, ...
-	TOKEN_PIPE = 0x008,			//Symbol: |
+	TOKEN_PIPE = 0x008,				//Symbol: |
 	TOKEN_REDIRECT_IN = 0x0010,		//Symbol: <
 	TOKEN_REDIRECT_OUT = 0x0020,	//Symbol: >
 	TOKEN_APPEND = 0x0040,			//Symbol: >>
@@ -85,6 +84,7 @@ typedef struct s_cmd_block //struct being allocated for each token from input
 	struct s_pipe				*pipe;
 	int							prev_read_end_fd; //pipe 초기값은 -1로.
 	int							cur_fd_write_end;
+	int							pipe_count;
 	struct s_cmd_block			*prev;
 	struct s_cmd_block			*next;
 }	t_cmd_block;
@@ -167,12 +167,12 @@ int		get_env_count(char **my_envp);
 char	**expand_envp(t_shell *shell, char *new_path);
 char	*create_new_path(const char *name, const char *value);
 int		check_existing(char **my_envp, const char *name);
-int		ft_setenv(const char *name, const char *value, int overwrite, t_shell *shell);
-void 	cd(char **argv, t_shell *shell, t_gc *gc);
+void	ft_setenv(const char *name, const char *value, int overwrite, t_shell *shell);
+void 	cd(char **args, t_shell *shell, t_gc *gc);
 
 //memo export.c
-int		export(char **argv, t_shell *shell);
-void	print_envp(t_shell *shell, char *flag);
+void	export(char **argv, t_shell *shell);
+void	print_envp(t_shell *shell, char **args);
 char	*extract_name(char *arg);
 char	*extract_value(char *arg);
 //char	*ft_strchr(char *str, char c);
@@ -181,7 +181,7 @@ char	*extract_value(char *arg);
 void	unset(char **argv, t_shell *shell);
 
 //memo echo.c
-void	ft_echo(char **argv, t_shell *shell, t_gc_list *gc_list);
+void	ft_echo(char **args, t_shell *shell);
 
 //memo pipe
 void	add_pipe(t_cmd_block **cmd_block, t_gc_list *gc_lst);
@@ -241,6 +241,7 @@ void	execute_single_command(t_cmd_block *cmd_block);
 void	do_alloc_pids(t_cmd_block* cmd_block);
 void	fork_and_execute(t_cmd_block *cmd_block, t_gc *gc, int *i);
 void	execute_pipeline(t_cmd_block *cmd_block);
+void	execute_builtin(t_cmd_block *cur, t_shell *shell);
 //built_in
 //pwd
 //cd

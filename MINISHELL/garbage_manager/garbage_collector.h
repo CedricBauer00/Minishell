@@ -52,7 +52,7 @@ t_gc		*get_gc(void);
 void		delete_node(t_gc_list **gc_lst, t_gc_list *to_delete);
 void		*do_alloc(t_gc_list **gc_lst, size_t howmuch, t_data_type data_type, char *id);
 void		free_data_by_type(void *data, t_data_type data_type);
-void		all_free(t_gc_list **gc_lst);
+void		gc_list_free(t_gc_list **gc_lst);
 void		print_list(t_gc_list *gc_lst);
 t_gc_list	*find_node(t_gc_list *gc_lst, void *target);
 t_gc_list	*find_node_with_id(t_gc_list *gc_lst, char *id);

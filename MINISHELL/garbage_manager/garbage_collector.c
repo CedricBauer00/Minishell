@@ -169,7 +169,7 @@ void	delete_node(t_gc_list **gc_lst, t_gc_list *to_delete)
 	}
 }
 
-void	all_free(t_gc_list **gc_lst)
+void	gc_list_free(t_gc_list **gc_lst)
 {
 	if (!gc_lst || !(*gc_lst))
 		return ;
@@ -226,13 +226,13 @@ void	gc_free(t_gc *gc)
 		return;
 	if(gc->temp)
 	{
-		all_free(&gc->temp);
+		gc_list_free(&gc->temp);
 		free(gc->temp);
 		gc->temp = NULL;
 	}
 	if(gc->shell)
 	{
-		all_free(&gc->shell);
+		gc_list_free(&gc->shell);
 		free(gc->shell);
 		gc->shell = NULL;
 	}

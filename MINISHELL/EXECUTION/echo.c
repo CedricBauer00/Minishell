@@ -26,6 +26,11 @@ void	ft_echo(char **args, t_shell *shell)
 		{
 			char *var_name = *args + 1;
 			char *var = find_var_in_env(shell->my_envp, var_name, ft_strlen(var_name), gc->temp);
+			if (!var)
+			{
+				gc_free(gc);
+				exit(1);
+			}
 			printf(YELLOW"%s\n"DEFAULT, var);
 			// search it,,
 			// if (check_existing(shell->my_envp, var))
