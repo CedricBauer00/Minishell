@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/24 18:16:05 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/29 18:16:59 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ int	main(int argc, char **argv, char **envp)
 	t_shell	*shell;
 	t_gc	*gc;
 
+	(void)shell;
 	(void)argc;
 	(void)argv;
 	using_history();
@@ -97,7 +98,7 @@ int	main(int argc, char **argv, char **envp)
 	if (ttyattr() < 0)
 		return (printf("ERROR\nttyattr failed!\n"), -1);
 	gc = get_gc();
-	main.envp = copy_envp(gc->shell, envp);
+	main.envp = copy_envp(gc, envp);
 	if (incrmnt_shllvl(&main, gc) < 0)
 		return (-1);
 	shell = get_shell(gc->shell);

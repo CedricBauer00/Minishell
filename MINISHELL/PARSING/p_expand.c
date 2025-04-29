@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 09:58:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/23 14:02:56 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/29 18:06:35 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,9 @@ int	expand_helper(t_main *main, int *i, int ws, t_gc_list *gc_list)
 	char	*var;
 	char	*value;
 	int		len;
-	int		j;
+	// int		j;
 
-	j = 0;
+	// j = 0;
 	len = 0;
 	var = NULL;
 	value = NULL;

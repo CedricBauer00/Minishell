@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 12:56:46 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/24 18:13:54 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/29 18:18:26 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,23 +24,23 @@ int	get_envp_count(char **envp)
 	return (count);
 }
 
-char	**copy_envp(t_gc_list *gc_lst, char **envp)
+char	**copy_envp(t_gc *gc, char **envp)
 {
 	int		count;
 	char	**my_envp;
 	int		i;
 
 	i = 0;
-	if (!gc_lst)
+	if (!gc) //gc->shell / gc
 		return (NULL);
 	count = get_envp_count(envp);
-	my_envp = do_alloc(&gc_lst, sizeof(char *) * count, \
+	my_envp = do_alloc(&gc->shell, sizeof(char *) * count, \
 		TYPE_DOUBLE_PTR, "copy_envp");
 	if (!my_envp)
-		return (NULL);
+		return (gc_free(gc), NULL); //gc
 	while (envp[i])
 	{
-		my_envp[i] = gc_strdup(envp[i], gc_lst);
+		my_envp[i] = gc_strdup(envp[i], gc->shell); //gc->shell
 		if (!my_envp[i])
 		{
 			while (--i >= 0)

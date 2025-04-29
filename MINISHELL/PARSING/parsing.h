@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/24 18:17:55 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/29 18:18:48 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ void	choose_error_statement(int indic, char *value);
 // 							ENVP + SHLLVL
 // ----------------------------------------------------------------------
 
-char	**copy_envp(t_gc_list *gc_lst, char **envp);
+char	**copy_envp(t_gc *gc, char **envp);
 int		get_envp_count(char **envp);
 int		num_len(int n);
 void	init_shllvl(char *str, int i);

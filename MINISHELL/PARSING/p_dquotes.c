@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   m_dquotes.c                                        :+:      :+:    :+:   */
+/*   p_dquotes.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 09:42:44 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/20 11:05:27 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/04/29 18:05:59 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,10 +83,10 @@ int	dquotes_helper(t_main *main, int *i, t_gc_list *gc_list)
 
 int	dquotes(t_main *main, int *i, t_gc_list *gc_list)
 {
-	int	ws;
+	// int	ws;
 
 	(*i)++;
-	ws = *i;
+	// ws = *i;
 	if (dquotes_helper(main, i, gc_list) < 0)
 		return (-1);
 	if (main->line[*i] != '"')
