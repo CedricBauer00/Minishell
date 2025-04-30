@@ -80,6 +80,25 @@ bool	is_validate_cmd_block(t_cmd_block *cmd_b)
 	return true;
 }
 
+//memo refactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoring
+void	validate_check(t_cmd_block *cmd_block)
+{
+	t_shell *shell;
+	t_cmd_block *cur;
+	t_gc *gc;
+
+	gc = get_gc();
+	shell =get_shell();
+	cur = cmd_block;
+	if (!cmd_block || is_validate_cmd_block(cur) == false)
+	{
+		gc_free(gc);
+		perror(RED"non valid cmd"DEFAULT);
+		shell->last_status_exit = 1;
+		exit(1);
+	}
+}
+
 /*
 token -> validate_syntax -> merge to one cmd_block -> validate_cmd_block(atm if theres heredoc excute heredoc)
 

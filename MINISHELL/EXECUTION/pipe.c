@@ -223,8 +223,11 @@ int	first_pipe_cmd(t_cmd_block *command, t_shell *shell, t_gc_list *gc_lst)
 		close(command->pipe->pipefd[0]);
 		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->pipefd[0]);
 		if (dup2( command->pipe->pipefd[1], STDOUT_FILENO) == -1)
+		{
 			perror(RED"first cmd dup2 error\n"DEFAULT);
-		fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), command->pipe->pipefd[1], STDOUT_FILENO);
+			return (-1);
+		}
+		fprintf(stderr, YELLOW "FIRST PIPE[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), command->pipe->pipefd[1], STDOUT_FILENO);
 		close( command->pipe->pipefd[1]);
 		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(),  command->pipe->pipefd[1]);
 		fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
@@ -337,7 +340,7 @@ void	close_pipefd(t_cmd_block *cmd)
 	else if (cmd->prev && !cmd->next)
 		close_last_pipefd(cmd);
 }
-
+//memo if return -1 we have to free all allocated memories
 void	processing_pipe(t_cmd_block *cmd, t_shell *shell, t_gc_list* gc_lst)
 {
 	if (is_first_pipe(cmd))

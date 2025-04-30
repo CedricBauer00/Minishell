@@ -137,12 +137,11 @@ void	ft_setenv(const char *name, const char *value, int overwrite, t_shell *shel
 
 	if(!name || *name == '\0')
 		return ;
-
 	gc = get_gc();
 	index = check_existing(shell->my_envp, name);
 	new_path = create_new_path(name, value);
 	is_exited(new_path, gc);
-	//if already existed but, overwrite == 0 so maybe we can delete it
+	// already exists but overwrite is false → do nothing
 	if(index >= 0 && overwrite == 0)
 		return ;
 	//if existed , and want to overwrite to it.
@@ -153,11 +152,13 @@ void	ft_setenv(const char *name, const char *value, int overwrite, t_shell *shel
 		delete_node(&gc->temp, find);
 	}
 	//even if is not existed then anyway we have to assign to it 
-	else
+	else if (index < 0)
 	{
 		new_envp = expand_envp(shell, new_path);
-		//todo think about how to copy ?!
-		free(shell->my_envp);
+		char **old_envp = shell->my_envp;
+		shell->my_envp = new_envp;
+		t_gc_list *old_envp_node = find_node(gc->shell, (char**)old_envp);
+		delete_node(&gc->shell, old_envp_node);
 		shell->my_envp = new_envp;
 	}
 }

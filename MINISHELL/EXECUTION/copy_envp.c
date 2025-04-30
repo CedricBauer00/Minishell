@@ -17,7 +17,7 @@ char	**copy_envp(t_gc_list *gc_lst, char **envp)
 	int		count;
 	char	**my_envp;
 	int		i;
-
+	
 	i = 0;
 	if (!gc_lst)
 	{
@@ -36,10 +36,6 @@ char	**copy_envp(t_gc_list *gc_lst, char **envp)
 		my_envp[i] = gc_strdup(envp[i], gc_lst);
 		if (!my_envp[i])
 		{
-			while(--i >= 0)
-			{
-				free(my_envp[i]);
-			}
 			return (NULL);
 		}
 		i++;

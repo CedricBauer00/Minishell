@@ -12,6 +12,8 @@ void	wait_for_child_and_update_status(t_cmd_block *cur, int i)
 	int	idx;
 
 	idx = 0;
+	if(!shell->pids)
+		return;
 	while(idx < i)
 	{
 		fprintf(stderr, RED"shell->pids[idx] %d\n"DEFAULT, shell->pids[idx]);
@@ -45,6 +47,7 @@ int heredoc_fd_offset_and_redir(t_cmd_block *cur)
 	fprintf(stderr, RED"in execute_child cur->io_streams->heredoc_fd: %d\n"DEFAULT, cur->io_streams->heredoc_fd);
 	fprintf(stderr, RED"in execute_child STDIN_FILENO: %d, STDOUT_FILENO: %d\n"DEFAULT, STDIN_FILENO, STDOUT_FILENO);
 	cur->io_streams->heredoc_fd = open("temp_heredoc" ,O_RDWR, 0644);
+	fprintf(stderr, RED"HEREDOR file open [pid %d] open(%d)\n"DEFAULT, getpid(), cur->io_streams->heredoc_fd);
 	if (cur->io_streams->heredoc_fd < 0)
 	{
 		return -1;
@@ -55,13 +58,11 @@ int heredoc_fd_offset_and_redir(t_cmd_block *cur)
 		unlink("temp_heredoc");
 		return -1;
 	}
-	fprintf(stderr, RED"[pid %d] dup2(%d, %d)\n"DEFAULT, getpid(), cur->io_streams->heredoc_fd, STDIN_FILENO);
+	fprintf(stderr, RED"HEREDOR REDIR[pid %d] dup2(%d, %d)\n"DEFAULT, getpid(), cur->io_streams->heredoc_fd, STDIN_FILENO);
 	close(cur->io_streams->heredoc_fd);
 	unlink("temp_heredoc");
 	return 1;
 }
-
-//todo mach die funktion fertig 
 
 void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 {
@@ -75,7 +76,6 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 	}
 	if (strcmp(cur->built_in, "echo") == 0)
 	{
-		fprintf(stderr, RED"try to do 'echo' execute_builtin\n"DEFAULT);
 		ft_echo(cur->args, shell);
 	}
 	// if (strcmp(cur->built_in, "export") == 0)
@@ -84,53 +84,34 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 	// 	my_pwd(shell, gc);
 	// if (strcmp(cur->built_in, "env") == 0)
 	// 	print_envp(shell, "env");
-	
 	// if (strcmp(cur->built_in, "unset") == 0)
 	// 	unset(cur->args, shell);
+	exit(0);
 }
-	
+
 void	single_cmd_execute(t_cmd_block *cur, pid_t pid, t_gc *gc)
 {
 	t_shell	*shell;
 
 	if (!cur)
 		return;
-	fprintf(stderr, GREEN"single_cmd_execute()\n"DEFAULT);
 	shell = get_shell();
-	if (cur->built_in)
+	if (heredoc_fd_offset_and_redir(cur) == -1)
 	{
-		if (cur->io_streams && cur->io_streams->heredoc_eof)
-		{
-			if (heredoc_fd_offset_and_redir(cur) == -1)
-			{
-				perror("errror");
-				gc_free(gc);
-				exit(1);
-			}
-		}
-		set_io_streams(cur);
-		execute_builtin(cur, shell);
+		perror(RED"heredoc error in single_cmd_execute()"DEFAULT);
+		gc_free(gc);
+		exit(1);
 	}
-	else if(cur->args) //if external cmd
+	set_io_streams(cur);
+	if (cur->is_built_in)
+		execute_builtin(cur, shell);
+	else
 	{
-		fprintf(stderr, "is in single_cmd_execute for child??\n");
 		pid = fork();
 		shell->pids[0] = pid;
-		fprintf(stderr, YELLOW" singlecmd fork() : %d , shell->pids[0] %d \n"DEFAULT, pid, shell->pids[0]) ;
+		fprintf(stderr, YELLOW" singlecmd for child proc fork() : %d , shell->pids[0] %d \n"DEFAULT, pid, shell->pids[0]) ;
 		if (pid == 0)
-		{
-			if (cur->io_streams && cur->io_streams->heredoc_eof)
-			{
-				if (heredoc_fd_offset_and_redir(cur) == -1)
-				{
-					perror("errror");
-					gc_free(gc);
-					exit(1);
-				}
-			}
-			set_io_streams(cur);
 			run_execve(cur, gc);
-		}
 		else
 		 	wait_for_child_and_update_status(cur, 1);
 	}
@@ -138,24 +119,25 @@ void	single_cmd_execute(t_cmd_block *cur, pid_t pid, t_gc *gc)
 
 void	execute_child(pid_t pid, t_cmd_block *cur, t_gc *gc, t_shell *shell)
 {
-	set_io_streams(cur);
-	processing_pipe(cur, shell, gc->temp);
 	if (cur->io_streams && cur->io_streams->heredoc_eof)
 	{
 		if (heredoc_fd_offset_and_redir(cur) == -1)
 		{
-			perror("errror");
+			perror("errror heredoc");
 			gc_free(gc);
 			exit(1);
 		}
 	}
+	processing_pipe(cur, shell, gc->temp);
+	set_io_streams(cur);
 	if (cur->built_in)
 	{
+		fprintf(stderr, RED"is it in for execute_builtin execute_child()\n"DEFAULT);
 		execute_builtin(cur, shell);
-		//exit(0);
 	}
 	if (cur->args)
 	{
+		fprintf(stderr, RED"is it in for external cmd execute_child()\n"DEFAULT);
 		run_execve(cur, gc);
 	}
 }
@@ -195,7 +177,7 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			fprintf(stderr, "execve()\n");
 			if (execve(cmd_path , cmd_block->args, shell->my_envp) == -1)
 			{
-				fprintf(stderr, RED"error\n"DEFAULT);
+				perror(RED"error execve()"DEFAULT);
 				exit(1);
 			}
 		}
@@ -205,7 +187,6 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 	exit(127);
 }
 
-
 void	main_execute(t_cmd_block *cmd_block, t_gc *gc, t_shell *shell)
 {
 	t_cmd_block *cur;
@@ -214,22 +195,20 @@ void	main_execute(t_cmd_block *cmd_block, t_gc *gc, t_shell *shell)
 	//t_shell *shell = get_shell();
 	cur = cmd_block;
 	//validate_check(cur);
-	
-	hanlde_heredoc(cur);
 
-	//memo zahlen wie viele pipe es gibt
+	hanlde_heredoc(cur);
 	int	pid_counts = count_command(cmd_block);
 	printf("pid_counts %d\n", pid_counts);
 
 	do_alloc_pids(cmd_block);
-
-	if (cur->is_built_in)
+	if (pid_counts == 1)
 		execute_single_command(cur);
-	
-	execute_pipeline(cur);
-
+	if (pid_counts > 1)
+	{
+		execute_pipeline(cur);
+	}
 	prevent_zombie_process();
-	fprintf(stderr, RED"-CHECK ORGINAL STDIN AND STDOUT-\n in execute_child STDIN_FILENO: %d, STDOUT_FILENO: %d\n"DEFAULT, STDIN_FILENO, STDOUT_FILENO);
+	fprintf(stderr, RED"-CHECK ORGINAL STDIN AND STDOUT-\n  STDIN_FILENO: %d, STDOUT_FILENO: %d\n"DEFAULT, STDIN_FILENO, STDOUT_FILENO);
 }
 
 //delete it later 
@@ -243,23 +222,24 @@ static t_token *create_token(t_token_type type, char *value)
 	new->prev = NULL;
 	new->next = NULL;
 	return new;
-} 
-
-
+}
+//cat -e << eof << eof > 1 | ls > 2  : in file 2 hello in && file 1 heredoc input
+//cat -e << EOF > out.txt | grep hello
 int main(int ac, char *argv[], char *envp[])
 {
 	(void)ac;
 	(void)argv;
-	t_token *t1 = create_token(TOKEN_BUILT_IN, "cd");
-	t_token *t2 = create_token(TOKEN_ARGS, "..");
-	t_token *t3 = create_token(TOKEN_PIPE, "|");
-	t_token *t4 = create_token(TOKEN_BUILT_IN, "echo");
-	t_token *t5= create_token(TOKEN_ARGS, "hello");
-	// t_token *t6 = create_token(TOKEN_ARGS, "-e");
-	// t_token *t7 = create_token(TOKEN_APPEND, ">>");
-	// t_token *t8 = create_token(TOKEN_FILE, "2");
+	t_token *t1 = create_token(TOKEN_ARGS, "cat");
+	t_token *t2 = create_token(TOKEN_ARGS, "-e");
+	t_token *t3 = create_token(TOKEN_HEREDOC, "<<");
+	t_token *t4 = create_token(TOKEN_REDIRECT_OUT, ">");
+	t_token *t5 = create_token(TOKEN_FILE, "1");
+	t_token *t6 = create_token(TOKEN_PIPE, "|");
+	t_token *t7 = create_token(TOKEN_ARGS, "grep");
+	t_token *t8 = create_token(TOKEN_ARGS, "hello");
+	// t_token *t9 = create_token(TOKEN_REDIRECT_OUT, ">");
+	// t_token *t10 = create_token(TOKEN_FILE, "2");
 
-	// t_token *t8 = create_token(TOKEN_PIPE, "|");
 	// t_token *t9 = create_token(TOKEN_ARGS, "ls -a");
 	// t_token *t10 = create_token(TOKEN_PIPE, "|");
 	// t_token *t11 = create_token(TOKEN_ARGS, "cat -b -e");
@@ -277,20 +257,19 @@ int main(int ac, char *argv[], char *envp[])
 	t4->prev = t3;
 	t4->next = t5;
 
-	// t5->prev = t4;
-	// t5->next = t6;
+	t5->prev = t4;
+	t5->next = t6;
 
-	// t6->prev = t5;
-	// t6->next = t7;
+	t6->prev = t5;
+	t6->next = t7;
 
-	// t7->prev = t6;
-	// t7->next = t8;
+	t7->prev = t6;
+	t7->next = t8;
 
-	// t8->prev = t7;
-	// t8->next = NULL;
-
+	t8->prev = t7;
 	// t8->next = t9;
 	// t9->prev = t8;
+
 	// t9->next = t10;
 	// t10->prev = t9;
 	// t10->next = t11;
@@ -338,25 +317,6 @@ int main(int ac, char *argv[], char *envp[])
 	return 0;
 }
 
-//memo refactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoring
-void	validate_check(t_cmd_block *cmd_block)
-{
-	t_shell *shell;
-	t_cmd_block *cur;
-	t_gc *gc;
-
-	gc = get_gc();
-	shell =get_shell();
-	cur = cmd_block;
-	if (!cmd_block || is_validate_cmd_block(cur) == false)
-	{
-		gc_free(gc);
-		perror(RED"non valid cmd"DEFAULT);
-		shell->last_status_exit = 1;
-		exit(1);
-	}
-}
-
 void	hanlde_heredoc(t_cmd_block *cmd_block)
 {
 	t_cmd_block *cur = cmd_block;
@@ -369,6 +329,7 @@ void	hanlde_heredoc(t_cmd_block *cmd_block)
 			process_heredoc(cur->io_streams);
 			printf(RED"heredocfd %d\n"DEFAULT, cur->io_streams->heredoc_fd);
 		}
+		
 		cur = cur->next;
 	}
 }
@@ -400,7 +361,6 @@ int	count_command(t_cmd_block *cmd_block)
 	return count;
 }
 
-
 void	do_alloc_pids(t_cmd_block* cmd_block)
 {
 	int	count;
@@ -412,13 +372,13 @@ void	do_alloc_pids(t_cmd_block* cmd_block)
 	if (count == 0 || (count == 1 && cmd_block->built_in))
 		return ;
 	shell = get_shell();
-	printf("count : %d\n", count);
 	shell->pids = do_alloc(&gc->temp, sizeof(pid_t) * count, TYPE_SINGLE_PTR, "pids");
 	if(!shell->pids)
 	{
 		gc_free(gc);
 		exit(1);
 	}
+	fprintf(stderr, YELLOW"pids is alloc in do_alloc_pids() counts: %d\n"DEFAULT, count);
 }
 
 void	fork_and_execute(t_cmd_block *cmd_block, t_gc *gc, int *i)
@@ -429,6 +389,8 @@ void	fork_and_execute(t_cmd_block *cmd_block, t_gc *gc, int *i)
 
 	shell = get_shell();
 	cur = cmd_block;
+	//hanlde_heredoc(cur);
+	//set_io_streams(cur);
 	if (cur->next)
 	{
 		add_pipe(&cur, gc->temp);
@@ -437,13 +399,14 @@ void	fork_and_execute(t_cmd_block *cmd_block, t_gc *gc, int *i)
 	pid = fork();
 	fprintf(stderr,YELLOW"[pid %d] fork()\n"DEFAULT, getpid());
 	if (pid == 0)
+	{
+		//set_io_streams(cur);
 		execute_child(pid, cur, gc, shell);
-		
+	}
 	close_pipefd(cur);
 	shell->pids[*i] = pid;
 }
 
-//error
 void	execute_pipeline(t_cmd_block *cmd_block)
 {
 	t_cmd_block *cur;
@@ -453,7 +416,6 @@ void	execute_pipeline(t_cmd_block *cmd_block)
 	i = 0;
 	gc = get_gc();
 	cur = cmd_block;
-
 	while(cur)
 	{
 		fork_and_execute(cur, gc, &i);

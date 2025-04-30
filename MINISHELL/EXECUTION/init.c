@@ -1,9 +1,10 @@
 # include "../INCLUDE/main.h"
 
-t_shell	*init_shell_struct(void)
+t_shell	*init_shell_struct(t_gc_list *gc_lst)
 {
 	t_shell *shell;
-	shell = malloc(sizeof(t_shell));
+
+	shell = do_alloc(&gc_lst, sizeof(t_shell), TYPE_SINGLE_PTR, "shell");
 	if (!shell)
 	{
 		return (NULL);
@@ -95,9 +96,12 @@ t_cmd_block *init_command_struct(t_gc_list *gc_lst)
 t_shell *get_shell(void)
 {
 	static t_shell *shell = NULL;
+	t_gc *gc;
+
+	gc = get_gc();
 	if (shell == NULL)
 	{
-		shell = init_shell_struct();
+		shell = init_shell_struct(gc->shell);
 	}
 	return (shell);
 }

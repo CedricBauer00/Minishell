@@ -18,7 +18,7 @@ void	ft_echo(char **args, t_shell *shell)
 	t_gc	*gc;
 
 	gc = get_gc();
-
+	fprintf(stderr, RED"try to do 'echo' ft_echo() \n"DEFAULT);
 	if (ft_strncmp(args[0], "$", 1) == 0)
 	{
 		//char *temp = ft_strdup(args[0] + 1);

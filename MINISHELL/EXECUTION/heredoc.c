@@ -34,15 +34,10 @@ int	process_heredoc(t_io_streams_list *io_streams)
 	int	fd_heredoc;
 	
 	fd_heredoc = 0;
-	if (!io_streams || !io_streams->heredoc_eof)
-		return 0;
-	while (io_streams)
+	// if (!io_streams || !io_streams->heredoc_eof)
+	//	return 0;
+	while (io_streams && io_streams->heredoc_eof)
 	{
-		//char filename[64];
-		//todo make multiples files;;;
-		//filename = "temp_heredoc";
-		//if multiples heredoc we need multiples filenames..
-		
 		fd_heredoc = open("temp_heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
 		fprintf(stderr, YELLOW"[pid %d] fd_heredoc open(), fd_heredoc fd : %d\n", getpid(), fd_heredoc);
 		if (fd_heredoc == -1)
@@ -53,7 +48,6 @@ int	process_heredoc(t_io_streams_list *io_streams)
 		while(1)
 		{
 			char *line;
-
 			line = readline("> ");
 			//todo put new_io_streams->heredoc_ef instead of using "eof"
 			if (!line || strcmp(line, "eof") == 0)

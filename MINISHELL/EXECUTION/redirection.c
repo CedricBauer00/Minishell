@@ -55,7 +55,7 @@ int	in_redir_file_open(t_io_streams_list *io_streams, char *in_filename)
 int	out_redir_file_open(t_io_streams_list *io_streams, char *out_filename)
 {
 	int		fd;
-	fd = open(out_filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	fd = open(out_filename, O_WRONLY | O_CREAT, 0644);
 	if (fd == -1)
 	{
 		perror(RED" > file open faield\n"DEFAULT);
@@ -97,6 +97,7 @@ void	set_io_streams(t_cmd_block *cmd)
 	if(!cmd)
 		return ;
 	io_streams = cmd->io_streams;
+	t_cmd_block *temp = cmd;
 	while (io_streams)
 	{
 		if (io_streams->infile_name)
@@ -104,10 +105,10 @@ void	set_io_streams(t_cmd_block *cmd)
 			in_redir_file_open(io_streams, io_streams->infile_name);
 			re_dir_in(io_streams);
 		}
-		if (io_streams->heredoc_fd)
+		if (io_streams->heredoc_fd > 0)
 		{
-			//todo call heredoc
 			dup2(cmd->io_streams->heredoc_fd, STDIN_FILENO);
+			fprintf(stderr ,RED"[pid %d] dup2(HEREDOC: %d, %d)\n"DEFAULT, getpid(), cmd->io_streams->heredoc_fd, STDIN_FILENO);
 		}
 		if (io_streams->outfile_name)
 		{
