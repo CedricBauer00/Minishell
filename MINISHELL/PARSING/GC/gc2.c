@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:00:46 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/20 14:18:49 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/01 13:10:31 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,15 +59,15 @@ void	delete_node(t_gc_list **gc_lst, t_gc_list *to_delete)
 	{
 		if (cur == to_delete)
 		{
-			printf("%p is free, type is %d\n", cur->data, cur->type);
+			printf("Deleting Node: %p, Data: %p, Type: %d\n", cur, cur->data, cur->type);
 			free_data_by_type(cur->data, cur->type);
-			prev ->next = cur ->next;
+			prev->next = cur->next;
 			free(cur);
 			cur = NULL;
 			break ;
 		}
 		prev = cur;
-		cur = cur -> next;
+		cur = cur->next;
 	}
 }
 
@@ -79,17 +79,16 @@ void	all_free(t_gc_list **gc_lst)
 	if (!gc_lst || !(*gc_lst))
 		return ;
 	cur = (*gc_lst)->next;
+	printf("*gc_list %p\n", (*gc_lst));
 	while (cur)
 	{
-		if (cur->next == NULL)
-			break ;
 		next = cur->next;
-		printf("cur %p cur->next %p , %p is free, type is %d\n", cur, \
-			cur->next, cur->data, cur->type);
+        printf("Freeing Node: %p, Data: %p, Type: %d, ID: %s\n", cur, cur->data, cur->type, cur->id);
 		free_data_by_type(cur->data, cur->type);
 		free(cur);
 		cur = next;
 	}
+	//*gc_lst = NULL;
 }
 
 void	gc_level_up(t_gc_list *gc_list)

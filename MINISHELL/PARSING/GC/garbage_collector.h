@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:41:48 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/22 11:53:56 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/01 13:09:31 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void		gc_level_up(t_gc_list *gc_list);
 void		gc_free_by_level(t_gc_list *gc_list);
 void		gc_free(t_gc *gc);
 void		print_list(t_gc_list *gc_lst);
-
+void		print_gc(t_gc *gc);
 char		*gc_strdup(const char *str, t_gc_list *gc_lst);
 
 #endif

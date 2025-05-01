@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:02:03 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/29 18:09:27 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/01 12:42:01 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,7 @@ t_gc	*init_gc(void)
 
 	gc = malloc(sizeof(t_gc));
 	if (!gc)
-	{
 		return (NULL);
-	}
 	gc->temp = init_gc_list();
 	if (!gc->temp)
 		free(gc);
@@ -49,9 +47,7 @@ t_gc_list	*init_gc_list(void)
 
 	head = malloc(sizeof(t_gc_list));
 	if (!head)
-	{
 		return (NULL);
-	}
 	head->data = NULL;
 	head->next = NULL;
 	head->type = 0;
@@ -68,12 +64,14 @@ void	*do_alloc(t_gc_list **gc_lst, size_t howmuch, \
 	new_node = malloc(sizeof(t_gc_list));
 	if (!new_node)
 	{
+		printf("Failed to allocate memory for new_node\n");
 		return (NULL);
 	}
 	data = malloc(howmuch);
 	if (!data)
 	{
-		free (new_node);
+		printf("Failed to allocate memory for data\n");
+		free(new_node);
 		return (NULL);
 	}
 	new_node->data = data;
@@ -83,6 +81,7 @@ void	*do_alloc(t_gc_list **gc_lst, size_t howmuch, \
 	new_node->level = (*gc_lst)->level;
 	if (*gc_lst)
 		(*gc_lst)->next = new_node;
+	printf("Allocated: Node %p, Data [%p], Type %d, ID %s\n", new_node, data, data_type, id);
 	return (data);
 }
 
@@ -94,12 +93,27 @@ void	free_data_by_type(void *data, t_data_type data_type)
 		return ;
 	if (data_type == TYPE_SINGLE_PTR)
 	{
+		printf("%p is free\n", data);
 		free(data);
 		data = NULL;
 	}
 	else if (data_type == TYPE_DOUBLE_PTR)
 	{
+		int	i;
+
+		i = 0;
 		temp = (char **)data;
+		if (temp)
+		{
+			while (temp[i])
+			{
+				printf("%p is free\n", temp[i]);
+				free(temp[i]);
+				temp[i] = NULL;
+				i++;
+			}
+		}
+		printf("%p is free\n", temp);
 		free (temp);
 		temp = NULL;
 	}

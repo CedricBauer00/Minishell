@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/29 18:16:59 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/01 12:49:00 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@ int	main_helper(t_main *main, t_gc_list *gc_list)
 {
 	main->temp_for_line = readline(YELLOW"minishell> "DEFAULT);
 	if (!main->temp_for_line)
+	{
 		return (printf("exit\n"), 1);
+	}
 	main->line = do_alloc(&gc_list, ft_strlen(main->temp_for_line) + 1, \
 		TYPE_SINGLE_PTR, "input");
 	if (!main->line)
@@ -66,12 +68,26 @@ int	main_loop(t_main *main, int i, t_gc *gc)
 		i = 0;
 		while (main->line[i])
 		{
+			print_list(gc->temp);
 			if (check_operator(main, &i, gc->temp) < 0 || i < 0)
 				return (printf("ERROR\nCheck_operator failed!\n"), \
 					gc_free(gc), -1);
 		}
 		if (main_loop_helper(main, 0, gc) < 0)
 			continue ;
+		//test
+		// print_list(gc->temp);
+		// int k = 0;
+		// if (main->envp)
+		// {
+		// 	fprintf(stderr, RED"[%p] envp\n"DEFAULT,main->envp);
+		// 	while (main->envp[k])
+		// 	{
+		// 		fprintf(stderr, RED"[%p] envp[%d] = %s\n"DEFAULT,main->envp[k], k, main->envp[k]);
+		// 		k++;
+		// 	}
+		// }
+		// print_list(gc->shell);
 	}
 	return (0);
 }
@@ -99,11 +115,26 @@ int	main(int argc, char **argv, char **envp)
 		return (printf("ERROR\nttyattr failed!\n"), -1);
 	gc = get_gc();
 	main.envp = copy_envp(gc, envp);
+	if (!main.envp)
+		return (printf("ERROR\nCopy_envp failed!\n"), gc_free(gc), -1);
 	if (incrmnt_shllvl(&main, gc) < 0)
 		return (-1);
 	shell = get_shell(gc->shell);
 	if (main_loop(&main, 0, gc) < 0)
-		return (printf("ERROR\nMain_loop failed!\n"), -1);
+		return (printf("ERROR\nMain_loop failed!\n"), gc_free(gc), -1);
 	if (gc)
+	{
 		gc_free(gc);
+	}
+	
+	int k = 0;
+	if (main.envp)
+	{
+		fprintf(stderr, RED"[%p] envp\n"DEFAULT,main.envp);
+		while (main.envp[k])
+		{
+			fprintf(stderr, RED"[%p] envp[%d] = %s\n"DEFAULT,main.envp[k], k, main.envp[k]);
+			k++;
+		}
+	}
 }
