@@ -1,0 +1,12 @@
+{
+	"files.associations": {
+		"locale": "c",
+		"ios": "c",
+		"iterator": "c",
+		"main.h": "c",
+		"__functional_03": "c",
+		"functional": "c",
+		"typeinfo": "c",
+		"chrono": "c"
+	}
+}
