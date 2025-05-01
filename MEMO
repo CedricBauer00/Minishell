@@ -19,3 +19,27 @@ first i have to set all redirections up before execution.
 check it is valid cmd..
 
 think about ''
+
+
+
+
+
+bash-3.2$ cat
+^\Quit: 3
+bash-3.2$ grep dskljfkad
+^C
+bash-3.2$ grep dskljfkad
+^\Quit: 3
+bash-3.2$ cT
+bash: cT: command not found
+bash-3.2$ cat
+^\Quit: 3
+bash-3.2$ cat
+^C
+
+
+bash-3.2$ exit 42 34123
+exit
+bash: exit: too many arguments
+
+$?   : ? can get just only 1 byte

@@ -130,6 +130,7 @@ void	execute_child(pid_t pid, t_cmd_block *cur, t_gc *gc, t_shell *shell)
 	}
 	processing_pipe(cur, shell, gc->temp);
 	set_io_streams(cur);
+
 	if (cur->built_in)
 	{
 		fprintf(stderr, RED"is it in for execute_builtin execute_child()\n"DEFAULT);
@@ -224,7 +225,7 @@ static t_token *create_token(t_token_type type, char *value)
 	return new;
 }
 //cat -e << eof << eof > 1 | ls > 2  : in file 2 hello in && file 1 heredoc input
-//cat -e << EOF > out.txt | grep hello
+//cat -e << eof > 1 | grep hello
 int main(int ac, char *argv[], char *envp[])
 {
 	(void)ac;

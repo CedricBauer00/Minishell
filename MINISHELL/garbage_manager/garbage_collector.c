@@ -95,17 +95,16 @@ void	free_data_by_type(void *data, t_data_type data_type)
 	else if (data_type == TYPE_DOUBLE_PTR)
 	{
 		char **temp = (char **)data;
-		// int i = 0;
-		// while(temp[i])
-		// {
-		// 	free(temp[i]);
-		// 	temp[i] = NULL;
-		// 	i++;
-		// }
+		int i = 0;
+		while(temp[i])
+		{
+			free(temp[i]);
+			temp[i] = NULL;
+			i++;
+		}
 		free (temp);
 		temp = NULL;
 	}
-	//todo add case for struct
 }
 
 t_gc_list	*find_node(t_gc_list *gc_lst, void *target)

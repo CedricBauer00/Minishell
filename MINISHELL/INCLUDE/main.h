@@ -30,7 +30,6 @@ typedef enum s_tenum
 	TOKEN_REDIRECT_OUT = 0x0020,	//Symbol: >
 	TOKEN_APPEND = 0x0040,			//Symbol: >>
 	TOKEN_HEREDOC = 0x0080,			//Symbol: <<
-
 	TOKEN_VAR = 0x0100,				//$variable
 	//TOKEN_EOF = 0x0400,			//End of input
 }	t_token_type;
@@ -77,7 +76,8 @@ typedef struct s_token
 typedef struct s_cmd_block //struct being allocated for each token from input
 {
 	//t_token_type				type;		//todo vilt ,,i can delete?
-	char						*built_in; //need to change name
+	char						*built_in; //memo just check if it is built in or not!
+	bool						is_built_in;
 	// char						**cmd_flags;
 	char						**args;
 	struct s_io_streams_list	*io_streams;
@@ -122,7 +122,6 @@ typedef struct s_shell
 	int		last_status_exit;
 }	t_shell;
 
-
 // like this 
 // t_token *first;
 // first = malloc(sizeof(t_token));
@@ -147,7 +146,7 @@ typedef struct s_shell
 //-----------------------------EXECUTION------------------------------------
 
 //memo init.c
-t_shell	*init_shell_struct(void);
+t_shell	*init_shell_struct(t_gc_list *gc_lst);
 t_shell *get_shell(void);
 t_cmd_block *init_command_struct(t_gc_list *gc_lst);
 t_pipe *init_pipe(t_gc_list *gc_lst);
