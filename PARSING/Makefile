@@ -4,7 +4,7 @@ GREEN = \033[0;32m
 DEFAULT = \033[0m
 
 #CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address #-Dreadline change
-LDFLAGS = -lreadline -Llibft -lft $(LIBFT_DIR)#del
+LDFLAGS = -lreadline -Llibft -lft -L$(LIBFT_DIR)#del
 CFLAGS = -I/usr/include/readline -Ilibft -Wextra -Wall -Werror -g -fsanitize=address #del 
 
 #INC = -I ../INCLUDE/# ./GC/ change
