@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 14:13:36 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/02 15:43:40 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/02 16:13:50 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@
 # include "GC/garbage_collector.h"
 # include <readline/readline.h>
 # include <readline/history.h>
-// # include "PARSING/parsing.h"
-// # include "EXECUTION/execution.h"
+
+// # include "libft/libft.h"
 
 # define RED "\033[0;31m"
 # define GREEN "\033[0;32m"

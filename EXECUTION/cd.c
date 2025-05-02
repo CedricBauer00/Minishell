@@ -169,7 +169,7 @@ void cd(char **args, t_shell *shell, t_gc *gc)
 	if (!shell)
 		return ;
 
-	shell->cur_dir = my_getcwd(shell, gc);
+	shell->cur_dir = my_getcwd(gc);
 	if (!shell->cur_dir)
 	{
 		perror(RED"get shell->cur_dir failed"DEFAULT);
@@ -212,7 +212,7 @@ void cd(char **args, t_shell *shell, t_gc *gc)
 		gc_free(gc);
 		exit(1);
 	}
-	char	*new_dir = my_getcwd(shell, gc);
+	char	*new_dir = my_getcwd(gc);
 	if (!new_dir)
 	{
 		perror(RED "chdir error for cd - \n"DEFAULT);

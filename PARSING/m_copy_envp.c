@@ -6,23 +6,23 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 12:56:46 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/02 15:26:28 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/02 16:16:42 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-int	get_envp_count(char **envp)
-{
-	int	count;
+// int	get_envp_count(char **envp)
+// {
+// 	int	count;
 
-	count = 0;
-	while (envp[count])
-	{
-		count++;
-	}
-	return (count);
-}
+// 	count = 0;
+// 	while (envp[count])
+// 	{
+// 		count++;
+// 	}
+// 	return (count);
+// }
 
 // char	**copy_envp(t_gc *gc, char **envp)
 // {

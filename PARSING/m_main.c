@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/02 15:32:15 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/02 16:09:56 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int	main(int argc, char **argv, char **envp)
 	if (ttyattr() < 0)
 		return (printf("ERROR\nttyattr failed!\n"), -1);
 	gc = get_gc();
-	main.envp = copy_envp(gc->shell, envp);
+	main.envp = copy_envp(gc, envp);
 	if (!main.envp)
 		return (printf("ERROR\nCopy_envp failed!\n"), -1);
 	if (incrmnt_shllvl(&main, gc) < 0)
