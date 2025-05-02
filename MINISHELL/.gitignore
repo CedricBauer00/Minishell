@@ -1,0 +1,35 @@
+
+# 상위 폴더의 .vscode/ 디렉토리
+../.vscode/
+
+# 상위 폴더의 1, 2 파일
+../1
+../2
+
+# EXECUTION 디렉토리 내의 파일 및 폴더
+EXECUTION/
+
+# 특정 실행 파일, 로그 등
+EXECUTION/a.out
+EXECUTION/a.out.dSYM/
+EXECUTION/out.txt
+
+# PARSING 디렉토리
+PARSING/
+
+# TEST_FOR_JISOO 내 파일들
+TEST_FOR_JISOO/function~~~~~~~
+TEST_FOR_JISOO/note.txt
+TEST_FOR_JISOO/result.txt
+TEST_FOR_JISOO/textfile/heredoc logs
+
+# 상위 폴더의 result.txt, temp_heredoc
+../result.txt
+../temp_heredoc
+
+.vscode/
+1
+2
+MINISHELL/2
+result.txt
+temp_heredoc
