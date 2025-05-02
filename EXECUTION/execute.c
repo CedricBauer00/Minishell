@@ -44,10 +44,10 @@ int heredoc_fd_offset_and_redir(t_cmd_block *cur)
 {
 	if (!cur)
 		return -1;
-	fprintf(stderr, RED"in execute_child cur->io_streams->heredoc_fd: %d\n"DEFAULT, cur->io_streams->heredoc_fd);
-	fprintf(stderr, RED"in execute_child STDIN_FILENO: %d, STDOUT_FILENO: %d\n"DEFAULT, STDIN_FILENO, STDOUT_FILENO);
+	//fprintf(stderr, RED"in execute_child cur->io_streams->heredoc_fd: %d\n"DEFAULT, cur->io_streams->heredoc_fd);
+	//fprintf(stderr, RED"in execute_child STDIN_FILENO: %d, STDOUT_FILENO: %d\n"DEFAULT, STDIN_FILENO, STDOUT_FILENO);
 	cur->io_streams->heredoc_fd = open("temp_heredoc" ,O_RDWR, 0644);
-	fprintf(stderr, RED"HEREDOR file open [pid %d] open(%d)\n"DEFAULT, getpid(), cur->io_streams->heredoc_fd);
+	//fprintf(stderr, RED"HEREDOR file open [pid %d] open(%d)\n"DEFAULT, getpid(), cur->io_streams->heredoc_fd);
 	if (cur->io_streams->heredoc_fd < 0)
 	{
 		return -1;
@@ -58,7 +58,7 @@ int heredoc_fd_offset_and_redir(t_cmd_block *cur)
 		unlink("temp_heredoc");
 		return -1;
 	}
-	fprintf(stderr, RED"HEREDOR REDIR[pid %d] dup2(%d, %d)\n"DEFAULT, getpid(), cur->io_streams->heredoc_fd, STDIN_FILENO);
+	//fprintf(stderr, RED"HEREDOR REDIR[pid %d] dup2(%d, %d)\n"DEFAULT, getpid(), cur->io_streams->heredoc_fd, STDIN_FILENO);
 	close(cur->io_streams->heredoc_fd);
 	unlink("temp_heredoc");
 	return 1;
@@ -97,13 +97,17 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 	if (!cur)
 		return;
 	shell = get_shell();
-	if (heredoc_fd_offset_and_redir(cur) == -1)
+	if (cur->io_streams)
 	{
-		perror(RED"heredoc error in single_cmd_execute()"DEFAULT);
-		gc_free(gc);
-		exit(1);
+		if (heredoc_fd_offset_and_redir(cur) == -1)
+		{
+			perror(RED"heredoc error in single_cmd_execute()"DEFAULT);
+			gc_free(gc);
+			exit(1);
+		}
 	}
-	set_io_streams(cur);
+	if (cur->io_streams)
+		set_io_streams(cur);
 	if (cur->is_built_in)
 		execute_builtin(cur, shell);
 	else

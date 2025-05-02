@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_main.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/02 16:09:56 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/02 17:05:29 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,9 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc)
 	if (indic == -2)
 		return (printf(RED"bonus error!\n"DEFAULT), all_free(&gc->temp), -1);
 	print_tokens(main->tokens);
+	t_cmd_block *cmd_block = NULL;
+	grouplize(main->tokens, &cmd_block, gc);
+	main_execute(cmd_block);
 	return (0);
 }
 
@@ -100,13 +103,13 @@ int	main(int argc, char **argv, char **envp)
 	if (ttyattr() < 0)
 		return (printf("ERROR\nttyattr failed!\n"), -1);
 	gc = get_gc();
-	main.envp = copy_envp(gc, envp);
-	if (!main.envp)
+	shell = get_shell();
+	shell->my_envp = copy_envp(gc, envp);
+	if (!shell->my_envp)
 		return (printf("ERROR\nCopy_envp failed!\n"), -1);
-	if (incrmnt_shllvl(&main, gc) < 0)
+	if (incrmnt_shllvl(shell, gc) < 0)
 		return (-1);
 	// shell = get_shell(&gc->shell);
-	shell = get_shell();
 	if (main_loop(&main, 0, gc) < 0)
 		return (printf("ERROR\nMain_loop failed!\n"), -1);
 	if (gc)

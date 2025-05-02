@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   p_expand.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 09:58:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/02 15:29:12 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/02 17:08:22 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,19 @@ char	*check_for_var(t_main *main, char *var, int len, t_gc_list **gc_list)
 {
 	int		j;
 	char	*value;
+	t_shell	*shell;
 
+	(void)main;
 	j = 0;
+	shell = get_shell();
 	value = NULL;
-	while (main->envp[j])
+	while (shell->my_envp[j])
 	{
 		len = ft_strlen(var);
-		if (ft_strncmp(main->envp[j], var, len) == 0 \
-			&& main->envp[j][len] == '=')
+		if (ft_strncmp(shell->my_envp[j], var, len) == 0 \
+			&& shell->my_envp[j][len] == '=')
 		{
-			value = gc_strdup(main->envp[j] + len + 1, gc_list);
+			value = gc_strdup(shell->my_envp[j] + len + 1, gc_list);
 			if (!value)
 				return (NULL);
 			break ;

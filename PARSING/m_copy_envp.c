@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_copy_envp.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 12:56:46 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/02 16:16:42 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/02 17:02:26 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,28 +87,54 @@ void	init_shllvl(char *str, int i)
 	free(temp);
 }
 
-int	incrmnt_shllvl(t_main *main, t_gc *gc)
+// int	incrmnt_shllvl(t_main *main, t_gc *gc)
+// {
+// 	int	i;
+// 	int	lvl;
+
+// 	i = 0;
+// 	lvl = 0;
+// 	while (main->envp[i] != NULL)
+// 	{
+// 		if (ft_strncmp(main->envp[i], "SHLVL=", 6) == 0)
+// 		{
+// 			lvl = ft_atoi(main->envp[i] + 6);
+// 			lvl++;
+// 			break ;
+// 		}
+// 		i++;
+// 	}
+// 	main->envp[i] = do_alloc(&gc->shell, 7 + num_len(lvl), \
+// 		TYPE_SINGLE_PTR, "shllvl");
+// 	if (!main->envp[i])
+// 		return (-1);
+// 	init_shllvl(main->envp[i], lvl);
+// 	printf("%s\n", main->envp[i]);
+// 	return (0);
+// }
+
+int	incrmnt_shllvl(t_shell *shell, t_gc *gc)
 {
 	int	i;
 	int	lvl;
 
 	i = 0;
 	lvl = 0;
-	while (main->envp[i] != NULL)
+	while (shell->my_envp[i] != NULL)
 	{
-		if (ft_strncmp(main->envp[i], "SHLVL=", 6) == 0)
+		if (ft_strncmp(shell->my_envp[i], "SHLVL=", 6) == 0)
 		{
-			lvl = ft_atoi(main->envp[i] + 6);
+			lvl = ft_atoi(shell->my_envp[i] + 6);
 			lvl++;
 			break ;
 		}
 		i++;
 	}
-	main->envp[i] = do_alloc(&gc->shell, 7 + num_len(lvl), \
+	shell->my_envp[i] = do_alloc(&gc->shell, 7 + num_len(lvl), \
 		TYPE_SINGLE_PTR, "shllvl");
-	if (!main->envp[i])
+	if (!shell->my_envp[i])
 		return (-1);
-	init_shllvl(main->envp[i], lvl);
-	printf("%s\n", main->envp[i]);
+	init_shllvl(shell->my_envp[i], lvl);
+	printf("%s\n", shell->my_envp[i]);
 	return (0);
 }

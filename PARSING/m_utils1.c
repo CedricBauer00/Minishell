@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_utils1.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 17:53:21 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/02 15:06:45 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/02 17:12:33 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ void	set_default(t_main *main)
 	main->tokens = NULL;
 	main->line = NULL;
 	main->last_status_exit = 0;
-	main->envp = NULL;
 	main->next_line = NULL;
 	main->new = NULL;
 	main->word = NULL;

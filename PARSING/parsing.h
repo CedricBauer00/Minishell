@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/02 15:31:53 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/02 17:08:37 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,8 @@ void	choose_error_statement(int indic, char *value);
 int		get_envp_count(char **envp);
 int		num_len(int n);
 void	init_shllvl(char *str, int i);
-int		incrmnt_shllvl(t_main *main, t_gc *gc);
+int		incrmnt_shllvl(t_shell *shell, t_gc *gc);
+//int	incrmnt_shllvl(t_main *main, t_gc *gc);
 
 // ----------------------------------------------------------------------
 // 							 SHELL_INFO
