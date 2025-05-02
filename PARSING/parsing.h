@@ -5,39 +5,15 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/05/02 14:25:30 by jisokim2         ###   ########.fr       */
-=======
-/*   Updated: 2025/05/02 14:02:07 by cbauer           ###   ########.fr       */
->>>>>>> e5f549a0776d69fc00f207e7cd19661389498d6e
+/*   Created: 2025/05/02 14:35:21 by jisokim2          #+#    #+#             */
+/*   Updated: 2025/05/02 14:35:24 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSING_H
 # define PARSING_H
 
-<<<<<<< HEAD
 #include "../minishell.h"
-=======
-# include <unistd.h>
-# include <sys/types.h>
-# include <sys/wait.h>
-# include <fcntl.h>
-# include <errno.h>
-# include <sys/stat.h>
-# include <signal.h>
-# include <termios.h>
-# include "../GC/garbage_collector.h"
-# include <readline/readline.h>
-# include <readline/history.h>
-
-# define RED "\033[0;31m"
-# define GREEN "\033[0;32m"
-# define BLUE "\033[0;34m"
-# define YELLOW "\033[0;33m"
-# define DEFAULT "\033[0m"
->>>>>>> e5f549a0776d69fc00f207e7cd19661389498d6e
 
 typedef enum s_tenum
 {
