@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   printing.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/02 11:59:23 by cbauer            #+#    #+#             */
+/*   Updated: 2025/05/02 12:08:26 by cbauer           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parsing.h"
 
-void print_token(t_token *tokens)
+void	print_token(t_token *tokens)
 {
 	if (!tokens)
 		return ;
@@ -26,21 +38,19 @@ void print_token(t_token *tokens)
 		printf("Token Type: %s, Value: %s\n", "FILE", tokens->value);
 	else
 		printf("Token Type: UNKNOWN (%d), Value: %s\n", tokens->type, tokens->value);
-	// printf("Token Type: %d, Value: %s\n", tokens->type, tokens->value);
 	tokens = tokens->next;
 }
 
 void	print_tokens(t_token *tokens)
 {
-    printf("\n---- Token List ----\n");
-    t_token *current;
+	t_token	*current;
 
+	printf("\n---- Token List ----\n");
 	current = tokens;
-
-		while (current)
-		{
-			print_token(current);
-			current = current->next;
-		}
-    printf("--------------------\n");
+	while (current)
+	{
+		print_token(current);
+		current = current->next;
+	}
+	printf("--------------------\n");
 }

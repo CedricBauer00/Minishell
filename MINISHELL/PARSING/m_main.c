@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_main.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/01 17:26:59 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/02 11:47:41 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,17 +74,6 @@ int	main_loop(t_main *main, int i, t_gc *gc)
 		}
 		if (main_loop_helper(main, 0, gc) < 0)
 			continue ;
-		// test
-		// int k = 0;
-		// if (main->envp)
-		// {
-		// 	fprintf(stderr, RED"[%p] envp\n"DEFAULT,main->envp);
-		// 	while (main->envp[k])
-		// 	{
-		// 		fprintf(stderr, RED"[%p] envp[%d] = %s\n"DEFAULT,main->envp[k], k, main->envp[k]);
-		// 		k++;
-		// 	}
-		// }
 	}
 	return (0);
 }
@@ -115,10 +104,7 @@ int	main(int argc, char **argv, char **envp)
 	if (!main.envp)
 		return (printf("ERROR\nCopy_envp failed!\n"), -1);
 	if (incrmnt_shllvl(&main, gc) < 0)
-	{
-		//gc_free(gc);
 		return (-1);
-	}
 	shell = get_shell(&gc->shell);
 	if (main_loop(&main, 0, gc) < 0)
 		return (printf("ERROR\nMain_loop failed!\n"), -1);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gc1.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:02:03 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/01 17:05:52 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/02 12:09:15 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,37 +25,16 @@ t_gc	*init_gc(void)
 {
 	t_gc	*gc;
 
-	// gc = malloc(sizeof(t_gc));
-	// if (!gc)
-	// 	return (NULL);
-	// gc->temp = init_gc_list();
-	// if (!gc->temp)
-	// 	free(gc);
-	// gc->shell = init_gc_list();
-	// if (!gc->shell)
-	// {
-	// 	free(gc);
-	// 	return (NULL);
-	// }
 	gc = malloc(sizeof(t_gc));
-    if (!gc)
-        return NULL;
-    gc->temp = init_gc_list();   // NULL로 초기화
-    gc->shell = init_gc_list();
+	if (!gc)
+		return (NULL);
+	gc->temp = init_gc_list();
+	gc->shell = init_gc_list();
 	return (gc);
 }
 
 t_gc_list	*init_gc_list(void)
 {
-	// t_gc_list	*head;
-
-	// head = malloc(sizeof(t_gc_list));
-	// if (!head)
-	// 	return (NULL);
-	// head->data = NULL;
-	// head->next = NULL;
-	// head->type = 0;
-	// head->id = 0;
 	return (NULL);
 }
 
@@ -79,16 +58,13 @@ void	*do_alloc(t_gc_list **gc_lst, size_t howmuch, \
 		return (NULL);
 	}
 	new_node->data = data;
-	//new_node->next = NULL;
 	new_node->type = data_type;
 	new_node->id = id;
-	//new_node->level = (*gc_lst)->level;
 	new_node->level = 0;
-	// if (*gc_lst)
-	// 	(*gc_lst)->next = new_node;
 	new_node->next = *gc_lst;
 	*gc_lst = new_node;
-	printf(PURPLE"Allocated: Node %p, Data [%p], Type %d, ID %s\n"RESET, new_node, data, data_type, id);
+	printf(PURPLE"Allocated: Node %p, Data [%p], Type %d, ID %s\n"RESET, \
+		new_node, data, data_type, id);
 	return (data);
 }
 
@@ -105,21 +81,9 @@ void	free_data_by_type(void *data, t_data_type data_type)
 	}
 	else if (data_type == TYPE_DOUBLE_PTR)
 	{
-		// int	i;
-
-		// i = 0;
 		temp = (char **)data;
 		if (temp)
 		{
-			// while (temp[i])
-			// {
-			// 	if(temp[i])
-			// 	printf("%p is free\n", temp[i]);
-			// 	free(temp[i]);
-			// 	temp[i] = NULL;
-			// 	i++;
-			// }
-			// printf("%p is free\n", temp);
 			free (temp);
 			temp = NULL;
 		}

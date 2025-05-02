@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   p_expand.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 09:58:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/01 16:37:12 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/02 12:01:16 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,7 @@ char	*check_for_var(t_main *main, char *var, int len, t_gc_list **gc_list)
 		{
 			value = gc_strdup(main->envp[j] + len + 1, gc_list);
 			if (!value)
-			{
-				// free(var);
 				return (NULL);
-			}
 			break ;
 		}
 		j++;
@@ -49,9 +46,7 @@ int	expand_helper(t_main *main, int *i, int ws, t_gc_list **gc_list)
 	char	*var;
 	char	*value;
 	int		len;
-	// int		j;
 
-	// j = 0;
 	len = 0;
 	var = NULL;
 	value = NULL;

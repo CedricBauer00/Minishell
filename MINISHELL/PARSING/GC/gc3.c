@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gc3.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:01:21 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/01 17:16:36 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/02 12:10:08 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,17 +50,11 @@ void	gc_free(t_gc *gc)
 	{
 		print_list(&gc->shell);
 		all_free(&gc->shell);
-		// printf(PU"free gc->sehll %p\n", gc->shell);
-		// free(gc->shell);
-		// gc->shell = NULL;
 	}
 	if (gc->temp)
 	{
 		print_list(&gc->temp);
 		all_free(&gc->temp);
-		//printf("free gc->temp %p\n", gc->temp);
-		// free(gc->temp);
-		// gc->temp = NULL;
 	}
 	printf(PURPLE"free gc %p\n"RESET, gc);
 	free(gc);
@@ -83,19 +77,3 @@ void	print_list(t_gc_list **gc_lst)
 		cur = cur->next;
 	}
 }
-
-// void	print_gc(t_gc *gc)
-// {
-// 	t_gc	*cur;
-// 	int			i;
-
-// 	i = 1;
-// 	cur = gc;
-// 	while (cur->temp != NULL)
-// 	{
-// 		printf("[%d]th NODE[%s], %p\n", i, (char*)cur->temp->data, cur->temp->data);
-// 		i++;
-// 		cur->temp = cur->temp->next;
-// 	}
-// }
-

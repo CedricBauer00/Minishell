@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gc2.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:00:46 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/01 17:09:10 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/02 12:09:47 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ void	delete_node(t_gc_list **gc_lst, t_gc_list *to_delete)
 	{
 		if (cur == to_delete)
 		{
-			printf("Deleting Node: %p, Data: %p, Type: %d\n", cur, cur->data, cur->type);
+			printf("Deleting Node: %p, Data: %p, Type: %d\n", \
+				cur, cur->data, cur->type);
 			free_data_by_type(cur->data, cur->type);
 			prev->next = cur->next;
 			free(cur);
@@ -83,7 +84,8 @@ void	all_free(t_gc_list **gc_lst)
 	{
 		next = cur->next;
 		free_data_by_type(cur->data, cur->type);
-		printf(PURPLE"Freeing Node: %p, Data: %p, Type: %d, ID: %s\n"RESET, cur, cur->data, cur->type, cur->id);
+		printf(PURPLE"Freeing Node: %p, Data: %p, Type: %d, ID: %s\n"RESET, \
+			cur, cur->data, cur->type, cur->id);
 		free(cur);
 		cur = next;
 	}

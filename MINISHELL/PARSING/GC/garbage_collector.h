@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   garbage_collector.h                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:41:48 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/01 17:11:16 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/02 11:56:32 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@
 # include <stdbool.h>
 # include "../libft/libft.h"
 
-#define PURPLE		"\x1b[35m"
-#define POWER_PURPLE "\x1b[1;45m"
-#define RESET		"\x1b[0m"
+# define PURPLE		"\x1b[35m"
+# define POWER_PURPLE "\x1b[1;45m"
+# define RESET		"\x1b[0m"
 
 typedef enum e_data_type
 {
