@@ -5,7 +5,7 @@ DEFAULT = \033[0m
 
 #CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address #-Dreadline change
 LDFLAGS = -lreadline -Llibft -lft #del
-CFLAGS = -I/usr/include/readline -Ilibft -Wextra -Wall -Werror  -g -fsanitize=address #del 
+CFLAGS = -I/usr/include/readline -Ilibft -Wextra -Wall -Werror -g -fsanitize=address #del 
 
 #INC = -I ../INCLUDE/# ./GC/ change
 
@@ -19,7 +19,7 @@ CC = cc
 
 NAME = minishell
 
-LIBFT_DIR = libft
+LIBFT_DIR = ../libft
 
 LIBFT = $(LIBFT_DIR)/libft.a
 
@@ -32,9 +32,9 @@ SOURCES = m_main.c \
 		m_signal.c \
 		m_copy_envp.c \
 		m_set_up_tokens.c \
-		GC/gc1.c \
-		GC/gc2.c \
-		GC/gc3.c \
+		../GC/gc1.c \
+		../GC/gc2.c \
+		../GC/gc3.c \
 		p_words.c \
 		p_builtins.c \
 		p_quotes.c \
