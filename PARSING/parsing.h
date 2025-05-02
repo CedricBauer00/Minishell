@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/02 13:45:05 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/02 14:02:07 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,11 @@
 # include <fcntl.h>
 # include <errno.h>
 # include <sys/stat.h>
-# include <stdio.h>
 # include <signal.h>
 # include <termios.h>
 # include "../GC/garbage_collector.h"
 # include <readline/readline.h>
 # include <readline/history.h>
-# include "../libft/libft.h"
 
 # define RED "\033[0;31m"
 # define GREEN "\033[0;32m"
