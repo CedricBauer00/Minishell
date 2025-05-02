@@ -1,26 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalnum.c                                       :+:      :+:    :+:   */
+/*   m_signal.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/08 10:58:09 by cbauer            #+#    #+#             */
-/*   Updated: 2024/10/18 15:14:31 by cbauer           ###   ########.fr       */
+/*   Created: 2025/04/15 10:26:29 by cbauer            #+#    #+#             */
+/*   Updated: 2025/04/22 15:56:49 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "parsing.h"
 
-int	ft_isalnum(int c)
+void	signal_func(int sig)
 {
-	if (ft_isalpha(c) == 1 || ft_isdigit(c) == 1)
-		return (1);
-	return (0);
+	(void)sig;
+	write(1, "\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
 }
 
-// int main()
-// {
-// 	printf("%d\n", ft_isalnum(1));
-// 	return (0);
-// }
+int	ttyattr(void)
+{
+	struct termios	temp;
+
+	if (tcgetattr(0, &temp) < 0)
+		return (-1);
+	temp.c_lflag &= ~(ECHOCTL);
+	if (tcsetattr(0, TCSANOW, &temp) < 0)
+		return (-1);
+	return (0);
+}
