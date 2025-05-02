@@ -21,6 +21,7 @@ NAME = minishell
 
 LIBFT_DIR = ../libft
 
+
 LIBFT = $(LIBFT_DIR)/libft.a
 
 SOURCES = m_main.c \
