@@ -1,4 +1,4 @@
-#include "../INCLUDE/main.h"
+#include "execution.h"
 
 //todo fix it where i use it? idk
 // t_cmd_block *add_command(t_gc_list *gc_lst, char *cmd, char **args, t_token_type type)
