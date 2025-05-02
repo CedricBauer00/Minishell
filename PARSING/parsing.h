@@ -6,39 +6,39 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/02 14:36:44 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/02 15:31:53 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef PARSING_H
 # define PARSING_H
 
-#include "../minishell.h"
+# include "../minishell.h"
+# include "../EXECUTION/execution.h"
 
-typedef enum s_tenum
-{
-	TOKEN_NONE = 0x0000,
-	TOKEN_ARG = 0x0002,				//word
-	TOKEN_FILE = 0x0001,			//file
-	TOKEN_BUILT_IN = 0x0004,		// cd, pwd, export, ...
-	TOKEN_PIPE = 0x008,				//Symbol: |
-	TOKEN_REDIRECT_IN = 0x0010,		//Symbol: <
-	TOKEN_REDIRECT_OUT = 0x0020,	//Symbol: >
-	TOKEN_APPEND = 0x0040,			//Symbol: >>
-	TOKEN_HEREDOC = 0x0080,			//Symbol: <<
-	TOKEN_VAR = 0x0100,				//$ variable
-	TOKEN_BONUS = 0x0200,			//End of input
-	TOKEN_SPACES = 0x0400,			//spaces
-}	t_token_type;
+// typedef enum s_tenum
+// {
+// 	TOKEN_NONE = 0x0000,
+// 	TOKEN_ARG = 0x0002,				//word
+// 	TOKEN_FILE = 0x0001,			//file
+// 	TOKEN_BUILT_IN = 0x0004,		// cd, pwd, export, ...
+// 	TOKEN_PIPE = 0x008,				//Symbol: |
+// 	TOKEN_REDIRECT_IN = 0x0010,		//Symbol: <
+// 	TOKEN_REDIRECT_OUT = 0x0020,	//Symbol: >
+// 	TOKEN_APPEND = 0x0040,			//Symbol: >>
+// 	TOKEN_HEREDOC = 0x0080,			//Symbol: <<
+// 	TOKEN_VAR = 0x0100,				//$ variable
+// 	TOKEN_BONUS = 0x0200,			//End of input
+// 	TOKEN_SPACES = 0x0400,			//spaces
+// }	t_token_type;
 
-typedef struct s_token //struct being allocated for each token from input
-{
-	t_token_type	type;
-	char			*value;
-	struct s_token	*next;
-	struct s_token	*prev;
-}	t_token;
+// typedef struct s_token //struct being allocated for each token from input
+// {
+// 	t_token_type	type;
+// 	char			*value;
+// 	struct s_token	*next;
+// 	struct s_token	*prev;
+// }	t_token;
 
 typedef struct s_main
 {
@@ -56,20 +56,20 @@ typedef struct s_main
 
 }	t_main;
 
-typedef struct s_cmd
-{
-	char			*cmd;
-	char			*flags; // idont know could be delte
-	struct s_cmd	*next; //"ls -l"
-}	t_cmd;
+// typedef struct s_cmd
+// {
+// 	char			*cmd;
+// 	char			*flags; // idont know could be delte
+// 	struct s_cmd	*next; //"ls -l"
+// }	t_cmd;
 
-typedef struct s_shell
-{
-	char	**my_envp;
-	char	*cur_dir;
-	char	*old_dir;
-	int		last_status_exit;
-}	t_shell;
+// typedef struct s_shell
+// {
+// 	char	**my_envp;
+// 	char	*cur_dir;
+// 	char	*old_dir;
+// 	int		last_status_exit;
+// }	t_shell;
 
 // ----------------------------------------------------------------------
 //							  MAIN
@@ -119,7 +119,7 @@ void	choose_error_statement(int indic, char *value);
 // 							ENVP + SHLLVL
 // ----------------------------------------------------------------------
 
-char	**copy_envp(t_gc *gc, char **envp);
+//char	**copy_envp(t_gc *gc, char **envp);
 int		get_envp_count(char **envp);
 int		num_len(int n);
 void	init_shllvl(char *str, int i);
@@ -129,8 +129,8 @@ int		incrmnt_shllvl(t_main *main, t_gc *gc);
 // 							 SHELL_INFO
 // ----------------------------------------------------------------------
 
-t_shell	*init_shell_info(t_gc_list **gc_list);
-t_shell	*get_shell(t_gc_list **gc_list);
+// t_shell	*init_shell_info(t_gc_list **gc_list);
+// t_shell	*get_shell(t_gc_list **gc_list);
 
 // ----------------------------------------------------------------------
 // 								SIGNAL
@@ -236,7 +236,7 @@ void	lex_tokens_correctly(t_token *tokens);
 
 int		syntax_redirects(t_token **cur);
 int		syntax_helper(t_token **cur);
-int		validate_syntax(t_token *token, t_gc_list *gc_list);
+int		validate_syntax(t_token *token);
 
 // ----------------------------------------------------------------------
 // 								PRINTING

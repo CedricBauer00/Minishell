@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_syntax.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:01:32 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/01 16:37:30 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/02 15:30:45 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ int	syntax_helper(t_token **cur)
 		return (-1);
 	return (0);
 }
-
-int	validate_syntax(t_token *token, t_gc_list *gc_list)
+//int	validate_syntax(t_token *token, t_gc_list *gc_list)
+int	validate_syntax(t_token *token)
 {
 	t_token	*cur;
 
@@ -63,7 +63,7 @@ int	validate_syntax(t_token *token, t_gc_list *gc_list)
 	{
 		if (syntax_helper(&cur) < 0)
 		{
-			get_shell(&gc_list)->last_status_exit = 258;
+			get_shell()->last_status_exit = 258;
 			return (-1);
 		}
 		cur = cur->next;

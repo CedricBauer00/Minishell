@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 09:58:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/02 12:01:16 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/02 15:29:12 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,8 @@ int	expand_helper(t_main *main, int *i, int ws, t_gc_list **gc_list)
 
 int	special_character(t_main *main, int *i, char *value, t_gc_list **gc_list) // reset exit_status = 0 if executing was successfull
 { //after successfull execution
-	value = ft_itoa(get_shell(gc_list)->last_status_exit);
+	// value = ft_itoa(get_shell(gc_list)->last_status_exit);
+	value = ft_itoa(get_shell()->last_status_exit);
 	if (!value)
 		return (-1);
 	main->error = create_token(&main->tokens, TOKEN_ARG, value, gc_list);

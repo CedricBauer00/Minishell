@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/02 11:47:41 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/02 15:32:15 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc)
 		return (printf("ERROR\nChecking nodes failed!\n"), \
 		gc_free(gc), -1);
 	lex_tokens_correctly(main->tokens);
-	indic = validate_syntax(main->tokens, gc->temp);
+	indic = validate_syntax(main->tokens);
 	/*
 	printf("status = %d\n", get_shell(gc->temp)->last_status_exit);
 	*/
@@ -100,12 +100,13 @@ int	main(int argc, char **argv, char **envp)
 	if (ttyattr() < 0)
 		return (printf("ERROR\nttyattr failed!\n"), -1);
 	gc = get_gc();
-	main.envp = copy_envp(gc, envp);
+	main.envp = copy_envp(gc->shell, envp);
 	if (!main.envp)
 		return (printf("ERROR\nCopy_envp failed!\n"), -1);
 	if (incrmnt_shllvl(&main, gc) < 0)
 		return (-1);
-	shell = get_shell(&gc->shell);
+	// shell = get_shell(&gc->shell);
+	shell = get_shell();
 	if (main_loop(&main, 0, gc) < 0)
 		return (printf("ERROR\nMain_loop failed!\n"), -1);
 	if (gc)

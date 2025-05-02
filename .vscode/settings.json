@@ -1,0 +1,8 @@
+{
+	"files.associations": {
+		"minishell.h": "c",
+		"types.h": "c",
+		"garbage_collector.h": "c",
+		"parsing.h": "c"
+	}
+}

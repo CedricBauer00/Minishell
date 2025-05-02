@@ -1,29 +1,30 @@
-#ifndef MAIN_H
-# define MAIN_H
+#ifndef EXECUTION_H
+# define EXECUTION_H
 
 # include "../minishell.h"
-typedef enum s_tenum
-{
-	TOKEN_NONE	= 0x0000,  			//0000 0000
-	TOKEN_ARGS	= 0x0001,
-	TOKEN_FILE  = 0x0002,
-	TOKEN_BUILT_IN = 0x0004,		// cd, pwd, export, ...
-	TOKEN_PIPE = 0x008,				//Symbol: |
-	TOKEN_REDIRECT_IN = 0x0010,		//Symbol: <
-	TOKEN_REDIRECT_OUT = 0x0020,	//Symbol: >
-	TOKEN_APPEND = 0x0040,			//Symbol: >>
-	TOKEN_HEREDOC = 0x0080,			//Symbol: <<
-	TOKEN_VAR = 0x0100,				//$variable
-	//TOKEN_EOF = 0x0400,			//End of input
-}	t_token_type;
 
-typedef struct s_token
-{
-	t_token_type	type;
-	char			*value;
-	struct s_token	*prev;
-	struct s_token	*next;
-}	t_token;
+// typedef enum s_tenum
+// {
+// 	TOKEN_NONE	= 0x0000,  			//0000 0000
+// 	TOKEN_ARGS	= 0x0001,
+// 	TOKEN_FILE  = 0x0002,
+// 	TOKEN_BUILT_IN = 0x0004,		// cd, pwd, export, ...
+// 	TOKEN_PIPE = 0x008,				//Symbol: |
+// 	TOKEN_REDIRECT_IN = 0x0010,		//Symbol: <
+// 	TOKEN_REDIRECT_OUT = 0x0020,	//Symbol: >
+// 	TOKEN_APPEND = 0x0040,			//Symbol: >>
+// 	TOKEN_HEREDOC = 0x0080,			//Symbol: <<
+// 	TOKEN_VAR = 0x0100,				//$variable
+// 	//TOKEN_EOF = 0x0400,			//End of input
+// }	t_token_type;
+
+// typedef struct s_token
+// {
+// 	t_token_type	type;
+// 	char			*value;
+// 	struct s_token	*prev;
+// 	struct s_token	*next;
+// }	t_token;
 
 typedef struct s_cmd_block //struct being allocated for each token from input
 {
@@ -55,7 +56,6 @@ typedef struct s_io_streams_list //> < > <
 	struct s_io_streams_list	*next;
 }	t_io_streams_list;
 
-
 typedef struct s_pipe
 {
 	int					*pipefd;
@@ -71,6 +71,15 @@ typedef struct s_shell
 	char	*old_dir;
 	int		last_status_exit;
 }	t_shell;
+
+typedef struct s_token //struct being allocated for each token from input
+{
+	t_token_type	type;
+	char			*value;
+	struct s_token	*next;
+	struct s_token	*prev;
+}	t_token;
+
 
 //memo init.c
 t_shell	*init_shell_struct(t_gc_list *gc_lst);
@@ -149,7 +158,7 @@ int	heredoc();
 char	*find_var_in_env(char **my_envp, char *find, size_t find_len, t_gc_list *gc_lst);
 
 //memo validate.c
-int		validate_syntax(t_token *token);
+//int		validate_syntax(t_token *token);
 bool	is_validate_cmd_block(t_cmd_block *cmd_b);
 
 //memo heredoc.c
