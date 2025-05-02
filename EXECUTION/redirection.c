@@ -1,4 +1,4 @@
-# include "../INCLUDE/main.h"
+#include "execution.h"
 
 //todo both redirection must be called in child!
 // todo need to change if 

@@ -1,4 +1,4 @@
-#include "../INCLUDE/main.h"
+#include "execution.h"
 
 /*
 	1. 명령어가 빌트인이냐 외부 명령어냐?
@@ -50,7 +50,7 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 	is_exited((t_cmd_block*)new_cmd_block, gc);
 	while(temp && temp->type != TOKEN_PIPE)
 	{
-		if (temp && temp->type == TOKEN_ARGS)
+		if (temp && temp->type == TOKEN_ARG)
 		{
 			i++;
 		}
@@ -68,7 +68,7 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 			//new_cmd_block->args[i++] = gc_strdup(cur->value, gc->temp);
 		}
 
-		if (cur && cur->type == TOKEN_ARGS)
+		if (cur && cur->type == TOKEN_ARG)
 		{
 			new_cmd_block->args[i++] = gc_strdup(cur->value, gc->temp);
 		}

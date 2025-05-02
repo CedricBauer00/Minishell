@@ -3,6 +3,8 @@
 		"minishell.h": "c",
 		"types.h": "c",
 		"garbage_collector.h": "c",
-		"parsing.h": "c"
+		"parsing.h": "c",
+		"execution.h": "c",
+		"history.h": "c"
 	}
 }

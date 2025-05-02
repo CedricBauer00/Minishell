@@ -1,7 +1,7 @@
-# include "../INCLUDE/main.h"
+#include "execution.h"
 
-# include <readline/readline.h>
-# include <readline/history.h>
+// # include <readline/readline.h>
+// # include <readline/history.h>
 
 /* printf함수를 사용하기위한 헤더 */
 // # include <stdio.h>

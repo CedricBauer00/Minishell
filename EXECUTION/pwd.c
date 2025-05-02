@@ -1,4 +1,4 @@
-#include "../INCLUDE/main.h"
+#include "execution.h"
 
 //pwd getcwd() get current working directory
 //obwohl ist es NULL, muss die richtige weg return --> dann brauche ich hier die find_var_in_env funktion nicht zu verwenden.

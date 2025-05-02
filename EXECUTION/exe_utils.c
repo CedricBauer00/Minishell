@@ -1,4 +1,4 @@
-#include "../INCLUDE/main.h"
+#include "execution.h"
 
 void	is_exited(void *failed, t_gc *gc)
 {

@@ -46,7 +46,8 @@ SOURCES = m_main.c \
 		m_syntax.c \
 		m_token_handling.c \
 		m_sorting.c \
-		printing.c 
+		printing.c \
+		#EXECUTION
 
 OBJECTS := $(SOURCES:.c=.o)
 

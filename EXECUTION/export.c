@@ -1,4 +1,4 @@
-#include "../INCLUDE/main.h"
+#include "execution.h"
 
 //todo make export.
 // char	**expand_envp(t_shell *shell, char *new_path)

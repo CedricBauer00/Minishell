@@ -1,4 +1,4 @@
-#include "../INCLUDE/main.h"
+#include "execution.h"
 
 char	*find_var_in_env(char **my_envp, char *find, size_t find_len, t_gc_list *gc_lst)
 {

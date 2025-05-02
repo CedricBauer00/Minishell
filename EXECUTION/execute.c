@@ -1,4 +1,4 @@
-# include "../INCLUDE/main.h"
+#include "execution.h"
 
 void	prevent_zombie_process()
 {
@@ -230,14 +230,14 @@ int main(int ac, char *argv[], char *envp[])
 {
 	(void)ac;
 	(void)argv;
-	t_token *t1 = create_token(TOKEN_ARGS, "cat");
-	t_token *t2 = create_token(TOKEN_ARGS, "-e");
+	t_token *t1 = create_token(TOKEN_ARG, "cat");
+	t_token *t2 = create_token(TOKEN_ARG, "-e");
 	t_token *t3 = create_token(TOKEN_HEREDOC, "<<");
 	t_token *t4 = create_token(TOKEN_REDIRECT_OUT, ">");
 	t_token *t5 = create_token(TOKEN_FILE, "1");
 	t_token *t6 = create_token(TOKEN_PIPE, "|");
-	t_token *t7 = create_token(TOKEN_ARGS, "grep");
-	t_token *t8 = create_token(TOKEN_ARGS, "hello");
+	t_token *t7 = create_token(TOKEN_ARG, "grep");
+	t_token *t8 = create_token(TOKEN_ARG, "hello");
 	// t_token *t9 = create_token(TOKEN_REDIRECT_OUT, ">");
 	// t_token *t10 = create_token(TOKEN_FILE, "2");
 

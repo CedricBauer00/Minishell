@@ -1,4 +1,4 @@
-# include "../INCLUDE/main.h"
+#include "execution.h"
 
 //fstat : for getting infos of files. prob can use just to debug fd of pipe or redirection ?? to check pipe's permission or pipes buffer size its good!!!
 //test!

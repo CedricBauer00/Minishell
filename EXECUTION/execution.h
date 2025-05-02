@@ -18,14 +18,6 @@
 // 	//TOKEN_EOF = 0x0400,			//End of input
 // }	t_token_type;
 
-// typedef struct s_token
-// {
-// 	t_token_type	type;
-// 	char			*value;
-// 	struct s_token	*prev;
-// 	struct s_token	*next;
-// }	t_token;
-
 typedef struct s_cmd_block //struct being allocated for each token from input
 {
 	char						*built_in; //memo just check if it is built in or not!

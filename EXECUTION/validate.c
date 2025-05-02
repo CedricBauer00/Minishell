@@ -1,4 +1,4 @@
-# include "../INCLUDE/main.h"
+#include "execution.h"
 
 /*
 	if cur->type is '|' or '<', '>', ''>>

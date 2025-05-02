@@ -1,4 +1,4 @@
-# include "../INCLUDE/main.h"
+#include "execution.h"
 
 t_shell	*init_shell_struct(t_gc_list *gc_lst)
 {

@@ -6,7 +6,7 @@
 	cd /: move to root dir;
 */
 
-#include "../INCLUDE/main.h"
+#include "execution.h"
 
 //stat(): check path, and check if its approchable. succesed return 0, failed: return -1
 //S_ISDIR is a macro 
