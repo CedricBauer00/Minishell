@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_syntax.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:01:32 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/02 17:27:23 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/02 17:33:44 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ int	syntax_redirects(t_token **cur)
 		if ((*cur)->next == NULL && ((*cur)->value == NULL
 				|| (*cur)->value[0] == '\0'))
 			return (choose_error_statement(1, NULL), -1);
-		else if ((*cur)->next != NULL && (*cur)->next->type == TOKEN_HEREDOC)
+		else if ((*cur)->next != NULL && (*cur)->next->type == TOKEN_HEREDOC \
+			&& ((*cur)->value == NULL || (*cur)->value[0] == '\0'))
 			return (choose_error_statement(2, "<<"), -1);
 		else if ((*cur)->value == NULL || (*cur)->value[0] == '\0')
 			return (choose_error_statement(2, (*cur)->next->value), -1);
