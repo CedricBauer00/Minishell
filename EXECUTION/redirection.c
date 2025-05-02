@@ -97,7 +97,6 @@ void	set_io_streams(t_cmd_block *cmd)
 	if(!cmd)
 		return ;
 	io_streams = cmd->io_streams;
-	t_cmd_block *temp = cmd;
 	while (io_streams)
 	{
 		if (io_streams->infile_name)

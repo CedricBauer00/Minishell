@@ -81,12 +81,12 @@ t_pipe *init_pipe(t_gc_list *gc_lst);
 t_io_streams_list *init_io_stream_struct(t_gc_list *gc_lst);
 
 //memo copy_envp.c  -- ok!
-char	**copy_envp(t_gc_list *gc_lst, char **envp);
+char	**copy_envp(t_gc *gc, char **envp);
 int		get_envp_count(char **envp);
 
 //memo pwd.c
-char	*my_getcwd(t_shell *shell, t_gc *gc);
-void	my_pwd(t_shell *shell, t_gc *gc);
+char	*my_getcwd(t_gc *gc);
+void	my_pwd(t_gc *gc);
 
 //memo cd.c
 int		is_valid_dir(const char *path);
@@ -115,10 +115,10 @@ void	add_pipe(t_cmd_block **cmd_block, t_gc_list *gc_lst);
 bool	is_first_pipe(t_cmd_block *cmd);
 bool	is_middle_pipe(t_cmd_block *cmd);
 bool	is_last_pipe(t_cmd_block *cmd);
-int		first_pipe_cmd(t_cmd_block *cmd_block, t_shell *shell, t_gc_list *gc_lst);
-int		middle_pipe_cmd(t_cmd_block *cmd_block, t_shell *shell, t_gc_list *gc_lst);
-int		last_pipe_cmd(t_cmd_block *cmd_block, t_shell *shell);
-void	processing_pipe(t_cmd_block *cmd, t_shell *shell, t_gc_list* gc_lst);
+int		first_pipe_cmd(t_cmd_block *cmd_block);
+int		middle_pipe_cmd(t_cmd_block *cmd_block);
+int		last_pipe_cmd(t_cmd_block *cmd_block);
+void	processing_pipe(t_cmd_block *cmd);
 void	close_pipefd(t_cmd_block *cmd);
 void	close_last_pipefd(t_cmd_block *cmd);
 void	close_middle_pipefd(t_cmd_block *cmd);
@@ -157,12 +157,12 @@ bool	is_validate_cmd_block(t_cmd_block *cmd_b);
 int	process_heredoc(t_io_streams_list *io_streams);
 
 //memo execute.c
-void	wait_for_child_and_update_status(t_cmd_block *cur, int i);
-void	main_execute(t_cmd_block *cmd_block, t_gc *gc, t_shell *shell);
+void	wait_for_child_and_update_status(int i);
+void	main_execute(t_cmd_block *cmd_block);
 void 	run_execve(t_cmd_block *cmd_block, t_gc *gc);
 void	validate_check(t_cmd_block *cmd_block);
 void	hanlde_heredoc(t_cmd_block *cmd_block);
-void	single_cmd_execute(t_cmd_block *cur, pid_t pid, t_gc *gc);
+void	single_cmd_execute(t_cmd_block *cur, t_gc *gc);
 int		count_command(t_cmd_block *cmd_block);
 void	execute_single_command(t_cmd_block *cmd_block);
 void	do_alloc_pids(t_cmd_block* cmd_block);

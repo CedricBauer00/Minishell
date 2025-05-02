@@ -26,7 +26,7 @@
 // }
 
 
-char	*my_getcwd(t_shell *shell, t_gc *gc)
+char	*my_getcwd(t_gc *gc)
 {
 	char	*cwd;
 	char	*temp;
@@ -50,10 +50,10 @@ char	*my_getcwd(t_shell *shell, t_gc *gc)
 	return cwd;
 }
 
-void	my_pwd(t_shell *shell, t_gc *gc)
+void	my_pwd(t_gc *gc)
 {
 	char *pwd;
-	pwd = my_getcwd(shell, gc);
+	pwd = my_getcwd(gc);
 	printf(GREEN"%s\n"DEFAULT, pwd);
 	//todo
 	// t_gc_list *find = find_node();

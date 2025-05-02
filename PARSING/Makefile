@@ -47,7 +47,6 @@ SOURCES = m_main.c \
 		m_token_handling.c \
 		m_sorting.c \
 		printing.c \
-		#EXECUTION
 		../EXECUTION/builtin_utils.c\
 		../EXECUTION/cd.c\
 		../EXECUTION/copy_envp.c\

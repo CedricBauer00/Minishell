@@ -148,7 +148,7 @@ void	ft_setenv(const char *name, const char *value, int overwrite, t_shell *shel
 	//if existed , and want to overwrite to it.
 	if (index >= 0 && overwrite == 1)
 	{
-		shell->my_envp[index] = gc_strdup(new_path, gc->shell);
+		shell->my_envp[index] = gc_strdup(new_path, &gc->shell);
 		t_gc_list *find = find_node(gc->temp, (char*)new_path);
 		delete_node(&gc->temp, find);
 	}
@@ -177,7 +177,7 @@ void cd(char **args, t_shell *shell, t_gc *gc)
 		return ;
 	}
 	char	*target;
-	char	*temp;
+	// char	*temp;
 	if (args[0] == NULL || strcmp(args[0], "~") == 0)
 	{
 		fprintf(stderr, RED"case just cd\n"DEFAULT);
@@ -203,7 +203,7 @@ void cd(char **args, t_shell *shell, t_gc *gc)
 	else
 	{
 		fprintf(stderr, RED"for 'cd others'\n"DEFAULT);
-		target = gc_strdup(args[0], gc->temp);
+		target = gc_strdup(args[0], &gc->temp);
 		is_exited(target, gc);
 	}
 	if (chdir(target) != 0)

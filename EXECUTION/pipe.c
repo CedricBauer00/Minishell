@@ -214,7 +214,7 @@ bool	is_last_pipe(t_cmd_block *cmd)
 		return false;
 }
 
-int	first_pipe_cmd(t_cmd_block *command, t_shell *shell, t_gc_list *gc_lst)
+int	first_pipe_cmd(t_cmd_block *command)
 {
 	// if (pid == 0)
 	// {
@@ -243,7 +243,7 @@ int	first_pipe_cmd(t_cmd_block *command, t_shell *shell, t_gc_list *gc_lst)
 }
 
 //memo if its multiple pipe lines...
-int	middle_pipe_cmd(t_cmd_block *command, t_shell *shell, t_gc_list *gc_lst)
+int	middle_pipe_cmd(t_cmd_block *command)
 {
 	// if (pid == 0)
 	// {
@@ -276,7 +276,7 @@ int	middle_pipe_cmd(t_cmd_block *command, t_shell *shell, t_gc_list *gc_lst)
 	return 1;
 }
 
-int	last_pipe_cmd(t_cmd_block *command, t_shell *shell)
+int	last_pipe_cmd(t_cmd_block *command)
 {
 	// if (pid == 0)
 	// {
@@ -341,14 +341,14 @@ void	close_pipefd(t_cmd_block *cmd)
 		close_last_pipefd(cmd);
 }
 //memo if return -1 we have to free all allocated memories
-void	processing_pipe(t_cmd_block *cmd, t_shell *shell, t_gc_list* gc_lst)
+void	processing_pipe(t_cmd_block *cmd)
 {
 	if (is_first_pipe(cmd))
-		first_pipe_cmd(cmd, shell, gc_lst);
+		first_pipe_cmd(cmd);
 	else if (is_middle_pipe(cmd))
-		middle_pipe_cmd(cmd, shell, gc_lst);
+		middle_pipe_cmd(cmd);
 	else if (is_last_pipe(cmd))
-		last_pipe_cmd(cmd, shell);
+		last_pipe_cmd(cmd);
 }
 
 // int	main(int argc, char **argv, char **envp)

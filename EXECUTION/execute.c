@@ -5,7 +5,7 @@ void	prevent_zombie_process()
 	while (waitpid(-1, NULL, WNOHANG) > 0);
 }
 
-void	wait_for_child_and_update_status(t_cmd_block *cur, int i)
+void	wait_for_child_and_update_status(int i)
 {
 	t_shell *shell = get_shell();
 	int status;
@@ -89,9 +89,10 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 	exit(0);
 }
 
-void	single_cmd_execute(t_cmd_block *cur, pid_t pid, t_gc *gc)
+void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 {
 	t_shell	*shell;
+	pid_t	pid;
 
 	if (!cur)
 		return;
@@ -113,11 +114,11 @@ void	single_cmd_execute(t_cmd_block *cur, pid_t pid, t_gc *gc)
 		if (pid == 0)
 			run_execve(cur, gc);
 		else
-		 	wait_for_child_and_update_status(cur, 1);
+		 	wait_for_child_and_update_status(1);
 	}
 }
 
-void	execute_child(pid_t pid, t_cmd_block *cur, t_gc *gc, t_shell *shell)
+void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 {
 	if (cur->io_streams && cur->io_streams->heredoc_eof)
 	{
@@ -188,10 +189,10 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 	exit(127);
 }
 
-void	main_execute(t_cmd_block *cmd_block, t_gc *gc, t_shell *shell)
+void	main_execute(t_cmd_block *cmd_block)
 {
 	t_cmd_block *cur;
-	pid_t	pid;
+	// pid_t	pid;
 
 	//t_shell *shell = get_shell();
 	cur = cmd_block;
@@ -311,8 +312,8 @@ int main(int ac, char *argv[], char *envp[])
 	}
 
 	t_shell *shell = get_shell();
-	shell->my_envp = copy_envp(gc->shell, envp);
-	main_execute(cmd_block_list, gc, shell);
+	shell->my_envp = copy_envp(gc, envp);
+	main_execute(cmd_block_list);
 	printf(YELLOW"shell->last_status_exit : %d\n"DEFAULT, shell->last_status_exit);
 	gc_free(gc);
 	return 0;
@@ -337,14 +338,14 @@ void	hanlde_heredoc(t_cmd_block *cmd_block)
 
 void	execute_single_command(t_cmd_block *cmd_block)
 {
-	pid_t pid;
+	// pid_t pid;
 	t_gc *gc;
 
 	gc = get_gc();
 	if(cmd_block && !cmd_block->prev && !cmd_block->next)
 	{
 		fprintf(stderr, RED"execute_single_command()\n"DEFAULT);
-		single_cmd_execute(cmd_block, pid, gc);
+		single_cmd_execute(cmd_block, gc);
 	}
 }
 
@@ -402,7 +403,7 @@ void	fork_and_execute(t_cmd_block *cmd_block, t_gc *gc, int *i)
 	if (pid == 0)
 	{
 		//set_io_streams(cur);
-		execute_child(pid, cur, gc, shell);
+		execute_child(cur, gc, shell);
 	}
 	close_pipefd(cur);
 	shell->pids[*i] = pid;
@@ -423,5 +424,5 @@ void	execute_pipeline(t_cmd_block *cmd_block)
 		i++;
 		cur = cur->next;
 	}
-	wait_for_child_and_update_status(cmd_block, i);
+	wait_for_child_and_update_status(i);
 }
