@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/02 14:35:21 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/02 14:35:24 by jisokim2         ###   ########.fr       */
+/*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
+/*   Updated: 2025/05/02 14:36:44 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef PARSING_H
 # define PARSING_H
