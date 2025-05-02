@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_utils1.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 17:53:21 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/24 18:10:40 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/01 16:10:57 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	set_default(t_main *main)
 	return ;
 }
 
-int	check_operator2(t_main *main, int *i, t_gc_list *gc_list)
+int	check_operator2(t_main *main, int *i, t_gc_list **gc_list)
 {
 	if (main->line[*i] == '"')
 	{
@@ -46,7 +46,7 @@ int	check_operator2(t_main *main, int *i, t_gc_list *gc_list)
 	return (0);
 }
 
-int	check_operator(t_main *main, int *i, t_gc_list *gc_list)
+int	check_operator(t_main *main, int *i, t_gc_list **gc_list)
 {
 	if (ft_isspace(main->line[*i]))
 		main->error = create_token(&main->tokens, TOKEN_SPACES, " ", gc_list);

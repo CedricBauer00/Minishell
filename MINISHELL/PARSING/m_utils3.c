@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_utils3.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 12:13:48 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/20 13:15:27 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/01 16:03:30 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	ft_strcmp(char *s1, char *s2)
 	return (*s1 - *s2);
 }
 
-char	*gc_strdup(const char *str, t_gc_list *gc_list)
+char	*gc_strdup(const char *str, t_gc_list **gc_list)
 {
 	size_t	len;
 	size_t	counter;
@@ -33,7 +33,7 @@ char	*gc_strdup(const char *str, t_gc_list *gc_list)
 	if (!str)
 		return (NULL);
 	len = ft_strlen(str);
-	ptr = do_alloc(&gc_list, len * sizeof(char) + 1, \
+	ptr = do_alloc(gc_list, len * sizeof(char) + 1, \
 		TYPE_SINGLE_PTR, "gc_strdup");
 	if (!ptr)
 		return (NULL);
@@ -47,7 +47,7 @@ char	*gc_strdup(const char *str, t_gc_list *gc_list)
 	return (ptr);
 }
 
-char	*gc_strndup(const char *str, size_t n, t_gc_list *gc_list)
+char	*gc_strndup(const char *str, size_t n, t_gc_list **gc_list)
 {
 	size_t	len;
 	size_t	counter;
@@ -56,7 +56,7 @@ char	*gc_strndup(const char *str, size_t n, t_gc_list *gc_list)
 	len = ft_strlen(str);
 	if (n < len)
 		len = n;
-	ptr = do_alloc(&gc_list, (len + 1) * sizeof(char), \
+	ptr = do_alloc(gc_list, (len + 1) * sizeof(char), \
 		TYPE_DOUBLE_PTR, "gc_strndup");
 	if (!ptr)
 		return (NULL);
@@ -70,7 +70,7 @@ char	*gc_strndup(const char *str, size_t n, t_gc_list *gc_list)
 	return (ptr);
 }
 
-char	*gc_strjoin(char const *s1, char const *s2, t_gc_list *gc_list)
+char	*gc_strjoin(char const *s1, char const *s2, t_gc_list **gc_list)
 {
 	char	*newstr;
 	size_t	len;
@@ -80,7 +80,7 @@ char	*gc_strjoin(char const *s1, char const *s2, t_gc_list *gc_list)
 	if (s1[0] == '\0' && s2[0] == '\0')
 		return (gc_strdup("", gc_list));
 	len = ft_strlen(s1) + ft_strlen(s2);
-	newstr = (char *)do_alloc(&gc_list, (len + 1) * sizeof(char), \
+	newstr = (char *)do_alloc(gc_list, (len + 1) * sizeof(char), \
 		TYPE_SINGLE_PTR, "gc_strjoin");
 	if (!newstr)
 		return (0);

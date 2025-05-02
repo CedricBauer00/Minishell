@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   m_main.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/01 12:49:00 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/01 17:26:59 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-int	main_helper(t_main *main, t_gc_list *gc_list)
+int	main_helper(t_main *main, t_gc_list **gc_list)
 {
 	main->temp_for_line = readline(YELLOW"minishell> "DEFAULT);
 	if (!main->temp_for_line)
 	{
 		return (printf("exit\n"), 1);
 	}
-	main->line = do_alloc(&gc_list, ft_strlen(main->temp_for_line) + 1, \
+	main->line = do_alloc(gc_list, ft_strlen(main->temp_for_line) + 1, \
 		TYPE_SINGLE_PTR, "input");
 	if (!main->line)
 		return (-1);
@@ -35,7 +35,7 @@ int	main_helper(t_main *main, t_gc_list *gc_list)
 int	main_loop_helper(t_main *main, int indic, t_gc *gc)
 {
 	if (main->tokens && check_for_node_spaces(main, main->tokens, \
-		gc->temp) < 0)
+		&gc->temp) < 0)
 		return (printf("ERROR\nChecking nodes failed!\n"), \
 		gc_free(gc), -1);
 	lex_tokens_correctly(main->tokens);
@@ -58,7 +58,7 @@ int	main_loop(t_main *main, int i, t_gc *gc)
 	while (1)
 	{
 		main->tokens = NULL;
-		ret = main_helper(main, gc->temp);
+		ret = main_helper(main, &gc->temp);
 		if (ret == 1)
 			return (0);
 		else if (ret == -1)
@@ -68,15 +68,13 @@ int	main_loop(t_main *main, int i, t_gc *gc)
 		i = 0;
 		while (main->line[i])
 		{
-			print_list(gc->temp);
-			if (check_operator(main, &i, gc->temp) < 0 || i < 0)
+			if (check_operator(main, &i, &gc->temp) < 0 || i < 0)
 				return (printf("ERROR\nCheck_operator failed!\n"), \
 					gc_free(gc), -1);
 		}
 		if (main_loop_helper(main, 0, gc) < 0)
 			continue ;
-		//test
-		// print_list(gc->temp);
+		// test
 		// int k = 0;
 		// if (main->envp)
 		// {
@@ -87,7 +85,6 @@ int	main_loop(t_main *main, int i, t_gc *gc)
 		// 		k++;
 		// 	}
 		// }
-		// print_list(gc->shell);
 	}
 	return (0);
 }
@@ -116,25 +113,18 @@ int	main(int argc, char **argv, char **envp)
 	gc = get_gc();
 	main.envp = copy_envp(gc, envp);
 	if (!main.envp)
-		return (printf("ERROR\nCopy_envp failed!\n"), gc_free(gc), -1);
+		return (printf("ERROR\nCopy_envp failed!\n"), -1);
 	if (incrmnt_shllvl(&main, gc) < 0)
+	{
+		//gc_free(gc);
 		return (-1);
-	shell = get_shell(gc->shell);
+	}
+	shell = get_shell(&gc->shell);
 	if (main_loop(&main, 0, gc) < 0)
-		return (printf("ERROR\nMain_loop failed!\n"), gc_free(gc), -1);
+		return (printf("ERROR\nMain_loop failed!\n"), -1);
 	if (gc)
 	{
+		printf(YELLOW"gc free execute!\n"DEFAULT);
 		gc_free(gc);
-	}
-	
-	int k = 0;
-	if (main.envp)
-	{
-		fprintf(stderr, RED"[%p] envp\n"DEFAULT,main.envp);
-		while (main.envp[k])
-		{
-			fprintf(stderr, RED"[%p] envp[%d] = %s\n"DEFAULT,main.envp[k], k, main.envp[k]);
-			k++;
-		}
 	}
 }

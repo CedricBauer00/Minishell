@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_set_up_tokens.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 12:26:06 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/20 13:05:51 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/01 16:07:16 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ int	append_token(t_token **tokens, t_token *new_token)
 }
 
 int	create_token(t_token **tokens, t_token_type type, char *str, \
-	t_gc_list *gc_list)
+	t_gc_list **gc_list)
 {
 	t_token	*new_token;
-
-	new_token = (t_token *)do_alloc(&gc_list, sizeof(t_token), \
+	
+	new_token = (t_token *)do_alloc(gc_list, sizeof(t_token), \
 		TYPE_SINGLE_PTR, "create_token");
 	if (!new_token)
 		return (perror("ERROR\nMalloc failed!\n"), -1);
@@ -46,7 +46,8 @@ int	create_token(t_token **tokens, t_token_type type, char *str, \
 	new_token->value = gc_strdup(str, gc_list);
 	if (!new_token->value && str != NULL)
 	{
-		free(new_token);
+		//free(new_token);
+		// gc_free(gc);
 		return (perror("ERROR\nMalloc for new_token->value failed!\n"), -1);
 	}
 	new_token->next = NULL;

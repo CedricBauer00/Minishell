@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   p_operators.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 10:25:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/20 12:51:40 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/01 16:22:38 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-int	operator(t_main *main, int i, char c, t_gc_list *gc_list)
+int	operator(t_main *main, int i, char c, t_gc_list **gc_list)
 {
 	if (c == '<' && i == 1)
 		main->error = create_token(&main->tokens, TOKEN_REDIRECT_IN, \

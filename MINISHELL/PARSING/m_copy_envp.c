@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_copy_envp.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 12:56:46 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/29 18:18:26 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/01 16:05:49 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,22 +34,23 @@ char	**copy_envp(t_gc *gc, char **envp)
 	if (!gc) //gc->shell / gc
 		return (NULL);
 	count = get_envp_count(envp);
-	my_envp = do_alloc(&gc->shell, sizeof(char *) * count, \
+	my_envp = do_alloc(&gc->shell, sizeof(char *) * (count + 1), \
 		TYPE_DOUBLE_PTR, "copy_envp");
 	if (!my_envp)
 		return (gc_free(gc), NULL); //gc
 	while (envp[i])
 	{
-		my_envp[i] = gc_strdup(envp[i], gc->shell); //gc->shell
+		my_envp[i] = gc_strdup(envp[i], &gc->shell); //gc->shell
 		if (!my_envp[i])
 		{
-			while (--i >= 0)
-				free(my_envp[i]);
-			return (NULL);
+			// while (--i >= 0)
+			// 	free(my_envp[i]);
+			// return (NULL);
+			gc_free(gc);
 		}
 		i++;
 	}
-	my_envp[i -1] = NULL;
+	my_envp[i] = NULL;
 	return (my_envp);
 }
 

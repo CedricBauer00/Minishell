@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_syntax.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:01:32 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/23 13:59:19 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/01 16:37:30 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	validate_syntax(t_token *token, t_gc_list *gc_list)
 	{
 		if (syntax_helper(&cur) < 0)
 		{
-			get_shell(gc_list)->last_status_exit = 258;
+			get_shell(&gc_list)->last_status_exit = 258;
 			return (-1);
 		}
 		cur = cur->next;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   p_heredoc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 10:54:17 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/23 10:14:32 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/01 16:23:13 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	heredoc_quote_helper(char *word)
 	return (0);
 }
 
-char	*del_quote(char *word, int i, t_gc_list *gc_list)
+char	*del_quote(char *word, int i, t_gc_list **gc_list)
 {
 	char	*str;
 	char	*ret;
@@ -59,7 +59,7 @@ char	*del_quote(char *word, int i, t_gc_list *gc_list)
 	return (ret);
 }
 
-int	heredoc(t_main *main, int i, t_gc_list *gc_list)
+int	heredoc(t_main *main, int i, t_gc_list **gc_list)
 {
 	int		j;
 	int		end;

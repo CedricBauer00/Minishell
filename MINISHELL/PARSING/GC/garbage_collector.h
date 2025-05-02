@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   garbage_collector.h                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:41:48 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/01 13:09:31 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/01 17:11:16 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,10 @@
 # include <string.h>
 # include <stdbool.h>
 # include "../libft/libft.h"
+
+#define PURPLE		"\x1b[35m"
+#define POWER_PURPLE "\x1b[1;45m"
+#define RESET		"\x1b[0m"
 
 typedef enum e_data_type
 {
@@ -69,8 +73,8 @@ void		gc_level_up(t_gc_list *gc_list);
 
 void		gc_free_by_level(t_gc_list *gc_list);
 void		gc_free(t_gc *gc);
-void		print_list(t_gc_list *gc_lst);
+void		print_list(t_gc_list **gc_lst);
 void		print_gc(t_gc *gc);
-char		*gc_strdup(const char *str, t_gc_list *gc_lst);
+char		*gc_strdup(const char *str, t_gc_list **gc_lst);
 
 #endif

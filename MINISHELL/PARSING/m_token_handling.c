@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   m_token_handling.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:30:51 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/20 12:26:03 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/01 16:23:34 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-int	node_spaces_helper(t_token *temp, t_gc_list *gc_list)
+int	node_spaces_helper(t_token *temp, t_gc_list **gc_list)
 {
 	temp->value = gc_strjoin(temp->value, temp->next->value, gc_list);
 	if (!temp->value)
@@ -21,7 +21,7 @@ int	node_spaces_helper(t_token *temp, t_gc_list *gc_list)
 	return (0);
 }
 
-int	node_space_else_if(t_token **temp, t_gc_list *gc_list)
+int	node_space_else_if(t_token **temp, t_gc_list **gc_list)
 {
 	while ((*temp)->next != NULL && (*temp)->next->type != TOKEN_SPACES
 		&& (*temp)->next->type != TOKEN_PIPE
@@ -52,7 +52,7 @@ int	check_tokens(t_token *temp)
 	return (-1);
 }
 
-int	check_for_node_spaces(t_main *main, t_token *temp, t_gc_list *gc_list)
+int	check_for_node_spaces(t_main *main, t_token *temp, t_gc_list **gc_list)
 {
 	if (temp->type == TOKEN_SPACES)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gc3.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:01:21 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/01 13:07:52 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/01 17:16:36 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,52 +46,56 @@ void	gc_free(t_gc *gc)
 {
 	if (!gc)
 		return ;
-	printf("call gc_free\n");
 	if (gc->shell)
 	{
-		printf("call gc_free gc->shell %p\n", gc->shell);
+		print_list(&gc->shell);
 		all_free(&gc->shell);
-		free(gc->shell);
-		gc->shell = NULL;
+		// printf(PU"free gc->sehll %p\n", gc->shell);
+		// free(gc->shell);
+		// gc->shell = NULL;
 	}
 	if (gc->temp)
 	{
-		printf("call gc_free gc->temp\n");
+		print_list(&gc->temp);
 		all_free(&gc->temp);
-		free(gc->temp);
-		gc->temp = NULL;
+		//printf("free gc->temp %p\n", gc->temp);
+		// free(gc->temp);
+		// gc->temp = NULL;
 	}
+	printf(PURPLE"free gc %p\n"RESET, gc);
 	free(gc);
 	gc = NULL;
+	printf(POWER_PURPLE"--------------------------------------GC CLEAN-------------------------------------------"RESET);
+	printf("\n");
 }
 
-void	print_list(t_gc_list *gc_lst)
+void	print_list(t_gc_list **gc_lst)
 {
 	t_gc_list	*cur;
 	int			i;
 
 	i = 1;
-	cur = gc_lst->next;
+	cur = (*gc_lst);
 	while (cur != NULL)
 	{
-		printf("[%d]th NODE[%p] [%s], %p\n", i, cur, (char*)cur->data, cur->data);
+		printf(PURPLE"[%d]th NODE[%p] [%s], %p\n"RESET, i, cur, (char*)cur->data, cur->data);
 		i++;
 		cur = cur->next;
 	}
 }
 
-void	print_gc(t_gc *gc)
-{
-	t_gc	*cur;
-	int			i;
+// void	print_gc(t_gc *gc)
+// {
+// 	t_gc	*cur;
+// 	int			i;
 
-	i = 1;
-	cur = gc;
-	while (cur->temp != NULL)
-	{
-		printf("[%d]th NODE[%s], %p\n", i, (char*)cur->temp->data, cur->temp->data);
-		i++;
-		cur->temp = cur->temp->next;
-	}
-}
+// 	i = 1;
+// 	cur = gc;
+// 	while (cur->temp != NULL)
+// 	{
+// 		printf("[%d]th NODE[%s], %p\n", i, (char*)cur->temp->data, cur->temp->data);
+// 		i++;
+// 		cur->temp = cur->temp->next;
+// 	}
+// }
 

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   p_dquotes.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 09:42:44 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/29 18:05:59 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/01 16:17:36 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-int	get_spaces(t_main *main, int *i, int k, t_gc_list *gc_list)
+int	get_spaces(t_main *main, int *i, int k, t_gc_list **gc_list)
 {
 	int		j;
 	char	*str;
@@ -24,7 +24,7 @@ int	get_spaces(t_main *main, int *i, int k, t_gc_list *gc_list)
 		j++;
 		(*i)++;
 	}
-	str = do_alloc(&gc_list, j + 1, TYPE_SINGLE_PTR, "get_spaces");
+	str = do_alloc(gc_list, j + 1, TYPE_SINGLE_PTR, "get_spaces");
 	if (!str)
 		return (-1);
 	str[j] = '\0';
@@ -34,7 +34,7 @@ int	get_spaces(t_main *main, int *i, int k, t_gc_list *gc_list)
 	return (0);
 }
 
-int	read_word(t_main *main, int *i, int k, t_gc_list *gc_list)
+int	read_word(t_main *main, int *i, int k, t_gc_list **gc_list)
 {
 	int		j;
 	int		m;
@@ -47,7 +47,7 @@ int	read_word(t_main *main, int *i, int k, t_gc_list *gc_list)
 		j++;
 		m++;
 	}
-	str = do_alloc(&gc_list, j + 1, TYPE_SINGLE_PTR, "read_word");
+	str = do_alloc(gc_list, j + 1, TYPE_SINGLE_PTR, "read_word");
 	if (!str)
 		return (-1);
 	str[j] = '\0';
@@ -63,7 +63,7 @@ int	read_word(t_main *main, int *i, int k, t_gc_list *gc_list)
 	return (0);
 }
 
-int	dquotes_helper(t_main *main, int *i, t_gc_list *gc_list)
+int	dquotes_helper(t_main *main, int *i, t_gc_list **gc_list)
 {
 	while (main->line[*i] && main->line[*i] != '"')
 	{
@@ -81,7 +81,7 @@ int	dquotes_helper(t_main *main, int *i, t_gc_list *gc_list)
 	return (0);
 }
 
-int	dquotes(t_main *main, int *i, t_gc_list *gc_list)
+int	dquotes(t_main *main, int *i, t_gc_list **gc_list)
 {
 	// int	ws;
 

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   p_expand.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 09:58:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/04/29 18:06:35 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/01 16:37:12 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-char	*check_for_var(t_main *main, char *var, int len, t_gc_list *gc_list)
+char	*check_for_var(t_main *main, char *var, int len, t_gc_list **gc_list)
 {
 	int		j;
 	char	*value;
@@ -28,7 +28,7 @@ char	*check_for_var(t_main *main, char *var, int len, t_gc_list *gc_list)
 			value = gc_strdup(main->envp[j] + len + 1, gc_list);
 			if (!value)
 			{
-				free(var);
+				// free(var);
 				return (NULL);
 			}
 			break ;
@@ -38,13 +38,13 @@ char	*check_for_var(t_main *main, char *var, int len, t_gc_list *gc_list)
 	return (value);
 }
 
-int	only_dollar_sign(t_main *main, t_gc_list *gc_list)
+int	only_dollar_sign(t_main *main, t_gc_list **gc_list)
 {
 	main->error = create_token(&main->tokens, TOKEN_ARG, "$", gc_list);
 	return (0);
 }
 
-int	expand_helper(t_main *main, int *i, int ws, t_gc_list *gc_list)
+int	expand_helper(t_main *main, int *i, int ws, t_gc_list **gc_list)
 {
 	char	*var;
 	char	*value;
@@ -72,7 +72,7 @@ int	expand_helper(t_main *main, int *i, int ws, t_gc_list *gc_list)
 	return (0);
 }
 
-int	special_character(t_main *main, int *i, char *value, t_gc_list *gc_list) // reset exit_status = 0 if executing was successfull
+int	special_character(t_main *main, int *i, char *value, t_gc_list **gc_list) // reset exit_status = 0 if executing was successfull
 { //after successfull execution
 	value = ft_itoa(get_shell(gc_list)->last_status_exit);
 	if (!value)
@@ -84,7 +84,7 @@ int	special_character(t_main *main, int *i, char *value, t_gc_list *gc_list) // 
 	return (0);
 }
 
-int	expands(t_main *main, int *i, int ws, t_gc_list *gc_list)
+int	expands(t_main *main, int *i, int ws, t_gc_list **gc_list)
 {
 	ws = *i;
 	(*i)++;

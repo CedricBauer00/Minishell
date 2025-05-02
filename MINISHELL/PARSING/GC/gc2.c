@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gc2.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:00:46 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/01 13:10:31 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/01 17:09:10 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_gc_list	*find_node(t_gc_list *gc_lst, void *target)
 {
 	t_gc_list	*cur;
 
-	cur = gc_lst->next;
+	cur = gc_lst;
 	while (cur)
 	{
 		if (cur->data == target)
@@ -33,7 +33,7 @@ t_gc_list	*find_node_with_id(t_gc_list *gc_lst, char *id)
 {
 	t_gc_list	*cur;
 
-	cur = gc_lst->next;
+	cur = gc_lst;
 	while (cur)
 	{
 		if (ft_strncmp(cur->id, id, ft_strlen(cur->id)) == 0)
@@ -53,8 +53,8 @@ void	delete_node(t_gc_list **gc_lst, t_gc_list *to_delete)
 
 	if (!gc_lst || !(*gc_lst))
 		return ;
-	prev = *gc_lst;
-	cur = (*gc_lst)->next;
+	prev = NULL;
+	cur = (*gc_lst);
 	while (cur)
 	{
 		if (cur == to_delete)
@@ -78,17 +78,16 @@ void	all_free(t_gc_list **gc_lst)
 
 	if (!gc_lst || !(*gc_lst))
 		return ;
-	cur = (*gc_lst)->next;
-	printf("*gc_list %p\n", (*gc_lst));
+	cur = (*gc_lst);
 	while (cur)
 	{
 		next = cur->next;
-        printf("Freeing Node: %p, Data: %p, Type: %d, ID: %s\n", cur, cur->data, cur->type, cur->id);
 		free_data_by_type(cur->data, cur->type);
+		printf(PURPLE"Freeing Node: %p, Data: %p, Type: %d, ID: %s\n"RESET, cur, cur->data, cur->type, cur->id);
 		free(cur);
 		cur = next;
 	}
-	//*gc_lst = NULL;
+	*gc_lst = NULL;
 }
 
 void	gc_level_up(t_gc_list *gc_list)
