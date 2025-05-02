@@ -10,7 +10,6 @@
 # include <fcntl.h>
 # include <errno.h>
 # include <sys/stat.h>
-# include "../garbage_manager/garbage_collector.h"
 
 # include "libft/libft.h"
 #define RED "\033[0;31m"	//error
@@ -75,10 +74,8 @@ typedef struct s_token
 
 typedef struct s_cmd_block //struct being allocated for each token from input
 {
-	//t_token_type				type;		//todo vilt ,,i can delete?
 	char						*built_in; //memo just check if it is built in or not!
 	bool						is_built_in;
-	// char						**cmd_flags;
 	char						**args;
 	struct s_io_streams_list	*io_streams;
 	struct s_pipe				*pipe;

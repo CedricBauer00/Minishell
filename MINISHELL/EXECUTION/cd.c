@@ -100,7 +100,8 @@ char *create_new_path(const char *name, const char *value)
 	if (!value)
 	{
 		namelen = ft_strlen(name);
-		char *new_path = do_alloc(&gc->temp, namelen + 1, TYPE_SINGLE_PTR, "new_path");
+		//todo &gc->temp ? or &gc->shell
+		char *new_path = do_alloc(&gc->shell, namelen + 1, TYPE_SINGLE_PTR, "new_path");
 		if (!new_path)
 		{
 			perror("failed to create new_path");
