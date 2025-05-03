@@ -97,15 +97,15 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 	if (!cur)
 		return;
 	shell = get_shell();
-	// if (cur->io_streams)
-	// {
-	// 	if (heredoc_fd_offset_and_redir(cur) == -1)
-	// 	{
-	// 		perror(RED"heredoc error in single_cmd_execute()"DEFAULT);
-	// 		gc_free(gc);
-	// 		exit(1);
-	// 	}
-	// }
+	if (cur->io_streams)
+	{
+		if (heredoc_fd_offset_and_redir(cur) == -1)
+		{
+			perror(RED"heredoc error in single_cmd_execute()"DEFAULT);
+			gc_free(gc);
+			exit(1);
+		}
+	}
 	if (cur->io_streams)
 		set_io_streams(cur);
 	if (cur->is_built_in)
@@ -207,7 +207,6 @@ void	main_execute(t_cmd_block *cmd_block)
 
 	//t_shell *shell = get_shell();
 	cur = cmd_block;
-	//validate_check(cur);
 
 	hanlde_heredoc(cur);
 	int	pid_counts = count_command(cmd_block);
