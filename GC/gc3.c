@@ -7,7 +7,11 @@
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:01:21 by cbauer            #+#    #+#             */
 <<<<<<< HEAD
+<<<<<<< HEAD
 /*   Updated: 2025/05/02 17:29:49 by cbauer           ###   ########.fr       */
+=======
+/*   Updated: 2025/05/03 13:10:30 by jisokim2         ###   ########.fr       */
+>>>>>>> 7245e98652b9aac3fc550ac8191a581d58889e87
 =======
 /*   Updated: 2025/05/03 13:10:30 by jisokim2         ###   ########.fr       */
 >>>>>>> 7245e98652b9aac3fc550ac8191a581d58889e87
@@ -64,7 +68,11 @@ void	gc_free(t_gc *gc)
 	free(gc);
 	gc = NULL;
 <<<<<<< HEAD
+<<<<<<< HEAD
 	// printf(POWER_PURPLE"--------------------------------------GC CLEAN-------------------------------------------"RESET);
+=======
+	//printf(POWER_PURPLE"--------------------------------------GC CLEAN-------------------------------------------"RESET);
+>>>>>>> 7245e98652b9aac3fc550ac8191a581d58889e87
 =======
 	//printf(POWER_PURPLE"--------------------------------------GC CLEAN-------------------------------------------"RESET);
 >>>>>>> 7245e98652b9aac3fc550ac8191a581d58889e87
@@ -81,7 +89,11 @@ void	print_list(t_gc_list **gc_lst)
 	while (cur != NULL)
 	{
 <<<<<<< HEAD
+<<<<<<< HEAD
 		// printf(PURPLE"[%d]th NODE[%p] [%s], %p\n"RESET, i, cur, (char*)cur->data, cur->data);
+=======
+		//printf(PURPLE"[%d]th NODE[%p] [%s], %p\n"RESET, i, cur, (char*)cur->data, cur->data);
+>>>>>>> 7245e98652b9aac3fc550ac8191a581d58889e87
 =======
 		//printf(PURPLE"[%d]th NODE[%p] [%s], %p\n"RESET, i, cur, (char*)cur->data, cur->data);
 >>>>>>> 7245e98652b9aac3fc550ac8191a581d58889e87

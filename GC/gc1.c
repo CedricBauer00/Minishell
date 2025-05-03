@@ -6,9 +6,10 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:02:03 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/03 15:10:50 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/03 15:12:13 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "garbage_collector.h"
 
@@ -63,8 +64,7 @@ void	*do_alloc(t_gc_list **gc_lst, size_t howmuch, \
 	new_node->level = 0;
 	new_node->next = *gc_lst;
 	*gc_lst = new_node;
-	printf(PURPLE"Allocated: Node %p, Data [%p], Type %d, ID %s\n"RESET, \
-		new_node, data, data_type, id);
+	//printf(PURPLE"Allocated: Node %p, Data [%p], Type %d, ID %s\n"RESET, new_node, data, data_type, id);
 	return (data);
 }
 

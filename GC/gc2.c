@@ -7,7 +7,11 @@
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:00:46 by cbauer            #+#    #+#             */
 <<<<<<< HEAD
+<<<<<<< HEAD
 /*   Updated: 2025/05/02 17:30:45 by cbauer           ###   ########.fr       */
+=======
+/*   Updated: 2025/05/03 13:10:12 by jisokim2         ###   ########.fr       */
+>>>>>>> 7245e98652b9aac3fc550ac8191a581d58889e87
 =======
 /*   Updated: 2025/05/03 13:10:12 by jisokim2         ###   ########.fr       */
 >>>>>>> 7245e98652b9aac3fc550ac8191a581d58889e87
@@ -88,8 +92,12 @@ void	all_free(t_gc_list **gc_lst)
 		next = cur->next;
 		free_data_by_type(cur->data, cur->type);
 <<<<<<< HEAD
+<<<<<<< HEAD
 		// printf(PURPLE"Freeing Node: %p, Data: %p, Type: %d, ID: %s\n"RESET, 
 			// cur, cur->data, cur->type, cur->id);
+=======
+		//printf(PURPLE"Freeing Node: %p, Data: %p, Type: %d, ID: %s\n"RESET, cur, cur->data, cur->type, cur->id);
+>>>>>>> 7245e98652b9aac3fc550ac8191a581d58889e87
 =======
 		//printf(PURPLE"Freeing Node: %p, Data: %p, Type: %d, ID: %s\n"RESET, cur, cur->data, cur->type, cur->id);
 >>>>>>> 7245e98652b9aac3fc550ac8191a581d58889e87
