@@ -1,12 +1,49 @@
-total 1176
--rw-r--r--  1 jisokim2  2024_heilbronn    3323 May  3 13:26 1
--rw-r--r--  1 jisokim2  2024_heilbronn       5 May  3 13:26 2
--rw-r--r--  1 jisokim2  2024_heilbronn    1867 May  3 13:06 Makefile
--rw-r--r--  1 jisokim2  2024_heilbronn    2984 May  3 13:06 m_copy_envp.c
--rw-r--r--  1 jisokim2  2024_heilbronn    9480 May  3 13:25 m_copy_envp.o
--rw-r--r--  1 jisokim2  2024_heilbronn    3360 May  3 13:06 m_main.c
--rw-r--r--  1 jisokim2  2024_heilbronn   18012 May  3 13:25 m_main.o
--rw-r--r--  1 jisokim2  2024_heilbronn    1781 May  3 13:06 m_set_up_tokens.c
+1
+2
+Makefile
+m_copy_envp.c
+m_copy_envp.o
+m_main.c
+m_main.o
+m_set_up_tokens.c
+m_set_up_tokens.o
+m_shell_init.c
+m_shell_init.o
+m_signal.c
+m_signal.o
+m_sorting.c
+m_sorting.o
+m_syntax.c
+m_syntax.o
+m_token_handling.c
+m_token_handling.o
+m_utils1.c
+m_utils1.o
+m_utils2.c
+m_utils2.o
+m_utils3.c
+m_utils3.o
+m_utils4.c
+m_utils4.o
+minishell
+p_builtins.c
+p_builtins.o
+p_dquotes.c
+p_dquotes.o
+p_expand.c
+p_expand.o
+p_heredoc.c
+p_heredoc.o
+p_operators.c
+p_operators.o
+p_quotes.c
+p_quotes.o
+p_words.c
+p_words.o
+parsing.h
+printing.c
+printing.o
+n    1781 May  3 13:06 m_set_up_tokens.c
 -rw-r--r--  1 jisokim2  2024_heilbronn    7872 May  3 13:25 m_set_up_tokens.o
 -rw-r--r--  1 jisokim2  2024_heilbronn    1461 May  3 13:06 m_shell_init.c
 -rw-r--r--  1 jisokim2  2024_heilbronn    1296 May  3 13:25 m_shell_init.o

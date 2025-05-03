@@ -97,19 +97,30 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 	if (!cur)
 		return;
 	shell = get_shell();
-	if (cur->io_streams)
-	{
-		if (heredoc_fd_offset_and_redir(cur) == -1)
-		{
-			perror(RED"heredoc error in single_cmd_execute()"DEFAULT);
-			gc_free(gc);
-			exit(1);
-		}
-	}
+	// if (cur->io_streams)
+	// {
+	// 	if (heredoc_fd_offset_and_redir(cur) == -1)
+	// 	{
+	// 		perror(RED"heredoc error in single_cmd_execute()"DEFAULT);
+	// 		gc_free(gc);
+	// 		exit(1);
+	// 	}
+	// }
 	if (cur->io_streams)
 		set_io_streams(cur);
 	if (cur->is_built_in)
+	{
+		if (cur->io_streams)
+		{
+			if (heredoc_fd_offset_and_redir(cur) == -1)
+			{
+				perror(RED"heredoc error in single_cmd_execute()"DEFAULT);
+				gc_free(gc);
+				exit(1);
+			}
+		}
 		execute_builtin(cur, shell);
+	}
 	else if (cur->is_external_cmd)
 	{
 		pid = fork();
@@ -117,11 +128,15 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 		fprintf(stderr, YELLOW" singlecmd for child proc fork() : %d , shell->pids[0] %d \n"DEFAULT, pid, shell->pids[0]) ;
 		if (pid == 0)
 		{
-			// if (cur->io_streams->heredoc_fd > 0)
-			// {
-			// 	dup2(cur->io_streams->heredoc_fd, STDIN_FILENO);
-			// 	fprintf(stderr ,RED"[pid %d] dup2(HEREDOC: %d, %d)\n"DEFAULT, getpid(), cur->io_streams->heredoc_fd, STDIN_FILENO);
-			// }
+			if (cur->io_streams)
+			{
+				if (heredoc_fd_offset_and_redir(cur) == -1)
+				{
+					perror(RED"heredoc error in single_cmd_execute()"DEFAULT);
+					gc_free(gc);
+					exit(1);
+				}
+			}
 			run_execve(cur, gc);
 		}
 		else
