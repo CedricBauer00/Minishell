@@ -30,7 +30,7 @@ SOURCES = m_main.c \
 		m_utils4.c \
 		m_shell_init.c \
 		m_signal.c \
-		m_copy_envp.c \
+		m_shell_things.c \
 		m_set_up_tokens.c \
 		../GC/gc1.c \
 		../GC/gc2.c \

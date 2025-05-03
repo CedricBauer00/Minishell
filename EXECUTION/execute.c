@@ -78,8 +78,8 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 	{
 		ft_echo(cur->args, shell);
 	}
-	// if (strcmp(cur->built_in, "export") == 0)
-	// 	export(shell, "export");
+	if (strcmp(cur->built_in, "export") == 0)
+		export(cur->args, shell);
 	// if (strcmp(cur->built_in, "pwd") == 0)
 	// 	my_pwd(shell, gc);
 	// if (strcmp(cur->built_in, "env") == 0)
