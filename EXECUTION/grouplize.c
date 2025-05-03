@@ -101,14 +101,12 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 		}
 		else if (cur && cur->type == TOKEN_ARG)
 		{
-			//ERROR 여기로들어가서 히어독인경우 에도 external cmd로 인식하는게문제
-			if (i == 0 && !new_cmd_block->is_built_in && cur->value != NULL)
-            {
-                new_cmd_block->is_external_cmd = true;
+			if (i == 0 && !new_cmd_block->is_built_in && !(new_cmd_block->io_streams && !cur->next))
+			{
+				new_cmd_block->is_external_cmd = true;
 			}
 			new_cmd_block->args[i++] = gc_strdup(cur->value, &gc->temp);
 		}
-		
 	
 		new_cmd_block->args[i] = NULL;
 		cur = cur->next;

@@ -104,11 +104,11 @@ void	set_io_streams(t_cmd_block *cmd)
 			in_redir_file_open(io_streams, io_streams->infile_name);
 			re_dir_in(io_streams);
 		}
-		if (io_streams->heredoc_fd > 0)
-		{
-			dup2(cmd->io_streams->heredoc_fd, STDIN_FILENO);
-			fprintf(stderr ,RED"[pid %d] dup2(HEREDOC: %d, %d)\n"DEFAULT, getpid(), cmd->io_streams->heredoc_fd, STDIN_FILENO);
-		}
+		// if (io_streams->heredoc_fd > 0)
+		// {
+		// 	dup2(cmd->io_streams->heredoc_fd, STDIN_FILENO);
+		// 	fprintf(stderr ,RED"[pid %d] dup2(HEREDOC: %d, %d)\n"DEFAULT, getpid(), cmd->io_streams->heredoc_fd, STDIN_FILENO);
+		// }
 		if (io_streams->outfile_name)
 		{
 			out_redir_file_open(io_streams, io_streams->outfile_name);

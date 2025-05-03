@@ -86,7 +86,6 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 	// 	print_envp(shell, "env");
 	// if (strcmp(cur->built_in, "unset") == 0)
 	// 	unset(cur->args, shell);
-	exit(0);
 }
 
 void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
@@ -97,20 +96,12 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 	if (!cur)
 		return;
 	shell = get_shell();
-	// if (cur->io_streams)
-	// {
-	// 	if (heredoc_fd_offset_and_redir(cur) == -1)
-	// 	{
-	// 		perror(RED"heredoc error in single_cmd_execute()"DEFAULT);
-	// 		gc_free(gc);
-	// 		exit(1);
-	// 	}
-	// }
+
 	if (cur->io_streams)
 		set_io_streams(cur);
 	if (cur->is_built_in)
 	{
-		if (cur->io_streams)
+		if (cur->io_streams && cur->io_streams->heredoc_fd > 0)
 		{
 			if (heredoc_fd_offset_and_redir(cur) == -1)
 			{
@@ -119,6 +110,9 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 				exit(1);
 			}
 		}
+
+		if (cur->is_built_in && (cur->io_streams->fd_in_file > 0 || cur->io_streams->fd_out_file > 0))
+			return ;
 		execute_builtin(cur, shell);
 	}
 	else if (cur->is_external_cmd)
@@ -128,7 +122,7 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 		fprintf(stderr, YELLOW" singlecmd for child proc fork() : %d , shell->pids[0] %d \n"DEFAULT, pid, shell->pids[0]) ;
 		if (pid == 0)
 		{
-			if (cur->io_streams)
+			if (cur->io_streams && cur->io_streams->heredoc_fd > 0)
 			{
 				if (heredoc_fd_offset_and_redir(cur) == -1)
 				{
@@ -218,9 +212,8 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 void	main_execute(t_cmd_block *cmd_block)
 {
 	t_cmd_block *cur;
-	// pid_t	pid;
+	int			fd;
 
-	//t_shell *shell = get_shell();
 	cur = cmd_block;
 
 	hanlde_heredoc(cur);
@@ -235,7 +228,10 @@ void	main_execute(t_cmd_block *cmd_block)
 		execute_pipeline(cur);
 	}
 	prevent_zombie_process();
-	fprintf(stderr, RED"-CHECK ORGINAL STDIN AND STDOUT-\n  STDIN_FILENO: %d, STDOUT_FILENO: %d\n"DEFAULT, STDIN_FILENO, STDOUT_FILENO);
+	fd = open("/dev/tty", O_WRONLY);
+	dup2(fd , STDOUT_FILENO);
+	close(fd);
+	fprintf(stderr, RED"-CHECK ORGINAL STDIN AND STDOUT-\n terminal fd : %d, STDIN_FILENO: %d, STDOUT_FILENO: %d\n"DEFAULT, fd, STDIN_FILENO, STDOUT_FILENO);
 }
 
 void	hanlde_heredoc(t_cmd_block *cmd_block)
@@ -245,7 +241,6 @@ void	hanlde_heredoc(t_cmd_block *cmd_block)
 	{
 		if (cur->io_streams && cur->io_streams->heredoc_eof)
 		{
-			//fprintf(stderr, RED"cur->io_streams->heredoc_eof %s\n"DEFAULT, cur->io_streams->heredoc_eof);
 			process_heredoc(cur->io_streams);
 			printf(RED"heredocfd %d\n"DEFAULT, cur->io_streams->heredoc_fd);
 		}
@@ -255,7 +250,6 @@ void	hanlde_heredoc(t_cmd_block *cmd_block)
 
 void	execute_single_command(t_cmd_block *cmd_block)
 {
-	// pid_t pid;
 	t_gc *gc;
 
 	gc = get_gc();

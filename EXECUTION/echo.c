@@ -32,18 +32,6 @@ void	ft_echo(char **args, t_shell *shell)
 				exit(1);
 			}
 			printf(YELLOW"%s\n"DEFAULT, var);
-			// search it,,
-			// if (check_existing(shell->my_envp, var))
-			// {
-			// 	char *result = ft_strdup(shell->my_envp[ft_strlen(var)]);
-			// 	printf(BLUE"%s\n"DEFAULT, result);
-			// 	free (result);
-			// 	exit(0);
-			// }
-			// else
-			// {
-			printf("\n");
-			//}
 		}
 	}
 	else
