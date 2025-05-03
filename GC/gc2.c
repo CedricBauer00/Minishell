@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:00:46 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/02 12:09:47 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/02 17:30:45 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,8 @@ void	all_free(t_gc_list **gc_lst)
 	{
 		next = cur->next;
 		free_data_by_type(cur->data, cur->type);
-		printf(PURPLE"Freeing Node: %p, Data: %p, Type: %d, ID: %s\n"RESET, \
-			cur, cur->data, cur->type, cur->id);
+		// printf(PURPLE"Freeing Node: %p, Data: %p, Type: %d, ID: %s\n"RESET, 
+			// cur, cur->data, cur->type, cur->id);
 		free(cur);
 		cur = next;
 	}
