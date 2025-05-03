@@ -89,11 +89,10 @@ int	handle_re_dir(t_cmd_block *cmd_block)
 	return 0;
 }
 
-//todo here if heredoc then just run it here 
 void	set_io_streams(t_cmd_block *cmd)	
 {
 	t_io_streams_list *io_streams;
-
+	
 	if(!cmd)
 		return ;
 	io_streams = cmd->io_streams;
@@ -104,11 +103,6 @@ void	set_io_streams(t_cmd_block *cmd)
 			in_redir_file_open(io_streams, io_streams->infile_name);
 			re_dir_in(io_streams);
 		}
-		// if (io_streams->heredoc_fd > 0)
-		// {
-		// 	dup2(cmd->io_streams->heredoc_fd, STDIN_FILENO);
-		// 	fprintf(stderr ,RED"[pid %d] dup2(HEREDOC: %d, %d)\n"DEFAULT, getpid(), cmd->io_streams->heredoc_fd, STDIN_FILENO);
-		// }
 		if (io_streams->outfile_name)
 		{
 			out_redir_file_open(io_streams, io_streams->outfile_name);
@@ -123,9 +117,47 @@ void	set_io_streams(t_cmd_block *cmd)
 	}
 }
 
-/*
-		   3 		4
-	cat << eof < file.1
 
-	4
-*/
+
+// void	set_io_streams(t_cmd_block *cmd)	
+// {
+// 	t_io_streams_list *cur;
+// 	t_io_streams_list *fd_in_redir;
+// 	t_io_streams_list *fd_out_redir;
+// 	t_io_streams_list *fd_append;
+
+// 	if(!cmd)
+// 		return ;
+// 	cur = cmd->io_streams;
+// 	while (cur)
+// 	{
+// 		if (cur->infile_name)
+// 		{
+// 			fd_in_redir = cur;
+// 		}
+// 		if (cur->outfile_name)
+// 		{
+// 			fd_out_redir = cur;
+// 		}
+// 		if (cur->append_file_name)
+// 		{
+// 			fd_append = cur;
+// 		}
+// 		cur = cur->next;
+// 	}
+// 	if (fd_in_redir)
+// 	{
+// 		in_redir_file_open(fd_in_redir, fd_in_redir->infile_name);
+// 		re_dir_in(fd_in_redir);
+// 	}
+// 	if (fd_append)
+// 	{
+// 		append_redir_file_open(fd_append, fd_append->append_file_name);
+// 		re_dir_out(fd_append);
+// 	}
+// 	else if (fd_out_redir)
+// 	{
+// 		out_redir_file_open(fd_out_redir, fd_out_redir->outfile_name);
+// 		re_dir_out(fd_out_redir);
+// 	}
+// }

@@ -5,6 +5,7 @@
 		"garbage_collector.h": "c",
 		"parsing.h": "c",
 		"execution.h": "c",
-		"history.h": "c"
+		"history.h": "c",
+		"ios": "c"
 	}
 }

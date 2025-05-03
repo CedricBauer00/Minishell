@@ -116,13 +116,3 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 }
 
 
-
-
-//redirection
-//ok cmd < filename < fileanme
-//ok cmd > filename > filename > filename
-//ok < 1.txt cat 3.txt 이경우 작동은되는데 cat 3.txt만
-//ok cmd < input.txt > output.txt
-//ok cmd filename > fileanme fileanme filename
-
-

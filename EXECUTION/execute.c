@@ -78,12 +78,12 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 	{
 		ft_echo(cur->args, shell);
 	}
-	// if (strcmp(cur->built_in, "export") == 0)
-	// 	export(shell, "export");
+	if (strcmp(cur->built_in, "export") == 0)
+		export(cur->args, shell);
 	// if (strcmp(cur->built_in, "pwd") == 0)
 	// 	my_pwd(shell, gc);
-	// if (strcmp(cur->built_in, "env") == 0)
-	// 	print_envp(shell, "env");
+	if (strcmp(cur->built_in, "env") == 0)
+		ft_env(shell);
 	// if (strcmp(cur->built_in, "unset") == 0)
 	// 	unset(cur->args, shell);
 }
@@ -110,9 +110,6 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 				exit(1);
 			}
 		}
-
-		if (cur->is_built_in && (cur->io_streams->fd_in_file > 0 || cur->io_streams->fd_out_file > 0))
-			return ;
 		execute_builtin(cur, shell);
 	}
 	else if (cur->is_external_cmd)
@@ -212,10 +209,13 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 void	main_execute(t_cmd_block *cmd_block)
 {
 	t_cmd_block *cur;
-	int			fd;
+	//int			fd;
+	int		stdin_backup;
+	int		stdout_backup;
 
 	cur = cmd_block;
-
+	stdin_backup = dup(STDIN_FILENO);
+	stdout_backup = dup(STDOUT_FILENO);
 	hanlde_heredoc(cur);
 	int	pid_counts = count_command(cmd_block);
 	printf("pid_counts %d\n", pid_counts);
@@ -228,10 +228,11 @@ void	main_execute(t_cmd_block *cmd_block)
 		execute_pipeline(cur);
 	}
 	prevent_zombie_process();
-	fd = open("/dev/tty", O_WRONLY);
-	dup2(fd , STDOUT_FILENO);
-	close(fd);
-	fprintf(stderr, RED"-CHECK ORGINAL STDIN AND STDOUT-\n terminal fd : %d, STDIN_FILENO: %d, STDOUT_FILENO: %d\n"DEFAULT, fd, STDIN_FILENO, STDOUT_FILENO);
+	dup2(stdin_backup, STDIN_FILENO);
+	dup2(stdout_backup, STDOUT_FILENO);
+	close(stdin_backup);
+	close(stdout_backup);
+	fprintf(stderr, RED"-CHECK ORGINAL STDIN AND STDOUT-\n STDIN_FILENO: %d, STDOUT_FILENO: %d\n"DEFAULT, STDIN_FILENO, STDOUT_FILENO);
 }
 
 void	hanlde_heredoc(t_cmd_block *cmd_block)

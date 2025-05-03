@@ -85,6 +85,9 @@ t_io_streams_list *init_io_stream_struct(t_gc_list *gc_lst);
 char	**copy_envp(t_gc *gc, char **envp);
 int		get_envp_count(char **envp);
 
+//memo env.c
+void	ft_env(t_shell *shell);
+
 //memo pwd.c
 char	*my_getcwd(t_gc *gc);
 void	my_pwd(t_gc *gc);
@@ -100,7 +103,7 @@ void 	cd(char **args, t_shell *shell, t_gc *gc);
 
 //memo export.c
 void	export(char **argv, t_shell *shell);
-void	print_envp(t_shell *shell, char **args);
+void	print_envp(t_shell *shell);
 char	*extract_name(char *arg);
 char	*extract_value(char *arg);
 //char	*ft_strchr(char *str, char c);

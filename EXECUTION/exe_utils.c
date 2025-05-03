@@ -4,7 +4,7 @@ void	is_exited(void *failed, t_gc *gc)
 {
 	if (!failed)
 	{
-		perror(RED"in is_exited() making new_pipe in add_pipe()error\n"DEFAULT);
+		printf(RED"%s in is_exited()is null \n"DEFAULT,(char*)failed);
 		gc_free(gc);
 		exit(EXIT_FAILURE);
 	}
