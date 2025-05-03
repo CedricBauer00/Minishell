@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_syntax.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:01:32 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/02 17:33:44 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/03 15:07:59 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	syntax_helper(t_token **cur)
 		return (-1);
 	return (0);
 }
-//int	validate_syntax(t_token *token, t_gc_list *gc_list)
+
 int	validate_syntax(t_token *token)
 {
 	t_token	*cur;
@@ -62,6 +62,10 @@ int	validate_syntax(t_token *token)
 	cur = token;
 	while (cur)
 	{
+		if (cur->type == TOKEN_HEREDOC)
+		{
+			
+		}
 		if (syntax_helper(&cur) < 0)
 		{
 			get_shell()->last_status_exit = 258;

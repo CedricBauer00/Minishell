@@ -97,26 +97,33 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 	if (!cur)
 		return;
 	shell = get_shell();
-	if (cur->io_streams)
-	{
-		if (heredoc_fd_offset_and_redir(cur) == -1)
-		{
-			perror(RED"heredoc error in single_cmd_execute()"DEFAULT);
-			gc_free(gc);
-			exit(1);
-		}
-	}
+	// if (cur->io_streams)
+	// {
+	// 	if (heredoc_fd_offset_and_redir(cur) == -1)
+	// 	{
+	// 		perror(RED"heredoc error in single_cmd_execute()"DEFAULT);
+	// 		gc_free(gc);
+	// 		exit(1);
+	// 	}
+	// }
 	if (cur->io_streams)
 		set_io_streams(cur);
 	if (cur->is_built_in)
 		execute_builtin(cur, shell);
-	else
+	else if (cur->is_external_cmd)
 	{
 		pid = fork();
 		shell->pids[0] = pid;
 		fprintf(stderr, YELLOW" singlecmd for child proc fork() : %d , shell->pids[0] %d \n"DEFAULT, pid, shell->pids[0]) ;
 		if (pid == 0)
+		{
+			// if (cur->io_streams->heredoc_fd > 0)
+			// {
+			// 	dup2(cur->io_streams->heredoc_fd, STDIN_FILENO);
+			// 	fprintf(stderr ,RED"[pid %d] dup2(HEREDOC: %d, %d)\n"DEFAULT, getpid(), cur->io_streams->heredoc_fd, STDIN_FILENO);
+			// }
 			run_execve(cur, gc);
+		}
 		else
 		 	wait_for_child_and_update_status(1);
 	}
@@ -217,125 +224,17 @@ void	main_execute(t_cmd_block *cmd_block)
 	fprintf(stderr, RED"-CHECK ORGINAL STDIN AND STDOUT-\n  STDIN_FILENO: %d, STDOUT_FILENO: %d\n"DEFAULT, STDIN_FILENO, STDOUT_FILENO);
 }
 
-// //delete it later 
-// static t_token *create_token(t_token_type type, char *value)
-// {
-// 	t_token *new = malloc(sizeof(t_token));
-// 	if (!new)
-// 		return NULL;
-// 	new->type = type;
-// 	new->value = ft_strdup(value);
-// 	new->prev = NULL;
-// 	new->next = NULL;
-// 	return new;
-// }
-// //cat -e << eof << eof > 1 | ls > 2  : in file 2 hello in && file 1 heredoc input
-// //cat -e << eof > 1 | grep hello
-// int main(int ac, char *argv[], char *envp[])
-// {
-// 	(void)ac;
-// 	(void)argv;
-// 	t_token *t1 = create_token(TOKEN_ARG, "cat");
-// 	t_token *t2 = create_token(TOKEN_ARG, "-e");
-// 	t_token *t3 = create_token(TOKEN_HEREDOC, "<<");
-// 	t_token *t4 = create_token(TOKEN_REDIRECT_OUT, ">");
-// 	t_token *t5 = create_token(TOKEN_FILE, "1");
-// 	t_token *t6 = create_token(TOKEN_PIPE, "|");
-// 	t_token *t7 = create_token(TOKEN_ARG, "grep");
-// 	t_token *t8 = create_token(TOKEN_ARG, "hello");
-// 	// t_token *t9 = create_token(TOKEN_REDIRECT_OUT, ">");
-// 	// t_token *t10 = create_token(TOKEN_FILE, "2");
-
-// 	// t_token *t9 = create_token(TOKEN_ARGS, "ls -a");
-// 	// t_token *t10 = create_token(TOKEN_PIPE, "|");
-// 	// t_token *t11 = create_token(TOKEN_ARGS, "cat -b -e");
-
-// 	//t1->next = t2;
-// 	t1->prev = NULL;
-// 	t1->next = t2;
-
-// 	t2->prev = t1;
-// 	t2->next = t3;
-
-// 	t3->prev = t2;
-// 	t3->next = t4;
-
-// 	t4->prev = t3;
-// 	t4->next = t5;
-
-// 	t5->prev = t4;
-// 	t5->next = t6;
-
-// 	t6->prev = t5;
-// 	t6->next = t7;
-
-// 	t7->prev = t6;
-// 	t7->next = t8;
-
-// 	t8->prev = t7;
-// 	// t8->next = t9;
-// 	// t9->prev = t8;
-
-// 	// t9->next = t10;
-// 	// t10->prev = t9;
-// 	// t10->next = t11;
-// 	// t11->prev = t10;
-// 	t_gc	*gc = get_gc();
-// 	// t_gc_list* gc_lst = init_gc_list();
-// 	t_cmd_block *cmd_block_list = NULL;
-// 	grouplize(t1, &cmd_block_list, gc);
-// 	int i = 0;
-// 	t_cmd_block *print = cmd_block_list;
-	
-// 	while (print)
-// 	{
-// 		i = 0;
-// 		while (print->args && print->args[i])
-// 		{
-// 			if (print->args && print->args[i])
-// 				printf("args : %s\n", print->args[i]);
-// 			i++;
-// 		}
-// 		t_io_streams_list *tmp = print->io_streams;
-// 		while (tmp&& tmp->infile_name)
-// 		{
-// 			if (tmp->infile_name)
-// 				printf("file : %s\n", tmp->infile_name);
-// 				tmp = tmp->next;
-// 		}
-// 		tmp = print->io_streams;
-// 		while (tmp && tmp->heredoc_eof)
-// 		{
-// 			if (tmp->heredoc_eof)
-// 				printf("heredoc_eof : %s \n", tmp->heredoc_eof);
-// 				tmp = tmp->next;
-// 		}
-
-// 		printf("cmd_block_list %p\n",print);
-// 		print = print->next;
-// 	}
-
-// 	t_shell *shell = get_shell();
-// 	shell->my_envp = copy_envp(gc, envp);
-// 	main_execute(cmd_block_list);
-// 	printf(YELLOW"shell->last_status_exit : %d\n"DEFAULT, shell->last_status_exit);
-// 	gc_free(gc);
-// 	return 0;
-// }
-
 void	hanlde_heredoc(t_cmd_block *cmd_block)
 {
 	t_cmd_block *cur = cmd_block;
 	while(cur)
 	{
-		fprintf(stderr, RED"cur->io_streams %p\n"DEFAULT, cur->io_streams );
 		if (cur->io_streams && cur->io_streams->heredoc_eof)
 		{
-			fprintf(stderr, RED"cur->io_streams->heredoc_eof %s\n"DEFAULT, cur->io_streams->heredoc_eof);
+			//fprintf(stderr, RED"cur->io_streams->heredoc_eof %s\n"DEFAULT, cur->io_streams->heredoc_eof);
 			process_heredoc(cur->io_streams);
 			printf(RED"heredocfd %d\n"DEFAULT, cur->io_streams->heredoc_fd);
 		}
-		
 		cur = cur->next;
 	}
 }
@@ -348,7 +247,7 @@ void	execute_single_command(t_cmd_block *cmd_block)
 	gc = get_gc();
 	if(cmd_block && !cmd_block->prev && !cmd_block->next)
 	{
-		fprintf(stderr, RED"execute_single_command()\n"DEFAULT);
+		fprintf(stderr, RED"this is execute_single_command()\n"DEFAULT);
 		single_cmd_execute(cmd_block, gc);
 	}
 }

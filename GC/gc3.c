@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gc3.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:01:21 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/02 12:10:08 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/03 13:10:30 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ void	gc_free(t_gc *gc)
 		print_list(&gc->temp);
 		all_free(&gc->temp);
 	}
-	printf(PURPLE"free gc %p\n"RESET, gc);
+	//printf(PURPLE"free gc %p\n"RESET, gc);
 	free(gc);
 	gc = NULL;
-	printf(POWER_PURPLE"--------------------------------------GC CLEAN-------------------------------------------"RESET);
+	//printf(POWER_PURPLE"--------------------------------------GC CLEAN-------------------------------------------"RESET);
 	printf("\n");
 }
 
@@ -72,7 +72,7 @@ void	print_list(t_gc_list **gc_lst)
 	cur = (*gc_lst);
 	while (cur != NULL)
 	{
-		printf(PURPLE"[%d]th NODE[%p] [%s], %p\n"RESET, i, cur, (char*)cur->data, cur->data);
+		//printf(PURPLE"[%d]th NODE[%p] [%s], %p\n"RESET, i, cur, (char*)cur->data, cur->data);
 		i++;
 		cur = cur->next;
 	}

@@ -49,8 +49,7 @@ int	process_heredoc(t_io_streams_list *io_streams)
 		{
 			char *line;
 			line = readline("> ");
-			//todo put new_io_streams->heredoc_ef instead of using "eof"
-			if (!line || strcmp(line, "eof") == 0)
+			if (!line || strcmp(line, io_streams->heredoc_eof) == 0)
 			{
 				free(line);
 				break;

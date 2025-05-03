@@ -22,6 +22,7 @@ typedef struct s_cmd_block //struct being allocated for each token from input
 {
 	char						*built_in; //memo just check if it is built in or not!
 	bool						is_built_in;
+	bool						is_external_cmd;
 	char						**args;
 	struct s_io_streams_list	*io_streams;
 	struct s_pipe				*pipe;
