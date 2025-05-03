@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   gc3.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:01:21 by cbauer            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/05/02 17:29:49 by cbauer           ###   ########.fr       */
+=======
+/*   Updated: 2025/05/03 13:10:30 by jisokim2         ###   ########.fr       */
+>>>>>>> 7245e98652b9aac3fc550ac8191a581d58889e87
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +60,14 @@ void	gc_free(t_gc *gc)
 		print_list(&gc->temp);
 		all_free(&gc->temp);
 	}
-	printf(PURPLE"free gc %p\n"RESET, gc);
+	//printf(PURPLE"free gc %p\n"RESET, gc);
 	free(gc);
 	gc = NULL;
+<<<<<<< HEAD
 	// printf(POWER_PURPLE"--------------------------------------GC CLEAN-------------------------------------------"RESET);
+=======
+	//printf(POWER_PURPLE"--------------------------------------GC CLEAN-------------------------------------------"RESET);
+>>>>>>> 7245e98652b9aac3fc550ac8191a581d58889e87
 	printf("\n");
 }
 
@@ -72,7 +80,11 @@ void	print_list(t_gc_list **gc_lst)
 	cur = (*gc_lst);
 	while (cur != NULL)
 	{
+<<<<<<< HEAD
 		// printf(PURPLE"[%d]th NODE[%p] [%s], %p\n"RESET, i, cur, (char*)cur->data, cur->data);
+=======
+		//printf(PURPLE"[%d]th NODE[%p] [%s], %p\n"RESET, i, cur, (char*)cur->data, cur->data);
+>>>>>>> 7245e98652b9aac3fc550ac8191a581d58889e87
 		i++;
 		cur = cur->next;
 	}

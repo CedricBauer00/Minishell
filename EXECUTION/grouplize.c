@@ -62,18 +62,6 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 	i = 0;
 	while(cur && cur->type != TOKEN_PIPE) //[cat] [-e] [hello] [hello] [|]
 	{
-		if (cur && cur->type == TOKEN_BUILT_IN)
-		{
-			new_cmd_block->is_built_in = true;
-			new_cmd_block->built_in = gc_strdup(cur->value, &gc->temp);
-			//new_cmd_block->args[i++] = gc_strdup(cur->value, gc->temp);
-		}
-
-		if (cur && cur->type == TOKEN_ARG)
-		{
-			new_cmd_block->args[i++] = gc_strdup(cur->value, &gc->temp);
-		}
-		
 		if (cur && (cur->type & (TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT | TOKEN_APPEND | TOKEN_HEREDOC)))  //token->value : < filename
 		{
 			new_io_streams = init_io_stream_struct(gc->temp);
@@ -92,9 +80,7 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 			if(cur->type & (TOKEN_HEREDOC))
 			{
 				fprintf(stderr, RED"if heredoc in grouplize()\n"DEFAULT);
-				//todo i did it for the test later delete
-				new_io_streams->heredoc_eof = gc_strdup("eof", &gc->temp);
-					// new_io_streams->heredoc_eof = gc_strdup(cur->value, gc_lst);
+				new_io_streams->heredoc_eof = gc_strdup(cur->value, &gc->temp);
 			}
 			else if(cur->next && cur->next->type == TOKEN_FILE)
 			{
@@ -107,11 +93,23 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 				cur = cur->next;
 				continue;
 			}
-			else
-			{
-				fprintf(stderr, "syntax error near unexpected token `newline'");
-			}
 		}
+		else if (cur && cur->type == TOKEN_BUILT_IN)
+		{
+			new_cmd_block->is_built_in = true;
+			new_cmd_block->built_in = gc_strdup(cur->value, &gc->temp);
+		}
+		else if (cur && cur->type == TOKEN_ARG)
+		{
+			//ERROR 여기로들어가서 히어독인경우 에도 external cmd로 인식하는게문제
+			if (i == 0 && !new_cmd_block->is_built_in && cur->value != NULL)
+            {
+                new_cmd_block->is_external_cmd = true;
+			}
+			new_cmd_block->args[i++] = gc_strdup(cur->value, &gc->temp);
+		}
+		
+	
 		new_cmd_block->args[i] = NULL;
 		cur = cur->next;
 	}
