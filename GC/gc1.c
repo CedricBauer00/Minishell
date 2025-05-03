@@ -6,10 +6,9 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:02:03 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/03 15:12:13 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/03 15:30:12 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "garbage_collector.h"
 
