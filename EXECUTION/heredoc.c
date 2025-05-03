@@ -28,14 +28,12 @@
 // 	return (tty_path);
 // }
 
-//todo think about that mmap how it does work!
+
 int	process_heredoc(t_io_streams_list *io_streams)
 {
 	int	fd_heredoc;
 	
 	fd_heredoc = 0;
-	// if (!io_streams || !io_streams->heredoc_eof)
-	//	return 0;
 	while (io_streams && io_streams->heredoc_eof)
 	{
 		fd_heredoc = open("temp_heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
