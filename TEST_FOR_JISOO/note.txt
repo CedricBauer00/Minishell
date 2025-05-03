@@ -1,0 +1,55 @@
+"Wenn ich in der Minishell eine andere Minishell ausführe, sollte ich fork() und execve() verwenden!"!
+
+durchfuehren : 수행하다?
+ausfuheren : 실행하다?
+
+만약 내가 파이프 리스트까지 스태틱으로한다면,,
+각 명령어때마다 프리해줘야하지.
+
+
+< > << >> 이것모두 자식에서 해야함.
+
+
+cat < file.txt | wc
+t_token *cmd1 = malloc(sizeof(t_token));
+cmd1->cmd = "cat";
+cmd1->args = ["cat", NULL];
+cmd1->redirect_in = "file.txt";  // 리디렉션 처리
+cmd1->type = COMMAND;
+
+// 파이프 토큰 (|)
+t_token *pipe_token = malloc(sizeof(t_token));
+pipe_token->cmd = "|";  // 파이프
+pipe_token->type = TOKEN_PIPE;
+pipe_token->next = cmd2;  // wc 명령어로 이어짐
+
+// 두 번째 명령어 (wc)
+t_token *cmd2 = malloc(sizeof(t_token));
+cmd2->cmd = "wc";
+cmd2->args = ["wc", NULL];
+cmd2->type = COMMAND;
+cmd2->next = NULL;  // 끝
+
+
+
+
+< cat file.txt | wc
+t_token *cmd1 = malloc(sizeof(t_token));
+cmd1->cmd = "cat";
+cmd1->args = ["cat", NULL];
+cmd1->redirect_in = "file.txt";  // 리디렉션 처리
+cmd1->type = COMMAND;
+cmd1->next = pipe_token;  // 파이프 뒤에 연결된 두 번째 명령어
+
+// 파이프 토큰
+t_token *pipe_token = malloc(sizeof(t_token));
+pipe_token->cmd = "|";  // 파이프
+pipe_token->type = TOKEN_PIPE;
+pipe_token->next = cmd2;  // wc 명령어
+
+// 두 번째 명령어 (wc)
+t_token *cmd2 = malloc(sizeof(t_token));
+cmd2->cmd = "wc";
+cmd2->args = ["wc", NULL];
+cmd2->type = COMMAND;
+cmd2->next = NULL;  // 끝

@@ -3,16 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 13:46:52 by cbauer            #+#    #+#             */
-<<<<<<< HEAD:MINISHELL/PARSING/libft/ft_strjoin.c
-/*   Updated: 2025/03/28 17:45:13 by cbauer           ###   ########.fr       */
-=======
-/*   Updated: 2025/05/03 13:09:16 by jisokim2         ###   ########.fr       */
->>>>>>> master:libft/ft_strjoin.c
+/*   Updated: 2025/05/03 16:22:04 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "libft.h"
 
