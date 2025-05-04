@@ -111,12 +111,18 @@
 
 void	add_pipe(t_cmd_block **cmd_block, t_gc_list *gc_lst)
 {
-	t_pipe *new_pipe_node;
-	// t_pipe *lastnode;
+	t_pipe	*new_pipe_node;
+	t_gc	*gc;
 
+	gc = get_gc();
 	if (!cmd_block || !*cmd_block)
 		return ;
 	new_pipe_node = init_pipe(gc_lst);
+	if (!new_pipe_node)
+	{
+		gc_free(gc);
+		exit(1);
+	}
 	if ((*cmd_block)->pipe == NULL)
 	{
 		(*cmd_block)->pipe = new_pipe_node;
@@ -219,18 +225,18 @@ int	first_pipe_cmd(t_cmd_block *command)
 	// if (pid == 0)
 	// {
 		//handle_re_dir(command);
-		fprintf(stderr,BLUE"first_pipe getpid() %d\n"DEFAULT, getpid());
-		close(command->pipe->pipefd[0]);
-		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->pipefd[0]);
-		if (dup2( command->pipe->pipefd[1], STDOUT_FILENO) == -1)
-		{
-			perror(RED"first cmd dup2 error\n"DEFAULT);
-			return (-1);
-		}
-		fprintf(stderr, YELLOW "FIRST PIPE[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), command->pipe->pipefd[1], STDOUT_FILENO);
-		close( command->pipe->pipefd[1]);
-		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(),  command->pipe->pipefd[1]);
-		fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
+	fprintf(stderr,BLUE"first_pipe getpid() %d\n"DEFAULT, getpid());
+	close(command->pipe->pipefd[0]);
+	fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->pipefd[0]);
+	if (dup2( command->pipe->pipefd[1], STDOUT_FILENO) == -1)
+	{
+		perror(RED"first cmd dup2 error\n"DEFAULT);
+		return (-1);
+	}
+	fprintf(stderr, YELLOW "FIRST PIPE[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), command->pipe->pipefd[1], STDOUT_FILENO);
+	close( command->pipe->pipefd[1]);
+	fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(),  command->pipe->pipefd[1]);
+	fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
 	//}
 	// else
 	// {
@@ -248,21 +254,21 @@ int	middle_pipe_cmd(t_cmd_block *command)
 	// if (pid == 0)
 	// {
 		//handle_re_dir(command);
-		fprintf(stderr,BLUE"second_pipe\n"DEFAULT);
-		if (dup2(command->prev_read_end_fd , STDIN_FILENO) == -1)
-			perror(RED"SE dup2 ERROR\n"DEFAULT);
-		fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), command->prev_read_end_fd , STDIN_FILENO);
-		fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
-		close(command->prev_read_end_fd);
-		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->prev_read_end_fd );
-		close(command->pipe->pipefd[0]);
-		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->pipefd[0]);
-		if (dup2(command->pipe->pipefd[1], STDOUT_FILENO) == -1)
-			perror(RED"SE dup2 ERROR\n"DEFAULT);
-		fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), command->pipe->pipefd[1], STDOUT_FILENO);
-		fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
-		close(command->pipe->pipefd[1]);
-		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->pipefd[1]);
+	fprintf(stderr,BLUE"second_pipe\n"DEFAULT);
+	if (dup2(command->prev_read_end_fd , STDIN_FILENO) == -1)
+		perror(RED"SE dup2 ERROR\n"DEFAULT);
+	fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), command->prev_read_end_fd , STDIN_FILENO);
+	fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
+	close(command->prev_read_end_fd);
+	fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->prev_read_end_fd );
+	close(command->pipe->pipefd[0]);
+	fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->pipefd[0]);
+	if (dup2(command->pipe->pipefd[1], STDOUT_FILENO) == -1)
+		perror(RED"SE dup2 ERROR\n"DEFAULT);
+	fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), command->pipe->pipefd[1], STDOUT_FILENO);
+	fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
+	close(command->pipe->pipefd[1]);
+	fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->pipe->pipefd[1]);
 	// }
 	// else
 	// {
@@ -280,17 +286,17 @@ int	last_pipe_cmd(t_cmd_block *command)
 {
 	// if (pid == 0)
 	// {
-		fprintf(stderr,BLUE"last_pipe getpid() %d\n"DEFAULT, getpid());
-		//todo if theres re_dir_out then i need to call re_dir_out()
-		
-		if (dup2(command->prev_read_end_fd, STDIN_FILENO) == -1)
-		{
-			fprintf(stderr,RED"last_pipe_cmd() dup2()error\n"DEFAULT);
-		}
-		fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), command->prev_read_end_fd, STDIN_FILENO);
-		fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
-		close(command->prev_read_end_fd);
-		fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->prev_read_end_fd);
+	fprintf(stderr,BLUE"last_pipe getpid() %d\n"DEFAULT, getpid());
+	//todo if theres re_dir_out then i need to call re_dir_out()
+	
+	if (dup2(command->prev_read_end_fd, STDIN_FILENO) == -1)
+	{
+		fprintf(stderr,RED"last_pipe_cmd() dup2()error\n"DEFAULT);
+	}
+	fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), command->prev_read_end_fd, STDIN_FILENO);
+	fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
+	close(command->prev_read_end_fd);
+	fprintf(stderr, YELLOW "[pid %d], close[%d]\n" DEFAULT, getpid(), command->prev_read_end_fd);
 	// }
 	// else
 	// {
@@ -340,7 +346,7 @@ void	close_pipefd(t_cmd_block *cmd)
 	else if (cmd->prev && !cmd->next)
 		close_last_pipefd(cmd);
 }
-//memo if return -1 we have to free all allocated memories
+
 void	processing_pipe(t_cmd_block *cmd)
 {
 	if (is_first_pipe(cmd))

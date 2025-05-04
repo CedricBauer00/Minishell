@@ -33,7 +33,7 @@ void	ft_pwd(char **args, t_gc *gc)
 	if (*args)
 	{
 		printf(RED"PWD TOO MANY ARGS\n"DEFAULT);
-		all_free(&gc->temp);
+		//all_free(&gc->temp);
 		return ;
 	}
 	char *pwd;

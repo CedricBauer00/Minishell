@@ -1,8 +1,5 @@
 #include "execution.h"
 
-//todo both redirection must be called in child!
-// todo need to change if 
-
 int	re_dir_in(t_io_streams_list *io_streams)
 {
 	int	fd;
@@ -20,7 +17,6 @@ int	re_dir_in(t_io_streams_list *io_streams)
 	return 1;
 }
 
-//todo need to change if 
 int	re_dir_out(t_io_streams_list *io_streams)
 {
 	int	fd;

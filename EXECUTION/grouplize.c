@@ -17,6 +17,7 @@ void grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc)
 		if(token && token->type == TOKEN_PIPE)
 			token = token->next;
 		t_cmd_block *new_cmd_block = merge_to_one_cmd(&token, gc);
+		is_exited((t_cmd_block*)new_cmd_block, gc);
 		if (*cmd_block == NULL)
 		{
 			*cmd_block = new_cmd_block;
@@ -65,6 +66,7 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 		if (cur && (cur->type & (TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT | TOKEN_APPEND | TOKEN_HEREDOC)))  //token->value : < filename
 		{
 			new_io_streams = init_io_stream_struct(gc->temp);
+			is_exited((t_io_streams_list*)new_io_streams, gc);
 			if(!new_cmd_block->io_streams)
 				new_cmd_block->io_streams = new_io_streams;
 			else
@@ -81,6 +83,9 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 			{
 				fprintf(stderr, RED"if heredoc in grouplize()\n"DEFAULT);
 				new_io_streams->heredoc_eof = gc_strdup(cur->value, &gc->temp);
+				t_gc_list *find;
+				find = find_node(gc->temp, (char*)cur->value);
+				delete_node(&gc->temp, find);
 			}
 			if(cur->next && cur->next->type == TOKEN_FILE)
 			{
@@ -90,6 +95,9 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 					new_io_streams->outfile_name = gc_strdup(cur->next->value, &gc->temp);
 				else if (cur->type == TOKEN_APPEND)
 					new_io_streams->append_file_name = gc_strdup(cur->next->value, &gc->temp);
+				t_gc_list *find;
+				find = find_node(gc->temp, (char*)cur->next->value);
+				delete_node(&gc->temp, find);
 				cur = cur->next;
 				continue;
 			}
@@ -98,6 +106,9 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 		{
 			new_cmd_block->is_built_in = true;
 			new_cmd_block->built_in = gc_strdup(cur->value, &gc->temp);
+			t_gc_list *find;
+			find = find_node(gc->temp, (char*)cur->value);
+			delete_node(&gc->temp, find);
 		}
 		else if (cur && cur->type == TOKEN_ARG)
 		{
@@ -106,6 +117,9 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 				new_cmd_block->is_external_cmd = true;
 			}
 			new_cmd_block->args[i++] = gc_strdup(cur->value, &gc->temp);
+			t_gc_list *find;
+			find = find_node(gc->temp, (char*)cur->value);
+			delete_node(&gc->temp, find);
 		}
 		new_cmd_block->args[i] = NULL;
 		cur = cur->next;

@@ -45,12 +45,10 @@ int	check_existing(char **my_envp, const char *name)
 	{
 		if ((strncmp(my_envp[i], name, strlen(name)) == 0) && (my_envp[i][strlen(name)] == '='))
 		{
-			//printf(YELLOW "existing env : %s\n" DEFAULT, my_envp[i]);
 			return (i);
 		}
 		i++;
 	}
-	//printf(RED " <%s> is non existing env\n" DEFAULT, name);
 	return(-1);
 }
 

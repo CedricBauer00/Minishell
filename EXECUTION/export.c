@@ -45,7 +45,8 @@ void	export(char **args, t_shell *shell)
 		if (check == false)
 		{
 			perror(RED"non valid identifier\n"DEFAULT);
-			all_free(&gc->temp);
+			return ;
+			//all_free(&gc->temp);
 		}
 		char	*name = extract_name(args[i]);
 		is_exited(name, gc);

@@ -32,12 +32,12 @@
 void	ft_unset(char **args, t_shell *shell)
 {
 	int	i;
-	int	j;
+	//int	j;
 	int	found;
 	bool check;
-	t_gc *gc;
+	//t_gc *gc;
 
-	gc = get_gc();
+	//gc = get_gc();
 	check = false;
 	i = 0;
 	if (args[i] != NULL)
@@ -47,23 +47,14 @@ void	ft_unset(char **args, t_shell *shell)
 			if (check == false)
 			{
 				perror(RED"non valid identifier\n"DEFAULT);
-				all_free(&gc->temp);
+				return ;
 			}
 		}
 		while (args[i])
 		{
 			found = -1;
-			j = 0;
-			while (shell->my_envp[j])
-			{
-				if ((ft_strncmp(shell->my_envp[j], args[i], ft_strlen(args[i])) == 0) && 
-					(shell->my_envp[j][ft_strlen(args[i])] == '='))
-				{
-					found = j;
-					break;
-				}
-				j++;
-			}
+
+			found = check_existing(shell->my_envp, args[i]);
 			printf(GREEN"in ft_unset() %d\n"DEFAULT, found);
 			if (found != -1)
 			{
@@ -75,7 +66,6 @@ void	ft_unset(char **args, t_shell *shell)
 					shell->my_envp[found] = shell->my_envp[found + 1];
 					found++;
 				}
-				printf("in ft_unset() shell->my_envp[found + 1] %p\n", shell->my_envp[found + 1]);
 				shell->my_envp[found] = NULL;
 			}
 			i++;
