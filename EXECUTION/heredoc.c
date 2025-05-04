@@ -34,29 +34,29 @@ int	process_heredoc(t_shell *shell, t_token *token)
 	int	fd_heredoc;
 
 	fd_heredoc = 0;
-		fd_heredoc = open("temp_heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
-		fprintf(stderr, YELLOW"[pid %d] fd_heredoc open(), fd_heredoc fd : %d\n", getpid(), fd_heredoc);
-		if (fd_heredoc == -1)
+	fd_heredoc = open("temp_heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
+	fprintf(stderr, YELLOW"[pid %d] fd_heredoc open(), fd_heredoc fd : %d\n", getpid(), fd_heredoc);
+	if (fd_heredoc == -1)
+	{
+		perror(RED"failed to open temp_heredoc"DEFAULT);
+		return -1;
+	}
+	while(1)
+	{
+		char *line;
+		line = readline("> ");
+		if (!line || strcmp(line, token->value) == 0)
 		{
-			perror(RED"failed to open temp_heredoc"DEFAULT);
-			return -1;
-		}
-		while(1)
-		{
-			char *line;
-			line = readline("> ");
-			if (!line || strcmp(line, token->value) == 0)
-			{
-				free(line);
-				break;
-			}
-			write(fd_heredoc, line, strlen(line));
-			write(fd_heredoc, "\n", 1);
 			free(line);
+			break;
 		}
-		shell->heredoc_fd = fd_heredoc;
-		close(fd_heredoc);
-		fprintf(stderr, YELLOW"[pid %d] close()%d\n"DEFAULT,getpid(), fd_heredoc);
+		write(fd_heredoc, line, strlen(line));
+		write(fd_heredoc, "\n", 1);
+		free(line);
+	}
+	shell->heredoc_fd = fd_heredoc;
+	close(fd_heredoc);
+	fprintf(stderr, YELLOW"[pid %d] close()%d\n"DEFAULT,getpid(), fd_heredoc);
 	return 1;
 }
 

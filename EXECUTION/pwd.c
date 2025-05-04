@@ -1,36 +1,12 @@
 #include "execution.h"
 
-//pwd getcwd() get current working directory
-//obwohl ist es NULL, muss die richtige weg return --> dann brauche ich hier die find_var_in_env funktion nicht zu verwenden.
-
-// char	*get_cwd(t_shell *shell, t_gc_list *gc_lst)
-// {
-// 	char	*cwd;
-
-// char *cwd = find_var_in_env(shell->my_envp, "PWD", 3, gc_lst)
-// {
-// 	if (cwd == NULL)
-// 	{
-// 		char *temp = getcwd(NULL, 0);
-// 		cwd = (char*)do_alloc(gc_lst, ft_strlen(temp) + 1, TYPE_SINGLE_PTR, "getcwd");
-// 		if (!cwd)
-// 		{
-// 			free(temp);
-// 			return NULL;
-// 		}
-// 		ft_strlcpy(cwd, temp, ft_strlen(temp) + 1);
-// 		free(temp);
-// 		return cwd;
-// 	}
-// 	return cwd;
-// }
-
-
-char	*my_getcwd(t_gc *gc)
+char	*my_getcwd()
 {
 	char	*cwd;
 	char	*temp;
+	t_gc	*gc;
 
+	gc = get_gc();
 	temp = getcwd(NULL, 0);
 	if (!temp)
 	{
@@ -38,26 +14,33 @@ char	*my_getcwd(t_gc *gc)
 		gc_free(gc);
 		exit(1);
 	}
-	//think about that wo soll ich cwd specitern in gc->temp oder gc->shell
 	cwd = (char*)do_alloc(&gc->temp, ft_strlen(temp) + 1, TYPE_SINGLE_PTR, "getcwd");
 	if (!cwd)
 	{
-		free(temp);
-		return NULL;
+		gc_free(gc);
+		return NULL; 
 	}
 	ft_strlcpy(cwd, temp, ft_strlen(temp) + 1);
 	free(temp);
 	return cwd;
 }
 
-void	my_pwd(t_gc *gc)
+void	ft_pwd(char **args, t_gc *gc)
 {
+	t_gc_list *find;
+
+	find = NULL;
+	if (*args)
+	{
+		printf(RED"PWD TOO MANY ARGS\n"DEFAULT);
+		all_free(&gc->temp);
+		return ;
+	}
 	char *pwd;
-	pwd = my_getcwd(gc);
-	printf(GREEN"%s\n"DEFAULT, pwd);
-	//todo
-	// t_gc_list *find = find_node();
-	// delete_node(find);
+	pwd = my_getcwd();
+	printf(YELLOW"%s\n"DEFAULT, pwd);
+	find = find_node(find, (char*)pwd);
+	delete_node(&gc->temp, (t_gc_list*)find);
 }
 
 // void	pwd(t_shell *shell, t_gc_list *gc_lst)

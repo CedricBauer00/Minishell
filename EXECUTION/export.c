@@ -24,23 +24,7 @@ void	print_envp(t_shell *shell)
 	}
 }
 
-static bool	is_valid_identifier(const char *name)
-{
-	int	i;
 
-	i = 0;
-	if(!name || (!ft_isalpha(name[0]) && name[0] != '_'))
-	{
-		return false;
-	}
-	while(name[i])
-	{
-		if(!ft_isalpha(name[i]) && name[i] != '_')
-			return false;
-		i++;
-	}
-	return true;
-}
 
 //todo fix must dont get digits.
 void	export(char **args, t_shell *shell)
@@ -61,17 +45,18 @@ void	export(char **args, t_shell *shell)
 		if (check == false)
 		{
 			perror(RED"non valid identifier\n"DEFAULT);
-			//all_free(&gc->temp);
+			all_free(&gc->temp);
 		}
 		char	*name = extract_name(args[i]);
 		is_exited(name, gc);
 		printf("name:%s\n", name);
 		char	*value = extract_value(args[i]);
-		// is_exited(value, gc);
 		printf("value:%s\n", value);
 		ft_setenv(name, value, 1 , shell);
-		free(name);
-		free(value);
+		if(name)
+			free(name);
+		if(value)
+			free(value);
 		i++;
 	}
 }

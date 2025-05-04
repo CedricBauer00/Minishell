@@ -89,11 +89,11 @@ char	**copy_envp(t_gc *gc, char **envp);
 int		get_envp_count(char **envp);
 
 //memo env.c
-void	ft_env(t_shell *shell);
+void    ft_env(char **args, t_shell *shell);
 
 //memo pwd.c
-char	*my_getcwd(t_gc *gc);
-void	my_pwd(t_gc *gc);
+char	*my_getcwd();
+void	ft_pwd(char **args, t_gc *gc);
 
 //memo cd.c
 int		is_valid_dir(const char *path);
@@ -112,7 +112,7 @@ char	*extract_value(char *arg);
 //char	*ft_strchr(char *str, char c);
 
 //memo unset.c
-void	unset(char **argv, t_shell *shell);
+void	ft_unset(char **argv, t_shell *shell);
 
 //memo echo.c
 void	ft_echo(char **args, t_shell *shell);
@@ -155,6 +155,7 @@ int	heredoc();
 
 //memo builtin_utils.c
 char	*find_var_in_env(char **my_envp, char *find, size_t find_len, t_gc_list *gc_lst);
+bool	is_valid_identifier(const char *name);
 
 //memo validate.c
 //int		validate_syntax(t_token *token);

@@ -94,7 +94,7 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 				continue;
 			}
 		}
-		else if (cur && cur->type == TOKEN_BUILT_IN)
+		if (cur && cur->type == TOKEN_BUILT_IN)
 		{
 			new_cmd_block->is_built_in = true;
 			new_cmd_block->built_in = gc_strdup(cur->value, &gc->temp);

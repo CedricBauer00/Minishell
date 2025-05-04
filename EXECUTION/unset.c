@@ -29,38 +29,53 @@
 // }
 
 //todo think about multiple env NAME should work like "unset PWD OLDPWD HOME PATH"
-void	unset(char **argv, t_shell *shell)
+void	ft_unset(char **args, t_shell *shell)
 {
 	int	i;
 	int	j;
 	int	found;
+	bool check;
+	t_gc *gc;
 
+	gc = get_gc();
+	check = false;
 	i = 0;
-	if ((strcmp("unset", argv[1]) == 0) && argv[2] != NULL)
+	if (args[i] != NULL)
 	{
-		i = 2;
-		while (argv[i])
+		check = is_valid_identifier(args[i]);
+		{
+			if (check == false)
+			{
+				perror(RED"non valid identifier\n"DEFAULT);
+				all_free(&gc->temp);
+			}
+		}
+		while (args[i])
 		{
 			found = -1;
 			j = 0;
 			while (shell->my_envp[j])
 			{
-				if ((strncmp(shell->my_envp[j], argv[i], ft_strlen(argv[i])) == 0) && (shell->my_envp[j][strlen(argv[i])] == '='))
+				if ((ft_strncmp(shell->my_envp[j], args[i], ft_strlen(args[i])) == 0) && 
+					(shell->my_envp[j][ft_strlen(args[i])] == '='))
 				{
 					found = j;
 					break;
 				}
 				j++;
 			}
-			printf(GREEN"%d\n"DEFAULT, found);
+			printf(GREEN"in ft_unset() %d\n"DEFAULT, found);
 			if (found != -1)
 			{
-				free(shell->my_envp[found]);
+				t_gc *gc = get_gc();
+				t_gc_list *find = find_node(gc->shell, (char*)shell->my_envp[found]);
+				delete_node(&gc->shell, find);
 				while(shell->my_envp[found + 1])
 				{
 					shell->my_envp[found] = shell->my_envp[found + 1];
 					found++;
 				}
+				printf("in ft_unset() shell->my_envp[found + 1] %p\n", shell->my_envp[found + 1]);
 				shell->my_envp[found] = NULL;
 			}
 			i++;
@@ -68,28 +83,4 @@ void	unset(char **argv, t_shell *shell)
 	}
 }
 
-// int	main(int argc, char **argv, char **envp)
-// {
-// 	(void)argc;
-// 	(void)argv;
-// 	t_gc_list *head = init_gc_list();
-// 	t_shell *shell = get_shell();
 
-// 	//todo copy_envp should put into init_shell func.
-// 	shell->my_envp = copy_envp(head, envp);
-
-// 	// export(argv, shell);
-// 	// printf("argv[1]%s, argv[2]%s\n", argv[1],argv[2]);
-// 	// unset(argv, shell);
-	
-// 	// ft_echo(argv, shell);
-
-// 	//test
-// 	// int i = 0;
-// 	// while (shell->my_envp[i])
-// 	// {
-// 	// 	printf(BLUE"%p,  %s\n"DEFAULT, shell->my_envp[i], shell->my_envp[i]);
-// 	// 	i++;
-// 	// }
-// 	echo_Hello_pipe_cat_pipe_wc(shell);
-// }

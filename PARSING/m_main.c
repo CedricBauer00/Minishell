@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/03 19:52:45 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/04 13:31:31 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,9 @@ int	main(int argc, char **argv, char **envp)
 	{
 		printf(YELLOW"gc free execute!\n"DEFAULT);
 		gc_free(gc);
-		//print_list(&gc->temp);
-		//print_list(&gc->shell);
+		if (gc && gc->temp)
+			print_list(&gc->temp);
+		if (gc && gc->shell)
+			print_list(&gc->shell);
 	}
 }

@@ -82,13 +82,21 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 		ft_echo(cur->args, shell);
 	}
 	if (strcmp(cur->built_in, "export") == 0)
+	{
 		export(cur->args, shell);
-	// if (strcmp(cur->built_in, "pwd") == 0)
-	// 	my_pwd(shell, gc);
+	}
+	if (strcmp(cur->built_in, "pwd") == 0)
+	{
+		ft_pwd(cur->args, gc);
+	}
 	if (strcmp(cur->built_in, "env") == 0)
-		ft_env(shell);
-	// if (strcmp(cur->built_in, "unset") == 0)
-	// 	unset(cur->args, shell);
+	{
+		ft_env(cur->args, shell);
+	}
+	if (strcmp(cur->built_in, "unset") == 0)
+	{
+		ft_unset(cur->args, shell);
+	}
 }
 
 void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
@@ -173,30 +181,38 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 	char *path = find_var_in_env(shell->my_envp, "PATH", 4, gc->temp);
 	if (!path)
 	{
-		exit(1);
+		perror(RED"can't find PATH"DEFAULT);
 		gc_free(gc);
+		exit(1);
 	}
 	splitted_path = ft_split(path, ':');
+	if (!splitted_path)
+	{
+		perror(RED"ft_split failed in run_execve()"DEFAULT);
+		gc_free(gc);
+		exit(1);
+	}
 	int i = 0;
 	while(splitted_path[i])
 	{
 		char *attach_slash_to_cmd = ft_strjoin(splitted_path[i], "/");
 		if (!attach_slash_to_cmd)
 		{
-			exit(1);
 			gc_free(gc);
+			exit(1);
 		}
 		char *cmd_path = ft_strjoin(attach_slash_to_cmd, cmd_block->args[0]);
 		if (!cmd_path)
 		{
-			exit(1);
 			gc_free(gc);
+			exit(1);
 		}
 		if (access(cmd_path, F_OK | X_OK) == 0)
 		{
 			fprintf(stderr, "execve()\n");
 			if (execve(cmd_path , cmd_block->args, shell->my_envp) == -1)
 			{
+				gc_free(gc);
 				perror(RED"error execve()"DEFAULT);
 				exit(1);
 			}
