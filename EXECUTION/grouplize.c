@@ -1,13 +1,5 @@
 #include "execution.h"
 
-/*
-	1. 명령어가 빌트인이냐 외부 명령어냐?
-	2. 외부명령어면 포크 아니면 그냥 부모에서
-	3. 외부명령어면 fd를 모두 자식에서 셋팅 
-	4. 빌트인이면 fd를 모두 부모에서 셋팅
-*/
-
-//Divided by command
 void grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc)
 {
 	if (!token)
@@ -46,7 +38,7 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 	i = 0;
 	cur = *token;
 	t_token *temp = cur;
-	new_cmd_block = init_command_struct(gc->temp);
+	new_cmd_block = init_command_struct(gc);
 	is_exited((t_cmd_block*)new_cmd_block, gc);
 	while(temp && temp->type != TOKEN_PIPE)
 	{
@@ -81,6 +73,9 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 			{
 				fprintf(stderr, RED"if heredoc in grouplize()\n"DEFAULT);
 				new_io_streams->heredoc_eof = gc_strdup(cur->value, &gc->temp);
+				t_gc_list *find;
+				find = find_node(gc->temp, (char*)cur->value);
+				delete_node(&gc->temp, find);
 			}
 			if(cur->next && cur->next->type == TOKEN_FILE)
 			{
@@ -90,6 +85,9 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 					new_io_streams->outfile_name = gc_strdup(cur->next->value, &gc->temp);
 				else if (cur->type == TOKEN_APPEND)
 					new_io_streams->append_file_name = gc_strdup(cur->next->value, &gc->temp);
+				t_gc_list *find;
+				find = find_node(gc->temp, (char*)cur->next->value);
+				delete_node(&gc->temp, find);
 				cur = cur->next;
 				continue;
 			}
@@ -98,6 +96,9 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 		{
 			new_cmd_block->is_built_in = true;
 			new_cmd_block->built_in = gc_strdup(cur->value, &gc->temp);
+			t_gc_list *find;
+			find = find_node(gc->temp, (char*)cur->value);
+			delete_node(&gc->temp, find);
 		}
 		else if (cur && cur->type == TOKEN_ARG)
 		{
@@ -106,6 +107,9 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 				new_cmd_block->is_external_cmd = true;
 			}
 			new_cmd_block->args[i++] = gc_strdup(cur->value, &gc->temp);
+			t_gc_list *find;
+			find = find_node(gc->temp, (char*)cur->value);
+			delete_node(&gc->temp, find);
 		}
 		new_cmd_block->args[i] = NULL;
 		cur = cur->next;

@@ -77,10 +77,10 @@ typedef struct s_token //struct being allocated for each token from input
 
 
 //memo init.c
-t_shell	*init_shell_struct(t_gc_list *gc_lst);
+t_shell	*init_shell_struct(t_gc_list **gc_lst);
 t_shell *get_shell(void);
-t_cmd_block *init_command_struct(t_gc_list *gc_lst);
-t_pipe *init_pipe(t_gc_list *gc_lst);
+t_cmd_block *init_command_struct(t_gc *gc);
+t_pipe *init_pipe(t_gc *gc);
 t_io_streams_list *init_io_stream_struct(t_gc_list *gc_lst);
 t_cmd_block *get_cmd_block(void);
 
@@ -118,7 +118,7 @@ void	ft_unset(char **argv, t_shell *shell);
 void	ft_echo(char **args, t_shell *shell);
 
 //memo pipe
-void	add_pipe(t_cmd_block **cmd_block, t_gc_list *gc_lst);
+void	add_pipe(t_cmd_block **cmd_block);
 bool	is_first_pipe(t_cmd_block *cmd);
 bool	is_middle_pipe(t_cmd_block *cmd);
 bool	is_last_pipe(t_cmd_block *cmd);

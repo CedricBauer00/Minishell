@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gc1.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:02:03 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/03 15:30:12 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/04 17:01:22 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ void	*do_alloc(t_gc_list **gc_lst, size_t howmuch, \
 	new_node->level = 0;
 	new_node->next = *gc_lst;
 	*gc_lst = new_node;
-	//printf(PURPLE"Allocated: Node %p, Data [%p], Type %d, ID %s\n"RESET, new_node, data, data_type, id);
 	return (data);
 }
 

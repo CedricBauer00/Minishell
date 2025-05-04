@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   garbage_collector.h                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:41:48 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/02 14:00:07 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/04 16:50:38 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,12 @@ void		gc_free_by_level(t_gc_list *gc_list);
 void		gc_free(t_gc *gc);
 void		print_list(t_gc_list **gc_lst);
 void		print_gc(t_gc *gc);
-char		*gc_strdup(const char *str, t_gc_list **gc_lst);
+//char		*gc_strdup(const char *str, t_gc_list **gc_lst);
+
+//	gc_utils.c
+int		ft_strcmp(char *s1, char *s2);
+char	*gc_strdup(const char *str, t_gc_list **gc_list);
+char	*gc_strndup(const char *str, size_t n, t_gc_list **gc_list);
+char	*gc_strjoin(char const *s1, char const *s2, t_gc_list **gc_list);
 
 #endif

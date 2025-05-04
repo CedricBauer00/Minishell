@@ -1,10 +1,10 @@
 #include "execution.h"
 
-t_shell	*init_shell_struct(t_gc_list *gc_lst)
+t_shell *init_shell_struct(t_gc_list **gc_lst)
 {
 	t_shell *shell;
 
-	shell = do_alloc(&gc_lst, sizeof(t_shell), TYPE_SINGLE_PTR, "shell");
+	shell = do_alloc(gc_lst, sizeof(t_shell), TYPE_SINGLE_PTR, "shell");
 	if (!shell)
 	{
 		return (NULL);
@@ -18,15 +18,15 @@ t_shell	*init_shell_struct(t_gc_list *gc_lst)
 	return shell;
 }
 
-t_pipe *init_pipe(t_gc_list *gc_lst)
+t_pipe *init_pipe(t_gc	*gc)
 {
 	t_pipe *p_pipe;
-	p_pipe = do_alloc(&gc_lst, sizeof(t_pipe), TYPE_SINGLE_PTR, "pipe_list");
+	p_pipe = do_alloc(&gc->temp, sizeof(t_pipe), TYPE_SINGLE_PTR, "pipe_list");
 	if (!p_pipe)
 	{
 		return (NULL);
 	}
-	p_pipe->pipefd = do_alloc(&gc_lst, sizeof(int) * 2, TYPE_SINGLE_PTR, "pipefd");
+	p_pipe->pipefd = do_alloc(&gc->temp, sizeof(int) * 2, TYPE_SINGLE_PTR, "pipefd");
 	if (!p_pipe->pipefd)
 	{
 		return (NULL);
@@ -67,10 +67,10 @@ t_io_streams_list *init_io_stream_struct(t_gc_list *gc_lst)
 	return (io_streams_lst);
 }
 
-t_cmd_block *init_command_struct(t_gc_list *gc_lst)
+t_cmd_block *init_command_struct(t_gc *gc)
 {
 	t_cmd_block *cmd;
-	cmd = do_alloc(&gc_lst, sizeof(t_cmd_block), TYPE_SINGLE_PTR, "cmd_block");
+	cmd = do_alloc(&gc->temp, sizeof(t_cmd_block), TYPE_SINGLE_PTR, "cmd_block");
 	if (!cmd)
 	{
 		return (NULL);
@@ -103,7 +103,7 @@ t_shell *get_shell(void)
 	gc = get_gc();
 	if (shell == NULL)
 	{
-		shell = init_shell_struct(gc->shell);
+		shell = init_shell_struct(&gc->shell);
 	}
 	return (shell);
 }
@@ -116,7 +116,7 @@ t_cmd_block *get_cmd_block(void)
 	gc = get_gc();
 	if (cmd == NULL)
 	{
-		cmd = init_command_struct(gc->temp);
+		cmd = init_command_struct(gc);
 	}
 	return (cmd);
 }

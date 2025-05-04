@@ -186,6 +186,7 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 		exit(1);
 	}
 	splitted_path = ft_split(path, ':');
+	free(path);
 	if (!splitted_path)
 	{
 		perror(RED"ft_split failed in run_execve()"DEFAULT);
@@ -195,13 +196,13 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 	int i = 0;
 	while(splitted_path[i])
 	{
-		char *attach_slash_to_cmd = ft_strjoin(splitted_path[i], "/");
+		char *attach_slash_to_cmd = gc_strjoin(splitted_path[i], "/", &gc->temp);
 		if (!attach_slash_to_cmd)
 		{
 			gc_free(gc);
 			exit(1);
 		}
-		char *cmd_path = ft_strjoin(attach_slash_to_cmd, cmd_block->args[0]);
+		char *cmd_path = gc_strjoin(attach_slash_to_cmd, cmd_block->args[0], &gc->temp);
 		if (!cmd_path)
 		{
 			gc_free(gc);
@@ -324,7 +325,7 @@ void	fork_and_execute(t_cmd_block *cmd_block, t_gc *gc, int *i)
 	//set_io_streams(cur);
 	if (cur->next)
 	{
-		add_pipe(&cur, gc->temp);
+		add_pipe(&cur);
 		fprintf(stderr, YELLOW"[pid %d] p_pipe->pipefd[0]: %d, p_pipe->pipefd[1]: %d\n"DEFAULT,getpid(), cur->pipe->pipefd[0], cur->pipe->pipefd[1]);
 	}
 	pid = fork();

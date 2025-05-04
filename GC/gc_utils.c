@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   m_utils3.c                                         :+:      :+:    :+:   */
+/*   gc_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 12:13:48 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/02 15:06:51 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/04 16:52:06 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
+#include "garbage_collector.h"
 
 int	ft_strcmp(char *s1, char *s2)
 {

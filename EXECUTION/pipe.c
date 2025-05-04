@@ -109,7 +109,7 @@
 	add_pipe를 언제 호출해야하는지 생각해보기 -> in exe function.
 */
 
-void	add_pipe(t_cmd_block **cmd_block, t_gc_list *gc_lst)
+void	add_pipe(t_cmd_block **cmd_block)
 {
 	t_pipe	*new_pipe_node;
 	t_gc	*gc;
@@ -117,7 +117,7 @@ void	add_pipe(t_cmd_block **cmd_block, t_gc_list *gc_lst)
 	gc = get_gc();
 	if (!cmd_block || !*cmd_block)
 		return ;
-	new_pipe_node = init_pipe(gc_lst);
+	new_pipe_node = init_pipe(gc);
 	if (!new_pipe_node)
 	{
 		gc_free(gc);

@@ -26,7 +26,6 @@ LIBFT = $(LIBFT_DIR)/libft.a
 SOURCES = m_main.c \
 		m_utils1.c \
 		m_utils2.c \
-		m_utils3.c \
 		m_utils4.c \
 		m_shell_init.c \
 		m_signal.c \
@@ -35,6 +34,7 @@ SOURCES = m_main.c \
 		../GC/gc1.c \
 		../GC/gc2.c \
 		../GC/gc3.c \
+		../GC/gc_utils.c\
 		p_words.c \
 		p_builtins.c \
 		p_quotes.c \
