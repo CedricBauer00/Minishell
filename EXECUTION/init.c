@@ -11,6 +11,7 @@ t_shell	*init_shell_struct(t_gc_list *gc_lst)
 	}
 	shell->cur_dir = NULL;
 	shell->old_dir = NULL;
+	shell->heredoc_fd = -1;
 	shell->my_envp = NULL;
 	shell->pids = NULL;
 	shell->last_status_exit = 0;
@@ -58,7 +59,6 @@ t_io_streams_list *init_io_stream_struct(t_gc_list *gc_lst)
 
 	io_streams_lst->heredoc_eof = NULL;
 	io_streams_lst->heredoc_file = NULL;
-	io_streams_lst->heredoc_fd = -1;
 	
 	io_streams_lst->fd_org_read = 0;
 	io_streams_lst->fd_in_file = 0;
@@ -79,6 +79,7 @@ t_cmd_block *init_command_struct(t_gc_list *gc_lst)
 	cmd->built_in = NULL;
 	cmd->is_built_in = false;
 	cmd->is_external_cmd = false;
+	//cmd->heredoc_fd = -1;
 	cmd->args = NULL;
 	//cmd->cmd_flags = NULL;
 	cmd->io_streams = NULL;
@@ -105,4 +106,17 @@ t_shell *get_shell(void)
 		shell = init_shell_struct(gc->shell);
 	}
 	return (shell);
+}
+
+t_cmd_block *get_cmd_block(void)
+{
+	static t_cmd_block *cmd = NULL;
+	t_gc *gc;
+
+	gc = get_gc();
+	if (cmd == NULL)
+	{
+		cmd = init_command_struct(gc->temp);
+	}
+	return (cmd);
 }

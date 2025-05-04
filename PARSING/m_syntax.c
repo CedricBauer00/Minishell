@@ -56,7 +56,7 @@ int	syntax_helper(t_token **cur)
 int	validate_syntax(t_token *token)
 {
 	t_token	*cur;
-
+	t_shell *shell = get_shell();
 	if (!token)
 		return (1);
 	cur = token;
@@ -65,7 +65,7 @@ int	validate_syntax(t_token *token)
 		//todo move to here heredoc
 		if (cur->type == TOKEN_HEREDOC)
 		{
-			
+			process_heredoc(shell, cur);
 		}
 		if (syntax_helper(&cur) < 0)
 		{

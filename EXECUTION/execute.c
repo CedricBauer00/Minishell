@@ -42,24 +42,27 @@ void	wait_for_child_and_update_status(int i)
 //todo change name becuz it doenst make offset or maybe i can make it to have it offset 
 int heredoc_fd_offset_and_redir(t_cmd_block *cur)
 {
+	t_shell *shell;
+
+	shell = get_shell();
 	if (!cur)
 		return -1;
 	//fprintf(stderr, RED"in execute_child cur->io_streams->heredoc_fd: %d\n"DEFAULT, cur->io_streams->heredoc_fd);
 	//fprintf(stderr, RED"in execute_child STDIN_FILENO: %d, STDOUT_FILENO: %d\n"DEFAULT, STDIN_FILENO, STDOUT_FILENO);
-	cur->io_streams->heredoc_fd = open("temp_heredoc" ,O_RDWR, 0644);
+	shell->heredoc_fd = open("temp_heredoc" ,O_RDWR, 0644);
 	//fprintf(stderr, RED"HEREDOR file open [pid %d] open(%d)\n"DEFAULT, getpid(), cur->io_streams->heredoc_fd);
-	if (cur->io_streams->heredoc_fd < 0)
+	if (shell->heredoc_fd < 0)
 	{
 		return -1;
 	}
-	if (dup2(cur->io_streams->heredoc_fd, STDIN_FILENO) == -1)
+	if (dup2(shell->heredoc_fd, STDIN_FILENO) == -1)
 	{
-		close(cur->io_streams->heredoc_fd);
+		close(shell->heredoc_fd);
 		unlink("temp_heredoc");
 		return -1;
 	}
 	//fprintf(stderr, RED"HEREDOR REDIR[pid %d] dup2(%d, %d)\n"DEFAULT, getpid(), cur->io_streams->heredoc_fd, STDIN_FILENO);
-	close(cur->io_streams->heredoc_fd);
+	close(shell->heredoc_fd);
 	unlink("temp_heredoc");
 	return 1;
 }
@@ -101,7 +104,7 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 		set_io_streams(cur);
 	if (cur->is_built_in)
 	{
-		if (cur->io_streams && cur->io_streams->heredoc_fd > 0)
+		if (cur->io_streams && cur->io_streams->heredoc_eof)
 		{
 			if (heredoc_fd_offset_and_redir(cur) == -1)
 			{
@@ -119,7 +122,7 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 		fprintf(stderr, YELLOW" singlecmd for child proc fork() : %d , shell->pids[0] %d \n"DEFAULT, pid, shell->pids[0]) ;
 		if (pid == 0)
 		{
-			if (cur->io_streams && cur->io_streams->heredoc_fd > 0)
+			if (cur->io_streams && cur->io_streams->heredoc_eof)
 			{
 				if (heredoc_fd_offset_and_redir(cur) == -1)
 				{
@@ -151,12 +154,12 @@ void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 
 	if (cur->built_in)
 	{
-		fprintf(stderr, RED"is it in for execute_builtin execute_child()\n"DEFAULT);
+		fprintf(stderr, RED"is it in pipe for execute_builtin execute_child()\n"DEFAULT);
 		execute_builtin(cur, shell);
 	}
 	if (cur->args)
 	{
-		fprintf(stderr, RED"is it in for external cmd execute_child()\n"DEFAULT);
+		fprintf(stderr, RED"is it in pipe for external cmd execute_child()\n"DEFAULT);
 		run_execve(cur, gc);
 	}
 }
@@ -165,9 +168,7 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 {
 	char	**splitted_path;
 	t_shell *shell;
-	bool 	is_executable;
 
-	is_executable = false;
 	shell = get_shell();
 	char *path = find_var_in_env(shell->my_envp, "PATH", 4, gc->temp);
 	if (!path)
@@ -216,7 +217,7 @@ void	main_execute(t_cmd_block *cmd_block)
 	cur = cmd_block;
 	stdin_backup = dup(STDIN_FILENO);
 	stdout_backup = dup(STDOUT_FILENO);
-	hanlde_heredoc(cur);
+	//hanlde_heredoc(cur);
 	int	pid_counts = count_command(cmd_block);
 	printf("pid_counts %d\n", pid_counts);
 
@@ -235,19 +236,19 @@ void	main_execute(t_cmd_block *cmd_block)
 	fprintf(stderr, RED"-CHECK ORGINAL STDIN AND STDOUT-\n STDIN_FILENO: %d, STDOUT_FILENO: %d\n"DEFAULT, STDIN_FILENO, STDOUT_FILENO);
 }
 
-void	hanlde_heredoc(t_cmd_block *cmd_block)
-{
-	t_cmd_block *cur = cmd_block;
-	while(cur)
-	{
-		if (cur->io_streams && cur->io_streams->heredoc_eof)
-		{
-			process_heredoc(cur->io_streams);
-			printf(RED"heredocfd %d\n"DEFAULT, cur->io_streams->heredoc_fd);
-		}
-		cur = cur->next;
-	}
-}
+// void	hanlde_heredoc(t_cmd_block *cmd_block)
+// {
+// 	t_cmd_block *cur = cmd_block;
+// 	while(cur)
+// 	{
+// 		if (cur->io_streams && cur->io_streams->heredoc_eof)
+// 		{
+// 			process_heredoc(cur->io_streams);
+// 			printf(RED"heredocfd %d\n"DEFAULT, cur->io_streams->heredoc_fd);
+// 		}
+// 		cur = cur->next;
+// 	}
+// }
 
 void	execute_single_command(t_cmd_block *cmd_block)
 {

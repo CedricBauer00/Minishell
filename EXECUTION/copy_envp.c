@@ -22,7 +22,7 @@ int	get_envp_count(char **envp)
 // 	if (!gc_lst)
 // 		return (NULL);
 // 	count = get_envp_count(envp);
-// 	my_envp = (char**)do_alloc(&gc_lst, sizeof(char *) * (count + 1), \
+// 	my_envp = (char**)do_alloc(&gc_lst, sizeof(char *) * (count + 1), 
 // 		TYPE_DOUBLE_PTR, "copy_envp");
 // 	if (!my_envp)
 // 		return (NULL);

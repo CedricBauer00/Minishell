@@ -34,7 +34,7 @@
 // 	if (!gc)
 // 		return (NULL);
 // 	count = get_envp_count(envp);
-// 	my_envp = (char**)do_alloc(&gc->shell, sizeof(char *) * (count + 1), \
+// 	my_envp = (char**)do_alloc(&gc->shell, sizeof(char *) * (count + 1), 
 // 		TYPE_DOUBLE_PTR, "copy_envp");
 // 	if (!my_envp)
 // 		return (gc_free(gc), NULL);
@@ -104,7 +104,7 @@ void	init_shllvl(char *str, int i)
 // 		}
 // 		i++;
 // 	}
-// 	main->envp[i] = do_alloc(&gc->shell, 7 + num_len(lvl), \
+// 	main->envp[i] = do_alloc(&gc->shell, 7 + num_len(lvl), 
 // 		TYPE_SINGLE_PTR, "shllvl");
 // 	if (!main->envp[i])
 // 		return (-1);

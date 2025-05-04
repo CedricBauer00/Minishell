@@ -9,17 +9,11 @@
 void	print_envp(t_shell *shell)
 {
 	int	i;
-	bool is_path = false;
-	int	j;
-	t_gc *gc;
 
 	i = 0;
-	j = 0;
 	if (!shell)
 		return ;
 
-	gc = get_gc();
-	is_path = check_existing(shell->my_envp, "PATH");
 	while(shell->my_envp[i])
 	{
 		if (extract_name(shell->my_envp[i]) && extract_value(shell->my_envp[i]) == NULL)

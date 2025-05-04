@@ -39,6 +39,7 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc)
 		return (printf("ERROR\nChecking nodes failed!\n"), \
 		gc_free(gc), -1);
 	lex_tokens_correctly(main->tokens);
+	t_cmd_block *cmd_block = NULL;
 	indic = validate_syntax(main->tokens);
 	/*
 	printf("status = %d\n", get_shell(gc->temp)->last_status_exit);
@@ -48,7 +49,6 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc)
 	if (indic == -2)
 		return (printf(RED"bonus error!\n"DEFAULT), all_free(&gc->temp), -1);
 	print_tokens(main->tokens);
-	t_cmd_block *cmd_block = NULL;
 	grouplize(main->tokens, &cmd_block, gc);
 	main_execute(cmd_block);
 	return (0);

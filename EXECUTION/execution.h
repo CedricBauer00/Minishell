@@ -23,6 +23,7 @@ typedef struct s_cmd_block //struct being allocated for each token from input
 	char						*built_in; //memo just check if it is built in or not!
 	bool						is_built_in;
 	bool						is_external_cmd;
+	//int		heredoc_fd;
 	char						**args;
 	struct s_io_streams_list	*io_streams;
 	struct s_pipe				*pipe;
@@ -41,7 +42,7 @@ typedef struct s_io_streams_list //> < > <
 	char	*append_file_name;
 	char	*heredoc_eof;
 	char	*heredoc_file;
-	int		heredoc_fd;
+
 	int		fd_org_read;
 	int		fd_org_write;
 	int		fd_in_file;
@@ -62,6 +63,7 @@ typedef struct s_shell
 	int		*pids;
 	char	*cur_dir;
 	char	*old_dir;
+	int		heredoc_fd;
 	int		last_status_exit;
 }	t_shell;
 
@@ -80,6 +82,7 @@ t_shell *get_shell(void);
 t_cmd_block *init_command_struct(t_gc_list *gc_lst);
 t_pipe *init_pipe(t_gc_list *gc_lst);
 t_io_streams_list *init_io_stream_struct(t_gc_list *gc_lst);
+t_cmd_block *get_cmd_block(void);
 
 //memo copy_envp.c  -- ok!
 char	**copy_envp(t_gc *gc, char **envp);
@@ -158,7 +161,7 @@ char	*find_var_in_env(char **my_envp, char *find, size_t find_len, t_gc_list *gc
 bool	is_validate_cmd_block(t_cmd_block *cmd_b);
 
 //memo heredoc.c
-int	process_heredoc(t_io_streams_list *io_streams);
+int	process_heredoc(t_shell *shell, t_token *token);
 
 //memo execute.c
 void	wait_for_child_and_update_status(int i);

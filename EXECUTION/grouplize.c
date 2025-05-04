@@ -82,7 +82,7 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 				fprintf(stderr, RED"if heredoc in grouplize()\n"DEFAULT);
 				new_io_streams->heredoc_eof = gc_strdup(cur->value, &gc->temp);
 			}
-			else if(cur->next && cur->next->type == TOKEN_FILE)
+			if(cur->next && cur->next->type == TOKEN_FILE)
 			{
 				if (cur->type == TOKEN_REDIRECT_IN)
 					new_io_streams->infile_name = gc_strdup(cur->next->value, &gc->temp);
@@ -107,7 +107,6 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 			}
 			new_cmd_block->args[i++] = gc_strdup(cur->value, &gc->temp);
 		}
-	
 		new_cmd_block->args[i] = NULL;
 		cur = cur->next;
 	}

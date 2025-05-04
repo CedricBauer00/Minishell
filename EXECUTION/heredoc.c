@@ -29,13 +29,11 @@
 // }
 
 
-int	process_heredoc(t_io_streams_list *io_streams)
+int	process_heredoc(t_shell *shell, t_token *token)
 {
 	int	fd_heredoc;
-	
+
 	fd_heredoc = 0;
-	while (io_streams && io_streams->heredoc_eof)
-	{
 		fd_heredoc = open("temp_heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
 		fprintf(stderr, YELLOW"[pid %d] fd_heredoc open(), fd_heredoc fd : %d\n", getpid(), fd_heredoc);
 		if (fd_heredoc == -1)
@@ -47,7 +45,7 @@ int	process_heredoc(t_io_streams_list *io_streams)
 		{
 			char *line;
 			line = readline("> ");
-			if (!line || strcmp(line, io_streams->heredoc_eof) == 0)
+			if (!line || strcmp(line, token->value) == 0)
 			{
 				free(line);
 				break;
@@ -56,11 +54,9 @@ int	process_heredoc(t_io_streams_list *io_streams)
 			write(fd_heredoc, "\n", 1);
 			free(line);
 		}
-		io_streams->heredoc_fd = fd_heredoc;
+		shell->heredoc_fd = fd_heredoc;
 		close(fd_heredoc);
 		fprintf(stderr, YELLOW"[pid %d] close()%d\n"DEFAULT,getpid(), fd_heredoc);
-		io_streams = io_streams->next;
-	}
 	return 1;
 }
 
