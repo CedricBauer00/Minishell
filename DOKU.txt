@@ -1,0 +1,70 @@
+TODO
+
+signals count???
+
+- SIGNALS : // signals im Parentprozess (minishell) == ignore 
+			// signals im Childprozess == SIG_DFL
+            - signals für childprozess (ctrl \) impkementation
+
+SHELL USE INSTRUCTIONS:
+
+//after using this function at the beginning, this func ensures that the 'shell' is no longer 'null'
+//because it has already been initialized as a static var.
+//static var is initialized just only at once when it called and assigned in data area.
+
+ERROR:
+
+signal seperation - parent - childprozess
+
+pid_t pid = fork();
+if (pid == 0) // CHILD
+{
+    // Kindprozess: Standard-Signalverhalten wiederherstellen
+    signal(SIGINT, SIG_DFL);    // Ctrl+C killt Child
+    signal(SIGQUIT, SIG_DFL);   // Ctrl+\ erlaubt (z. B. für Core Dump)
+
+    // execve oder heredoc oder was du machen willst
+    execve(...);
+    exit(1); // Falls execve fehlschlägt
+}
+else if (pid > 0) // PARENT
+{
+    int status;
+    waitpid(pid, &status, 0); // auf Kind warten
+
+    // Jetzt kann man prüfen ob Kind wegen Signal beendet wurde:
+    if (WIFSIGNALED(status))
+    {
+        int sig = WTERMSIG(status);
+        if (sig == SIGINT)
+            write(1, "\n", 1);
+        else if (sig == SIGQUIT)
+            write(1, "Quit (core dumped)\n", 19);
+    }
+}
+
+
+- signal handling - childprozess für heredoc 
+
+pid_t pid = fork();
+if (pid == 0) // Child: liest Heredoc
+{
+    signal(SIGINT, SIG_DFL); // Ctrl+C beendet den Heredoc-Child
+    signal(SIGQUIT, SIG_IGN); // Meistens ignoriert
+
+    // hier Heredoc lesen (z. B. mit read oder readline)
+    exit(0);
+}
+else // Parent
+{
+    int status;
+    waitpid(pid, &status, 0);
+    if (WIFSIGNALED(status))
+    {
+        if (WTERMSIG(status) == SIGINT)
+        {
+            write(1, "\n", 1);
+            // Setze Flag oder breche Pipeline ab
+        }
+    }
+}
