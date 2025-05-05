@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/04 16:38:45 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/05 11:40:35 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,23 @@
 
 int	main_helper(t_main *main, t_gc_list **gc_list)
 {
+	t_gc *gc;
 	size_t len;
 
+	(void)gc_list;
+	gc = get_gc();
 	main->temp_for_line = readline(YELLOW"minishell> "DEFAULT);
 	len = ft_strlen(main->temp_for_line);
 	if (!main->temp_for_line)
 	{
 		return (printf("exit\n"), 1);
 	}
-	main->line = do_alloc(gc_list, len + 1, TYPE_SINGLE_PTR, "input");
+	main->line = do_alloc(&gc->temp, len + 1, TYPE_SINGLE_PTR, "input");
 	if (!main->line)
 		return (-1);
 	ft_strlcpy(main->line, main->temp_for_line, len + 1);
 	if (!main->line)
 		return (-1);
-	main->line[len + 1] = '\0';
 	free(main->temp_for_line);
 	if (ft_strncmp(main->line, "history -c", 10) == 0)
 		clear_history();
