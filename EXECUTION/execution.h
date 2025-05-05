@@ -93,7 +93,11 @@ t_shell	*init_shell_struct(t_gc_list **gc_lst);
 t_shell *get_shell(void);
 t_cmd_block *init_command_struct(t_gc *gc);
 t_pipe *init_pipe(t_gc *gc);
+<<<<<<< HEAD
+t_io_streams_list	*init_io_stream_struct(t_gc *gc);
+=======
 t_io_streams_list *init_io_stream_struct(t_gc *gc);
+>>>>>>> 56aca7462458d680eed027320cfc627b412230f1
 t_cmd_block *get_cmd_block(void);
 
 //memo copy_envp.c  -- ok!

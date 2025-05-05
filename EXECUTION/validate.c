@@ -25,7 +25,7 @@
 
 int	validate_syntax(t_token *token)
 {
-	t_token *cur;
+	t_token	*cur;
 
 	// | <<
 	cur = token;
@@ -59,7 +59,7 @@ int	validate_syntax(t_token *token)
 				perror(RED"syntax error"DEFAULT);
 			}
 		}
- 
+
 		//heck if a TOKEN_EOF follows after a TOKEN_HEREDOC
 		else if (cur->type == TOKEN_HEREDOC)
 		{
@@ -78,7 +78,7 @@ int	validate_syntax(t_token *token)
 //maybe we dont need it
 bool	is_validate_cmd_block(t_cmd_block *cmd_b)
 {
-	t_cmd_block *cur;
+	t_cmd_block	*cur;
 
 	cur = cmd_b;
 	while(cur)
@@ -95,9 +95,9 @@ bool	is_validate_cmd_block(t_cmd_block *cmd_b)
 //memo refactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoring
 void	validate_check(t_cmd_block *cmd_block)
 {
-	t_shell *shell;
-	t_cmd_block *cur;
-	t_gc *gc;
+	t_shell		*shell;
+	t_cmd_block	*cur;
+	t_gc		*gc;
 
 	gc = get_gc();
 	shell =get_shell();

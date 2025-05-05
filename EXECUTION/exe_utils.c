@@ -21,7 +21,5 @@ void	is_exited(void *failed, t_gc *gc)
 		exit(EXIT_FAILURE);
 	}
 	else
-	{
 		printf(BLUE"in is_exited() alloc success\n"DEFAULT);
-	}
 }

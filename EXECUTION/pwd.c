@@ -39,7 +39,7 @@ char	*my_getcwd()
 
 void	ft_pwd(char **args, t_gc *gc)
 {
-	t_gc_list *find;
+	t_gc_list	*find;
 
 	find = NULL;
 	if (*args)

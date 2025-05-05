@@ -43,10 +43,10 @@
 //todo think about multiple env NAME should work like "unset PWD OLDPWD HOME PATH"
 void	ft_unset(char **args, t_shell *shell)
 {
-	int	i;
+	int		i;
 	//int	j;
-	int	found;
-	bool check;
+	int		found;
+	bool	check;
 	//t_gc *gc;
 
 	//gc = get_gc();

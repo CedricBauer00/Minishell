@@ -41,9 +41,9 @@ void	print_envp(t_shell *shell)
 //todo fix must dont get digits.
 void	export(char **args, t_shell *shell)
 {
-	t_gc *gc;
-	int	i;
-	bool check;
+	t_gc	*gc;
+	int		i;
+	bool	check;
 
 	i = 0;
 	gc = get_gc();
