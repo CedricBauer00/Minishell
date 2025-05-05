@@ -60,7 +60,8 @@ SOURCES = m_main.c \
 		../EXECUTION/pipe.c\
 		../EXECUTION/pwd.c\
 		../EXECUTION/redirection.c\
-		../EXECUTION/unset.c
+		../EXECUTION/unset.c\
+		../EXECUTION/signal.c
 
 OBJECTS := $(SOURCES:.c=.o)
 

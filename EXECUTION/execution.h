@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/05 14:16:59 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/05 14:41:55 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,6 +190,8 @@ void	fork_and_execute(t_cmd_block *cmd_block, t_gc *gc, int *i);
 void	execute_pipeline(t_cmd_block *cmd_block);
 void	execute_builtin(t_cmd_block *cur, t_shell *shell);
 
+//memo signal.c
+void	signal_handler();
 //built_in
 //pwd
 //cd

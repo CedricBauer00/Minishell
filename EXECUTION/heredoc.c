@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/05 14:16:16 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/05 14:48:10 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,13 @@ int	process_heredoc(t_shell *shell, t_token *token)
 	}
 	while(1)
 	{
+		struct sigaction sa;
+		sa.sa_handler = signal_handler;
+		sigemptyset(&sa.sa_mask);
+		sa.sa_flags = 0;
+		
+		sigaction(SIGINT, &sa, NULL);
+		sigaction(SIGTERM, &sa, NULL);
 		char *line;
 		line = readline("> ");
 		size_t len = ft_strlen(line);
