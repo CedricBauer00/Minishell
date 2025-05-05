@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:23 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/05 14:49:07 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/05 14:54:51 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ void	ft_setenv(const char *name, const char *value, \
 	t_gc		*gc;
 	t_gc_list	*find;
 	t_gc_list	*old_envp_node;
-	char		**old_env;
+	char **old_envp;
 
 	if (!name || *name == '\0')
 		return ;
@@ -218,5 +218,5 @@ void	cd(char **args, t_shell *shell, t_gc *gc)
 	fprintf(stderr, RED"sell->old_dir : %s\n"DEFAULT, shell->old_dir);
 	shell->cur_dir = new_dir;
 	ft_setenv("PWD", shell->cur_dir, 1, shell);
-	fprintf(stderr, RED"sell->cur_dir : %s\n"DEFAULT, shell->cur_dir);
+	fprintf(stderr , RED"sell->cur_dir : %s\n"DEFAULT, shell->cur_dir);
 }
