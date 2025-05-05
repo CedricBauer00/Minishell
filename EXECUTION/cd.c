@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:23 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/05 14:49:07 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/05 14:54:39 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ void	ft_setenv(const char *name, const char *value, \
 	t_gc		*gc;
 	t_gc_list	*find;
 	t_gc_list	*old_envp_node;
-	char		**old_env;
+	char		**old_envp;
 
 	if (!name || *name == '\0')
 		return ;

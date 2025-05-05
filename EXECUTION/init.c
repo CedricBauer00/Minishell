@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:13 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/05 14:17:14 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/05 14:55:13 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,16 +50,9 @@ t_pipe	*init_pipe(t_gc	*gc)
 	return p_pipe;
 }
 
-<<<<<<< HEAD
-t_io_streams_list	*init_io_stream_struct(t_gc *gc)
+t_io_streams_list 	*init_io_stream_struct(t_gc *gc)
 {
 	t_io_streams_list	*io_streams_lst;
-
-=======
-t_io_streams_list *init_io_stream_struct(t_gc *gc)
-{
-	t_io_streams_list	*io_streams_lst;
->>>>>>> 56aca7462458d680eed027320cfc627b412230f1
 	io_streams_lst = do_alloc(&gc->temp, sizeof(t_io_streams_list), TYPE_SINGLE_PTR, "io_streams_list");
 	if (!io_streams_lst)
 		return (NULL);
