@@ -28,7 +28,7 @@
 // 		if (*args + 1)
 // 		{
 // 			var_name = *args + 1;
-// 			var = find_var_in_env(shell->my_envp, var_name, \
+// 			var = find_var_in_env(shell->my_envp, var_name, 
 // 				ft_strlen(var_name), gc->temp);
 // 			if (!var)
 // 			{

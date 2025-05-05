@@ -38,11 +38,11 @@ t_pipe	*init_pipe(t_gc	*gc)
 	return p_pipe;
 }
 
-t_io_streams_list	*init_io_stream_struct(t_gc_list *gc_lst)
+t_io_streams_list	*init_io_stream_struct(t_gc *gc)
 {
 	t_io_streams_list	*io_streams_lst;
 
-	io_streams_lst = do_alloc(&gc_lst, sizeof(t_io_streams_list), TYPE_SINGLE_PTR, "io_streams_list");
+	io_streams_lst = do_alloc(&gc->temp, sizeof(t_io_streams_list), TYPE_SINGLE_PTR, "io_streams_list");
 	if (!io_streams_lst)
 		return (NULL);
 	io_streams_lst->infile_name = NULL;

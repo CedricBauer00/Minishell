@@ -23,8 +23,6 @@ m_utils1.c
 m_utils1.o
 m_utils2.c
 m_utils2.o
-m_utils3.c
-m_utils3.o
 m_utils4.c
 m_utils4.o
 minishell
@@ -43,5 +41,7 @@ p_quotes.o
 p_words.c
 p_words.o
 parsing.h
+printing.c
+printing.o
 printing.c
 printing.o
