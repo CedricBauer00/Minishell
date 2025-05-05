@@ -132,7 +132,7 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 		pid = fork();
 		shell->pids[0] = pid;
 		fprintf(stderr, YELLOW" singlecmd for child proc fork() : %d , shell->pids[0] %d \n"DEFAULT, pid, shell->pids[0]) ;
-		if (pid == 0)
+		if (pid == 0) //signal implementation?
 		{
 			if (cur->io_streams && cur->io_streams->heredoc_eof)
 			{
@@ -336,7 +336,7 @@ void	fork_and_execute(t_cmd_block *cmd_block, t_gc *gc, int *i)
 	}
 	pid = fork();
 	fprintf(stderr,YELLOW"[pid %d] fork()\n"DEFAULT, getpid());
-	if (pid == 0)
+	if (pid == 0) //signal function call?
 	{
 		//set_io_streams(cur);
 		execute_child(cur, gc, shell);
