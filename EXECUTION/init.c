@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:13 by jisokim2          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/05/05 14:55:13 by jisokim2         ###   ########.fr       */
+=======
+/*   Updated: 2025/05/05 14:55:39 by cbauer           ###   ########.fr       */
+>>>>>>> b4bd7e1301382fc67248b34dd334f1624d92b195
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +54,11 @@ t_pipe	*init_pipe(t_gc	*gc)
 	return p_pipe;
 }
 
+<<<<<<< HEAD
 t_io_streams_list 	*init_io_stream_struct(t_gc *gc)
+=======
+t_io_streams_list *init_io_stream_struct(t_gc *gc)
+>>>>>>> b4bd7e1301382fc67248b34dd334f1624d92b195
 {
 	t_io_streams_list	*io_streams_lst;
 	io_streams_lst = do_alloc(&gc->temp, sizeof(t_io_streams_list), TYPE_SINGLE_PTR, "io_streams_list");
