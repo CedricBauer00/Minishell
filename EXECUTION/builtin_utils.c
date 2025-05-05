@@ -2,8 +2,8 @@
 
 char	*find_var_in_env(char **my_envp, char *find, size_t find_len, t_gc_list *gc_lst)
 {
-	int	i;
-	char *result;
+	int		i;
+	char	*result;
 
 	i = 0;
 	while(my_envp[i])

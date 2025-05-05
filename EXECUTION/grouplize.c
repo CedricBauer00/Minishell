@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   grouplize.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/05 09:49:42 by cbauer            #+#    #+#             */
+/*   Updated: 2025/05/05 09:55:44 by cbauer           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "execution.h"
 
-void grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc)
+void	grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc)
 {
 	if (!token)
 		return ;
@@ -27,13 +39,12 @@ void grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc)
 	}
 }
 
-
 t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 {
-	t_cmd_block *new_cmd_block;
-	t_io_streams_list *new_io_streams;
-	t_token *cur;
-	int	i;
+	t_cmd_block			*new_cmd_block;
+	t_io_streams_list	*new_io_streams;
+	t_token				*cur;
+	int					i;
 	
 	i = 0;
 	cur = *token;
@@ -117,5 +128,4 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 	*token = cur;
 	return new_cmd_block;
 }
-
 
