@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/05 12:18:40 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/05 13:25:31 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,6 @@ int	main(int argc, char **argv, char **envp)
 	t_shell	*shell;
 	t_gc	*gc;
 
-	(void)shell;
 	(void)argc;
 	(void)argv;
 	using_history();
