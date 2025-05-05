@@ -55,7 +55,7 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 	{
 		if (cur && (cur->type & (TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT | TOKEN_APPEND | TOKEN_HEREDOC)))  //token->value : < filename
 		{
-			new_io_streams = init_io_stream_struct(gc->temp);
+			new_io_streams = init_io_stream_struct(gc);
 			is_exited((t_io_streams_list*)new_io_streams, gc);
 			if(!new_cmd_block->io_streams)
 				new_cmd_block->io_streams = new_io_streams;
