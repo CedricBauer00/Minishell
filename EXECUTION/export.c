@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:04 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/05 14:17:05 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/05 15:07:04 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	export(char **args, t_shell *shell)
 {
 	t_gc	*gc;
 	int		i;
-	bool	check;
+	//bool	check;
 
 	i = 0;
 	gc = get_gc();
@@ -53,13 +53,14 @@ void	export(char **args, t_shell *shell)
 	}
 	while ((args[i]))
 	{
-		check = is_valid_identifier(args[i]);
-		if (check == false)
-		{
-			perror(RED"non valid identifier\n"DEFAULT);
-			return ;
-			//all_free(&gc->temp);
-		}
+		//memo check is_valid_identifier
+		// check = is_valid_identifier(args[i]);
+		// if (check == false)
+		// {
+		// 	perror(RED"non valid identifier\n"DEFAULT);
+		// 	return ;
+		// 	//all_free(&gc->temp);
+		// }
 		char	*name = extract_name(args[i]);
 		is_exited(name, gc);
 		printf("name:%s\n", name);

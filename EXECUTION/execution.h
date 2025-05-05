@@ -3,36 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   execution.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/05/05 14:52:44 by jisokim2         ###   ########.fr       */
-=======
-/*   Updated: 2025/05/05 14:55:04 by cbauer           ###   ########.fr       */
->>>>>>> b4bd7e1301382fc67248b34dd334f1624d92b195
+/*   Updated: 2025/05/05 15:44:52 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef EXECUTION_H
 # define EXECUTION_H
 
 # include "../minishell.h"
-
-// typedef enum s_tenum
-// {
-// 	TOKEN_NONE	= 0x0000,  			//0000 0000
-// 	TOKEN_ARGS	= 0x0001,
-// 	TOKEN_FILE  = 0x0002,
-// 	TOKEN_BUILT_IN = 0x0004,		// cd, pwd, export, ...
-// 	TOKEN_PIPE = 0x008,				//Symbol: |
-// 	TOKEN_REDIRECT_IN = 0x0010,		//Symbol: <
-// 	TOKEN_REDIRECT_OUT = 0x0020,	//Symbol: >
-// 	TOKEN_APPEND = 0x0040,			//Symbol: >>
-// 	TOKEN_HEREDOC = 0x0080,			//Symbol: <<
-// 	TOKEN_VAR = 0x0100,				//$variable
-// 	//TOKEN_EOF = 0x0400,			//End of input
-// }	t_token_type;
 
 typedef struct s_cmd_block //struct being allocated for each token from input
 {
@@ -75,6 +57,7 @@ typedef struct s_pipe
 
 typedef struct s_shell
 {
+	bool	heredoc_interrupted;
 	char	**my_envp;
 	int		*pids;
 	char	*cur_dir;
@@ -97,13 +80,9 @@ t_shell	*init_shell_struct(t_gc_list **gc_lst);
 t_shell *get_shell(void);
 t_cmd_block *init_command_struct(t_gc *gc);
 t_pipe *init_pipe(t_gc *gc);
-<<<<<<< HEAD
 
 t_io_streams_list	*init_io_stream_struct(t_gc *gc);
 
-=======
-t_io_streams_list *init_io_stream_struct(t_gc *gc);
->>>>>>> b4bd7e1301382fc67248b34dd334f1624d92b195
 t_cmd_block *get_cmd_block(void);
 
 //memo copy_envp.c  -- ok!
@@ -201,7 +180,8 @@ void	execute_pipeline(t_cmd_block *cmd_block);
 void	execute_builtin(t_cmd_block *cur, t_shell *shell);
 
 //memo signal.c
-void	signal_handler();
+
+void	signal_handler_for_heredoc();
 //built_in
 //pwd
 //cd

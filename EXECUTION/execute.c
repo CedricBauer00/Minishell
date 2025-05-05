@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/05 14:16:55 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/05 17:16:43 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,7 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 		fprintf(stderr, YELLOW" singlecmd for child proc fork() : %d , shell->pids[0] %d \n"DEFAULT, pid, shell->pids[0]) ;
 		if (pid == 0) //signal implementation?
 		{
+		
 			if (cur->io_streams && cur->io_streams->heredoc_eof)
 			{
 				if (heredoc_fd_offset_and_redir(cur) == -1)
@@ -226,6 +227,8 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 		}
 		if (access(cmd_path, F_OK | X_OK) == 0)
 		{
+			signal(SIGINT, signal_handler_for_heredoc);
+			signal(SIGQUIT, signal_handler_for_heredoc);
 			fprintf(stderr, "execve()\n");
 			if (execve(cmd_path , cmd_block->args, shell->my_envp) == -1)
 			{
