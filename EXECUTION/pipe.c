@@ -124,9 +124,7 @@ void	add_pipe(t_cmd_block **cmd_block)
 		exit(1);
 	}
 	if ((*cmd_block)->pipe == NULL)
-	{
 		(*cmd_block)->pipe = new_pipe_node;
-	}
 	// if ((*command)->pipe == NULL)
 	// {
 	// 	(*command)->pipe = new_pipe_node;
@@ -290,9 +288,7 @@ int	last_pipe_cmd(t_cmd_block *command)
 	//todo if theres re_dir_out then i need to call re_dir_out()
 	
 	if (dup2(command->prev_read_end_fd, STDIN_FILENO) == -1)
-	{
 		fprintf(stderr,RED"last_pipe_cmd() dup2()error\n"DEFAULT);
-	}
 	fprintf(stderr, YELLOW "[pid %d] dup2([%d, %d)\n" DEFAULT,getpid(), command->prev_read_end_fd, STDIN_FILENO);
 	fprintf(stderr, "STDIN_FILENO: %d, STDOUT_FILENO: %d\n", STDIN_FILENO, STDOUT_FILENO);
 	close(command->prev_read_end_fd);

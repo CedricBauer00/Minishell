@@ -37,6 +37,7 @@ int	re_dir_out(t_io_streams_list *io_streams)
 int	in_redir_file_open(t_io_streams_list *io_streams, char *in_filename)
 {
 	int		fd;
+
 	fd = open(in_filename, O_RDONLY);
 	if (fd == -1)
 	{
@@ -51,6 +52,7 @@ int	in_redir_file_open(t_io_streams_list *io_streams, char *in_filename)
 int	out_redir_file_open(t_io_streams_list *io_streams, char *out_filename)
 {
 	int		fd;
+
 	fd = open(out_filename, O_WRONLY | O_CREAT, 0644);
 	if (fd == -1)
 	{
@@ -65,6 +67,7 @@ int	out_redir_file_open(t_io_streams_list *io_streams, char *out_filename)
 int	append_redir_file_open(t_io_streams_list *io_streams, char *appned_file_name)
 {
 	int		fd;
+
 	fd = open(appned_file_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
 	{
@@ -87,8 +90,8 @@ int	handle_re_dir(t_cmd_block *cmd_block)
 
 void	set_io_streams(t_cmd_block *cmd)	
 {
-	t_io_streams_list *io_streams;
-	
+	t_io_streams_list	*io_streams;
+
 	if(!cmd)
 		return ;
 	io_streams = cmd->io_streams;

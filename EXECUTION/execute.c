@@ -7,11 +7,13 @@ void	prevent_zombie_process()
 
 void	wait_for_child_and_update_status(int i)
 {
-	t_shell *shell = get_shell();
-	int status;
-	int	idx;
+	// t_shell	*shell = get_shell();
+	t_shell	*shell;
+	int		status;
+	int		idx;
 
 	idx = 0;
+	shell = get_shell();
 	if(!shell->pids)
 		return;
 	while(idx < i)
@@ -42,7 +44,7 @@ void	wait_for_child_and_update_status(int i)
 //todo change name becuz it doenst make offset or maybe i can make it to have it offset 
 int heredoc_fd_offset_and_redir(t_cmd_block *cur)
 {
-	t_shell *shell;
+	t_shell	*shell;
 
 	shell = get_shell();
 	if (!cur)
@@ -69,10 +71,12 @@ int heredoc_fd_offset_and_redir(t_cmd_block *cur)
 
 void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 {
-	t_gc *gc = get_gc();
- 	
+	// t_gc *gc = get_gc();
+	t_gc *gc;
+
+	gc = get_gc();
 	fprintf(stderr, GREEN"execute_builtin()\n"DEFAULT);
- 	if (strcmp(cur->built_in, "cd") == 0)
+	if (strcmp(cur->built_in, "cd") == 0)
 	{
 		fprintf(stderr, RED"try to do 'cd' execute_builtin\n"DEFAULT);
 		cd(cur->args, shell, gc);
@@ -142,7 +146,7 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 			run_execve(cur, gc);
 		}
 		else
-		 	wait_for_child_and_update_status(1);
+			wait_for_child_and_update_status(1);
 	}
 }
 
@@ -175,7 +179,7 @@ void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 {
 	char	**splitted_path;
-	t_shell *shell;
+	t_shell	*shell;
 
 	shell = get_shell();
 	char *path = find_var_in_env(shell->my_envp, "PATH", 4, gc->temp);
@@ -226,10 +230,10 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 
 void	main_execute(t_cmd_block *cmd_block)
 {
-	t_cmd_block *cur;
+	t_cmd_block	*cur;
 	//int			fd;
-	int		stdin_backup;
-	int		stdout_backup;
+	int			stdin_backup;
+	int			stdout_backup;
 
 	cur = cmd_block;
 	stdin_backup = dup(STDIN_FILENO);
@@ -269,7 +273,7 @@ void	main_execute(t_cmd_block *cmd_block)
 
 void	execute_single_command(t_cmd_block *cmd_block)
 {
-	t_gc *gc;
+	t_gc	*gc;
 
 	gc = get_gc();
 	if(cmd_block && !cmd_block->prev && !cmd_block->next)
@@ -281,9 +285,11 @@ void	execute_single_command(t_cmd_block *cmd_block)
 
 int	count_command(t_cmd_block *cmd_block)
 {
-	t_cmd_block *temp;
+	t_cmd_block	*temp;
+	int			count;
+	
 	temp = cmd_block;
-	int count = 0;
+	count = 0;
 
 	while(temp)
 	{
@@ -295,8 +301,8 @@ int	count_command(t_cmd_block *cmd_block)
 
 void	do_alloc_pids(t_cmd_block* cmd_block)
 {
-	int	count;
-	t_shell *shell;
+	int		count;
+	t_shell	*shell;
 	t_gc	*gc;
 
 	gc = get_gc();
@@ -315,9 +321,9 @@ void	do_alloc_pids(t_cmd_block* cmd_block)
 
 void	fork_and_execute(t_cmd_block *cmd_block, t_gc *gc, int *i)
 {
-	t_cmd_block *cur;
-	pid_t pid;
-	t_shell	*shell;
+	t_cmd_block	*cur;
+	pid_t		pid;
+	t_shell		*shell;
 
 	shell = get_shell();
 	cur = cmd_block;
@@ -341,9 +347,9 @@ void	fork_and_execute(t_cmd_block *cmd_block, t_gc *gc, int *i)
 
 void	execute_pipeline(t_cmd_block *cmd_block)
 {
-	t_cmd_block *cur;
-	t_gc 		*gc;
-	int	i;
+	t_cmd_block	*cur;
+	t_gc		*gc;
+	int			i;
 
 	i = 0;
 	gc = get_gc();
