@@ -6,15 +6,57 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/06 16:18:55 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/06 16:46:39 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-// static t_main main; // Global static instance of t_main
+// void	set_default(t_main *main)
+// {
+// 	main->tokens = NULL;
+// 	main->line = NULL;
+// 	main->last_status_exit = 0;
+// 	main->next_line = NULL;
+// 	main->new = NULL;
+// 	main->word = NULL;
+// 	main->temp_for_line = NULL;
+// 	main->error = 0;
+// 	return ;
+// }
 
-// t_main *get_main_instance(void)
+t_main	*init_main_struct(t_gc_list **gc_lst)
+{
+	t_main	*main;
+
+	main = do_alloc(gc_lst, sizeof(t_main), TYPE_SINGLE_PTR, "main");
+	if (!main)
+		return (NULL);
+	main->tokens = NULL;
+	main->line = NULL;
+	main->last_status_exit = 0;
+	main->next_line = NULL;
+	main->new = NULL;
+	main->word = NULL;
+	main->temp_for_line = NULL;
+	main->error = 0;
+	return (main);
+}
+
+t_main	*get_main(void)
+{
+	static t_main *main = NULL; // Global static t_main struct
+	t_gc	*gc;
+
+	gc = get_gc();
+	if (main == NULL)
+	{
+		main = init_main_struct(&gc->shell);
+	}
+	return (main);
+}
+
+// t_main *get_main_struct(void)
 // {
 // 	return &main;
 // }
@@ -106,8 +148,10 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
+	
 	using_history();
-	set_default(&main);
+	// set_default(&main);
+	main = *get_main();
 	signal(SIGINT, signal_func);
 	signal(SIGQUIT, SIG_IGN);
 	if (ttyattr() < 0)

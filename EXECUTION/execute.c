@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/06 16:27:57 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/06 16:49:19 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	prevent_zombie_process()
 
 void	wait_for_child_and_update_status(int i)
 {
-	// t_shell	*shell = get_shell();
 	t_shell	*shell;
 	int		status;
 	int		idx;
@@ -53,7 +52,6 @@ void	wait_for_child_and_update_status(int i)
 	}
 }
 
-//todo change name becuz it doenst make offset or maybe i can make it to have it offset 
 int heredoc_fd_offset_and_redir(t_cmd_block *cur)
 {
 	t_shell	*shell;
@@ -61,10 +59,7 @@ int heredoc_fd_offset_and_redir(t_cmd_block *cur)
 	shell = get_shell();
 	if (!cur)
 		return -1;
-	//fprintf(stderr, RED"in execute_child cur->io_streams->heredoc_fd: %d\n"DEFAULT, cur->io_streams->heredoc_fd);
-	//fprintf(stderr, RED"in execute_child STDIN_FILENO: %d, STDOUT_FILENO: %d\n"DEFAULT, STDIN_FILENO, STDOUT_FILENO);
 	shell->heredoc_fd = open("temp_heredoc" ,O_RDWR, 0644);
-	//fprintf(stderr, RED"HEREDOR file open [pid %d] open(%d)\n"DEFAULT, getpid(), cur->io_streams->heredoc_fd);
 	if (shell->heredoc_fd < 0)
 	{
 		return -1;
@@ -75,7 +70,6 @@ int heredoc_fd_offset_and_redir(t_cmd_block *cur)
 		unlink("temp_heredoc");
 		return -1;
 	}
-	//fprintf(stderr, RED"HEREDOR REDIR[pid %d] dup2(%d, %d)\n"DEFAULT, getpid(), cur->io_streams->heredoc_fd, STDIN_FILENO);
 	close(shell->heredoc_fd);
 	unlink("temp_heredoc");
 	return 1;
@@ -83,7 +77,6 @@ int heredoc_fd_offset_and_redir(t_cmd_block *cur)
 
 void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 {
-	// t_gc *gc = get_gc();
 	t_gc *gc;
 
 	gc = get_gc();
@@ -212,7 +205,6 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			gc_free(gc);
 			exit(1);
 		}
-		// If file not found at the full path
 		fprintf(stderr, RED"command not found (absolute path): %s\n"DEFAULT, cmd_block->args[0]);
 		exit(127);
 	}
@@ -267,14 +259,12 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 void	main_execute(t_cmd_block *cmd_block)
 {
 	t_cmd_block	*cur;
-	//int			fd;
 	int			stdin_backup;
 	int			stdout_backup;
 
 	cur = cmd_block;
 	stdin_backup = dup(STDIN_FILENO);
 	stdout_backup = dup(STDOUT_FILENO);
-	//hanlde_heredoc(cur);
 	int	pid_counts = count_command(cmd_block);
 	printf("pid_counts %d\n", pid_counts);
 	do_alloc_pids(cmd_block);
@@ -291,20 +281,6 @@ void	main_execute(t_cmd_block *cmd_block)
 	close(stdout_backup);
 	fprintf(stderr, RED"-CHECK ORGINAL STDIN AND STDOUT-\n STDIN_FILENO: %d, STDOUT_FILENO: %d\n"DEFAULT, STDIN_FILENO, STDOUT_FILENO);
 }
-
-// void	hanlde_heredoc(t_cmd_block *cmd_block)
-// {
-// 	t_cmd_block *cur = cmd_block;
-// 	while(cur)
-// 	{
-// 		if (cur->io_streams && cur->io_streams->heredoc_eof)
-// 		{
-// 			process_heredoc(cur->io_streams);
-// 			printf(RED"heredocfd %d\n"DEFAULT, cur->io_streams->heredoc_fd);
-// 		}
-// 		cur = cur->next;
-// 	}
-// }
 
 void	execute_single_command(t_cmd_block *cmd_block)
 {
@@ -362,8 +338,6 @@ void	fork_and_execute(t_cmd_block *cmd_block, t_gc *gc, int *i)
 
 	shell = get_shell();
 	cur = cmd_block;
-	//hanlde_heredoc(cur);
-	//set_io_streams(cur);
 	if (cur->next)
 	{
 		add_pipe(&cur);
@@ -372,10 +346,7 @@ void	fork_and_execute(t_cmd_block *cmd_block, t_gc *gc, int *i)
 	pid = fork();
 	fprintf(stderr,YELLOW"[pid %d] fork()\n"DEFAULT, getpid());
 	if (pid == 0) //signal function call?
-	{
-		//set_io_streams(cur);
 		execute_child(cur, gc, shell);
-	}
 	close_pipefd(cur);
 	shell->pids[*i] = pid;
 }
