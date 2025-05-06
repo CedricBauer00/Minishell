@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 11:21:44 by cbauer            #+#    #+#             */
-/*   Updated: 2024/10/26 16:56:06 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/06 15:53:26 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
 	unsigned int	counter;
 
+	if (!dst || !src)
+		return 0;
 	counter = 0;
 	if (dstsize == 0)
 		return (ft_strlen(src));

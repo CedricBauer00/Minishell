@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 12:15:07 by cbauer            #+#    #+#             */
-/*   Updated: 2024/10/18 14:50:10 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/06 15:15:58 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		return (0);
 	if (start >= ft_strlen(s))
 		return (ft_strdup(""));
-	if (len > ft_strlen(s) - start)
+	if (len > ft_strlen(s) - start)  //"HELLO WORLD"
 		len = ft_strlen(s) - start;
 	substr = (char *)malloc((len + 1) * sizeof(char));
 	if (!substr)
