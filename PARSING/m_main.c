@@ -3,14 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   m_main.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/05 16:34:58 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/06 16:18:55 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
+
+// static t_main main; // Global static instance of t_main
+
+// t_main *get_main_instance(void)
+// {
+// 	return &main;
+// }
 
 int	main_helper(t_main *main, t_gc_list **gc_temp)
 {

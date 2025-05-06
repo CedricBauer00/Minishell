@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/06 10:54:54 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/06 16:27:57 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,7 +201,24 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 		gc_free(gc);
 		exit(1);
 	}
-	splitted_path = ft_split(path, ':');
+	if (cmd_block->args[0][0] == '/' || ft_strncmp(cmd_block->args[0], "./", 2) == 0)
+	{
+		if (access(cmd_block->args[0], F_OK | X_OK) == 0)
+		{
+			signal(SIGINT, signal_handler_for_child);
+			signal(SIGQUIT, signal_handler_for_child);
+			execve(cmd_block->args[0], cmd_block->args, shell->my_envp);
+			perror(RED"error execve() (absolute path)"DEFAULT);
+			gc_free(gc);
+			exit(1);
+		}
+		// If file not found at the full path
+		fprintf(stderr, RED"command not found (absolute path): %s\n"DEFAULT, cmd_block->args[0]);
+		exit(127);
+	}
+	else
+	{
+		splitted_path = ft_split(path, ':');
 	free(path);
 	if (!splitted_path)
 	{
@@ -224,6 +241,9 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			gc_free(gc);
 			exit(1);
 		}
+		fprintf(stderr, YELLOW"cmd_path: %s\n"DEFAULT, cmd_path);
+		fprintf(stderr, YELLOW"cmd_block->args[0]: %s\n"DEFAULT, cmd_block->args[0]);
+		fprintf(stderr, YELLOW"cmd_block->args[1]: %s\n"DEFAULT, cmd_block->args[1]);	
 		if (access(cmd_path, F_OK | X_OK) == 0)
 		{
 			signal(SIGINT, signal_handler_for_child);
@@ -240,6 +260,8 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 	}
 	fprintf(stderr, RED"command not found: %s\n"DEFAULT, cmd_block->args[0]);
 	exit(127);
+	}
+	
 }
 
 void	main_execute(t_cmd_block *cmd_block)
