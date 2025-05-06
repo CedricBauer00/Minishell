@@ -6,11 +6,16 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:54:41 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/06 16:56:28 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/06 17:05:48 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
+
+void	prevent_zombie_process()
+{
+	while (waitpid(-1, NULL, WNOHANG) > 0);
+}
 
 void	main_execute(t_cmd_block *cmd_block)
 {

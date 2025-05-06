@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/06 15:57:20 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/06 17:04:39 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,9 @@ int	process_heredoc(t_shell *shell, t_token *token)
 {
 	int	fd_heredoc;
 	t_gc *gc;
-
+	// t_main	*main;
+	
+	// main = get_main();
 	gc = get_gc();
 	fd_heredoc = 0;
 	fd_heredoc = open("temp_heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
@@ -96,6 +98,7 @@ int	process_heredoc(t_shell *shell, t_token *token)
 		if (!line)
 			break;
 		char *expanded_var = expand_case_in_heredoc(line, shell);
+		
 		size_t len = ft_strlen(line);
 		char *temp = do_alloc(&gc->temp, len + 1, TYPE_SINGLE_PTR, "heredoc");
 		ft_strlcpy(temp, expanded_var, len + 1);

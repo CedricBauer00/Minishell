@@ -6,16 +6,11 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/06 16:56:25 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/06 16:58:07 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
-
-void	prevent_zombie_process()
-{
-	while (waitpid(-1, NULL, WNOHANG) > 0);
-}
 
 void	wait_for_child_and_update_status(int i)
 {
