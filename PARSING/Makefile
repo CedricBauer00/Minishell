@@ -46,21 +46,22 @@ SOURCES = m_main.c \
 		m_token_handling.c \
 		m_sorting.c \
 		printing.c \
-		../EXECUTION/builtin_utils.c\
-		../EXECUTION/cd.c\
-		../EXECUTION/copy_envp.c\
-		../EXECUTION/echo.c\
-		../EXECUTION/env.c\
-		../EXECUTION/exe_utils.c\
-		../EXECUTION/execute.c\
-		../EXECUTION/export.c\
-		../EXECUTION/grouplize.c\
-		../EXECUTION/heredoc.c\
-		../EXECUTION/init.c\
-		../EXECUTION/pipe.c\
-		../EXECUTION/pwd.c\
-		../EXECUTION/redirection.c\
-		../EXECUTION/unset.c\
+		../EXECUTION/builtin_utils.c \
+		../EXECUTION/cd.c \
+		../EXECUTION/copy_envp.c \
+		../EXECUTION/echo.c \
+		../EXECUTION/env.c \
+		../EXECUTION/exe_utils.c \
+		../EXECUTION/execute.c \
+		../EXECUTION/execute2.c \
+		../EXECUTION/export.c \
+		../EXECUTION/grouplize.c \
+		../EXECUTION/heredoc.c \
+		../EXECUTION/init.c \
+		../EXECUTION/pipe.c \
+		../EXECUTION/pwd.c \
+		../EXECUTION/redirection.c \
+		../EXECUTION/unset.c \
 		../EXECUTION/signal.c
 
 OBJECTS := $(SOURCES:.c=.o)
