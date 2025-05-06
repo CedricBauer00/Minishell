@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:04 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/05 15:07:04 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/06 11:32:31 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,11 @@ void	print_envp(t_shell *shell)
 	}
 }
 
-
-
-//todo fix must dont get digits.
 void	export(char **args, t_shell *shell)
 {
 	t_gc	*gc;
 	int		i;
-	//bool	check;
+	bool	check;
 
 	i = 0;
 	gc = get_gc();
@@ -53,16 +50,14 @@ void	export(char **args, t_shell *shell)
 	}
 	while ((args[i]))
 	{
-		//memo check is_valid_identifier
-		// check = is_valid_identifier(args[i]);
-		// if (check == false)
-		// {
-		// 	perror(RED"non valid identifier\n"DEFAULT);
-		// 	return ;
-		// 	//all_free(&gc->temp);
-		// }
 		char	*name = extract_name(args[i]);
 		is_exited(name, gc);
+		check = is_valid_identifier(name);
+		if (check == false)
+		{
+			perror(RED"non valid identifier\n"DEFAULT);
+			return ;
+		}
 		printf("name:%s\n", name);
 		char	*value = extract_value(args[i]);
 		printf("value:%s\n", value);

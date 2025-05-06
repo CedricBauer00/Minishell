@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:01:21 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/04 13:31:19 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/06 12:50:55 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,12 @@ void	gc_free(t_gc *gc)
 		return ;
 	if (gc->shell)
 	{
-		print_list(&gc->shell);
+		//print_list(&gc->shell);
 		all_free(&gc->shell);
 	}
 	if (gc->temp)
 	{
-		print_list(&gc->temp);
+		//print_list(&gc->temp);
 		all_free(&gc->temp);
 	}
 	//printf(PURPLE"free gc %p\n"RESET, gc);
@@ -71,6 +71,8 @@ void	print_list(t_gc_list **gc_lst)
 	int			i;
 
 	i = 1;
+	if (!gc_lst || !*gc_lst)
+		return ;
 	cur = (*gc_lst);
 	while (cur != NULL)
 	{

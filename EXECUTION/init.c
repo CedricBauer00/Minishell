@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:13 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/05 15:45:13 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/06 10:32:23 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ t_shell	*init_shell_struct(t_gc_list **gc_lst)
 	shell->heredoc_fd = -1;
 	shell->my_envp = NULL;
 	shell->pids = NULL;
-	shell->heredoc_interrupted = 0;
 	shell->last_status_exit = 0;
 	return shell;
 }

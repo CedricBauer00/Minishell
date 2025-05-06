@@ -1,23 +1,20 @@
 #include "execution.h"
 
-void	signal_handler_for_heredoc(int sign)
+void	signal_handler_for_child(int sign)
 {
 	t_gc	*gc;
-	//t_shell	*shell;
 
-	//shell = get_shell();
 	gc = get_gc();
-	if (sign == SIGINT)
+	if (sign == SIGINT) //ctrl +d
 	{
-		//shell->heredoc_interrupted = 1;
 		fprintf(stderr, RED"signal SIGINT heredoc\n"DEFAULT);
-		// write(1, "\n", 1);
-		// rl_redisplay();
+		gc_free(gc);
 	}
-	if (sign == SIGQUIT)
+	if (sign == SIGQUIT) // ctrl + backslash
 	{
 		fprintf(stderr, RED"signal SIGQUIT\n"DEFAULT);
-		//exit(1);
+		gc_free(gc);
+		exit(1);
 	}
 }
 

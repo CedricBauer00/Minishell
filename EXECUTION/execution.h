@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/05 15:44:52 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/06 11:19:05 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ typedef struct s_pipe
 
 typedef struct s_shell
 {
-	bool	heredoc_interrupted;
 	char	**my_envp;
 	int		*pids;
 	char	*cur_dir;
@@ -181,7 +180,7 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell);
 
 //memo signal.c
 
-void	signal_handler_for_heredoc();
+void	signal_handler_for_child(int sign);
 //built_in
 //pwd
 //cd

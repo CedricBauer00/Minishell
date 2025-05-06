@@ -6,24 +6,11 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/05 16:57:43 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/06 12:50:12 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
-
-//fd sollte einfach STDIN_FILENO
-// char *get_terminal_path(int fd)
-// {
-// 	char *tty_path;
-	
-// 	if (fd < 0)
-// 		return (NULL);
-// 	tty_path = ttyname(fd);
-// 	if (!tty_path)
-// 		return (NULL);
-// 	return (tty_path);
-// }
 
 int	process_heredoc(t_shell *shell, t_token *token)
 {
@@ -41,7 +28,6 @@ int	process_heredoc(t_shell *shell, t_token *token)
 		return -1;
 	}
 	signal(SIGINT, SIG_DFL);
-	printf("signal!%d\n", shell->heredoc_interrupted);
 	while(1)
 	{
 		char *line;
@@ -51,9 +37,29 @@ int	process_heredoc(t_shell *shell, t_token *token)
 		size_t len = ft_strlen(line);
 		char *temp = do_alloc(&gc->temp, len + 1, TYPE_SINGLE_PTR, "heredoc");
 		ft_strlcpy(temp, line, len + 1);
+
+		char *expand = ft_strchr(temp, '$');
+		//tmep == $USER;
+		int	i = 0;
+		if (expand && expand[i] == '$' && expand[i + 1] != '\0')
+		{
+			int j = check_existing(shell->my_envp, &expand[i + 1]);
+			if (j > 0)
+				fprintf(stderr,YELLOW"expand case in heredoc : %s\n"DEFAULT, shell->my_envp[j]);
+			char *result = extract_value(shell->my_envp[j]);
+			fprintf(stderr,YELLOW"expand case in heredoc : %s\n"DEFAULT, result);
+			// char *temp = do_alloc(&gc->temp, len + 1, TYPE_SINGLE_PTR, "heredoc");
+			// ft_strlcpy(temp, line, len + 1);
+			// free(line);
+			write(fd_heredoc, result, strlen(result));
+			write(fd_heredoc, "\n", 1);
+		}
+		
 		free(line);
 		if (!temp || strcmp(temp, token->value) == 0)
 		{
+			gc_free(gc);
+			exit(0);
 			break;
 		}
 		write(fd_heredoc, temp, strlen(temp));
@@ -62,6 +68,7 @@ int	process_heredoc(t_shell *shell, t_token *token)
 	close(fd_heredoc);
 	gc_free(gc);
 	fprintf(stderr, YELLOW"[pid %d] close() %d\n"DEFAULT,getpid(), fd_heredoc);
+	exit(0);
 	return 1;
 }
 

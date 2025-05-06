@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:35 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/05 14:17:36 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/06 11:40:26 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,6 @@ bool	is_validate_cmd_block(t_cmd_block *cmd_b)
 	return true;
 }
 
-//memo refactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoringrefactoring
 void	validate_check(t_cmd_block *cmd_block)
 {
 	t_shell		*shell;

@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/05 17:16:43 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/06 10:54:54 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,6 @@ void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 	}
 	processing_pipe(cur);
 	set_io_streams(cur);
-
 	if (cur->built_in)
 	{
 		fprintf(stderr, RED"is it in pipe for execute_builtin execute_child()\n"DEFAULT);
@@ -227,8 +226,8 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 		}
 		if (access(cmd_path, F_OK | X_OK) == 0)
 		{
-			signal(SIGINT, signal_handler_for_heredoc);
-			signal(SIGQUIT, signal_handler_for_heredoc);
+			signal(SIGINT, signal_handler_for_child);
+			signal(SIGQUIT, signal_handler_for_child);
 			fprintf(stderr, "execve()\n");
 			if (execve(cmd_path , cmd_block->args, shell->my_envp) == -1)
 			{
@@ -256,7 +255,6 @@ void	main_execute(t_cmd_block *cmd_block)
 	//hanlde_heredoc(cur);
 	int	pid_counts = count_command(cmd_block);
 	printf("pid_counts %d\n", pid_counts);
-
 	do_alloc_pids(cmd_block);
 	if (pid_counts == 1)
 		execute_single_command(cur);
