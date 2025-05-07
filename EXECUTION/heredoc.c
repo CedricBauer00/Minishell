@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 12:18:09 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 12:40:25 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,6 @@ int	process_heredoc(t_shell *shell, t_token *token)
 		if (!line)
 			break;
 		char *expanded_var = expand_case_in_heredoc(line, shell);
-		
 		size_t len = ft_strlen(line);
 		char *temp = do_alloc(&gc->temp, len + 1, TYPE_SINGLE_PTR, "heredoc");
 		ft_strlcpy(temp, expanded_var, len + 1);
@@ -100,7 +99,7 @@ int	process_heredoc(t_shell *shell, t_token *token)
 		{
 			gc_free(gc);
 			exit(0);
-			break;
+			//break;
 		}
 		write(fd_heredoc, expanded_var, strlen(expanded_var));
 		write(fd_heredoc, "\n", 1);
@@ -124,7 +123,7 @@ void	wait_for_heredoc_pid(pid_t heredoc_pid, int status)
 		if (WTERMSIG(status) == SIGINT)
 		{
 			shell->last_status_exit = 1;
-			//return (-1); 
+			//return (-1);
 		}
 	}
 	else if (WIFEXITED(status))
