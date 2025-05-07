@@ -3,14 +3,63 @@
 /*                                                        :::      ::::::::   */
 /*   m_main.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/05 16:34:58 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/06 16:46:39 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
+
+// void	set_default(t_main *main)
+// {
+// 	main->tokens = NULL;
+// 	main->line = NULL;
+// 	main->last_status_exit = 0;
+// 	main->next_line = NULL;
+// 	main->new = NULL;
+// 	main->word = NULL;
+// 	main->temp_for_line = NULL;
+// 	main->error = 0;
+// 	return ;
+// }
+
+t_main	*init_main_struct(t_gc_list **gc_lst)
+{
+	t_main	*main;
+
+	main = do_alloc(gc_lst, sizeof(t_main), TYPE_SINGLE_PTR, "main");
+	if (!main)
+		return (NULL);
+	main->tokens = NULL;
+	main->line = NULL;
+	main->last_status_exit = 0;
+	main->next_line = NULL;
+	main->new = NULL;
+	main->word = NULL;
+	main->temp_for_line = NULL;
+	main->error = 0;
+	return (main);
+}
+
+t_main	*get_main(void)
+{
+	static t_main *main = NULL; // Global static t_main struct
+	t_gc	*gc;
+
+	gc = get_gc();
+	if (main == NULL)
+	{
+		main = init_main_struct(&gc->shell);
+	}
+	return (main);
+}
+
+// t_main *get_main_struct(void)
+// {
+// 	return &main;
+// }
 
 int	main_helper(t_main *main, t_gc_list **gc_temp)
 {
@@ -99,8 +148,10 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
+	
 	using_history();
-	set_default(&main);
+	// set_default(&main);
+	main = *get_main();
 	signal(SIGINT, signal_func);
 	signal(SIGQUIT, SIG_IGN);
 	if (ttyattr() < 0)

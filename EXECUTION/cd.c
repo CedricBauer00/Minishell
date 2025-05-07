@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:23 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/05 15:00:13 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 09:44:20 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "execution.h"
 

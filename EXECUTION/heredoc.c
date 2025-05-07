@@ -6,17 +6,11 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/06 15:57:20 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 11:01:07 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
-
-// static int	ft_isspace(char c)
-// {
-// 	return (c == ' ' || c == '\t' || c == '\n'
-// 		|| c == '\r' || c == '\f' || c == '\v');
-// }
 
 static char	*expand_case_in_heredoc(char *line ,t_shell *shell)
 {
@@ -35,38 +29,34 @@ static char	*expand_case_in_heredoc(char *line ,t_shell *shell)
 	{
 		if (line[i] == '$' && line[i + 1] != '\0')
 		{
-			//int start = i;
+			int start = i;
 			printf("case1\n");
 			i++;
 			while(line[i] && (line[i] || line[i] == '_'))
 			{
-				i++;	
+				i++;
 			}
-			key = ft_strchr(line, '$');
-			// ft_substr()
+			key =  ft_substr(line, start, i - start);//$USER
 			fprintf(stderr, "key : %s\n", key);
 			k = check_existing(shell->my_envp, &key[1]);
 			fprintf(stderr, "k %d\n", k);
-			if (k > 0)
+			if (k >= 0)
 			{
 				value = extract_value(shell->my_envp[k]);
 				fprintf(stderr, "value %s\n", value);
 			}
-			else
-			{
-				printf("case2\n");
-				value = "";
-				i++;
-			}
 			result = gc_strjoin(result, value, &gc->temp);
 			fprintf(stderr, RED"result : %s\n"DEFAULT, result);
+			free(key);
 		}
 		else
 		{
 			printf("case3\n");
-			result = "";
-			result = gc_strjoin(result, line, &gc->temp);
-			fprintf(stderr, BLUE"result : %s\n"DEFAULT, result);
+			char str[2];
+			str[0] = line[i];
+			str[1] = '\0';
+			fprintf(stderr, "line[i] : %c\n", line[i]);
+			result = gc_strjoin(result, str, &gc->temp);
 			i++;
 		}
 	}
@@ -96,6 +86,7 @@ int	process_heredoc(t_shell *shell, t_token *token)
 		if (!line)
 			break;
 		char *expanded_var = expand_case_in_heredoc(line, shell);
+		
 		size_t len = ft_strlen(line);
 		char *temp = do_alloc(&gc->temp, len + 1, TYPE_SINGLE_PTR, "heredoc");
 		ft_strlcpy(temp, expanded_var, len + 1);
@@ -115,7 +106,6 @@ int	process_heredoc(t_shell *shell, t_token *token)
 	exit(0);
 	return 1;
 }
-
 
 //bei der durchfuehrung des cmd muss ich den FD des temporäre Datei umleiten.
 // int main()

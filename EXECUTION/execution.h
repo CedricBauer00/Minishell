@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/06 11:19:05 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 09:56:34 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,23 +160,41 @@ bool	is_valid_identifier(const char *name);
 //memo validate.c
 //int		validate_syntax(t_token *token);
 bool	is_validate_cmd_block(t_cmd_block *cmd_b);
+void	validate_check(t_cmd_block *cmd_block);
 
 //memo heredoc.c
 int	process_heredoc(t_shell *shell, t_token *token);
 
-//memo execute.c
-void	wait_for_child_and_update_status(int i);
-void	main_execute(t_cmd_block *cmd_block);
-void 	run_execve(t_cmd_block *cmd_block, t_gc *gc);
-void	validate_check(t_cmd_block *cmd_block);
-void	hanlde_heredoc(t_cmd_block *cmd_block);
-void	single_cmd_execute(t_cmd_block *cur, t_gc *gc);
-int		count_command(t_cmd_block *cmd_block);
+
+// ----------------------------------------------------------------------
+// 							memo execute.c
+// ----------------------------------------------------------------------
+
+void	execute_pipeline(t_cmd_block *cmd_block);
 void	execute_single_command(t_cmd_block *cmd_block);
 void	do_alloc_pids(t_cmd_block* cmd_block);
-void	fork_and_execute(t_cmd_block *cmd_block, t_gc *gc, int *i);
-void	execute_pipeline(t_cmd_block *cmd_block);
+int		count_command(t_cmd_block *cmd_block);
+void	main_execute(t_cmd_block *cmd_block);
+
+// ----------------------------------------------------------------------
+// 							memo execute2.c
+// ----------------------------------------------------------------------
+
+void	single_cmd_execute(t_cmd_block *cur, t_gc *gc);
+int		heredoc_fd_offset_and_redir(t_cmd_block *cur);
 void	execute_builtin(t_cmd_block *cur, t_shell *shell);
+void	run_execve(t_cmd_block *cmd_block, t_gc *gc);
+void	wait_for_child_and_update_status(int i);
+
+// ----------------------------------------------------------------------
+// 							memo execute3.c
+// ----------------------------------------------------------------------
+
+void	prevent_zombie_process();
+void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell);
+void	fork_and_execute(t_cmd_block *cmd_block, t_gc *gc, int *i);
+void	hanlde_heredoc(t_cmd_block *cmd_block);
+
 
 //memo signal.c
 

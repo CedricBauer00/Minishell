@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 12:13:48 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/04 16:52:06 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 11:04:27 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ char	*gc_strjoin(char const *s1, char const *s2, t_gc_list **gc_list)
 	size_t	counter;
 	size_t	i;
 
+	// if (!s1 || !s2)
+	// 	return "";
 	if (s1[0] == '\0' && s2[0] == '\0')
 		return (gc_strdup("", gc_list));
 	len = ft_strlen(s1) + ft_strlen(s2);

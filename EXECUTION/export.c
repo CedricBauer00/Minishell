@@ -3,21 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:04 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/06 11:32:31 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 09:58:28 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 
-//todo make export.
-// char	**expand_envp(t_shell *shell, char *new_path)
-// char *create_new_path(const char *name, const char *value)
-
-//export even  if no existed '=' it should works
-//if i use only with '=' we can see that var in env
 void	print_envp(t_shell *shell)
 {
 	int	i;

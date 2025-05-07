@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:26 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/05 14:17:27 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 10:02:56 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,48 +127,3 @@ void	set_io_streams(t_cmd_block *cmd)
 		io_streams = io_streams->next;
 	}
 }
-
-
-
-// void	set_io_streams(t_cmd_block *cmd)	
-// {
-// 	t_io_streams_list *cur;
-// 	t_io_streams_list *fd_in_redir;
-// 	t_io_streams_list *fd_out_redir;
-// 	t_io_streams_list *fd_append;
-
-// 	if(!cmd)
-// 		return ;
-// 	cur = cmd->io_streams;
-// 	while (cur)
-// 	{
-// 		if (cur->infile_name)
-// 		{
-// 			fd_in_redir = cur;
-// 		}
-// 		if (cur->outfile_name)
-// 		{
-// 			fd_out_redir = cur;
-// 		}
-// 		if (cur->append_file_name)
-// 		{
-// 			fd_append = cur;
-// 		}
-// 		cur = cur->next;
-// 	}
-// 	if (fd_in_redir)
-// 	{
-// 		in_redir_file_open(fd_in_redir, fd_in_redir->infile_name);
-// 		re_dir_in(fd_in_redir);
-// 	}
-// 	if (fd_append)
-// 	{
-// 		append_redir_file_open(fd_append, fd_append->append_file_name);
-// 		re_dir_out(fd_append);
-// 	}
-// 	else if (fd_out_redir)
-// 	{
-// 		out_redir_file_open(fd_out_redir, fd_out_redir->outfile_name);
-// 		re_dir_out(fd_out_redir);
-// 	}
-// }

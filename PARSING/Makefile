@@ -4,7 +4,7 @@ GREEN = \033[0;32m
 DEFAULT = \033[0m
 
 #CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address #-Dreadline change
-LDFLAGS = -lreadline -Llibft -lft -L$(LIBFT_DIR)#del
+LDFLAGS = -lreadline -L$(LIBFT_DIR) -lft
 CFLAGS = -I/usr/include/readline -Ilibft -Wextra -Wall -Werror -g -fsanitize=address #del 
 
 #INC = -I ../INCLUDE/# ./GC/ change
@@ -46,21 +46,23 @@ SOURCES = m_main.c \
 		m_token_handling.c \
 		m_sorting.c \
 		printing.c \
-		../EXECUTION/builtin_utils.c\
-		../EXECUTION/cd.c\
-		../EXECUTION/copy_envp.c\
-		../EXECUTION/echo.c\
-		../EXECUTION/env.c\
-		../EXECUTION/exe_utils.c\
-		../EXECUTION/execute.c\
-		../EXECUTION/export.c\
-		../EXECUTION/grouplize.c\
-		../EXECUTION/heredoc.c\
-		../EXECUTION/init.c\
-		../EXECUTION/pipe.c\
-		../EXECUTION/pwd.c\
-		../EXECUTION/redirection.c\
-		../EXECUTION/unset.c\
+		../EXECUTION/builtin_utils.c \
+		../EXECUTION/cd.c \
+		../EXECUTION/copy_envp.c \
+		../EXECUTION/echo.c \
+		../EXECUTION/env.c \
+		../EXECUTION/exe_utils.c \
+		../EXECUTION/execute.c \
+		../EXECUTION/execute2.c \
+		../EXECUTION/execute3.c \
+		../EXECUTION/export.c \
+		../EXECUTION/grouplize.c \
+		../EXECUTION/heredoc.c \
+		../EXECUTION/init.c \
+		../EXECUTION/pipe.c \
+		../EXECUTION/pwd.c \
+		../EXECUTION/redirection.c \
+		../EXECUTION/unset.c \
 		../EXECUTION/signal.c
 
 OBJECTS := $(SOURCES:.c=.o)
