@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:22 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/05 14:17:23 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 10:02:06 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ void	ft_pwd(char **args, t_gc *gc)
 	if (*args)
 	{
 		printf(RED"PWD TOO MANY ARGS\n"DEFAULT);
-		//all_free(&gc->temp);
 		return ;
 	}
 	char *pwd;
@@ -54,21 +53,3 @@ void	ft_pwd(char **args, t_gc *gc)
 	find = find_node(find, (char*)pwd);
 	delete_node(&gc->temp, (t_gc_list*)find);
 }
-
-// void	pwd(t_shell *shell, t_gc_list *gc_lst)
-// {
-// 	get_cwd();
-// }
-
-// int main()
-// {
-// 	char *cwd = pwd();
-// 	if (cwd)
-// 	{
-// 		printf("%p, %s\n", cwd, cwd);
-// 		free(cwd);
-// 		cwd = NULL;
-// 		if (cwd == NULL)
-// 			printf("\033[1;34mcwd is already free\033[0;34m\n");
-// 	}
-// }
