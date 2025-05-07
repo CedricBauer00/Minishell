@@ -6,17 +6,11 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/06 17:04:39 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/07 09:58:42 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
-
-// static int	ft_isspace(char c)
-// {
-// 	return (c == ' ' || c == '\t' || c == '\n'
-// 		|| c == '\r' || c == '\f' || c == '\v');
-// }
 
 static char	*expand_case_in_heredoc(char *line ,t_shell *shell)
 {
@@ -77,9 +71,7 @@ int	process_heredoc(t_shell *shell, t_token *token)
 {
 	int	fd_heredoc;
 	t_gc *gc;
-	// t_main	*main;
-	
-	// main = get_main();
+
 	gc = get_gc();
 	fd_heredoc = 0;
 	fd_heredoc = open("temp_heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
