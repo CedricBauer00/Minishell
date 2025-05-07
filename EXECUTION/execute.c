@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/06 10:54:54 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/06 16:16:46 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ int heredoc_fd_offset_and_redir(t_cmd_block *cur)
 	return 1;
 }
 
+//todo we have to recognize also /bin/echo
 void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 {
 	// t_gc *gc = get_gc();
@@ -224,6 +225,7 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			gc_free(gc);
 			exit(1);
 		}
+		fprintf(stderr, "%s\n", cmd_path);
 		if (access(cmd_path, F_OK | X_OK) == 0)
 		{
 			signal(SIGINT, signal_handler_for_child);
@@ -231,6 +233,8 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			fprintf(stderr, "execve()\n");
 			if (execve(cmd_path , cmd_block->args, shell->my_envp) == -1)
 			{
+				fprintf(stderr, "%s\n", cmd_block->args[0]);
+				fprintf(stderr, "%s\n", cmd_block->args[1]);
 				gc_free(gc);
 				perror(RED"error execve()"DEFAULT);
 				exit(1);
