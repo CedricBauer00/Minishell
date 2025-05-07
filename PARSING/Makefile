@@ -4,7 +4,7 @@ GREEN = \033[0;32m
 DEFAULT = \033[0m
 
 #CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address #-Dreadline change
-LDFLAGS = -lreadline -L$(LIBFT_DIR) -lft
+LDFLAGS = -lreadline -L$(LIBFT_DIR) -L$(GET_NEXT_LINE_DIR) -lft
 CFLAGS = -I/usr/include/readline -Ilibft -Wextra -Wall -Werror -g -fsanitize=address #del 
 
 #INC = -I ../INCLUDE/# ./GC/ change
@@ -20,6 +20,10 @@ CC = cc
 NAME = minishell
 
 LIBFT_DIR = ../libft
+
+GET_NEXT_LINE_DIR = ../get_next_line
+
+GET_NEXT_LINE = $(GET_NEXT_LINE_DIR)/get_next_line.a
 
 LIBFT = $(LIBFT_DIR)/libft.a
 
@@ -69,24 +73,27 @@ OBJECTS := $(SOURCES:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(LIBFT) $(OBJECTS)
-	@$(CC) $(CFLAGS) $(LIBFT) $(OBJECTS) $(INC) -o $(NAME) $(LDFLAGS) #RL_FLAG
+$(NAME): $(LIBFT) $(GET_NEXT_LINE) $(OBJECTS)
+	@$(CC) $(CFLAGS) $(LIBFT) $(OBJECTS) $(GET_NEXT_LINE) $(INC) -o $(NAME) $(LDFLAGS) #RL_FLAG
 	@echo "$(GREEN)LEXER compiled!$(DEFAULT)"
 
 $(LIBFT):
 	@$(MAKE) -C $(LIBFT_DIR) --silent
 
+$(GET_NEXT_LINE):
+	@$(MAKE) -C $(GET_NEXT_LINE_DIR) --silent
 %.o : %.c
 	@$(CC) $(CFLAGS) -c $< -o $@ $(INC)
 
 clean:
-	@$(MAKE) -C $(LIBFT_DIR) clean --silent
+	@$(MAKE) -C $(LIBFT_DIR) $(GET_NEXT_LINE) clean --silent
 	@$(RM) $(OBJECTS)
 	@echo "$(GREEN)LEXER cleaned successfully!$(DEFAULT)"
 
 fclean: clean
 	@$(RM) $(LIBFT)
 	@$(RM) $(NAME)
+	@$(RM) $(GET_NEXT_LINE)
 	@echo "$(GREEN)LEXER cleaned successfully!$(DEFAULT)"
 
 re: fclean all

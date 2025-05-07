@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/07 12:18:05 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 15:04:34 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 	{
 		pid = fork();
 		shell->pids[0] = pid;
-		fprintf(stderr, YELLOW" singlecmd for child proc fork() : %d , shell->pids[0] %d \n"DEFAULT, pid, shell->pids[0]) ;
+		// fprintf(stderr, YELLOW" singlecmd for child proc fork() : %d , shell->pids[0] %d \n"DEFAULT, pid, shell->pids[0]) ;
 		if (pid == 0) //signal implementation?
 		{
 		
@@ -88,10 +88,10 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 	t_gc *gc;
 
 	gc = get_gc();
-	fprintf(stderr, GREEN"execute_builtin()\n"DEFAULT);
+	// fprintf(stderr, GREEN"execute_builtin()\n"DEFAULT);
 	if (strcmp(cur->built_in, "cd") == 0)
 	{
-		fprintf(stderr, RED"try to do 'cd' execute_builtin\n"DEFAULT);
+		// fprintf(stderr, RED"try to do 'cd' execute_builtin\n"DEFAULT);
 		cd(cur->args, shell, gc);
 	}
 	if (strcmp(cur->built_in, "echo") == 0)
@@ -140,7 +140,7 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			gc_free(gc);
 			exit(1);
 		}
-		fprintf(stderr, RED"command not found (absolute path): %s\n"DEFAULT, cmd_block->args[0]);
+		// fprintf(stderr, RED"command not found (absolute path): %s\n"DEFAULT, cmd_block->args[0]);
 		exit(127);
 	}
 	else
@@ -175,7 +175,7 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 		{
 			signal(SIGINT, signal_handler_for_child);
 			signal(SIGQUIT, signal_handler_for_child);
-			fprintf(stderr, "execve()\n");
+			// fprintf(stderr, "execve()\n");
 			if (execve(cmd_path , cmd_block->args, shell->my_envp) == -1)
 			{
 				gc_free(gc);
@@ -185,7 +185,7 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 		}
 		i++;
 	}
-	fprintf(stderr, RED"command not found: %s\n"DEFAULT, cmd_block->args[0]);
+	printf(RED"command not found: %s\n"DEFAULT, cmd_block->args[0]);
 	exit(127);
 	}
 	
@@ -196,30 +196,32 @@ void	wait_for_child_and_update_status(int i)
 	t_shell	*shell;
 	int		status;
 	int		idx;
+	pid_t	child_pid;
 
+	child_pid = 0;
 	idx = 0;
 	shell = get_shell();
 	if(!shell->pids)
 		return;
 	while(idx < i)
 	{
-		fprintf(stderr, RED"shell->pids[idx] %d\n"DEFAULT, shell->pids[idx]);
-		pid_t child_pid = wait4(shell->pids[idx], &status, 0 ,NULL);
-		fprintf(stderr ,RED"child_pid %d\n"DEFAULT, child_pid);
-		fprintf(stderr ,BLUE"parent got this from wait4() child_pid : %d\n"DEFAULT, child_pid);
+		//fprintf(stderr, RED"shell->pids[idx] %d\n"DEFAULT, shell->pids[idx]);
+		child_pid = wait4(shell->pids[idx], &status, 0 ,NULL);
+		//fprintf(stderr ,RED"child_pid %d\n"DEFAULT, child_pid);
+		//fprintf(stderr ,BLUE"parent got this from wait4() child_pid : %d\n"DEFAULT, child_pid);
 		if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
 		{
-			fprintf(stderr, GREEN"exited with %d\n"DEFAULT, WEXITSTATUS(status));
+			// fprintf(stderr, GREEN"exited with %d\n"DEFAULT, WEXITSTATUS(status));
 			shell->last_status_exit = WEXITSTATUS(status);  //parents get exit status 
 		}
 		if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
 		{
-			fprintf(stderr, GREEN"exited with %d\n"DEFAULT, WEXITSTATUS(status));
+			// fprintf(stderr, GREEN"exited with %d\n"DEFAULT, WEXITSTATUS(status));
 			shell->last_status_exit = WEXITSTATUS(status);  //parents get exit status 
 		}
 		else if (WIFSIGNALED(status))
 		{
-			fprintf(stderr, RED"terminated by signal %d (%s)\n" DEFAULT, WTERMSIG(status), strsignal(WTERMSIG(status)));
+			// fprintf(stderr, RED"terminated by signal %d (%s)\n" DEFAULT, WTERMSIG(status), strsignal(WTERMSIG(status)));
 			shell->last_status_exit = 128 + WTERMSIG(status);
 		}
 		idx++;

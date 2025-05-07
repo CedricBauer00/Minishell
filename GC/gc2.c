@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:00:46 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/03 15:30:04 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/07 14:56:55 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_gc_list	*find_node(t_gc_list *gc_lst, void *target)
 	{
 		if (cur->data == target)
 		{
-			printf("----------find : %p in garbage--------\n", target);
+			// printf("----------find : %p in garbage--------\n", target);
 			return (cur);
 		}
 		cur = cur->next;
@@ -40,7 +40,7 @@ t_gc_list	*find_node_with_id(t_gc_list *gc_lst, char *id)
 	{
 		if (ft_strncmp(cur->id, id, ft_strlen(cur->id)) == 0)
 		{
-			printf("----------find : %s in garbage--------\n", id);
+			// printf("----------find : %s in garbage--------\n", id);
 			return (cur);
 		}
 		cur = cur->next;

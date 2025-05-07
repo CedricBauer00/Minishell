@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:08 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/05 14:31:07 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/07 14:49:06 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 			}
 			if(cur->type & (TOKEN_HEREDOC))
 			{
-				fprintf(stderr, RED"if heredoc in grouplize()\n"DEFAULT);
+				// fprintf(stderr, RED"if heredoc in grouplize()\n"DEFAULT);
 				new_io_streams->heredoc_eof = gc_strdup(cur->value, &gc->temp);
 				t_gc_list *find;
 				find = find_node(gc->temp, (char*)cur->value);

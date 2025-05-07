@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 14:48:33 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 15:54:28 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,20 +30,20 @@ static char	*expand_case_in_heredoc(char *line ,t_shell *shell)
 		if (line[i] == '$' && line[i + 1] != '\0')
 		{
 			int start = i;
-			printf("case1\n");
+			// printf("case1\n");
 			i++;
 			while(line[i] && (ft_isalpha(line[i]) || line[i] == '_'))
 			{
 				i++;
 			}
 			key =  ft_substr(line, start, i - start);
-			fprintf(stderr, "key : %s\n", key);
+			// fprintf(stderr, "key : %s\n", key);
 			k = check_existing(shell->my_envp, &key[1]);
-			fprintf(stderr, "k %d\n", k);
+			// fprintf(stderr, "k %d\n", k);
 			if (k >= 0)
 			{
 				value = extract_value(shell->my_envp[k]);
-				fprintf(stderr, "value %s\n", value);
+				// fprintf(stderr, "value %s\n", value);
 			}
 			else
 			{
@@ -51,16 +51,13 @@ static char	*expand_case_in_heredoc(char *line ,t_shell *shell)
 				return result;
 			}
 			result = gc_strjoin(result, value, &gc->temp);
-			//fprintf(stderr, RED"result : %s\n"DEFAULT, result);
 			free(key);
 		}
 		else
 		{
-			//printf("case3\n");
 			char str[2];
 			str[0] = line[i];
 			str[1] = '\0';
-			//fprintf(stderr, "line[i] : %c\n", line[i]);
 			result = gc_strjoin(result, str, &gc->temp);
 			i++;
 		}
@@ -76,7 +73,7 @@ int	process_heredoc(t_shell *shell, t_token *token)
 	gc = get_gc();
 	fd_heredoc = 0;
 	fd_heredoc = open("temp_heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
-	fprintf(stderr, YELLOW"[pid %d] fd_heredoc open(), fd_heredoc fd : %d\n", getpid(), fd_heredoc);
+	// fprintf(stderr, YELLOW"[pid %d] fd_heredoc open(), fd_heredoc fd : %d\n", getpid(), fd_heredoc);
 	shell->heredoc_fd = fd_heredoc;
 	if (fd_heredoc == -1)
 	{
@@ -109,7 +106,7 @@ int	process_heredoc(t_shell *shell, t_token *token)
 	}
 	close(fd_heredoc);
 	gc_free(gc);
-	fprintf(stderr, YELLOW"[pid %d] close() %d\n"DEFAULT,getpid(), fd_heredoc);
+	// fprintf(stderr, YELLOW"[pid %d] close() %d\n"DEFAULT,getpid(), fd_heredoc);
 	exit(0);
 	return 1;
 }
@@ -123,7 +120,7 @@ int	wait_for_heredoc_pid(pid_t heredoc_pid, int status)
 	waitpid(heredoc_pid, &status, 0);
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 	{
-		printf(BLUE"1\n"DEFAULT);
+		// printf(BLUE"1\n"DEFAULT);
 		shell->last_status_exit = 1;
 		return (-1);
 	}
@@ -132,7 +129,7 @@ int	wait_for_heredoc_pid(pid_t heredoc_pid, int status)
 		int exit_status = WEXITSTATUS(status);
 		if (exit_status != 0)
 		{
-			printf(BLUE"2\n"DEFAULT);
+			// printf(BLUE"2\n"DEFAULT);
 			shell->last_status_exit = exit_status;
 			return (1);
 		}

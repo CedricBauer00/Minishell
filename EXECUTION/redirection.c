@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:26 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 10:02:56 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/07 14:49:30 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ int	re_dir_in(t_io_streams_list *io_streams)
 		close(fd);
 		return -1;
 	}
-	fprintf(stderr, YELLOW"[pid %d] dup2(io_streams->fd_in_file : %d, STDIN_FILENO : %d)\n"DEFAULT,getpid(),fd, STDIN_FILENO);
+	// fprintf(stderr, YELLOW"[pid %d] dup2(io_streams->fd_in_file : %d, STDIN_FILENO : %d)\n"DEFAULT,getpid(),fd, STDIN_FILENO);
 	close(fd);
-	fprintf(stderr, YELLOW"[pid %d] close(%d)\n"DEFAULT, getpid(), fd);
+	// fprintf(stderr, YELLOW"[pid %d] close(%d)\n"DEFAULT, getpid(), fd);
 	return 1;
 }
 
@@ -40,9 +40,9 @@ int	re_dir_out(t_io_streams_list *io_streams)
 		close(fd);
 		return (-1);
 	}
-	fprintf(stderr, YELLOW"[pid %d] dup2(io_streams->fd_out_file : %d, STDOUT_FILENO : %d)\n"DEFAULT, getpid(), fd, STDOUT_FILENO);
+	// fprintf(stderr, YELLOW"[pid %d] dup2(io_streams->fd_out_file : %d, STDOUT_FILENO : %d)\n"DEFAULT, getpid(), fd, STDOUT_FILENO);
 	close(fd);
-	fprintf(stderr, YELLOW"[pid %d] close(%d)\n"DEFAULT, getpid(), fd);
+	// fprintf(stderr, YELLOW"[pid %d] close(%d)\n"DEFAULT, getpid(), fd);
 	return 1;
 }
 
@@ -57,7 +57,7 @@ int	in_redir_file_open(t_io_streams_list *io_streams, char *in_filename)
 		return -1;
 	}
 	io_streams->fd_in_file = fd;
-	fprintf(stderr, YELLOW"[pid %d] open() in_filename %s, io_streams->fd_in_filename,  %d)\n"DEFAULT,getpid(),in_filename, fd);
+	// fprintf(stderr, YELLOW"[pid %d] open() in_filename %s, io_streams->fd_in_filename,  %d)\n"DEFAULT,getpid(),in_filename, fd);
 	return 1;
 }
 
@@ -72,7 +72,7 @@ int	out_redir_file_open(t_io_streams_list *io_streams, char *out_filename)
 		return (-1);
 	}
 	io_streams->fd_out_file = fd;
-	fprintf(stderr, YELLOW"[pid %d]open() out_filename : %s, io_streams->fd_out_filename, %d)\n"DEFAULT, getpid(), out_filename, fd);
+	// fprintf(stderr, YELLOW"[pid %d]open() out_filename : %s, io_streams->fd_out_filename, %d)\n"DEFAULT, getpid(), out_filename, fd);
 	return 1;
 }
 
@@ -87,7 +87,7 @@ int	append_redir_file_open(t_io_streams_list *io_streams, char *appned_file_name
 		return (-1);
 	}
 	io_streams->fd_out_file = fd;
-	fprintf(stderr, YELLOW"[pid %d]open() appned_file_name : %s, fd_out_filename, %d)\n"DEFAULT, getpid(), appned_file_name, fd);
+	// fprintf(stderr, YELLOW"[pid %d]open() appned_file_name : %s, fd_out_filename, %d)\n"DEFAULT, getpid(), appned_file_name, fd);
 	return 1;
 }
 

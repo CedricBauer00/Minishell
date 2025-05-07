@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:23 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 12:23:42 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 14:38:35 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,7 @@ void	cd(char **args, t_shell *shell, t_gc *gc)
 	}
 	if (args[0] == NULL || strcmp(args[0], "~") == 0)
 	{
-		fprintf(stderr, RED"case just cd\n"DEFAULT);
+		// fprintf(stderr, RED"case just cd\n"DEFAULT);
 		target = find_var_in_env(shell->my_envp, "HOME", 4, gc->temp);
 		if (!target)
 		{
@@ -183,18 +183,18 @@ void	cd(char **args, t_shell *shell, t_gc *gc)
 	}
 	else if (strcmp(args[0], "-") == 0)
 	{
-		fprintf(stderr, RED"for 'cd -'\n"DEFAULT);
+		// fprintf(stderr, RED"for 'cd -'\n"DEFAULT);
 		target = find_var_in_env(shell->my_envp, "OLDPWD", 6, gc->temp);
 		if (!target)
 		{
-			fprintf(stderr, RED"cd:OLDPWD not set\n"DEFAULT);
+			// fprintf(stderr, RED"cd:OLDPWD not set\n"DEFAULT);
 			gc_free(gc);
 			exit(1);
 		}
 	}
 	else
 	{
-		fprintf(stderr, RED"for 'cd others'\n"DEFAULT);
+		// fprintf(stderr, RED"for 'cd others'\n"DEFAULT);
 		target = gc_strdup(args[0], &gc->temp);
 		is_exited(target, gc);
 	}
@@ -215,8 +215,8 @@ void	cd(char **args, t_shell *shell, t_gc *gc)
 	delete_node(&gc->temp, find);
 	shell->old_dir = shell->cur_dir;
 	ft_setenv("OLDPWD", shell->cur_dir, 1, shell);
-	fprintf(stderr, RED"sell->old_dir : %s\n"DEFAULT, shell->old_dir);
+	// fprintf(stderr, RED"sell->old_dir : %s\n"DEFAULT, shell->old_dir);
 	shell->cur_dir = new_dir;
 	ft_setenv("PWD", shell->cur_dir, 1, shell);
-	fprintf(stderr , RED"sell->cur_dir : %s\n"DEFAULT, shell->cur_dir);
+	// fprintf(stderr , RED"sell->cur_dir : %s\n"DEFAULT, shell->cur_dir);
 }
