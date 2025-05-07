@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 14:19:23 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 14:48:33 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,16 +51,16 @@ static char	*expand_case_in_heredoc(char *line ,t_shell *shell)
 				return result;
 			}
 			result = gc_strjoin(result, value, &gc->temp);
-			fprintf(stderr, RED"result : %s\n"DEFAULT, result);
+			//fprintf(stderr, RED"result : %s\n"DEFAULT, result);
 			free(key);
 		}
 		else
 		{
-			printf("case3\n");
+			//printf("case3\n");
 			char str[2];
 			str[0] = line[i];
 			str[1] = '\0';
-			fprintf(stderr, "line[i] : %c\n", line[i]);
+			//fprintf(stderr, "line[i] : %c\n", line[i]);
 			result = gc_strjoin(result, str, &gc->temp);
 			i++;
 		}
