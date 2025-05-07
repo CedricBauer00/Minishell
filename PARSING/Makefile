@@ -92,8 +92,8 @@ clean:
 
 fclean: clean
 	@$(RM) $(LIBFT)
-	@$(RM) $(NAME)
 	@$(RM) $(GET_NEXT_LINE)
+	@$(RM) $(NAME)
 	@echo "$(GREEN)LEXER cleaned successfully!$(DEFAULT)"
 
 re: fclean all
