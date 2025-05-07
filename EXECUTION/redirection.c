@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:26 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 14:49:30 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/07 17:56:39 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	out_redir_file_open(t_io_streams_list *io_streams, char *out_filename)
 	fd = open(out_filename, O_WRONLY | O_CREAT, 0644);
 	if (fd == -1)
 	{
-		perror(RED" > file open faield\n"DEFAULT);
+		perror(RED" > file open faield"DEFAULT);
 		return (-1);
 	}
 	io_streams->fd_out_file = fd;
@@ -83,7 +83,7 @@ int	append_redir_file_open(t_io_streams_list *io_streams, char *appned_file_name
 	fd = open(appned_file_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
 	{
-		perror(RED" > file open faield\n"DEFAULT);
+		perror(RED" >> file open faield"DEFAULT);
 		return (-1);
 	}
 	io_streams->fd_out_file = fd;

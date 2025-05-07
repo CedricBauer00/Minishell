@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 15:57:05 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 18:52:31 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,15 @@ void    main_execute(t_cmd_block *cmd_block)
     pid_counts = count_command(cmd_block);
     do_alloc_pids(cmd_block);
     if (pid_counts == 1)
+	{
+		printf("1\n");
         execute_single_command(cur);
+	}
     if (pid_counts > 1)
+	{
+		printf("2\n");
         execute_pipeline(cur);
+	}
     prevent_zombie_process();
     dup2(stdin_backup, STDIN_FILENO);
     dup2(stdout_backup, STDOUT_FILENO);

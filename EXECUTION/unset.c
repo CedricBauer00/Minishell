@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:31 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 10:03:42 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/07 18:03:24 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void	ft_unset(char **args, t_shell *shell)
 		{
 			found = -1;
 			found = check_existing(shell->my_envp, args[i]);
-			printf(GREEN"in ft_unset() %d\n"DEFAULT, found);
 			if (found != -1)
 			{
 				t_gc *gc = get_gc();

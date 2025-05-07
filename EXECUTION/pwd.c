@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:22 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 10:02:06 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/07 16:58:37 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*my_getcwd()
 	temp = getcwd(NULL, 0);
 	if (!temp)
 	{
-		perror(RED"getcwd()failed"DEFAULT);
+		//perror(RED"getcwd()failed"DEFAULT);
 		gc_free(gc);
 		exit(1);
 	}

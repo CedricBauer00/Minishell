@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:04 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 09:58:28 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/07 17:45:04 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ void	export(char **args, t_shell *shell)
 			perror(RED"non valid identifier\n"DEFAULT);
 			return ;
 		}
-		printf("name:%s\n", name);
+		//printf("name:%s\n", name);
 		char	*value = extract_value(args[i]);
-		printf("value:%s\n", value);
+		//printf("value:%s\n", value);
 		ft_setenv(name, value, 1 , shell);
 		if(name)
 			free(name);
