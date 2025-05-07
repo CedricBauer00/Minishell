@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 14:47:56 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/07 15:57:05 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,12 @@ void    main_execute(t_cmd_block *cmd_block)
     t_cmd_block *cur;
     int         stdin_backup;
     int         stdout_backup;
+	int 		pid_counts;
+
     cur = cmd_block;
     stdin_backup = dup(STDIN_FILENO);
     stdout_backup = dup(STDOUT_FILENO);
-    int pid_counts = count_command(cmd_block);
-   // printf("pid_counts %d\n", pid_counts);
+    pid_counts = count_command(cmd_block);
     do_alloc_pids(cmd_block);
     if (pid_counts == 1)
         execute_single_command(cur);
@@ -59,7 +60,6 @@ void    main_execute(t_cmd_block *cmd_block)
     dup2(stdout_backup, STDOUT_FILENO);
     close(stdin_backup);
     close(stdout_backup);
-    //fprintf(stderr, RED"-CHECK ORGINAL STDIN AND STDOUT-\n STDIN_FILENO: %d, STDOUT_FILENO: %d\n"DEFAULT, STDIN_FILENO, STDOUT_FILENO);
 }
 
 void    do_alloc_pids(t_cmd_block* cmd_block)
