@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 09:58:42 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/07 09:59:38 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,6 @@ int	process_heredoc(t_shell *shell, t_token *token)
 	exit(0);
 	return 1;
 }
-
 
 //bei der durchfuehrung des cmd muss ich den FD des temporäre Datei umleiten.
 // int main()
