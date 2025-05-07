@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gc3.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:01:21 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/06 12:50:55 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 14:59:13 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	gc_free_by_level(t_gc_list *gc_list)
 			to_free = cur;
 			prev->next = cur->next;
 			cur = cur->next;
-			printf("Freeing Node by Level: %p, Data: %p, Type: %d, Level: %d\n", to_free, to_free->data, to_free->type, to_free->level);
+			// printf("Freeing Node by Level: %p, Data: %p, Type: %d, Level: %d\n", to_free, to_free->data, to_free->type, to_free->level);
 			free_data_by_type(to_free->data, to_free->type);
 			free(to_free);
 			to_free = NULL;
@@ -41,7 +41,7 @@ void	gc_free_by_level(t_gc_list *gc_list)
 		}
 	}
 	gc_list->level--;
-	printf("Decreased GC Level to: %d\n", gc_list->level);
+	// printf("Decreased GC Level to: %d\n", gc_list->level);
 }
 
 void	gc_free(t_gc *gc)
@@ -62,7 +62,7 @@ void	gc_free(t_gc *gc)
 	free(gc);
 	gc = NULL;
 	//printf(POWER_PURPLE"--------------------------------------GC CLEAN-------------------------------------------"RESET);
-	printf("\n");
+	// printf("\n");
 }
 
 void	print_list(t_gc_list **gc_lst)
@@ -76,7 +76,7 @@ void	print_list(t_gc_list **gc_lst)
 	cur = (*gc_lst);
 	while (cur != NULL)
 	{
-		printf(PURPLE"[%d]th NODE[%p] [%s], %p\n"RESET, i, cur, (char*)cur->data, cur->data);
+		// printf(PURPLE"[%d]th NODE[%p] [%s], %p\n"RESET, i, cur, (char*)cur->data, cur->data);
 		i++;
 		cur = cur->next;
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_main.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/07 14:03:38 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 15:05:03 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	main_helper(t_main *main, t_gc_list **gc_temp)
 	// }
 	
 	size_t len;
-	main->temp_for_line = readline(YELLOW"minishell> "DEFAULT);
+	main->temp_for_line = readline("minishell> ");
 	len = ft_strlen(main->temp_for_line);
 	if (!main->temp_for_line)
 	{
@@ -105,15 +105,15 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc)
 	t_cmd_block *cmd_block = NULL;
 	indic = validate_syntax(main->tokens);
 	
-	t_shell *shell = get_shell();
-	printf("status = %d\n", shell->last_status_exit);
+	// t_shell *shell = get_shell();
+	// printf("status = %d\n", shell->last_status_exit);
 	
 	if (indic == -1)
 		return (all_free(&gc->temp), -1);
 	if (indic == -2)
 		return (printf(RED"bonus error!\n"DEFAULT), all_free(&gc->temp), -1);
-	print_tokens(main->tokens);
-	printf("2status = %d\n", shell->last_status_exit);
+	// print_tokens(main->tokens);
+	// printf("2status = %d\n", shell->last_status_exit);
 	grouplize(main->tokens, &cmd_block, gc);
 	main_execute(cmd_block);
 	return (0);
@@ -180,7 +180,7 @@ int	main(int argc, char **argv, char **envp)
 		return (printf("ERROR\nMain_loop failed!\n"), -1);
 	if (gc)
 	{
-		printf(YELLOW"gc free execute!\n"DEFAULT);
+		// printf(YELLOW"gc free execute!\n"DEFAULT);
 		gc_free(gc);
 	}
 }

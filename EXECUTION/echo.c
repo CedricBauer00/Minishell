@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:39 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 14:18:10 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 14:47:46 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	ft_echo(char **args, t_shell *shell)
 	t_gc	*gc;
 
 	gc = get_gc();
-	fprintf(stderr, RED"try to do 'echo' ft_echo() \n"DEFAULT);
+	//fprintf(stderr, RED"try to do 'echo' ft_echo() \n"DEFAULT);
 	while (args[i] && strcmp(args[i], "-n") == 0)
 	{
 		is_newline = false;

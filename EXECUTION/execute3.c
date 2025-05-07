@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 09:44:04 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/07 14:49:02 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 	set_io_streams(cur);
 	if (cur->built_in)
 	{
-		fprintf(stderr, RED"is it in pipe for execute_builtin execute_child()\n"DEFAULT);
+		// fprintf(stderr, RED"is it in pipe for execute_builtin execute_child()\n"DEFAULT);
 		execute_builtin(cur, shell);
 	}
 	if (cur->args)
 	{
-		fprintf(stderr, RED"is it in pipe for external cmd execute_child()\n"DEFAULT);
+		// fprintf(stderr, RED"is it in pipe for external cmd execute_child()\n"DEFAULT);
 		run_execve(cur, gc);
 	}
 }
@@ -53,10 +53,10 @@ void	fork_and_execute(t_cmd_block *cmd_block, t_gc *gc, int *i)
 	if (cur->next)
 	{
 		add_pipe(&cur);
-		fprintf(stderr, YELLOW"[pid %d] p_pipe->pipefd[0]: %d, p_pipe->pipefd[1]: %d\n"DEFAULT,getpid(), cur->pipe->pipefd[0], cur->pipe->pipefd[1]);
+		// fprintf(stderr, YELLOW"[pid %d] p_pipe->pipefd[0]: %d, p_pipe->pipefd[1]: %d\n"DEFAULT,getpid(), cur->pipe->pipefd[0], cur->pipe->pipefd[1]);
 	}
 	pid = fork();
-	fprintf(stderr,YELLOW"[pid %d] fork()\n"DEFAULT, getpid());
+	// fprintf(stderr,YELLOW"[pid %d] fork()\n"DEFAULT, getpid());
 	if (pid == 0) //signal function call?
 		execute_child(cur, gc, shell);
 	close_pipefd(cur);

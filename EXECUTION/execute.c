@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 12:22:50 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 14:47:56 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void    execute_single_command(t_cmd_block *cmd_block)
     gc = get_gc();
     if(cmd_block && !cmd_block->prev && !cmd_block->next)
     {
-        fprintf(stderr, RED"this is execute_single_command()\n"DEFAULT);
+       // fprintf(stderr, RED"this is execute_single_command()\n"DEFAULT);
         single_cmd_execute(cmd_block, gc);
     }
 }
@@ -48,7 +48,7 @@ void    main_execute(t_cmd_block *cmd_block)
     stdin_backup = dup(STDIN_FILENO);
     stdout_backup = dup(STDOUT_FILENO);
     int pid_counts = count_command(cmd_block);
-    printf("pid_counts %d\n", pid_counts);
+   // printf("pid_counts %d\n", pid_counts);
     do_alloc_pids(cmd_block);
     if (pid_counts == 1)
         execute_single_command(cur);
@@ -59,7 +59,7 @@ void    main_execute(t_cmd_block *cmd_block)
     dup2(stdout_backup, STDOUT_FILENO);
     close(stdin_backup);
     close(stdout_backup);
-    fprintf(stderr, RED"-CHECK ORGINAL STDIN AND STDOUT-\n STDIN_FILENO: %d, STDOUT_FILENO: %d\n"DEFAULT, STDIN_FILENO, STDOUT_FILENO);
+    //fprintf(stderr, RED"-CHECK ORGINAL STDIN AND STDOUT-\n STDIN_FILENO: %d, STDOUT_FILENO: %d\n"DEFAULT, STDIN_FILENO, STDOUT_FILENO);
 }
 
 void    do_alloc_pids(t_cmd_block* cmd_block)
@@ -78,7 +78,7 @@ void    do_alloc_pids(t_cmd_block* cmd_block)
         gc_free(gc);
         exit(1);
     }
-    fprintf(stderr, YELLOW"pids is alloc in do_alloc_pids() counts: %d\n"DEFAULT, count);
+   // fprintf(stderr, YELLOW"pids is alloc in do_alloc_pids() counts: %d\n"DEFAULT, count);
 }
 
 int count_command(t_cmd_block *cmd_block)
