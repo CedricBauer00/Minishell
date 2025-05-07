@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 12:40:25 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 14:19:23 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,10 @@ int	process_heredoc(t_shell *shell, t_token *token)
 		char *line;
 		line = readline("> ");
 		if (!line)
-			break;
+		{
+			gc_free(gc);
+			exit(1);
+		}
 		char *expanded_var = expand_case_in_heredoc(line, shell);
 		size_t len = ft_strlen(line);
 		char *temp = do_alloc(&gc->temp, len + 1, TYPE_SINGLE_PTR, "heredoc");
@@ -98,7 +101,7 @@ int	process_heredoc(t_shell *shell, t_token *token)
 		if (!temp || strcmp(temp, token->value) == 0)
 		{
 			gc_free(gc);
-			exit(0);
+			exit(1);
 			//break;
 		}
 		write(fd_heredoc, expanded_var, strlen(expanded_var));
@@ -111,33 +114,33 @@ int	process_heredoc(t_shell *shell, t_token *token)
 	return 1;
 }
 
-void	wait_for_heredoc_pid(pid_t heredoc_pid, int status)
+int	wait_for_heredoc_pid(pid_t heredoc_pid, int status)
 {
 	t_shell *shell;
 
 	shell = get_shell();
 	signal(SIGINT, SIG_IGN);
 	waitpid(heredoc_pid, &status, 0);
-	if (WIFSIGNALED(status))
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 	{
-		if (WTERMSIG(status) == SIGINT)
-		{
-			shell->last_status_exit = 1;
-			//return (-1);
-		}
+		printf(BLUE"1\n"DEFAULT);
+		shell->last_status_exit = 1;
+		return (-1);
 	}
 	else if (WIFEXITED(status))
 	{
 		int exit_status = WEXITSTATUS(status);
 		if (exit_status != 0)
 		{
+			printf(BLUE"2\n"DEFAULT);
 			shell->last_status_exit = exit_status;
-			//return (-1);
+			return (1);
 		}
 	}
+	return 0;
 }
 
-void	execute_heredoc(t_shell *shell, t_token *cur)
+int	execute_heredoc(t_shell *shell, t_token *cur)
 {
 	int status = 0;
 	pid_t pid;
@@ -147,26 +150,10 @@ void	execute_heredoc(t_shell *shell, t_token *cur)
 		process_heredoc(shell, cur);
 	else if (pid > 0)
 	{
-		wait_for_heredoc_pid(pid, status);
-		// signal(SIGINT, SIG_IGN);
-		// waitpid(pid, &status, 0);
-		// if (WIFSIGNALED(status))
-		// {
-		// 	if (WTERMSIG(status) == SIGINT)
-		// 	{
-		// 		shell->last_status_exit = 1;
-		// 		//return (-1); 
-		// 	}
-		// }
-		// else if (WIFEXITED(status))
-		// {
-		// 	int exit_status = WEXITSTATUS(status);
-		// 	if (exit_status != 0)
-		// 	{
-		// 		shell->last_status_exit = exit_status;
-		// 		//return (-1);
-		// 	}
-		// }
+		int test = wait_for_heredoc_pid(pid, status);
+		if (test == -1)
+			return -1;
 	}
+	return 0;
 }
 

@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/07 11:48:29 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 14:03:38 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,14 +104,16 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc)
 	lex_tokens_correctly(main->tokens);
 	t_cmd_block *cmd_block = NULL;
 	indic = validate_syntax(main->tokens);
-	/*
-	printf("status = %d\n", get_shell(gc->temp)->last_status_exit);
-	*/
+	
+	t_shell *shell = get_shell();
+	printf("status = %d\n", shell->last_status_exit);
+	
 	if (indic == -1)
 		return (all_free(&gc->temp), -1);
 	if (indic == -2)
 		return (printf(RED"bonus error!\n"DEFAULT), all_free(&gc->temp), -1);
 	print_tokens(main->tokens);
+	printf("2status = %d\n", shell->last_status_exit);
 	grouplize(main->tokens, &cmd_block, gc);
 	main_execute(cmd_block);
 	return (0);

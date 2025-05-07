@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:39 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 12:53:16 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 14:18:10 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,28 +25,30 @@ void	ft_echo(char **args, t_shell *shell)
 		is_newline = false;
 		i++;
 	}
-	
-	while (args[i])
+	if (args[i][0] == '$' && ft_strlen(args[i]) > 1)
 	{
-		if (args[i][0] == '$' && ft_strlen(args[i]) > 1)
+		if (args[i])
 		{
-			
 			char *var_name = *args + 1;
 			char *var = find_var_in_env(shell->my_envp, var_name, ft_strlen(var_name), gc->temp);
 			if (!var)
 			{
 				// all_free(&gc->temp);???
 				// is_newline = true;
-				printf(YELLOW"%d\n"DEFAULT, shell->last_status_exit);
-			}
-			else
-			{
-				printf("%s", var);
+				printf(YELLOW"\n"DEFAULT);
 			}
 		}
-		if (args[i + 1])
-			printf(" ");
-		i++;
+	}
+	else if (args[i])
+	{
+	
+		while (args[i] != NULL)
+		{
+			printf(YELLOW"%s", args[i]);
+			if (args[i + 1] != NULL)
+				printf(" ");
+			i++;
+		}
 	}
 	if (is_newline)
 		printf(YELLOW"\n"DEFAULT);

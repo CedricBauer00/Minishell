@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:01:32 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/07 12:02:27 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 14:18:39 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ int	validate_syntax(t_token *token)
 		if (cur->type == TOKEN_HEREDOC)
 		{
 			//todo move to here heredoc
-			execute_heredoc(shell, cur);
+			if (execute_heredoc(shell, cur) == -1)
+				return (-1);
 		}
 		if (syntax_helper(&cur) < 0)
 		{

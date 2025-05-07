@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:26:29 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/05 13:27:56 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 13:47:17 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,15 @@
 
 void	signal_func(int sig)
 {
+	t_shell	*shell;
+
+	shell = get_shell();
 	(void)sig;
 	write(1, "\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
+	shell->last_status_exit = 1;
 }
 
 int	ttyattr(void)
