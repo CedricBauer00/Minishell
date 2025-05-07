@@ -6,11 +6,12 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 10:25:43 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 11:50:04 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
+
 void    execute_pipeline(t_cmd_block *cmd_block)
 {
     t_cmd_block *cur;
@@ -37,37 +38,7 @@ void    execute_single_command(t_cmd_block *cmd_block)
         single_cmd_execute(cmd_block, gc);
     }
 }
-void    do_alloc_pids(t_cmd_block* cmd_block)
-{
-    int     count;
-    t_shell *shell;
-    t_gc    *gc;
-    gc = get_gc();
-    count = count_command(cmd_block);
-    if (count == 0 || (count == 1 && cmd_block->built_in))
-        return ;
-    shell = get_shell();
-    shell->pids = do_alloc(&gc->temp, sizeof(pid_t) * count, TYPE_SINGLE_PTR, "pids");
-    if(!shell->pids)
-    {
-        gc_free(gc);
-        exit(1);
-    }
-    fprintf(stderr, YELLOW"pids is alloc in do_alloc_pids() counts: %d\n"DEFAULT, count);
-}
-int count_command(t_cmd_block *cmd_block)
-{
-    t_cmd_block *temp;
-    int         count;
-    temp = cmd_block;
-    count = 0;
-    while(temp)
-    {
-        count++;
-        temp = temp->next;
-    }
-    return count;
-}
+
 void    main_execute(t_cmd_block *cmd_block)
 {
     t_cmd_block *cur;
@@ -89,4 +60,41 @@ void    main_execute(t_cmd_block *cmd_block)
     close(stdin_backup);
     close(stdout_backup);
     fprintf(stderr, RED"-CHECK ORGINAL STDIN AND STDOUT-\n STDIN_FILENO: %d, STDOUT_FILENO: %d\n"DEFAULT, STDIN_FILENO, STDOUT_FILENO);
+}
+
+
+
+
+
+void    do_alloc_pids(t_cmd_block* cmd_block)
+{
+    int     count;
+    t_shell *shell;
+    t_gc    *gc;
+    gc = get_gc();
+    count = count_command(cmd_block);
+    if (count == 0 || (count == 1 && cmd_block->built_in))
+        return ;
+    shell = get_shell();
+    shell->pids = do_alloc(&gc->temp, sizeof(pid_t) * count, TYPE_SINGLE_PTR, "pids");
+    if(!shell->pids)
+    {
+        gc_free(gc);
+        exit(1);
+    }
+    fprintf(stderr, YELLOW"pids is alloc in do_alloc_pids() counts: %d\n"DEFAULT, count);
+}
+
+int count_command(t_cmd_block *cmd_block)
+{
+    t_cmd_block *temp;
+    int         count;
+    temp = cmd_block;
+    count = 0;
+    while(temp)
+    {
+        count++;
+        temp = temp->next;
+    }
+    return count;
 }

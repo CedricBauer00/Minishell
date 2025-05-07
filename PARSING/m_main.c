@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_main.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/06 16:46:39 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/07 11:48:29 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,18 @@ t_main	*get_main(void)
 
 int	main_helper(t_main *main, t_gc_list **gc_temp)
 {
+	//MEMO FOR TESTER
+	// if (isatty(fileno(STDIN_FILENO)))
+	// 	main->temp_for_line = readline(YELLOW"minishell> "DEFAULT);
+	// else
+	// {
+	// 	char *line;
+	// 	line = get_next_line(fileno(STDIN_FILENO));
+	// 	main->temp_for_line = ft_strtrim(line, "\n");
+	// 	free(line);
+	// }
+	
 	size_t len;
-
 	main->temp_for_line = readline(YELLOW"minishell> "DEFAULT);
 	len = ft_strlen(main->temp_for_line);
 	if (!main->temp_for_line)

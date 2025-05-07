@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/07 09:43:22 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/07 12:18:05 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,9 +168,9 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			gc_free(gc);
 			exit(1);
 		}
-		fprintf(stderr, YELLOW"cmd_path: %s\n"DEFAULT, cmd_path);
-		fprintf(stderr, YELLOW"cmd_block->args[0]: %s\n"DEFAULT, cmd_block->args[0]);
-		fprintf(stderr, YELLOW"cmd_block->args[1]: %s\n"DEFAULT, cmd_block->args[1]);	
+		// fprintf(stderr, YELLOW"cmd_path: %s\n"DEFAULT, cmd_path);
+		// fprintf(stderr, YELLOW"cmd_block->args[0]: %s\n"DEFAULT, cmd_block->args[0]);
+		// fprintf(stderr, YELLOW"cmd_block->args[1]: %s\n"DEFAULT, cmd_block->args[1]);	
 		if (access(cmd_path, F_OK | X_OK) == 0)
 		{
 			signal(SIGINT, signal_handler_for_child);
@@ -225,3 +225,5 @@ void	wait_for_child_and_update_status(int i)
 		idx++;
 	}
 }
+
+

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 09:56:34 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/07 12:18:01 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,8 @@ void	grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc);
 t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc);
 
 //memo heredoc.c
-int	heredoc();
+int		heredoc();
+void	wait_for_heredoc_pid(pid_t heredoc_pid, int status);
 
 //memo builtin_utils.c
 char	*find_var_in_env(char **my_envp, char *find, size_t find_len, t_gc_list *gc_lst);
@@ -163,8 +164,8 @@ bool	is_validate_cmd_block(t_cmd_block *cmd_b);
 void	validate_check(t_cmd_block *cmd_block);
 
 //memo heredoc.c
-int	process_heredoc(t_shell *shell, t_token *token);
-
+int		process_heredoc(t_shell *shell, t_token *token);
+void	execute_heredoc(t_shell *shell, t_token *cur);
 
 // ----------------------------------------------------------------------
 // 							memo execute.c

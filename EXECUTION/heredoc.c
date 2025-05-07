@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 11:01:07 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/07 12:18:09 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ static char	*expand_case_in_heredoc(char *line ,t_shell *shell)
 			int start = i;
 			printf("case1\n");
 			i++;
-			while(line[i] && (line[i] || line[i] == '_'))
+			while(line[i] && (ft_isalpha(line[i]) || line[i] == '_'))
 			{
 				i++;
 			}
-			key =  ft_substr(line, start, i - start);//$USER
+			key =  ft_substr(line, start, i - start);
 			fprintf(stderr, "key : %s\n", key);
 			k = check_existing(shell->my_envp, &key[1]);
 			fprintf(stderr, "k %d\n", k);
@@ -44,6 +44,11 @@ static char	*expand_case_in_heredoc(char *line ,t_shell *shell)
 			{
 				value = extract_value(shell->my_envp[k]);
 				fprintf(stderr, "value %s\n", value);
+			}
+			else
+			{
+				result = gc_strdup("", &gc->temp);
+				return result;
 			}
 			result = gc_strjoin(result, value, &gc->temp);
 			fprintf(stderr, RED"result : %s\n"DEFAULT, result);
@@ -107,8 +112,62 @@ int	process_heredoc(t_shell *shell, t_token *token)
 	return 1;
 }
 
-//bei der durchfuehrung des cmd muss ich den FD des temporäre Datei umleiten.
-// int main()
-// {
-// 	heredoc();
-// }
+void	wait_for_heredoc_pid(pid_t heredoc_pid, int status)
+{
+	t_shell *shell;
+
+	shell = get_shell();
+	signal(SIGINT, SIG_IGN);
+	waitpid(heredoc_pid, &status, 0);
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGINT)
+		{
+			shell->last_status_exit = 1;
+			//return (-1); 
+		}
+	}
+	else if (WIFEXITED(status))
+	{
+		int exit_status = WEXITSTATUS(status);
+		if (exit_status != 0)
+		{
+			shell->last_status_exit = exit_status;
+			//return (-1);
+		}
+	}
+}
+
+void	execute_heredoc(t_shell *shell, t_token *cur)
+{
+	int status = 0;
+	pid_t pid;
+	pid = 0;
+	pid = fork();
+	if (pid == 0)
+		process_heredoc(shell, cur);
+	else if (pid > 0)
+	{
+		wait_for_heredoc_pid(pid, status);
+		// signal(SIGINT, SIG_IGN);
+		// waitpid(pid, &status, 0);
+		// if (WIFSIGNALED(status))
+		// {
+		// 	if (WTERMSIG(status) == SIGINT)
+		// 	{
+		// 		shell->last_status_exit = 1;
+		// 		//return (-1); 
+		// 	}
+		// }
+		// else if (WIFEXITED(status))
+		// {
+		// 	int exit_status = WEXITSTATUS(status);
+		// 	if (exit_status != 0)
+		// 	{
+		// 		shell->last_status_exit = exit_status;
+		// 		//return (-1);
+		// 	}
+		// }
+	}
+}
+
