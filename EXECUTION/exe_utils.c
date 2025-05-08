@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exe_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:50 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 14:57:29 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/08 15:51:28 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,4 @@ void	is_exited(void *failed, t_gc *gc)
 		gc_free(gc);
 		exit(EXIT_FAILURE);
 	}
-	// else
-	// 	printf(BLUE"in is_exited() alloc success\n"DEFAULT);
 }

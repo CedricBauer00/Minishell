@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:26 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 17:56:39 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/08 18:17:04 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,9 @@ int	handle_re_dir(t_cmd_block *cmd_block)
 void	set_io_streams(t_cmd_block *cmd)	
 {
 	t_io_streams_list	*io_streams;
+	t_gc				*gc;
 
+	gc = get_gc();
 	if(!cmd)
 		return ;
 	io_streams = cmd->io_streams;
@@ -111,19 +113,46 @@ void	set_io_streams(t_cmd_block *cmd)
 	{
 		if (io_streams->infile_name)
 		{
-			in_redir_file_open(io_streams, io_streams->infile_name);
-			re_dir_in(io_streams);
+			if (in_redir_file_open(io_streams, io_streams->infile_name) == -1)
+			{
+				gc_free(gc);
+				exit(1);
+			}
+			if (re_dir_in(io_streams) == -1)
+			{
+				gc_free(gc);
+				exit(1);
+			}
 		}
 		if (io_streams->outfile_name)
 		{
-			out_redir_file_open(io_streams, io_streams->outfile_name);
-			re_dir_out(io_streams);
+			if (out_redir_file_open(io_streams, io_streams->outfile_name) == -1)
+			{
+				gc_free(gc);
+				exit(1);
+			}
+			if (re_dir_out(io_streams) == -1)
+			{
+				gc_free(gc);
+				exit(1);
+			}
 		}
 		if (io_streams->append_file_name)
 		{
-			append_redir_file_open(io_streams, io_streams->append_file_name);
-			re_dir_out(io_streams);
+			if (append_redir_file_open(io_streams, io_streams->append_file_name) == -1)
+			{
+				gc_free(gc);
+				exit(1);
+			}
+			if (re_dir_out(io_streams) == -1)
+			{
+				gc_free(gc);
+				exit(1);
+			}
 		}
 		io_streams = io_streams->next;
 	}
 }
+
+
+

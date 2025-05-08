@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/07 18:59:36 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/08 16:56:34 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc)
 		return (all_free(&gc->temp), -1);
 	if (indic == -2)
 		return (printf(RED"bonus error!\n"DEFAULT), all_free(&gc->temp), -1);
-	print_tokens(main->tokens);
+	//print_tokens(main->tokens);
 	grouplize(main->tokens, &cmd_block, gc);
 	main_execute(cmd_block);
 	return (0);
@@ -139,12 +139,6 @@ int	main_loop(t_main *main, int i, t_gc *gc)
 	return (0);
 }
 
-/*
-	heredoc exection
-	normal exection
-	right before print_tokens
-*/
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_main	main;
@@ -159,8 +153,8 @@ int	main(int argc, char **argv, char **envp)
 	//main = *get_main();
 	signal(SIGINT, signal_func);
 	signal(SIGQUIT, SIG_IGN);
-	// if (ttyattr() < 0)
-	// 	return (printf("ERROR\nttyattr failed!\n"), -1);
+	if (ttyattr() < 0)
+	 	return (printf("ERROR\nttyattr failed!\n"), -1);
 	gc = get_gc();
 	shell = get_shell();
 	shell->my_envp = copy_envp(gc, envp);

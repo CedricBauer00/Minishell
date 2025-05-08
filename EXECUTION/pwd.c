@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:22 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 16:58:37 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/08 14:29:08 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ char	*my_getcwd()
 	temp = getcwd(NULL, 0);
 	if (!temp)
 	{
-		//perror(RED"getcwd()failed"DEFAULT);
 		gc_free(gc);
 		exit(1);
 	}
@@ -30,7 +29,7 @@ char	*my_getcwd()
 	if (!cwd)
 	{
 		gc_free(gc);
-		return NULL; 
+		exit(1);
 	}
 	ft_strlcpy(cwd, temp, ft_strlen(temp) + 1);
 	free(temp);

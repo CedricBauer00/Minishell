@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 18:19:08 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/08 12:05:51 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,21 +65,21 @@ static char	*expand_case_in_heredoc(char *line ,t_shell *shell)
 	return (result);
 }
 
-int	process_heredoc(t_shell *shell, t_token *token)
+void	process_heredoc(t_shell *shell, t_token *token)
 {
 	int	fd_heredoc;
 	t_gc *gc;
 
 	
 	gc = get_gc();
-	fd_heredoc = 0;
 	fd_heredoc = open("temp_heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
 	// fprintf(stderr, YELLOW"[pid %d] fd_heredoc open(), fd_heredoc fd : %d\n", getpid(), fd_heredoc);
 	shell->heredoc_fd = fd_heredoc;
 	if (fd_heredoc == -1)
 	{
 		perror(RED"failed to open temp_heredoc"DEFAULT);
-		return -1;
+		gc_free(gc);
+		exit(1);
 	}
 	signal(SIGINT, SIG_DFL);
 	while(1)
@@ -110,7 +110,6 @@ int	process_heredoc(t_shell *shell, t_token *token)
 	gc_free(gc);
 	// fprintf(stderr, YELLOW"[pid %d] close() %d\n"DEFAULT,getpid(), fd_heredoc);
 	exit(0);
-	return 1;
 }
 
 int	wait_for_heredoc_pid(pid_t heredoc_pid, int status)

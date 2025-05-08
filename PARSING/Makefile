@@ -67,7 +67,10 @@ SOURCES = m_main.c \
 		../EXECUTION/pwd.c \
 		../EXECUTION/redirection.c \
 		../EXECUTION/unset.c \
-		../EXECUTION/signal.c
+		../EXECUTION/signal.c\
+		../EXECUTION/exit.c\
+		../EXECUTION/ft_setenv.c\
+		../EXECUTION/builtin_utils1.c
 
 OBJECTS := $(SOURCES:.c=.o)
 

@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/07 18:58:54 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/08 18:03:11 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,36 +88,24 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 	t_gc *gc;
 
 	gc = get_gc();
-	if (strcmp(cur->built_in, "cd") == 0)
-	{
+	if (ft_strcmp(cur->built_in, "cd") == 0)
 		cd(cur->args, shell, gc);
-	}
-	if (strcmp(cur->built_in, "echo") == 0)
-	{
-		
+	else if (ft_strcmp(cur->built_in, "echo") == 0)
 		ft_echo(cur->args, shell);
-	}
-	if (strcmp(cur->built_in, "export") == 0)
-	{
+	else if (ft_strcmp(cur->built_in, "export") == 0)
 		export(cur->args, shell);
-	}
-	if (strcmp(cur->built_in, "pwd") == 0)
-	{
+	else if (ft_strcmp(cur->built_in, "pwd") == 0)
 		ft_pwd(cur->args, gc);
-	}
-	if (strcmp(cur->built_in, "env") == 0)
-	{
+	else if (ft_strcmp(cur->built_in, "env") == 0)
 		ft_env(cur->args, shell);
-	}
-	if (strcmp(cur->built_in, "unset") == 0)
-	{
+	else if (ft_strcmp(cur->built_in, "unset") == 0)
 		ft_unset(cur->args, shell);
-	}
-	//todo exit!
-	if (strcmp(cur->built_in, "exit") == 0)
-	{
-		ft_unset(cur->args, shell);
-	}
+	else if (ft_strcmp(cur->built_in, "exit") == 0)
+		ft_exit(cur->args, shell);
+	else
+		;
+	all_free(&gc->temp);
+	return ;
 }
 
 void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
@@ -125,6 +113,8 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 	char	**splitted_path;
 	t_shell	*shell;
 
+	if ( !cmd_block)
+		return ;
 	shell = get_shell();
 	char *path = find_var_in_env(shell->my_envp, "PATH", 4, gc->temp);
 	if (!path)
@@ -186,7 +176,7 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			}
 			i++;
 		}
-	//printf(RED"command not found\n"DEFAULT);
+	printf(RED"command not found\n"DEFAULT);
 	exit(127);
 	}
 }
@@ -210,20 +200,14 @@ void	wait_for_child_and_update_status(int i)
 		// fprintf(stderr ,BLUE"child_pid %d\n"DEFAULT, child_pid);
 		// fprintf(stderr ,BLUE"parent got this from wait4() child_pid : %d\n"DEFAULT, child_pid);
 		if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
-		{
 			// fprintf(stderr, BLUE"exited with %d\n"DEFAULT, WEXITSTATUS(status));
 			shell->last_status_exit = WEXITSTATUS(status);  //parents get exit status 
-		}
 		if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
-		{
 			// fprintf(stderr, BLUE"exited with %d\n"DEFAULT, WEXITSTATUS(status));
 			shell->last_status_exit = WEXITSTATUS(status);  //parents get exit status 
-		}
 		else if (WIFSIGNALED(status))
-		{
 			// fprintf(stderr, BLUE"terminated by signal %d (%s)\n" DEFAULT, WTERMSIG(status), strsignal(WTERMSIG(status)));
 			shell->last_status_exit = 128 + WTERMSIG(status);
-		}
 		idx++;
 	}
 }
