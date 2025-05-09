@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/09 14:23:07 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 16:04:07 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,21 +67,21 @@ static char	*expand_case_in_heredoc(char *line ,t_shell *shell)
 
 void	process_heredoc(t_shell *shell, t_token *token)
 {
-	int	fd_heredoc;
+	int	fd_heredoc = shell->heredoc_fd;
 	t_gc *gc;
 
 	
 	gc = get_gc();
 	//error okay here is wrong right !
-	fd_heredoc = open("temp_heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
-	fprintf(stderr, YELLOW"[pid %d] fd_heredoc open(), fd_heredoc fd : %d\n", getpid(), fd_heredoc);
-	shell->heredoc_fd = fd_heredoc;
-	if (fd_heredoc == -1)
-	{
-		perror(RED"failed to open temp_heredoc"DEFAULT);
-		gc_free(gc);
-		exit(1);
-	}
+	// fd_heredoc = open("temp_heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
+	// fprintf(stderr, YELLOW"[pid %d] fd_heredoc open(), fd_heredoc fd : %d\n", getpid(), fd_heredoc);
+	// shell->heredoc_fd = fd_heredoc;
+	// if (fd_heredoc == -1)
+	// {
+	// 	perror(RED"failed to open temp_heredoc"DEFAULT);
+	// 	gc_free(gc);
+	// 	exit(1);
+	// }
 	signal(SIGINT, SIG_DFL);
 	while(1)
 	{
@@ -89,6 +89,7 @@ void	process_heredoc(t_shell *shell, t_token *token)
 		line = readline("> ");
 		if (!line)
 		{
+			close(fd_heredoc);
 			gc_free(gc);
 			exit(1);
 		}				
@@ -99,7 +100,9 @@ void	process_heredoc(t_shell *shell, t_token *token)
 		if (!line || strcmp(line, token->value) == 0)
 		{
 			free(line);
+			close(fd_heredoc);
 			gc_free(gc);
+			// fprintf(stderr, YELLOW"[pid %d] close() %d\n"DEFAULT,getpid(), fd_heredoc);
 			exit(1);
 			break;
 		}
@@ -107,10 +110,6 @@ void	process_heredoc(t_shell *shell, t_token *token)
 		write(fd_heredoc, "\n", 1);
 		free(line);
 	}
-	close(fd_heredoc);
-	gc_free(gc);
-	 fprintf(stderr, YELLOW"[pid %d] close() %d\n"DEFAULT,getpid(), fd_heredoc);
-	exit(0);
 }
 
 int	wait_for_heredoc_pid(pid_t heredoc_pid, int status)

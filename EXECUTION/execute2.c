@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/09 14:17:45 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 16:03:18 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 		//fprintf(stderr, YELLOW" singlecmd for child proc fork() : %d , shell->pids[0] %d \n"DEFAULT, pid, shell->pids[0]) ;
 		if (pid == 0) //signal implementation?
 		{
-		
 			if (cur->io_streams && cur->io_streams->heredoc_eof)
 			{
 				if (heredoc_fd_offset_and_redir(cur) == -1)
@@ -67,10 +66,11 @@ int heredoc_fd_offset_and_redir(t_cmd_block *cur)
 	shell = get_shell();
 	if (!cur)
 		return -1;
-	shell->heredoc_fd = open("temp_heredoc" ,O_RDWR, O_CREAT, 0644);
+	//fprintf(stderr, "heredoc fd %d\n", shell->heredoc_fd);
+	shell->heredoc_fd = open("temp_heredoc" ,O_RDWR | O_CREAT, 0644);
 	if (shell->heredoc_fd < 0)
 	{
-		fprintf(stderr, RED"heredoc_fd : %d, in heredoc_fd_offset_and_redir 1 \n"DEFAULT, shell->heredoc_fd);
+		//fprintf(stderr, RED"heredoc_fd : %d, in heredoc_fd_offset_and_redir 1 \n"DEFAULT, shell->heredoc_fd);
 		return -1;
 	}
 	if (dup2(shell->heredoc_fd, STDIN_FILENO) == -1)
@@ -139,7 +139,6 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			gc_free(gc);
 			exit(1);
 		}
-		//
 		fprintf(stderr, RED"command not found (absolute path): %s\n"DEFAULT, cmd_block->args[0]);
 		exit(127);
 	}

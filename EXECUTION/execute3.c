@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/09 13:17:20 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 16:06:23 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ void	prevent_zombie_process()
 
 void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 {
+	//fprintf(stderr, "in execute_child() : heredoc->fd %d\n", shell->heredoc_fd);
+	//TODO i can change later if statsments  --> if (shell->heredoc_fd > 0)
 	if (cur && cur->io_streams && cur->io_streams->heredoc_eof)
 	{
 		if (heredoc_fd_offset_and_redir(cur) == -1)

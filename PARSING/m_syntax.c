@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:01:32 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/09 14:35:41 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 16:03:28 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,20 @@ int	validate_syntax(t_token *token)
 		if (cur->type == TOKEN_HEREDOC)
 		{
 			//todo move to here heredoc
-			fprintf(stderr, "before running heredoc_fd %d", shell->heredoc_fd);
+			t_gc *gc = get_gc();
+			int heredoc_fd = open("temp_heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
+			//fprintf(stderr, YELLOW"[pid %d] fd_heredoc open(), fd_heredoc fd : %d\n", getpid(), shell->heredoc_fd);
+			if (heredoc_fd == -1)
+			{
+				perror(RED"failed to open temp_heredoc"DEFAULT);
+				gc_free(gc);
+				exit(1);
+			}
+			else if (heredoc_fd > 0)
+			{
+				shell->heredoc_fd = heredoc_fd;
+				// fprintf(stderr, YELLOW"fd_heredoc is exist\n");
+			}
 			if (execute_heredoc(shell, cur) == -1)
 				return (-1);
 		}

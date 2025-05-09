@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:08 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/09 14:07:04 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 16:05:43 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ static void	add_io_streams(t_token **cur, t_cmd_block *new_cmd_block)
 	//todo can i delete it?
 	if((*cur)->type & (TOKEN_HEREDOC))
 	{
-		fprintf(stderr, RED"if heredoc in grouplize()\n"DEFAULT);
+		// fprintf(stderr, RED"if heredoc in grouplize()\n"DEFAULT);
 		new_io_streams->heredoc_eof = gc_strdup((*cur)->value, &gc->temp);
 		t_gc_list *find;
 		find = find_node(gc->temp, (char*)(*cur)->value);
@@ -166,7 +166,7 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 	// }
 	int i = 0;
 	args_count = count_cmd_block(cur);
-	fprintf(stderr, "args_count : %d\n", args_count);
+	// fprintf(stderr, "args_count : %d\n", args_count);
 	new_cmd_block->args = (char**)do_alloc(&gc->temp, sizeof(char*) * (args_count + 1), TYPE_DOUBLE_PTR, "new_cmd_block->args");
 	is_exited(new_cmd_block->args, gc);
 	
