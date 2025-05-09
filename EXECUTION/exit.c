@@ -28,12 +28,12 @@ long long	ft_atoll(const char *str, long long *exitvalue)
 		if (num > (LONGLONGMAX / 10) || (num == (LONGLONGMAX / 10) && digit > LONGLONGMAX % 10))
         {
              *exitvalue = 255;
-            return 0;
+            return -1;
         }
         if (num < (LONGLONGMIN / 10) || (num == (LONGLONGMIN / 10) && digit > -(LONGLONGMIN % 10)))
         {
             *exitvalue = 255;
-            return 0;
+            return -1;
         }
 		num = num * 10 + digit;
 		str++;
@@ -42,11 +42,12 @@ long long	ft_atoll(const char *str, long long *exitvalue)
 	if (num > LONGLONGMAX || num < LONGLONGMIN)
 	{
 		*exitvalue = 255;
-		return 0;
+		return -1;
 	}
     return num;
 }
 
+//memo case for "exit dsfsdf"
 void	ft_exit(char **args, t_shell *shell)
 {
 	long long exitvalue;
@@ -59,21 +60,21 @@ void	ft_exit(char **args, t_shell *shell)
 	write(1, "exit\n", 5);
 	if (args[0] == NULL)
 	{
-		gc_free(gc);
 		exit(shell->last_status_exit);
+		gc_free(gc);
 	}
 	if (args[1] != NULL)
 	{
 		fprintf(stderr, RED"exit: too many arguments\n"DEFAULT);
-		all_free(&gc->temp);
 		shell->last_status_exit = 1;
+		all_free(&gc->temp);
 		return;
 	}
-
 	temp = args[0];
 	if (*temp == '-' || *temp == '+')
 			temp++;
 
+	//todo if is not allowed value ... if its not number  
 	if (ft_atoll(args[0], &exitvalue) == -1)
 	{
 		fprintf(stderr, RED"exit: %s numeric argument required\n"DEFAULT, args[0]);
@@ -82,6 +83,6 @@ void	ft_exit(char **args, t_shell *shell)
 	}
 
 	shell->last_status_exit = (unsigned char)exitvalue % 256;
-	gc_free(gc);
 	exit(shell->last_status_exit);
+	gc_free(gc);
 }
