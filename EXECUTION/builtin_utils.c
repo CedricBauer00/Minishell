@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:18 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/06 11:21:32 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/08 18:03:49 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,62 @@ bool	is_valid_identifier(const char *name)
 	i = 0;
 	if (!name || (!ft_isalpha(name[0]) && name[0] != '_'))
 		return (false);
-	// i = 1;
-	// while (name[i])
-	// {
-	// 	if (!ft_isalpha(name[i]) && name[i] != '_')
-	// 		return (false);
-	// 	i++;
-	// }
 	else
 		return (true);
+}
+
+char	*create_new_path(const char *name, const char *value)
+{
+	int		namelen;
+	int		total_len;
+	t_gc	*gc;
+	char	*new_path;
+
+	namelen = ft_strlen(name);
+	gc = get_gc();
+	total_len = namelen + 1;
+
+	if (value)
+		total_len += ft_strlen(value) + 1;
+	new_path = do_alloc(&gc->shell, total_len, TYPE_SINGLE_PTR, "new_path");
+	if (!new_path)
+	{
+		perror("failed do_alloc new_path");
+		gc_free(gc);
+		exit(EXIT_FAILURE);
+	}
+	ft_strlcpy(new_path, name, namelen + 1);
+	if (value)
+	{
+		new_path[namelen] = '=';
+		ft_strlcpy(new_path + namelen + 1, value, total_len - namelen - 1);
+	}
+	return (new_path);
+}
+
+int	check_existing(char **my_envp, const char *name)
+{
+	int	i;
+
+	i = 0;
+	while (my_envp[i])
+	{
+		if ((strncmp(my_envp[i], name, strlen(name)) == 0)
+			&& (my_envp[i][strlen(name)] == '='))
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
+int	get_env_count(char **my_envp)
+{
+	if (!my_envp)
+		return (0);
+	int	env_count;
+
+	env_count = 0;
+	while (my_envp[env_count])
+		env_count++;
+	return (env_count);
 }

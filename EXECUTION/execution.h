@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 14:16:22 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/08 16:33:45 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,13 @@ t_io_streams_list	*init_io_stream_struct(t_gc *gc);
 
 t_cmd_block *get_cmd_block(void);
 
+//memo builtin_utils.c
+char	*find_var_in_env(char **my_envp, char *find, size_t find_len, t_gc_list *gc_lst);
+bool	is_valid_identifier(const char *name);
+char	*create_new_path(const char *name, const char *value);
+int		get_env_count(char **my_envp);
+int		check_existing(char **my_envp, const char *name);
+
 //memo copy_envp.c  -- ok!
 char	**copy_envp(t_gc *gc, char **envp);
 int		get_envp_count(char **envp);
@@ -95,14 +102,18 @@ void    ft_env(char **args, t_shell *shell);
 char	*my_getcwd();
 void	ft_pwd(char **args, t_gc *gc);
 
+//memo ft_setenv.c
+void	ft_setenv(const char *name, const char *value, int overwrite, t_shell *shell);
+
 //memo cd.c
 int		is_valid_dir(const char *path);
-int		get_env_count(char **my_envp);
+
 char	**expand_envp(t_shell *shell, char *new_path);
-char	*create_new_path(const char *name, const char *value);
-int		check_existing(char **my_envp, const char *name);
-void	ft_setenv(const char *name, const char *value, int overwrite, t_shell *shell);
+
 void 	cd(char **args, t_shell *shell, t_gc *gc);
+
+//memo exit.c
+void	ft_exit(char **args, t_shell *shell);
 
 //memo export.c
 void	export(char **argv, t_shell *shell);
@@ -154,9 +165,6 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc);
 int		heredoc();
 //void	wait_for_heredoc_pid(pid_t heredoc_pid, int status);
 int	wait_for_heredoc_pid(pid_t heredoc_pid, int status);
-//memo builtin_utils.c
-char	*find_var_in_env(char **my_envp, char *find, size_t find_len, t_gc_list *gc_lst);
-bool	is_valid_identifier(const char *name);
 
 //memo validate.c
 //int		validate_syntax(t_token *token);
@@ -164,7 +172,7 @@ bool	is_validate_cmd_block(t_cmd_block *cmd_b);
 void	validate_check(t_cmd_block *cmd_block);
 
 //memo heredoc.c
-int		process_heredoc(t_shell *shell, t_token *token);
+void		process_heredoc(t_shell *shell, t_token *token);
 //void	execute_heredoc(t_shell *shell, t_token *cur);
 int		execute_heredoc(t_shell *shell, t_token *cur);
 

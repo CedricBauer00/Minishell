@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:39 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 14:47:46 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/09 14:34:36 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,30 +18,15 @@ void	ft_echo(char **args, t_shell *shell)
 	bool is_newline = true;
 	t_gc	*gc;
 
+	(void)shell;
 	gc = get_gc();
-	//fprintf(stderr, RED"try to do 'echo' ft_echo() \n"DEFAULT);
-	while (args[i] && strcmp(args[i], "-n") == 0)
+	while (args[i] && ft_strcmp(args[i], "-n") == 0)
 	{
 		is_newline = false;
 		i++;
 	}
-	if (args[i][0] == '$' && ft_strlen(args[i]) > 1)
+	if (args[i])
 	{
-		if (args[i])
-		{
-			char *var_name = *args + 1;
-			char *var = find_var_in_env(shell->my_envp, var_name, ft_strlen(var_name), gc->temp);
-			if (!var)
-			{
-				// all_free(&gc->temp);???
-				// is_newline = true;
-				printf(YELLOW"\n"DEFAULT);
-			}
-		}
-	}
-	else if (args[i])
-	{
-	
 		while (args[i] != NULL)
 		{
 			printf(YELLOW"%s", args[i]);

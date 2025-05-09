@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:41:48 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/04 16:50:38 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/08 17:59:59 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,5 +82,6 @@ int		ft_strcmp(char *s1, char *s2);
 char	*gc_strdup(const char *str, t_gc_list **gc_list);
 char	*gc_strndup(const char *str, size_t n, t_gc_list **gc_list);
 char	*gc_strjoin(char const *s1, char const *s2, t_gc_list **gc_list);
-
+char	*gc_substr(char const *s, unsigned int start, size_t len, t_gc *gc);
+int		is_valid_char(char c);
 #endif

@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/07 16:02:17 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 13:14:39 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,24 +63,22 @@ t_main	*get_main(void)
 
 int	main_helper(t_main *main, t_gc_list **gc_temp)
 {
+	size_t len = 0;
 	//MEMO FOR TESTER
-	// if (isatty(fileno(STDIN_FILENO)))
-	// 	main->temp_for_line = readline(YELLOW"minishell> "DEFAULT);
+	if (isatty(fileno(stdin)))
+		main->temp_for_line = readline(YELLOW"minishell> "DEFAULT);
 	// else
 	// {
 	// 	char *line;
-	// 	line = get_next_line(fileno(STDIN_FILENO));
+	// 	line = get_next_line(fileno(stdin));
 	// 	main->temp_for_line = ft_strtrim(line, "\n");
 	// 	free(line);
 	// }
-	
-	size_t len;
-	main->temp_for_line = readline(YELLOW"minishell> "DEFAULT);
-	len = ft_strlen(main->temp_for_line);
 	if (!main->temp_for_line)
 	{
 		return (printf("exit\n"), 1);
 	}
+	len = ft_strlen(main->temp_for_line);
 	main->line = do_alloc(gc_temp, len + 1, TYPE_SINGLE_PTR, "input");
 	if (!main->line)
 		return (-1);
@@ -104,14 +102,11 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc)
 	lex_tokens_correctly(main->tokens);
 	t_cmd_block *cmd_block = NULL;
 	indic = validate_syntax(main->tokens);
-	// t_shell *shell = get_shell();
-	// printf("status = %d\n", shell->last_status_exit);
 	if (indic == -1)
 		return (all_free(&gc->temp), -1);
 	if (indic == -2)
 		return (printf(RED"bonus error!\n"DEFAULT), all_free(&gc->temp), -1);
-	print_tokens(main->tokens);
-	// printf("2status = %d\n", shell->last_status_exit);
+	//print_tokens(main->tokens);
 	grouplize(main->tokens, &cmd_block, gc);
 	main_execute(cmd_block);
 	return (0);
@@ -144,12 +139,6 @@ int	main_loop(t_main *main, int i, t_gc *gc)
 	return (0);
 }
 
-/*
-	heredoc exection
-	normal exection
-	right before print_tokens
-*/
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_main	main;
@@ -160,12 +149,12 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	
 	using_history();
-	// set_default(&main);
-	main = *get_main();
+	set_default(&main);
+	//main = *get_main();
 	signal(SIGINT, signal_func);
 	signal(SIGQUIT, SIG_IGN);
 	if (ttyattr() < 0)
-		return (printf("ERROR\nttyattr failed!\n"), -1);
+	 	return (printf("ERROR\nttyattr failed!\n"), -1);
 	gc = get_gc();
 	shell = get_shell();
 	shell->my_envp = copy_envp(gc, envp);
