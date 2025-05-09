@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/09 15:12:30 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/09 17:09:57 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,11 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc)
 	// print_tokens(main->tokens);
 	grouplize(main->tokens, &cmd_block, gc);
 	main_execute(cmd_block);
+	
 	if (gc->temp)
 		all_free(&gc->temp);
+	// print_list(&gc->temp);
+	// print_list(&gc->shell);
 	return (0);
 }
 

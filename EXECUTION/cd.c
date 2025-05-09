@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:23 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/08 17:40:21 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 16:54:08 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,11 @@ static char	*get_cd_target(char **args, t_shell *shell, t_gc *gc)
 	
 	if (args[0] == NULL || ft_strcmp(args[0], "~") == 0)
 	{
-		target = find_var_in_env(shell->my_envp, "HOME", 4, gc->temp);
+		target = find_var_in_env(shell->my_envp, "HOME", 4);
 	}
 	else if (ft_strcmp(args[0], "-") == 0)
 	{
-		target = find_var_in_env(shell->my_envp, "OLDPWD", 6, gc->temp);
+		target = find_var_in_env(shell->my_envp, "OLDPWD", 6);
 	}
 	else
 	{

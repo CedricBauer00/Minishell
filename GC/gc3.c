@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:01:21 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/09 15:10:00 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/09 17:06:19 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	print_list(t_gc_list **gc_lst)
 	cur = (*gc_lst);
 	while (cur != NULL)
 	{
-		// printf(PURPLE"[%d]th NODE[%p] [%s], %p\n"RESET, i, cur, (char*)cur->data, cur->data);
+		printf(PURPLE"[%d]th NODE[%p] [%s], %p\n"RESET, i, cur, (char*)cur->data, cur->data);
 		i++;
 		cur = cur->next;
 	}

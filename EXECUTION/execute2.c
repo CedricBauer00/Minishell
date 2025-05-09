@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/09 16:10:31 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 17:13:56 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,20 +118,20 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 	if ( !cmd_block)
 		return ;
 	shell = get_shell();
-	char *path = find_var_in_env(shell->my_envp, "PATH", 4, gc->temp);
+	char *path = find_var_in_env(shell->my_envp, "PATH", 4);
 	if (!path)
 	{
-		//perror(RED"can't find PATH"DEFAULT);
+		printf(RED"can't find PATH"DEFAULT);
 		gc_free(gc);
 		exit(1);
 	}
-	if (!cmd_block->args)
+	if (!cmd_block->args || !cmd_block->args[0])
 		return ;
+	fprintf(stderr, "cmd_block->args[0]%s\n", cmd_block->args[0]);
 	if (cmd_block->args[0][0] == '/' || ft_strncmp(cmd_block->args[0], "./", 2) == 0)
 	{
 		if (access(cmd_block->args[0], F_OK | X_OK) == 0)
 		{
-			//printf("ishier1\n");
 			signal(SIGINT, signal_handler_for_child);
 			signal(SIGQUIT, signal_handler_for_child);
 			execve(cmd_block->args[0], cmd_block->args, shell->my_envp);
@@ -139,11 +139,13 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			gc_free(gc);
 			exit(1);
 		}
+		
 		fprintf(stderr, RED"command not found (absolute path): %s\n"DEFAULT, cmd_block->args[0]);
 		exit(127);
 	}
 	else
 	{
+		printf("2\n");
 		splitted_path = ft_split(path, ':');
 		free(path);
 		if (!splitted_path)
@@ -173,16 +175,18 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 				signal(SIGQUIT, signal_handler_for_child);
 				if (execve(cmd_path , cmd_block->args, shell->my_envp) == -1)
 				{
-					gc_free(gc);
+					//gc_free(gc);
 					perror(RED"error execve()"DEFAULT);
 					exit(1);
 				}
 			}
 			i++;
 		}
-	printf(RED"command not found\n"DEFAULT);
-	exit(127);
+		printf(RED"command not found\n"DEFAULT);
+	
+		exit(127);
 	}
+	return ;
 }
 
 void	wait_for_child_and_update_status(int i)

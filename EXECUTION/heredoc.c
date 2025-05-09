@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/09 16:11:44 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 17:36:09 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,11 +138,42 @@ int	wait_for_heredoc_pid(pid_t heredoc_pid, int status)
 	return 0;
 }
 
+
+void	signal_func(int sig)
+{
+	t_shell	*shell;
+
+	shell = get_shell();
+	(void)sig;
+	write(1, "\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+	shell->last_status_exit = 1;
+}
+
+int	ttyattr(void)
+{
+	struct termios	temp;
+
+	if (tcgetattr(0, &temp) < 0)
+		return (-1);
+	temp.c_lflag &= ~(ECHOCTL);
+	if (tcsetattr(0, TCSANOW, &temp) < 0)
+		return (-1);
+	return (0);
+}
+
 int	execute_heredoc(t_shell *shell, t_token *cur)
 {
 	int status = 0;
 	pid_t pid;
 	pid = 0;
+	int stdin_backup;
+	int stdout_backup;
+
+	stdin_backup = dup(STDIN_FILENO);
+    stdout_backup = dup(STDOUT_FILENO);
 	pid = fork();
 	if (pid == 0)
 		process_heredoc(shell, cur);
@@ -152,6 +183,14 @@ int	execute_heredoc(t_shell *shell, t_token *cur)
 		//printf("test%d\n", test);
 		if (test == -1)
 			return -1;
+		dup2(stdin_backup, STDIN_FILENO);
+    	dup2(stdout_backup, STDOUT_FILENO);
+    	close(stdin_backup);
+    	close(stdout_backup);
+		signal(SIGINT, signal_func);
+		signal(SIGQUIT, SIG_IGN);
+		if (ttyattr() < 0)
+			return (printf("ERROR\nttyattr failed!\n"), -1);
 	}
 	return 0;
 }

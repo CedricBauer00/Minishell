@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/09 16:09:40 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 16:53:48 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ t_io_streams_list	*init_io_stream_struct(t_gc *gc);
 t_cmd_block *get_cmd_block(void);
 
 //memo builtin_utils.c
-char	*find_var_in_env(char **my_envp, char *find, size_t find_len, t_gc_list *gc_lst);
+char	*find_var_in_env(char **my_envp, char *find, size_t find_len);
 bool	is_valid_identifier(const char *name);
 char	*create_new_path(const char *name, const char *value);
 int		get_env_count(char **my_envp);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_syntax.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:01:32 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/09 16:03:28 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 17:26:21 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,7 @@ int	validate_syntax(t_token *token)
 				gc_free(gc);
 				exit(1);
 			}
-			else if (heredoc_fd > 0)
-			{
-				shell->heredoc_fd = heredoc_fd;
-				// fprintf(stderr, YELLOW"fd_heredoc is exist\n");
-			}
+			shell->heredoc_fd = heredoc_fd;
 			if (execute_heredoc(shell, cur) == -1)
 				return (-1);
 		}

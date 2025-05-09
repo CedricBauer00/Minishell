@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gc1.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:02:03 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/08 17:17:35 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 16:39:34 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ void	*do_alloc(t_gc_list **gc_lst, size_t howmuch, \
 	t_gc_list	*new_node;
 	void		*data;
 
+	if(!gc_lst || howmuch == 0)
+		return (NULL);
 	new_node = malloc(sizeof(t_gc_list));
 	if (!new_node)
 	{

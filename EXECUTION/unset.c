@@ -6,12 +6,12 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:31 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/09 16:00:51 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/09 17:18:09 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
-
+//todo modify case for "unset v" if v just existed as v without value.
 static void	foo(char *arg, t_shell *shell)
 {
 	t_gc *gc;
