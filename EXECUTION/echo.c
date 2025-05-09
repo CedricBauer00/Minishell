@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:39 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/09 15:32:32 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/09 15:45:27 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,3 @@ void	ft_echo(char **args, bool is_newline, int i, int j)
 	if (is_newline)
 		printf("\n");
 }
-
-

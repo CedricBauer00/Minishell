@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/09 15:28:50 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/09 16:00:01 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,9 +191,9 @@ void	wait_for_child_and_update_status(int i)
 	t_shell	*shell;
 	int		status;
 	int		idx;
-	pid_t	child_pid;
+	//pid_t	child_pid;
 
-	child_pid = 0;
+	//child_pid = 0;
 	idx = 0;
 	shell = get_shell();
 	if(!shell->pids)
@@ -201,7 +201,8 @@ void	wait_for_child_and_update_status(int i)
 	while(idx < i)
 	{
 		// fprintf(stderr, BLUE"shell->pids[idx] %d\n"DEFAULT, shell->pids[idx]);
-		child_pid = wait4(shell->pids[idx], &status, 0 ,NULL);
+		//child_pid = 
+		wait4(shell->pids[idx], &status, 0 ,NULL);
 		// fprintf(stderr ,BLUE"child_pid %d\n"DEFAULT, child_pid);
 		// fprintf(stderr ,BLUE"parent got this from wait4() child_pid : %d\n"DEFAULT, child_pid);
 		if (WIFEXITED(status) && WEXITSTATUS(status) == 0)

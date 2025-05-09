@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:18 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/08 18:03:49 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 15:58:36 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,6 @@ char	*find_var_in_env(char **my_envp, char *find, size_t find_len, \
 
 bool	is_valid_identifier(const char *name)
 {
-	int	i;
-
-	i = 0;
 	if (!name || (!ft_isalpha(name[0]) && name[0] != '_'))
 		return (false);
 	else
