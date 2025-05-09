@@ -75,7 +75,7 @@ all: $(NAME)
 
 $(NAME): $(LIBFT) $(GET_NEXT_LINE) $(OBJECTS)
 	@$(CC) $(CFLAGS) $(LIBFT) $(OBJECTS) $(GET_NEXT_LINE) $(INC) -o $(NAME) $(LDFLAGS) #RL_FLAG
-	@echo "$(GREEN)LEXER compiled!$(DEFAULT)"
+	@echo "$(GREEN)Minishell compiled!$(DEFAULT)"
 
 $(LIBFT):
 	@$(MAKE) -C $(LIBFT_DIR) --silent
@@ -88,13 +88,13 @@ $(GET_NEXT_LINE):
 clean:
 	@$(MAKE) -C $(LIBFT_DIR) $(GET_NEXT_LINE) clean --silent
 	@$(RM) $(OBJECTS)
-	@echo "$(GREEN)LEXER cleaned successfully!$(DEFAULT)"
+	@echo "$(GREEN)Minishell cleaned successfully!$(DEFAULT)"
 
 fclean: clean
 	@$(RM) $(LIBFT)
 	@$(RM) $(GET_NEXT_LINE)
 	@$(RM) $(NAME)
-	@echo "$(GREEN)LEXER cleaned successfully!$(DEFAULT)"
+	@echo "$(GREEN)Minishell cleaned successfully!$(DEFAULT)"
 
 re: fclean all
 

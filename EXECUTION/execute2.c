@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/07 15:04:34 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/07 16:09:40 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,23 +205,23 @@ void	wait_for_child_and_update_status(int i)
 		return;
 	while(idx < i)
 	{
-		//fprintf(stderr, RED"shell->pids[idx] %d\n"DEFAULT, shell->pids[idx]);
+		fprintf(stderr, BLUE"shell->pids[idx] %d\n"DEFAULT, shell->pids[idx]);
 		child_pid = wait4(shell->pids[idx], &status, 0 ,NULL);
-		//fprintf(stderr ,RED"child_pid %d\n"DEFAULT, child_pid);
-		//fprintf(stderr ,BLUE"parent got this from wait4() child_pid : %d\n"DEFAULT, child_pid);
+		fprintf(stderr ,BLUE"child_pid %d\n"DEFAULT, child_pid);
+		fprintf(stderr ,BLUE"parent got this from wait4() child_pid : %d\n"DEFAULT, child_pid);
 		if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
 		{
-			// fprintf(stderr, GREEN"exited with %d\n"DEFAULT, WEXITSTATUS(status));
+			fprintf(stderr, BLUE"exited with %d\n"DEFAULT, WEXITSTATUS(status));
 			shell->last_status_exit = WEXITSTATUS(status);  //parents get exit status 
 		}
 		if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
 		{
-			// fprintf(stderr, GREEN"exited with %d\n"DEFAULT, WEXITSTATUS(status));
+			fprintf(stderr, BLUE"exited with %d\n"DEFAULT, WEXITSTATUS(status));
 			shell->last_status_exit = WEXITSTATUS(status);  //parents get exit status 
 		}
 		else if (WIFSIGNALED(status))
 		{
-			// fprintf(stderr, RED"terminated by signal %d (%s)\n" DEFAULT, WTERMSIG(status), strsignal(WTERMSIG(status)));
+			fprintf(stderr, BLUE"terminated by signal %d (%s)\n" DEFAULT, WTERMSIG(status), strsignal(WTERMSIG(status)));
 			shell->last_status_exit = 128 + WTERMSIG(status);
 		}
 		idx++;

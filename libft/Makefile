@@ -68,7 +68,7 @@ bonus: ${OBJECTS} ${BONUS_OBJECTS}
 
 clean:
 	${RM} ${OBJECTS} ${BONUS_OBJECTS}
-	echo "$(COLOUR_RED)Objects cleaned successfully!$(COLOUR_END)"
+	echo "$(COLOUR_RED)Libft cleaned successfully!$(COLOUR_END)"
 
 fclean: clean
 	${RM} ${NAME}
