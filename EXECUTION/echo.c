@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:39 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 18:33:39 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 14:34:36 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	ft_echo(char **args, t_shell *shell)
 
 	(void)shell;
 	gc = get_gc();
-	while (args[i] && strcmp(args[i], "-n") == 0)
+	while (args[i] && ft_strcmp(args[i], "-n") == 0)
 	{
 		is_newline = false;
 		i++;

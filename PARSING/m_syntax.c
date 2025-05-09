@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:01:32 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/07 14:18:39 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 14:35:41 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,10 @@ int	validate_syntax(t_token *token)
 	cur = token;
 	while (cur)
 	{
-		
 		if (cur->type == TOKEN_HEREDOC)
 		{
 			//todo move to here heredoc
+			fprintf(stderr, "before running heredoc_fd %d", shell->heredoc_fd);
 			if (execute_heredoc(shell, cur) == -1)
 				return (-1);
 		}

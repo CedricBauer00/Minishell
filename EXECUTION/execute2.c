@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/08 18:03:11 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 14:17:45 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,13 +67,15 @@ int heredoc_fd_offset_and_redir(t_cmd_block *cur)
 	shell = get_shell();
 	if (!cur)
 		return -1;
-	shell->heredoc_fd = open("temp_heredoc" ,O_RDWR, 0644);
+	shell->heredoc_fd = open("temp_heredoc" ,O_RDWR, O_CREAT, 0644);
 	if (shell->heredoc_fd < 0)
 	{
+		fprintf(stderr, RED"heredoc_fd : %d, in heredoc_fd_offset_and_redir 1 \n"DEFAULT, shell->heredoc_fd);
 		return -1;
 	}
 	if (dup2(shell->heredoc_fd, STDIN_FILENO) == -1)
 	{
+		fprintf(stderr, "in heredoc_fd_offset_and_redir 2 \n");
 		close(shell->heredoc_fd);
 		unlink("temp_heredoc");
 		return -1;
@@ -102,9 +104,9 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 		ft_unset(cur->args, shell);
 	else if (ft_strcmp(cur->built_in, "exit") == 0)
 		ft_exit(cur->args, shell);
-	else
-		;
-	all_free(&gc->temp);
+	// else
+	// 	;
+	// all_free(&gc->temp);
 	return ;
 }
 
@@ -123,6 +125,8 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 		gc_free(gc);
 		exit(1);
 	}
+	if (!cmd_block->args)
+		return ;
 	if (cmd_block->args[0][0] == '/' || ft_strncmp(cmd_block->args[0], "./", 2) == 0)
 	{
 		if (access(cmd_block->args[0], F_OK | X_OK) == 0)
@@ -135,6 +139,7 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			gc_free(gc);
 			exit(1);
 		}
+		//
 		fprintf(stderr, RED"command not found (absolute path): %s\n"DEFAULT, cmd_block->args[0]);
 		exit(127);
 	}

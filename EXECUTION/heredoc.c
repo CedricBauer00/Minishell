@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/08 12:05:51 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 14:23:07 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,9 @@ void	process_heredoc(t_shell *shell, t_token *token)
 
 	
 	gc = get_gc();
+	//error okay here is wrong right !
 	fd_heredoc = open("temp_heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
-	// fprintf(stderr, YELLOW"[pid %d] fd_heredoc open(), fd_heredoc fd : %d\n", getpid(), fd_heredoc);
+	fprintf(stderr, YELLOW"[pid %d] fd_heredoc open(), fd_heredoc fd : %d\n", getpid(), fd_heredoc);
 	shell->heredoc_fd = fd_heredoc;
 	if (fd_heredoc == -1)
 	{
@@ -108,7 +109,7 @@ void	process_heredoc(t_shell *shell, t_token *token)
 	}
 	close(fd_heredoc);
 	gc_free(gc);
-	// fprintf(stderr, YELLOW"[pid %d] close() %d\n"DEFAULT,getpid(), fd_heredoc);
+	 fprintf(stderr, YELLOW"[pid %d] close() %d\n"DEFAULT,getpid(), fd_heredoc);
 	exit(0);
 }
 
@@ -149,8 +150,9 @@ int	execute_heredoc(t_shell *shell, t_token *cur)
 	else if (pid > 0)
 	{
 		int test = wait_for_heredoc_pid(pid, status);
-		if (test == -1)
-			return -1;
+		printf("test%d\n", test);
+		// if (test == -1)
+		// 	return -1;
 	}
 	return 0;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute3.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/07 14:49:02 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/09 13:17:20 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	prevent_zombie_process()
 
 void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 {
-	if (cur->io_streams && cur->io_streams->heredoc_eof)
+	if (cur && cur->io_streams && cur->io_streams->heredoc_eof)
 	{
 		if (heredoc_fd_offset_and_redir(cur) == -1)
 		{
@@ -30,14 +30,14 @@ void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 	}
 	processing_pipe(cur);
 	set_io_streams(cur);
-	if (cur->built_in)
+	if (cur && cur->built_in)
 	{
 		// fprintf(stderr, RED"is it in pipe for execute_builtin execute_child()\n"DEFAULT);
 		execute_builtin(cur, shell);
 	}
-	if (cur->args)
+	if (cur && cur->args)
 	{
-		// fprintf(stderr, RED"is it in pipe for external cmd execute_child()\n"DEFAULT);
+		//fprintf(stderr, RED"is it in pipe for external cmd execute_child()\n"DEFAULT);
 		run_execve(cur, gc);
 	}
 }
