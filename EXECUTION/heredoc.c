@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/09 17:36:09 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/09 17:46:55 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,8 +187,6 @@ int	execute_heredoc(t_shell *shell, t_token *cur)
     	dup2(stdout_backup, STDOUT_FILENO);
     	close(stdin_backup);
     	close(stdout_backup);
-		signal(SIGINT, signal_func);
-		signal(SIGQUIT, SIG_IGN);
 		if (ttyattr() < 0)
 			return (printf("ERROR\nttyattr failed!\n"), -1);
 	}
