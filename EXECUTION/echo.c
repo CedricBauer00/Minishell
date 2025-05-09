@@ -3,40 +3,41 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:39 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/09 14:34:36 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 15:32:32 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 
-void	ft_echo(char **args, t_shell *shell)
+void	ft_echo(char **args, bool is_newline, int i, int j)
 {
-	int i  = 0;
-	bool is_newline = true;
-	t_gc	*gc;
-
-	(void)shell;
-	gc = get_gc();
-	while (args[i] && ft_strcmp(args[i], "-n") == 0)
+	while (args[i] && args[i][0] ==  '-')
 	{
-		is_newline = false;
-		i++;
+		while (args[i][j] == 'n')
+			j++;
+		if (args[i][j] == '\0' && args[i][j - 1] == 'n')
+		{
+			is_newline = false;
+			i++;
+		}
+		else
+			break ;
 	}
 	if (args[i])
 	{
 		while (args[i] != NULL)
 		{
-			printf(YELLOW"%s", args[i]);
+			printf("%s", args[i]);
 			if (args[i + 1] != NULL)
 				printf(" ");
 			i++;
 		}
 	}
 	if (is_newline)
-		printf(YELLOW"\n"DEFAULT);
+		printf("\n");
 }
 
 

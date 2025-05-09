@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/09 14:17:45 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 15:28:50 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 	if (ft_strcmp(cur->built_in, "cd") == 0)
 		cd(cur->args, shell, gc);
 	else if (ft_strcmp(cur->built_in, "echo") == 0)
-		ft_echo(cur->args, shell);
+		ft_echo(cur->args, true, 0, 1);
 	else if (ft_strcmp(cur->built_in, "export") == 0)
 		export(cur->args, shell);
 	else if (ft_strcmp(cur->built_in, "pwd") == 0)

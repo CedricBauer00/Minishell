@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/07 14:31:26 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/09 14:40:23 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 
 # include "../minishell.h"
 # include "../EXECUTION/execution.h"
-#include "../get_next_line/get_next_line.h"
-
+# include "../get_next_line/get_next_line.h"
 
 // typedef enum s_tenum
 // {

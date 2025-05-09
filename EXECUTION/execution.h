@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/08 16:33:45 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 15:28:37 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ char	*extract_value(char *arg);
 void	ft_unset(char **argv, t_shell *shell);
 
 //memo echo.c
-void	ft_echo(char **args, t_shell *shell);
+void	ft_echo(char **args, bool newline, int i, int j);
 
 //memo pipe
 void	add_pipe(t_cmd_block **cmd_block);
