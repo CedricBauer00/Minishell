@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:04 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/08 18:13:21 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 16:00:22 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,11 @@ void	print_envp(t_shell *shell)
 
 void	export(char **args, t_shell *shell)
 {
-	t_gc	*gc;
+	// t_gc	*gc;
 	int		i;
 
 	i = 0;
-	gc = get_gc();
+	//gc = get_gc();
 	if (args && args[0] == NULL)
 		print_envp(shell);
 	while ((args[i]))

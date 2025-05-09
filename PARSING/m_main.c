@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_main.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/09 13:14:39 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 15:12:30 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	main_helper(t_main *main, t_gc_list **gc_temp)
 	size_t len = 0;
 	//MEMO FOR TESTER
 	if (isatty(fileno(stdin)))
-		main->temp_for_line = readline(YELLOW"minishell> "DEFAULT);
+		main->temp_for_line = readline("minishell> ");
 	// else
 	// {
 	// 	char *line;
@@ -104,11 +104,13 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc)
 	indic = validate_syntax(main->tokens);
 	if (indic == -1)
 		return (all_free(&gc->temp), -1);
-	if (indic == -2)
-		return (printf(RED"bonus error!\n"DEFAULT), all_free(&gc->temp), -1);
-	//print_tokens(main->tokens);
+	// if (indic == -2)
+	// 	return (printf(RED"bonus error!\n"DEFAULT), all_free(&gc->temp), -1);
+	// print_tokens(main->tokens);
 	grouplize(main->tokens, &cmd_block, gc);
 	main_execute(cmd_block);
+	if (gc->temp)
+		all_free(&gc->temp);
 	return (0);
 }
 
@@ -154,7 +156,7 @@ int	main(int argc, char **argv, char **envp)
 	signal(SIGINT, signal_func);
 	signal(SIGQUIT, SIG_IGN);
 	if (ttyattr() < 0)
-	 	return (printf("ERROR\nttyattr failed!\n"), -1);
+		return (printf("ERROR\nttyattr failed!\n"), -1);
 	gc = get_gc();
 	shell = get_shell();
 	shell->my_envp = copy_envp(gc, envp);

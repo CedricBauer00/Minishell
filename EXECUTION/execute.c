@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/09 14:14:18 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 15:15:39 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,12 @@ void    main_execute(t_cmd_block *cmd_block)
     do_alloc_pids(cmd_block);
     if (pid_counts == 1)
 	{
-		fprintf(stderr, "1\n");
+		// fprintf(stderr, "1\n");
         execute_single_command(cur);
 	}
     if (pid_counts > 1)
 	{
-		fprintf(stderr, "2\n");
+		// fprintf(stderr, "2\n");
         execute_pipeline(cur);
 	}
     prevent_zombie_process();

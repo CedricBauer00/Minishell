@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/09 16:03:18 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 16:10:31 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 	if (ft_strcmp(cur->built_in, "cd") == 0)
 		cd(cur->args, shell, gc);
 	else if (ft_strcmp(cur->built_in, "echo") == 0)
-		ft_echo(cur->args, shell);
+		ft_echo(cur->args, true, 0, 1);
 	else if (ft_strcmp(cur->built_in, "export") == 0)
 		export(cur->args, shell);
 	else if (ft_strcmp(cur->built_in, "pwd") == 0)
@@ -190,9 +190,9 @@ void	wait_for_child_and_update_status(int i)
 	t_shell	*shell;
 	int		status;
 	int		idx;
-	pid_t	child_pid;
+	//pid_t	child_pid;
 
-	child_pid = 0;
+	//child_pid = 0;
 	idx = 0;
 	shell = get_shell();
 	if(!shell->pids)
@@ -200,7 +200,8 @@ void	wait_for_child_and_update_status(int i)
 	while(idx < i)
 	{
 		// fprintf(stderr, BLUE"shell->pids[idx] %d\n"DEFAULT, shell->pids[idx]);
-		child_pid = wait4(shell->pids[idx], &status, 0 ,NULL);
+		//child_pid = 
+		wait4(shell->pids[idx], &status, 0 ,NULL);
 		// fprintf(stderr ,BLUE"child_pid %d\n"DEFAULT, child_pid);
 		// fprintf(stderr ,BLUE"parent got this from wait4() child_pid : %d\n"DEFAULT, child_pid);
 		if (WIFEXITED(status) && WEXITSTATUS(status) == 0)

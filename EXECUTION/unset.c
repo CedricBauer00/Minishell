@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:31 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/08 18:33:59 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 16:00:51 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,11 @@ static void	foo(char *arg, t_shell *shell)
 void	ft_unset(char **args, t_shell *shell)
 {
 	int			i;
-	t_gc		*gc;
-	t_gc_list	*find;
+	//t_gc		*gc;
+	// t_gc_list	*find;
 
-	find = NULL;
-	gc = get_gc();
+	// find = NULL;
+	// gc = get_gc();
 	i = 0;
 	if (!args || !shell)
 		return ;
