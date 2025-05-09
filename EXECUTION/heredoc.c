@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/09 17:44:14 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/09 17:47:40 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	process_heredoc(t_shell *shell, t_token *token)
 		{
 			close(fd_heredoc);
 			gc_free(gc);
-			exit(1);
+			exit(0);
 		}				
 		char *expanded_var = expand_case_in_heredoc(line, shell);
 		size_t len = ft_strlen(line);
@@ -103,7 +103,7 @@ void	process_heredoc(t_shell *shell, t_token *token)
 			close(fd_heredoc);
 			gc_free(gc);
 			// fprintf(stderr, YELLOW"[pid %d] close() %d\n"DEFAULT,getpid(), fd_heredoc);
-			exit(1);
+			exit(0);
 			break;
 		}
 		write(fd_heredoc, expanded_var, strlen(expanded_var));
