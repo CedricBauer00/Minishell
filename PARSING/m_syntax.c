@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:01:32 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/09 17:26:21 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/09 17:41:39 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,13 @@ int	validate_syntax(t_token *token)
 			}
 			shell->heredoc_fd = heredoc_fd;
 			if (execute_heredoc(shell, cur) == -1)
-				return (-1);
+			{
+				signal(SIGINT, signal_func);
+				signal(SIGQUIT, SIG_IGN);
+				if (ttyattr() < 0)
+					return (printf("ERROR\nttyattr failed!\n"), -1);
+				// return (-1);
+			}
 		}
 		if (syntax_helper(&cur) < 0)
 		{

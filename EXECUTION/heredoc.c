@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/09 17:46:55 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/09 17:49:46 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ void	process_heredoc(t_shell *shell, t_token *token)
 
 	
 	gc = get_gc();
-	//error okay here is wrong right !
 	// fd_heredoc = open("temp_heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
 	// fprintf(stderr, YELLOW"[pid %d] fd_heredoc open(), fd_heredoc fd : %d\n", getpid(), fd_heredoc);
 	// shell->heredoc_fd = fd_heredoc;
@@ -91,7 +90,7 @@ void	process_heredoc(t_shell *shell, t_token *token)
 		{
 			close(fd_heredoc);
 			gc_free(gc);
-			exit(1);
+			exit(0);
 		}				
 		char *expanded_var = expand_case_in_heredoc(line, shell);
 		size_t len = ft_strlen(line);
@@ -103,7 +102,7 @@ void	process_heredoc(t_shell *shell, t_token *token)
 			close(fd_heredoc);
 			gc_free(gc);
 			// fprintf(stderr, YELLOW"[pid %d] close() %d\n"DEFAULT,getpid(), fd_heredoc);
-			exit(1);
+			exit(0);
 			break;
 		}
 		write(fd_heredoc, expanded_var, strlen(expanded_var));
