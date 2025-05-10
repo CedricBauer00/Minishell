@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/10 13:55:09 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 17:36:19 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,12 +121,14 @@ void	signal_func(int sig)
 {
 	t_shell	*shell;
 
+	//fprintf(stderr, RED"singal func()\n"DEFAULT);
 	shell = get_shell();
 	(void)sig;
-	write(1, "\n", 1);
+	
 	rl_replace_line("", 0);
-	rl_on_new_line();
 	rl_redisplay();
+	rl_on_new_line();
+	write(1, "\n", 1);
 	shell->last_status_exit = 1;
 }
 
@@ -164,8 +166,6 @@ int	execute_heredoc(t_shell *shell, t_token *cur)
 		dup2(stdout_backup, STDOUT_FILENO);
 		close(stdin_backup);
 		close(stdout_backup);
-		if (ttyattr() < 0)
-			return (printf("ERROR\nttyattr failed!\n"), -1);
 	}
 	return 0;
 }

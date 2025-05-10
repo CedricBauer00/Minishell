@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:53:04 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/10 14:59:23 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/10 16:33:10 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,16 @@ void	ft_exit(char **args, t_shell *shell)
 	temp = args[0];
 	if (*temp == '-' || *temp == '+')
 			temp++;
-	if (ft_atoll(args[0], &exitvalue) == -1 || ft_isdigit((int)(args[0])))
+	int i = 0;
+	while (args[0][i])
+	{
+		if (args[0][i] >= '0' && args[0][i] <= '9')
+		fprintf(stderr, RED"exit: %s numeric argument required\n"DEFAULT, args[0]);
+		gc_free(gc);
+		exit(255);
+		i++;
+	}
+	if (ft_atoll(args[0], &exitvalue) == -1)
 	{
 		fprintf(stderr, RED"exit: %s numeric argument required\n"DEFAULT, args[0]);
 		gc_free(gc);

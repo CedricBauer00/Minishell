@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:56:54 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/10 13:58:08 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 17:31:35 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,11 @@ void	signal_handler_for_child(int sign)
 
 	gc = get_gc();
 	if (sign == SIGINT)
-		gc_free(gc);
+	{
+		//write(1, "\n", 1);
+		//all_free(&gc->temp);
+		signal(SIGINT, SIG_DFL);
+	}
 	if (sign == SIGQUIT)
 	{
 		gc_free(gc);

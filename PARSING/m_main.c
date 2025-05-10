@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_main.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/10 13:31:19 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 17:22:48 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	main_helper(t_main *main, t_gc_list **gc_temp)
 	size_t	len;
 	//MEMO FOR TESTER
 	if (isatty(fileno(stdin)))
-		main->temp_for_line = readline("minishell> ");
+		main->temp_for_line = readline(RED"minishell> "DEFAULT);
 	// else
 	// {
 	// 	char *line;
@@ -56,7 +56,7 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc)
 	indic = validate_syntax(main->tokens);
 	if (indic == -1)
 		return (all_free(&gc->temp), -1);
-	// print_tokens(main->tokens);
+	//print_tokens(main->tokens);
 	grouplize(main->tokens, &cmd_block, gc);
 	main_execute(cmd_block);
 	if (gc->temp)
@@ -70,6 +70,8 @@ int	main_loop(t_main *main, int i, t_gc *gc)
 
 	while (1)
 	{
+		signal(SIGINT, signal_func);
+		signal(SIGQUIT, SIG_IGN);
 		main->tokens = NULL;
 		ret = main_helper(main, &gc->temp);
 		if (ret == 1)
@@ -101,8 +103,6 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	using_history();
 	set_default(&main);
-	signal(SIGINT, signal_func);
-	signal(SIGQUIT, SIG_IGN);
 	if (ttyattr() < 0)
 		return (printf("ERROR\nttyattr failed!\n"), -1);
 	gc = get_gc();
