@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/10 16:28:34 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 17:13:43 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,13 @@ void	wait_for_child_and_update_status(int i)
 		if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
 			shell->last_status_exit = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
+		{
+			rl_replace_line("", 0);
+			rl_redisplay();
+			write(1, "\n", 1);
+			// rl_on_new_line();
 			shell->last_status_exit = 128 + WTERMSIG(status);
+		}
 		idx++;
 	}
 }
