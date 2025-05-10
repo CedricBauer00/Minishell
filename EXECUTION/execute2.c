@@ -201,22 +201,7 @@ void	wait_for_child_and_update_status(int i)
 			shell->last_status_exit = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
 		{
-<<<<<<< HEAD
-			//fprintf(stderr, RED"signal ! happend!\n"DEFAULT);
 			shell->last_status_exit = 128 + WTERMSIG(status);
-			
-			//write(1, "\n", 1);
-			// rl_replace_line("", 0);
-			//rl_on_new_line();
-			// rl_redisplay();
-			return ;
-=======
-			rl_replace_line("", 0);
-			rl_redisplay();
-			write(1, "\n", 1);
-			// rl_on_new_line();
-			shell->last_status_exit = 128 + WTERMSIG(status);
->>>>>>> bb64c22381d84b95903db9f59a53f991fdb37c1a
 		}
 		idx++;
 	}
