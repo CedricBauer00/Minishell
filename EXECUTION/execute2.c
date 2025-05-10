@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/09 17:39:03 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 13:17:39 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 		{
 			if (heredoc_fd_offset_and_redir(cur) == -1)
 			{
-				//perror(RED"heredoc error in single_cmd_execute()"DEFAULT);
 				gc_free(gc);
 				exit(1);
 			}
@@ -40,14 +39,12 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 	{
 		pid = fork();
 		shell->pids[0] = pid;
-		//fprintf(stderr, YELLOW" singlecmd for child proc fork() : %d , shell->pids[0] %d \n"DEFAULT, pid, shell->pids[0]) ;
-		if (pid == 0) //signal implementation?
+		if (pid == 0)
 		{
 			if (cur->io_streams && cur->io_streams->heredoc_eof)
 			{
 				if (heredoc_fd_offset_and_redir(cur) == -1)
 				{
-					//perror(RED"heredoc error in single_cmd_execute()"DEFAULT);
 					gc_free(gc);
 					exit(1);
 				}
@@ -66,13 +63,9 @@ int heredoc_fd_offset_and_redir(t_cmd_block *cur)
 	shell = get_shell();
 	if (!cur)
 		return -1;
-	//fprintf(stderr, "heredoc fd %d\n", shell->heredoc_fd);
 	shell->heredoc_fd = open("temp_heredoc" ,O_RDWR | O_CREAT, 0644);
 	if (shell->heredoc_fd < 0)
-	{
-		//fprintf(stderr, RED"heredoc_fd : %d, in heredoc_fd_offset_and_redir 1 \n"DEFAULT, shell->heredoc_fd);
 		return -1;
-	}
 	if (dup2(shell->heredoc_fd, STDIN_FILENO) == -1)
 	{
 		fprintf(stderr, "in heredoc_fd_offset_and_redir 2 \n");
@@ -104,9 +97,6 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 		ft_unset(cur->args, shell);
 	else if (ft_strcmp(cur->built_in, "exit") == 0)
 		ft_exit(cur->args, shell);
-	// else
-	// 	;
-	// all_free(&gc->temp);
 	return ;
 }
 
@@ -170,12 +160,10 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			}
 			if (access(cmd_path, F_OK | X_OK) == 0)
 			{
-				//printf("ishier2\n");
 				signal(SIGINT, signal_handler_for_child);
 				signal(SIGQUIT, signal_handler_for_child);
 				if (execve(cmd_path , cmd_block->args, shell->my_envp) == -1)
 				{
-					//gc_free(gc);
 					perror(RED"error execve()"DEFAULT);
 					exit(1);
 				}
@@ -194,28 +182,19 @@ void	wait_for_child_and_update_status(int i)
 	t_shell	*shell;
 	int		status;
 	int		idx;
-	//pid_t	child_pid;
 
-	//child_pid = 0;
 	idx = 0;
 	shell = get_shell();
 	if(!shell->pids)
 		return;
 	while(idx < i)
 	{
-		// fprintf(stderr, BLUE"shell->pids[idx] %d\n"DEFAULT, shell->pids[idx]);
-		//child_pid = 
 		wait4(shell->pids[idx], &status, 0 ,NULL);
-		// fprintf(stderr ,BLUE"child_pid %d\n"DEFAULT, child_pid);
-		// fprintf(stderr ,BLUE"parent got this from wait4() child_pid : %d\n"DEFAULT, child_pid);
 		if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
-			// fprintf(stderr, BLUE"exited with %d\n"DEFAULT, WEXITSTATUS(status));
-			shell->last_status_exit = WEXITSTATUS(status);  //parents get exit status 
+			shell->last_status_exit = WEXITSTATUS(status);
 		if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
-			// fprintf(stderr, BLUE"exited with %d\n"DEFAULT, WEXITSTATUS(status));
-			shell->last_status_exit = WEXITSTATUS(status);  //parents get exit status 
+			shell->last_status_exit = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
-			// fprintf(stderr, BLUE"terminated by signal %d (%s)\n" DEFAULT, WTERMSIG(status), strsignal(WTERMSIG(status)));
 			shell->last_status_exit = 128 + WTERMSIG(status);
 		idx++;
 	}

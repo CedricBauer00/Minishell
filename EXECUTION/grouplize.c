@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   grouplize.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:08 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/09 17:36:45 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/10 13:18:50 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,10 @@ static int	count_cmd_block(t_token *token)
 	while(temp && temp->type != TOKEN_PIPE)
 	{
 		if (temp && temp->type == TOKEN_ARG)
-	 	{
-	 		i++;
-	 	}
-	 	temp = temp ->next;
+		{
+			i++;
+		}
+		temp = temp ->next;
 	}
 	return i;
 }
@@ -113,7 +113,6 @@ static void	add_io_streams(t_token **cur, t_cmd_block *new_cmd_block)
 	new_io_streams = init_io_stream_struct(gc);
 	is_exited((t_io_streams_list*)new_io_streams, gc);
 	add_io_streams_list(&new_cmd_block->io_streams, new_io_streams);
-	//todo can i delete it?
 	if((*cur)->type & (TOKEN_HEREDOC))
 	{
 		new_io_streams->heredoc_eof = gc_strdup((*cur)->value, &gc->temp);
@@ -150,14 +149,7 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 			continue;
 		}
 		if (cur && cur->type == TOKEN_BUILT_IN)
-		{
-			// new_cmd_block->is_built_in = true;
-			// new_cmd_block->built_in = gc_strdup(cur->value, &gc->temp);
-			// t_gc_list *find;
-			// find = find_node(gc->temp, (char*)cur->value);
-			// delete_node(&gc->temp, find);
 			ready_builtin(new_cmd_block, &cur ,gc);
-		}
 		else if (cur && cur->type == TOKEN_ARG)
 		{
 			if (i == 0 && !new_cmd_block->is_built_in && !(new_cmd_block->io_streams && !cur->next))

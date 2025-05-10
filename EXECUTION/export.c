@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:04 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/09 16:00:22 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 13:18:12 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,30 +57,14 @@ void	print_envp(t_shell *shell)
 
 void	export(char **args, t_shell *shell)
 {
-	// t_gc	*gc;
 	int		i;
 
 	i = 0;
-	//gc = get_gc();
 	if (args && args[0] == NULL)
 		print_envp(shell);
 	while ((args[i]))
 	{
 		export_handling(args[i], shell);
-		// name = extract_name(args[i]);
-		// is_exited(name, gc);
-		// check = is_valid_identifier(name);
-		// if (check == false)
-		// {
-		// 	printf(RED"non valid identifier"DEFAULT);
-		// 	return ;
-		// }
-		// char	*value = extract_value(args[i]);
-		// ft_setenv(name, value, 1 , shell);
-		// if(name)
-		// 	free(name);
-		// if(value)
-		// 	free(value);
 		i++;
 	}
 }

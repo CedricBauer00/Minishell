@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:01:32 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/09 17:41:39 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 13:01:07 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,8 @@ int	validate_syntax(t_token *token)
 	{
 		if (cur->type == TOKEN_HEREDOC)
 		{
-			//todo move to here heredoc
 			t_gc *gc = get_gc();
 			int heredoc_fd = open("temp_heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
-			//fprintf(stderr, YELLOW"[pid %d] fd_heredoc open(), fd_heredoc fd : %d\n", getpid(), shell->heredoc_fd);
 			if (heredoc_fd == -1)
 			{
 				perror(RED"failed to open temp_heredoc"DEFAULT);
@@ -81,7 +79,6 @@ int	validate_syntax(t_token *token)
 				signal(SIGQUIT, SIG_IGN);
 				if (ttyattr() < 0)
 					return (printf("ERROR\nttyattr failed!\n"), -1);
-				// return (-1);
 			}
 		}
 		if (syntax_helper(&cur) < 0)
@@ -93,16 +90,3 @@ int	validate_syntax(t_token *token)
 	}
 	return (1);
 }
-
-/* 
-	<< | should be iinvalid
-	< null
-	> null
-	>> null
-	null | null
-	| null
-	null |
-	|| 
-	if || valid -> bonus_error
-	if && valid -> bonus_error
-*/
