@@ -40,7 +40,7 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 		shell->pids[0] = pid;
 		if (pid == 0)
 		{
-			signal(SIGINT, signal_handler_for_child);
+			signal(SIGINT, SIG_DFL);
 			signal(SIGQUIT, SIG_DFL);
 			if (cur->io_streams && cur->io_streams->heredoc_eof)
 			{
@@ -126,6 +126,7 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 		if (access(cmd_block->args[0], F_OK | X_OK) == 0)
 		{
 			signal(SIGINT, SIG_DFL);
+			signal(SIGQUIT, SIG_DFL);
 			execve(cmd_block->args[0], cmd_block->args, shell->my_envp);
 			perror(RED"error execve() (absolute path)"DEFAULT);
 			// gc_free(gc);
@@ -163,6 +164,7 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			if (access(cmd_path, F_OK | X_OK) == 0)
 			{
 				signal(SIGINT, SIG_DFL);
+			        signal(SIGQUIT, SIG_DFL);
 				if (execve(cmd_path , cmd_block->args, shell->my_envp) == -1)
 				{
 					perror(RED"error execve()"DEFAULT);
