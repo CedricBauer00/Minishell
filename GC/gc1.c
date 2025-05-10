@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:02:03 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/09 16:39:34 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 13:34:52 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,18 +44,14 @@ void	*do_alloc(t_gc_list **gc_lst, size_t howmuch, \
 	t_gc_list	*new_node;
 	void		*data;
 
-	if(!gc_lst || howmuch == 0)
+	if (!gc_lst || howmuch == 0)
 		return (NULL);
 	new_node = malloc(sizeof(t_gc_list));
 	if (!new_node)
-	{
-		//printf("Failed to allocate memory for new_node\n");
 		return (NULL);
-	}
 	data = malloc(howmuch);
 	if (!data)
 	{
-		//printf("Failed to allocate memory for data\n");
 		free(new_node);
 		return (NULL);
 	}

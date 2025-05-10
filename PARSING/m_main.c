@@ -6,42 +6,11 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/09 18:05:47 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 13:31:19 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
-
-t_main	*init_main_struct(t_gc_list **gc_lst)
-{
-	t_main	*main;
-
-	main = do_alloc(gc_lst, sizeof(t_main), TYPE_SINGLE_PTR, "main");
-	if (!main)
-		return (NULL);
-	main->tokens = NULL;
-	main->line = NULL;
-	main->last_status_exit = 0;
-	main->next_line = NULL;
-	main->new = NULL;
-	main->word = NULL;
-	main->temp_for_line = NULL;
-	main->error = 0;
-	return (main);
-}
-
-t_main	*get_main(void)
-{
-	static t_main *main = NULL;
-	t_gc	*gc;
-
-	gc = get_gc();
-	if (main == NULL)
-	{
-		main = init_main_struct(&gc->shell);
-	}
-	return (main);
-}
 
 int	main_helper(t_main *main, t_gc_list **gc_temp)
 {
@@ -76,7 +45,7 @@ int	main_helper(t_main *main, t_gc_list **gc_temp)
 
 int	main_loop_helper(t_main *main, int indic, t_gc *gc)
 {
-	t_cmd_block *cmd_block;
+	t_cmd_block	*cmd_block;
 
 	cmd_block = NULL;
 	if (main->tokens && check_for_node_spaces(main, main->tokens, \
@@ -90,7 +59,6 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc)
 	// print_tokens(main->tokens);
 	grouplize(main->tokens, &cmd_block, gc);
 	main_execute(cmd_block);
-	
 	if (gc->temp)
 		all_free(&gc->temp);
 	return (0);
@@ -144,7 +112,6 @@ int	main(int argc, char **argv, char **envp)
 		return (printf("ERROR\nCopy_envp failed!\n"), -1);
 	if (incrmnt_shllvl(shell, gc) < 0)
 		return (-1);
-	// shell = get_shell(&gc->shell);
 	if (main_loop(&main, 0, gc) < 0)
 		return (printf("ERROR\nMain_loop failed!\n"), -1);
 	if (gc)

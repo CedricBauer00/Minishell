@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/10 13:20:42 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 13:52:58 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,13 @@ void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 	processing_pipe(cur);
 	set_io_streams(cur);
 	if (cur && cur->built_in)
+	{
 		execute_builtin(cur, shell);
+	}
 	if (cur && cur->args)
+	{
 		run_execve(cur, gc);
+	}
 }
 
 void	fork_and_execute(t_cmd_block *cmd_block, t_gc *gc, int *i)
@@ -45,7 +49,9 @@ void	fork_and_execute(t_cmd_block *cmd_block, t_gc *gc, int *i)
 	shell = get_shell();
 	cur = cmd_block;
 	if (cur->next)
+	{
 		add_pipe(&cur);
+	}
 	pid = fork();
 	if (pid == 0)
 		execute_child(cur, gc, shell);

@@ -31,7 +31,6 @@ SOURCES = m_main.c \
 		m_utils1.c \
 		m_utils2.c \
 		m_utils4.c \
-		m_shell_init.c \
 		m_signal.c \
 		m_copy_envp.c \
 		m_set_up_tokens.c \

@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:23 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/10 13:21:04 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 13:48:08 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	is_valid_dir(const char *path)
 static char	*get_cd_target(char **args, t_shell *shell, t_gc *gc)
 {
 	char	*target;
-
+	
 	if (args[0] == NULL || ft_strcmp(args[0], "~") == 0)
 	{
 		target = find_var_in_env(shell->my_envp, "HOME", 4);
@@ -46,7 +46,7 @@ static char	*get_cd_target(char **args, t_shell *shell, t_gc *gc)
 		target = gc_strdup(args[0], &gc->temp);
 		is_exited(target, gc);
 	}
-	return (target);
+	return target;
 }
 
 void	cd(char **args, t_shell *shell, t_gc *gc)

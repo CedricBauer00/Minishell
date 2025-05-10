@@ -6,9 +6,10 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:13 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/10 12:18:07 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 13:46:06 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "execution.h"
 
@@ -25,7 +26,7 @@ t_shell	*init_shell_struct(t_gc_list **gc_lst)
 	shell->my_envp = NULL;
 	shell->pids = NULL;
 	shell->last_status_exit = 0;
-	return (shell);
+	return shell;
 }
 
 t_pipe	*init_pipe(t_gc	*gc)
@@ -35,8 +36,7 @@ t_pipe	*init_pipe(t_gc	*gc)
 	p_pipe = do_alloc(&gc->temp, sizeof(t_pipe), TYPE_SINGLE_PTR, "pipe_list");
 	if (!p_pipe)
 		return (NULL);
-	p_pipe->pipefd = do_alloc(&gc->temp, sizeof(int) * 2, \
-		TYPE_SINGLE_PTR, "pipefd");
+	p_pipe->pipefd = do_alloc(&gc->temp, sizeof(int) * 2, TYPE_SINGLE_PTR, "pipefd");
 	if (!p_pipe->pipefd)
 		return (NULL);
 	if (pipe(p_pipe->pipefd) == -1)
@@ -44,15 +44,13 @@ t_pipe	*init_pipe(t_gc	*gc)
 		perror("init_pipe()");
 		return (NULL);
 	}
-	return (p_pipe);
+	return p_pipe;
 }
 
-t_io_streams_list	*init_io_stream_struct(t_gc *gc)
+t_io_streams_list *init_io_stream_struct(t_gc *gc)
 {
 	t_io_streams_list	*io_streams_lst;
-
-	io_streams_lst = do_alloc(&gc->temp, sizeof(t_io_streams_list), \
-		TYPE_SINGLE_PTR, "io_streams_list");
+	io_streams_lst = do_alloc(&gc->temp, sizeof(t_io_streams_list), TYPE_SINGLE_PTR, "io_streams_list");
 	if (!io_streams_lst)
 		return (NULL);
 	io_streams_lst->infile_name = NULL;
@@ -60,20 +58,22 @@ t_io_streams_list	*init_io_stream_struct(t_gc *gc)
 	io_streams_lst->fd_in_file = -1;
 	io_streams_lst->fd_out_file = -1;
 	io_streams_lst->append_file_name = NULL;
+
 	io_streams_lst->heredoc_eof = NULL;
 	io_streams_lst->heredoc_file = NULL;
+	
 	io_streams_lst->fd_org_read = 0;
 	io_streams_lst->fd_in_file = 0;
+
 	io_streams_lst->next = NULL;
 	return (io_streams_lst);
 }
 
-t_cmd_block	*init_command_struct(t_gc *gc)
+t_cmd_block *init_command_struct(t_gc *gc)
 {
 	t_cmd_block	*cmd;
 
-	cmd = do_alloc(&gc->temp, sizeof(t_cmd_block), \
-		TYPE_SINGLE_PTR, "cmd_block");
+	cmd = do_alloc(&gc->temp, sizeof(t_cmd_block), TYPE_SINGLE_PTR, "cmd_block");
 	if (!cmd)
 		return (NULL);
 	cmd->built_in = NULL;
@@ -91,24 +91,26 @@ t_cmd_block	*init_command_struct(t_gc *gc)
 
 t_shell	*get_shell(void)
 {
-	static t_shell	*shell;
-	t_gc			*gc;
+	static t_shell	*shell = NULL;
+	t_gc	*gc;
 
-	shell = NULL;
 	gc = get_gc();
 	if (shell == NULL)
+	{
 		shell = init_shell_struct(&gc->shell);
+	}
 	return (shell);
 }
 
 t_cmd_block	*get_cmd_block(void)
 {
-	static t_cmd_block	*cmd;
-	t_gc				*gc;
+	static t_cmd_block	*cmd = NULL;
+	t_gc	*gc;
 
-	cmd = NULL;
 	gc = get_gc();
 	if (cmd == NULL)
+	{
 		cmd = init_command_struct(gc);
+	}
 	return (cmd);
 }

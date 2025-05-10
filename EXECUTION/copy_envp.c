@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:34 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/10 11:29:33 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 13:43:45 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	**copy_envp(t_gc *gc, char **envp)
 	if (!gc)
 		return (NULL);
 	count = get_envp_count(envp);
-	my_envp = (char **)do_alloc(&gc->shell, sizeof(char *) * (count + 1), \
+	my_envp = (char**)do_alloc(&gc->shell, sizeof(char *) * (count + 1), \
 		TYPE_DOUBLE_PTR, "copy_envp");
 	if (!my_envp)
 		return (gc_free(gc), NULL);

@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:26 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/10 12:24:27 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 13:57:56 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,7 @@ int	out_redir_file_open(t_io_streams_list *io_streams, char *out_filename)
 	return (1);
 }
 
-int	append_redir_file_open(t_io_streams_list *io_streams,
-		char *appned_file_name)
+int	append_redir_file_open(t_io_streams_list *io_streams, char *appned_file_name)
 {
 	int	fd;
 
@@ -91,10 +90,10 @@ int	handle_re_dir(t_cmd_block *cmd_block)
 		re_dir_in(cmd_block->io_streams);
 	if (cmd_block->io_streams->fd_out_file)
 		re_dir_out(cmd_block->io_streams);
-	return (0);
+	return 0;
 }
 
-void	set_io_streams(t_cmd_block *cmd)
+void	set_io_streams(t_cmd_block *cmd)	
 {
 	t_io_streams_list	*io_streams;
 	t_gc				*gc;
@@ -133,8 +132,7 @@ void	set_io_streams(t_cmd_block *cmd)
 		}
 		if (io_streams->append_file_name)
 		{
-			if (append_redir_file_open(io_streams, \
-					io_streams->append_file_name) == -1)
+			if (append_redir_file_open(io_streams, io_streams->append_file_name) == -1)
 			{
 				gc_free(gc);
 				exit(1);
