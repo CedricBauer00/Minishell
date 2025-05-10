@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/10 11:42:00 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/10 14:50:36 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,10 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 
 	gc = get_gc();
 	if (ft_strcmp(cur->built_in, "cd") == 0)
+	{
+		fprintf(stderr, "in execute_builtin()\n");
 		cd(cur->args, shell, gc);
+	}
 	else if (ft_strcmp(cur->built_in, "echo") == 0)
 		ft_echo(cur->args, true, 0, 1);
 	else if (ft_strcmp(cur->built_in, "export") == 0)
@@ -104,9 +107,6 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 		ft_unset(cur->args, shell);
 	else if (ft_strcmp(cur->built_in, "exit") == 0)
 		ft_exit(cur->args, shell);
-	// else
-	// 	;
-	// all_free(&gc->temp);
 	return ;
 }
 
@@ -114,8 +114,8 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 {
 	char	**splitted_path;
 	t_shell	*shell;
-
-	if ( !cmd_block)
+	
+	if (!cmd_block || !cmd_block->args || !cmd_block->args[0])
 		return ;
 	shell = get_shell();
 	char *path = find_var_in_env(shell->my_envp, "PATH", 4);
@@ -125,9 +125,6 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 		gc_free(gc);
 		exit(1);
 	}
-	if (!cmd_block->args || !cmd_block->args[0])
-		return ;
-	fprintf(stderr, "cmd_block->args[0]%s\n", cmd_block->args[0]);
 	if (cmd_block->args[0][0] == '/' || ft_strncmp(cmd_block->args[0], "./", 2) == 0)
 	{
 		if (access(cmd_block->args[0], F_OK | X_OK) == 0)
@@ -144,7 +141,7 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 	}
 	else
 	{
-		printf("2\n");
+		fprintf(stderr, RED"in run_execve()\n"DEFAULT);
 		splitted_path = ft_split(path, ':');
 		free(path);
 		if (!splitted_path)
@@ -169,7 +166,6 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			}
 			if (access(cmd_path, F_OK | X_OK) == 0)
 			{
-				//printf("ishier2\n");
 				signal(SIGINT, signal_handler_for_child);
 				signal(SIGQUIT, signal_handler_for_child);
 				if (execve(cmd_path , cmd_block->args, shell->my_envp) == -1)

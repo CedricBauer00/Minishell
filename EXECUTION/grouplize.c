@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:08 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/10 12:25:50 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/10 14:12:22 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,6 @@ static void ready_args(t_cmd_block *new_cmd_block, t_token **cur, t_gc *gc, int 
 	{
 		new_cmd_block->is_external_cmd = true;
 	}
-	fprintf(stderr, "in ready_args() args_count : %d\n",*i);
 	new_cmd_block->args[(*i)++] = gc_strdup((*cur)->value, &gc->temp);
 	
 	t_gc_list *find;
@@ -179,6 +178,7 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 	{
 		ready_all(new_cmd_block, &cur, gc ,&i);
 	}
+	//printf("in merege_to_one_cmd : new_cmd_block->built_in : %s\n", new_cmd_block->built_in);
 	new_cmd_block->args[args_count] = NULL;
 	*token = cur;
 	return new_cmd_block;

@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:04 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/10 11:38:24 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/10 14:55:47 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,10 @@ void	print_envp(t_shell *shell)
 	{
 		name = extract_name(shell->my_envp[i]);
 		value = extract_value(shell->my_envp[i]);
-		if ((name != NULL && value == NULL ) || value == NULL)
-			printf(YELLOW"declare -x %s\n"DEFAULT, extract_name(shell->my_envp[i]));
-		else
+		if (ft_strchr(shell->my_envp[i] ,'='))
 			printf(YELLOW"declare -x %s=\"%s\"\n"DEFAULT, name, value);
+		else if (name)
+			printf(YELLOW"declare -x %s\n"DEFAULT, name);
 		i++;
 	}
 }
@@ -67,20 +67,6 @@ void	export(char **args, t_shell *shell)
 	while ((args[i]))
 	{
 		export_handling(args[i], shell);
-		// name = extract_name(args[i]);
-		// is_exited(name, gc);
-		// check = is_valid_identifier(name);
-		// if (check == false)
-		// {
-		// 	printf(RED"non valid identifier"DEFAULT);
-		// 	return ;
-		// }
-		// char	*value = extract_value(args[i]);
-		// ft_setenv(name, value, 1 , shell);
-		// if(name)
-		// 	free(name);
-		// if(value)
-		// 	free(value);
 		i++;
 	}
 }
@@ -115,5 +101,5 @@ char	*extract_value(char *arg)
 	if (arg[i] == '=')
 		return gc_strdup(arg + i + 1, &gc->temp);
 	else
-		return "";
+		return NULL;
 }

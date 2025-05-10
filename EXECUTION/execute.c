@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/09 15:15:39 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 14:06:41 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ void    execute_pipeline(t_cmd_block *cmd_block)
     i = 0;
     gc = get_gc();
     cur = cmd_block;
+	if (!cur->next)
+		return ;
     while(cur)
     {
         fork_and_execute(cur, gc, &i);
@@ -28,6 +30,7 @@ void    execute_pipeline(t_cmd_block *cmd_block)
     }
     wait_for_child_and_update_status(i);
 }
+
 void    execute_single_command(t_cmd_block *cmd_block)
 {
     t_gc    *gc;

@@ -73,15 +73,12 @@ void	ft_exit(char **args, t_shell *shell)
 	temp = args[0];
 	if (*temp == '-' || *temp == '+')
 			temp++;
-
-	//todo if is not allowed value ... if its not number  
-	if (ft_atoll(args[0], &exitvalue) == -1)
+	if (ft_atoll(args[0], &exitvalue) == -1 || !ft_isdigit((int)args[0]))
 	{
 		fprintf(stderr, RED"exit: %s numeric argument required\n"DEFAULT, args[0]);
 		gc_free(gc);
 		exit(255);
 	}
-
 	shell->last_status_exit = (unsigned char)exitvalue % 256;
 	exit(shell->last_status_exit);
 	gc_free(gc);

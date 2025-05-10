@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:23 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/09 16:54:08 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 13:04:30 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void	cd(char **args, t_shell *shell, t_gc *gc)
 	ft_setenv("OLDPWD", shell->cur_dir, 1, shell);
 	shell->cur_dir = new_dir;
 	ft_setenv("PWD", shell->cur_dir, 1, shell);
+	fprintf(stderr ,RED"shell->curdir %s\n"DEFAULT, shell->cur_dir);
 }
 
 // if (args[0] == NULL || strcmp(args[0], "~") == 0)
