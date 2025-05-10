@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:18 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/09 16:53:15 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 12:32:17 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char	*find_var_in_env(char **my_envp, char *find, size_t find_len)
 {
 	int		i;
 	char	*result;
-	t_gc *gc;
+	t_gc	*gc;
 
 	gc = get_gc();
 	i = 0;
@@ -51,7 +51,6 @@ char	*create_new_path(const char *name, const char *value)
 	namelen = ft_strlen(name);
 	gc = get_gc();
 	total_len = namelen + 1;
-
 	if (value)
 		total_len += ft_strlen(value) + 1;
 	new_path = do_alloc(&gc->shell, total_len, TYPE_SINGLE_PTR, "new_path");
@@ -87,10 +86,10 @@ int	check_existing(char **my_envp, const char *name)
 
 int	get_env_count(char **my_envp)
 {
-	if (!my_envp)
-		return (0);
 	int	env_count;
 
+	if (!my_envp)
+		return (0);
 	env_count = 0;
 	while (my_envp[env_count])
 		env_count++;

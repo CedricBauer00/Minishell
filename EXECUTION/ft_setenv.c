@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_setenv.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/10 11:56:55 by cbauer            #+#    #+#             */
+/*   Updated: 2025/05/10 13:20:29 by cbauer           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "execution.h"
 
 static void	overwrite_env(int index, char *new_path)
@@ -19,18 +31,21 @@ static void	make_env(char *new_path)
 	t_shell		*shell;
 	t_gc		*gc;
 	char		**new_envp;
+	char		**old_envp;
+	t_gc_list	*old_envp_node;
 
 	new_envp = NULL;
 	shell = get_shell();
 	gc = get_gc();
 	new_envp = expand_envp(shell, new_path);
-	char **old_envp = shell->my_envp;
-	t_gc_list *old_envp_node = find_node(gc->shell, (char **)old_envp);
+	old_envp = shell->my_envp;
+	old_envp_node = find_node(gc->shell, (char **)old_envp);
 	delete_node(&gc->shell, old_envp_node);
 	shell->my_envp = new_envp;
 }
 
-void	ft_setenv(const char *name, const char *value, int overwrite, t_shell *shell)
+void	ft_setenv(const char *name, const char *value, \
+		int overwrite, t_shell *shell)
 {
 	int			index;
 	char		*new_path;

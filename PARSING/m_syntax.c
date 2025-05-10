@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:01:32 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/10 13:01:07 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 13:21:13 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,10 @@ int	syntax_helper(t_token **cur)
 int	validate_syntax(t_token *token)
 {
 	t_token	*cur;
-	t_shell *shell = get_shell();
+	t_shell	*shell;
+	t_gc	*gc;
+
+	shell = get_shell();
 	if (!token)
 		return (1);
 	cur = token;
@@ -64,8 +67,9 @@ int	validate_syntax(t_token *token)
 	{
 		if (cur->type == TOKEN_HEREDOC)
 		{
-			t_gc *gc = get_gc();
-			int heredoc_fd = open("temp_heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
+			gc = get_gc();
+			int heredoc_fd = open("temp_heredoc", \
+				O_RDWR | O_CREAT | O_TRUNC, 0644);
 			if (heredoc_fd == -1)
 			{
 				perror(RED"failed to open temp_heredoc"DEFAULT);

@@ -6,24 +6,11 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/09 17:09:57 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/09 18:05:47 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
-
-// void	set_default(t_main *main)
-// {
-// 	main->tokens = NULL;
-// 	main->line = NULL;
-// 	main->last_status_exit = 0;
-// 	main->next_line = NULL;
-// 	main->new = NULL;
-// 	main->word = NULL;
-// 	main->temp_for_line = NULL;
-// 	main->error = 0;
-// 	return ;
-// }
 
 t_main	*init_main_struct(t_gc_list **gc_lst)
 {
@@ -45,7 +32,7 @@ t_main	*init_main_struct(t_gc_list **gc_lst)
 
 t_main	*get_main(void)
 {
-	static t_main *main = NULL; // Global static t_main struct
+	static t_main *main = NULL;
 	t_gc	*gc;
 
 	gc = get_gc();
@@ -56,14 +43,9 @@ t_main	*get_main(void)
 	return (main);
 }
 
-// t_main *get_main_struct(void)
-// {
-// 	return &main;
-// }
-
 int	main_helper(t_main *main, t_gc_list **gc_temp)
 {
-	size_t len = 0;
+	size_t	len;
 	//MEMO FOR TESTER
 	if (isatty(fileno(stdin)))
 		main->temp_for_line = readline("minishell> ");
@@ -74,10 +56,9 @@ int	main_helper(t_main *main, t_gc_list **gc_temp)
 	// 	main->temp_for_line = ft_strtrim(line, "\n");
 	// 	free(line);
 	// }
+	len = 0;
 	if (!main->temp_for_line)
-	{
 		return (printf("exit\n"), 1);
-	}
 	len = ft_strlen(main->temp_for_line);
 	main->line = do_alloc(gc_temp, len + 1, TYPE_SINGLE_PTR, "input");
 	if (!main->line)
@@ -95,25 +76,23 @@ int	main_helper(t_main *main, t_gc_list **gc_temp)
 
 int	main_loop_helper(t_main *main, int indic, t_gc *gc)
 {
+	t_cmd_block *cmd_block;
+
+	cmd_block = NULL;
 	if (main->tokens && check_for_node_spaces(main, main->tokens, \
 		&gc->temp) < 0)
 		return (printf("ERROR\nChecking nodes failed!\n"), \
 		gc_free(gc), -1);
 	lex_tokens_correctly(main->tokens);
-	t_cmd_block *cmd_block = NULL;
 	indic = validate_syntax(main->tokens);
 	if (indic == -1)
 		return (all_free(&gc->temp), -1);
-	// if (indic == -2)
-	// 	return (printf(RED"bonus error!\n"DEFAULT), all_free(&gc->temp), -1);
 	// print_tokens(main->tokens);
 	grouplize(main->tokens, &cmd_block, gc);
 	main_execute(cmd_block);
 	
 	if (gc->temp)
 		all_free(&gc->temp);
-	// print_list(&gc->temp);
-	// print_list(&gc->shell);
 	return (0);
 }
 
@@ -152,10 +131,8 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	
 	using_history();
 	set_default(&main);
-	//main = *get_main();
 	signal(SIGINT, signal_func);
 	signal(SIGQUIT, SIG_IGN);
 	if (ttyattr() < 0)
@@ -171,8 +148,5 @@ int	main(int argc, char **argv, char **envp)
 	if (main_loop(&main, 0, gc) < 0)
 		return (printf("ERROR\nMain_loop failed!\n"), -1);
 	if (gc)
-	{
-		// printf(YELLOW"gc free execute!\n"DEFAULT);
 		gc_free(gc);
-	}
 }

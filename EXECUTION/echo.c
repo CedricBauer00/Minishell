@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:39 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/09 15:45:27 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 11:30:05 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_echo(char **args, bool is_newline, int i, int j)
 {
-	while (args[i] && args[i][0] ==  '-')
+	while (args[i] && args[i][0] == '-')
 	{
 		while (args[i][j] == 'n')
 			j++;
