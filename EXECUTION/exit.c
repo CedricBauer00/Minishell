@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exit.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/10 13:53:04 by cbauer            #+#    #+#             */
+/*   Updated: 2025/05/10 14:59:23 by jisokim2         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "execution.h"
 #define LONGLONGMAX 9223372036854775807LL
 #define LONGLONGMIN (-9223372036854775807LL - 1)
@@ -47,7 +59,6 @@ long long	ft_atoll(const char *str, long long *exitvalue)
     return num;
 }
 
-//memo case for "exit dsfsdf"
 void	ft_exit(char **args, t_shell *shell)
 {
 	long long exitvalue;
@@ -73,7 +84,7 @@ void	ft_exit(char **args, t_shell *shell)
 	temp = args[0];
 	if (*temp == '-' || *temp == '+')
 			temp++;
-	if (ft_atoll(args[0], &exitvalue) == -1 || !ft_isdigit((int)args[0]))
+	if (ft_atoll(args[0], &exitvalue) == -1 || ft_isdigit((int)(args[0])))
 	{
 		fprintf(stderr, RED"exit: %s numeric argument required\n"DEFAULT, args[0]);
 		gc_free(gc);

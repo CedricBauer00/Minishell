@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/10 14:06:41 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/10 14:58:13 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void    execute_single_command(t_cmd_block *cmd_block)
     gc = get_gc();
     if(cmd_block && !cmd_block->prev && !cmd_block->next)
     {
-       // fprintf(stderr, RED"this is execute_single_command()\n"DEFAULT);
         single_cmd_execute(cmd_block, gc);
     }
 }
@@ -56,12 +55,10 @@ void    main_execute(t_cmd_block *cmd_block)
     do_alloc_pids(cmd_block);
     if (pid_counts == 1)
 	{
-		// fprintf(stderr, "1\n");
         execute_single_command(cur);
 	}
     if (pid_counts > 1)
 	{
-		// fprintf(stderr, "2\n");
         execute_pipeline(cur);
 	}
     prevent_zombie_process();
@@ -87,7 +84,6 @@ void    do_alloc_pids(t_cmd_block* cmd_block)
         gc_free(gc);
         exit(1);
     }
-   // fprintf(stderr, YELLOW"pids is alloc in do_alloc_pids() counts: %d\n"DEFAULT, count);
 }
 
 int count_command(t_cmd_block *cmd_block)

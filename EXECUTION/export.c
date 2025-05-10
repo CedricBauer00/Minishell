@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:04 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/10 14:55:47 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/10 14:59:37 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,9 @@ void	print_envp(t_shell *shell)
 
 void	export(char **args, t_shell *shell)
 {
-	// t_gc	*gc;
 	int		i;
 
 	i = 0;
-	//gc = get_gc();
 	if (args && args[0] == NULL)
 		print_envp(shell);
 	while ((args[i]))

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:18 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/10 11:36:38 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/10 13:59:56 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char	*find_var_in_env(char **my_envp, char *find, size_t find_len)
 {
 	int		i;
 	char	*result;
-	t_gc *gc;
+	t_gc	*gc;
 
 	gc = get_gc();
 	i = 0;
@@ -90,7 +90,6 @@ int	get_env_count(char **my_envp)
 	if (!my_envp)
 		return (0);
 	int	env_count;
-
 	env_count = 0;
 	while (my_envp[env_count])
 		env_count++;

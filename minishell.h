@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 14:13:36 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/02 16:13:50 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 11:26:29 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,24 +48,5 @@ typedef enum s_tenum
 	TOKEN_BONUS = 0x0200,			//End of input
 	TOKEN_SPACES = 0x0400,			//spaces
 }	t_token_type;
-
-// typedef struct s_shell
-// {
-// 	char	**my_envp;
-// 	int		*pids;
-// 	char	*cur_dir;
-// 	char	*old_dir;
-// 	int		last_status_exit;
-// }	t_shell;
-
-// typedef struct s_token
-// {
-// 	t_token_type	type;
-// 	char			*value;
-// 	struct s_token	*prev;
-// 	struct s_token	*next;
-// }	t_token;
-
-
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:23 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/10 13:04:30 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/10 14:58:06 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ static char	*get_cd_target(char **args, t_shell *shell, t_gc *gc)
 	}
 	else
 	{
-		//fprintf(stderr, RED"for 'cd others'\n"DEFAULT);
 		target = gc_strdup(args[0], &gc->temp);
 		is_exited(target, gc);
 	}
@@ -75,34 +74,3 @@ void	cd(char **args, t_shell *shell, t_gc *gc)
 	ft_setenv("PWD", shell->cur_dir, 1, shell);
 	fprintf(stderr ,RED"shell->curdir %s\n"DEFAULT, shell->cur_dir);
 }
-
-// if (args[0] == NULL || strcmp(args[0], "~") == 0)
-	// {
-	// 	//fprintf(stderr, RED"case just cd\n"DEFAULT);
-	// 	target = find_var_in_env(shell->my_envp, "HOME", 4, gc->temp);
-	// 	if (!target)
-	// 	{
-	// 		perror(RED "chdir error for 'cd'\n"DEFAULT);
-	// 		//all_free(&gc->temp);
-	// 		shell->last_status_exit = 127;
-	// 		return ;
-	// 	}
-	// }
-	// else if (strcmp(args[0], "-") == 0)
-	// {
-	// 	//fprintf(stderr, RED"for 'cd -'\n"DEFAULT);
-	// 	target = find_var_in_env(shell->my_envp, "OLDPWD", 6, gc->temp);
-	// 	if (!target)
-	// 	{
-	// 		printf(RED"cd:OLDPWD not set\n"DEFAULT);
-	// 		//all_free(&gc->temp);
-	// 		shell->last_status_exit = 127;
-	// 		return ;
-	// 	}
-	// }
-	// else
-	// {
-	// 	//fprintf(stderr, RED"for 'cd others'\n"DEFAULT);
-	// 	target = gc_strdup(args[0], &gc->temp);
-	// 	is_exited(target, gc);
-	// }
