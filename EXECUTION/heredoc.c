@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/10 15:26:56 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 15:47:14 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,32 +116,6 @@ int	wait_for_heredoc_pid(pid_t heredoc_pid, int status)
 	return 0;
 }
 
-
-void	signal_func(int sig)
-{
-	t_shell	*shell;
-
-	shell = get_shell();
-	(void)sig;
-	write(1, "\n", 1);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-	shell->last_status_exit = 1;
-}
-
-int	ttyattr(void)
-{
-	struct termios	temp;
-
-	if (tcgetattr(0, &temp) < 0)
-		return (-1);
-	temp.c_lflag &= ~(ECHOCTL);
-	if (tcsetattr(0, TCSANOW, &temp) < 0)
-		return (-1);
-	return (0);
-}
-
 int	execute_heredoc(t_shell *shell, t_token *cur)
 {
 	int status = 0;
@@ -164,8 +138,8 @@ int	execute_heredoc(t_shell *shell, t_token *cur)
 		dup2(stdout_backup, STDOUT_FILENO);
 		close(stdin_backup);
 		close(stdout_backup);
-		if (ttyattr() < 0)
-			return (printf("ERROR\nttyattr failed!\n"), -1);
+		// if (ttyattr() < 0)
+		// 	return (printf("ERROR\nttyattr failed!\n"), -1);
 	}
 	return 0;
 }
