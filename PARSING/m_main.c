@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/10 13:31:19 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 15:27:32 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ int	main_loop(t_main *main, int i, t_gc *gc)
 
 	while (1)
 	{
+		signal(SIGINT, signal_func);
+		signal(SIGQUIT, SIG_IGN);
 		main->tokens = NULL;
 		ret = main_helper(main, &gc->temp);
 		if (ret == 1)
@@ -101,8 +103,8 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	using_history();
 	set_default(&main);
-	signal(SIGINT, signal_func);
-	signal(SIGQUIT, SIG_IGN);
+	// signal(SIGINT, signal_func);
+	// signal(SIGQUIT, SIG_IGN);
 	if (ttyattr() < 0)
 		return (printf("ERROR\nttyattr failed!\n"), -1);
 	gc = get_gc();

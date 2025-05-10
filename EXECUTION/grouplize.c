@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   grouplize.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:08 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/10 15:03:56 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/10 15:13:24 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ static void ready_all(t_cmd_block *new_cmd_block, t_token **cur, t_gc *gc, int *
 	{
 		add_io_streams(cur, new_cmd_block);
 	}
-	if (cur && (*cur)->type == TOKEN_BUILT_IN)
+	if (*cur && (*cur)->type == TOKEN_BUILT_IN)
 		ready_builtin(new_cmd_block, cur ,gc);
 	else if (*cur && (*cur)->type == TOKEN_ARG)
 		ready_args(new_cmd_block, cur ,gc, i);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/10 14:58:16 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/10 15:19:10 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 	if (!cur)
 		return;
 	shell = get_shell();
-
 	if (cur->io_streams)
 		set_io_streams(cur);
 	if (cur->is_built_in)
@@ -173,7 +172,6 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			i++;
 		}
 		printf(RED"command not found\n"DEFAULT);
-	
 		exit(127);
 	}
 	return ;
