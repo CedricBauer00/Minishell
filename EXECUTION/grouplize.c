@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:08 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/10 15:03:56 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/10 15:22:20 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,17 +144,21 @@ static void ready_args(t_cmd_block *new_cmd_block, t_token **cur, t_gc *gc, int 
 
 static void ready_all(t_cmd_block *new_cmd_block, t_token **cur, t_gc *gc, int *i)
 {	
-	if (!cur || !*cur || !new_cmd_block || !i)
-		return ;
-	if (*cur && ((*cur)->type & (TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT | TOKEN_APPEND | TOKEN_HEREDOC)))
+	while(*cur && (*cur)->type != TOKEN_PIPE)
 	{
-		add_io_streams(cur, new_cmd_block);
+		if (!cur || !*cur || !new_cmd_block || !i)
+			return ;
+		if (*cur && ((*cur)->type & (TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT | TOKEN_APPEND | TOKEN_HEREDOC)))
+		{
+			add_io_streams(cur, new_cmd_block);
+			continue;
+		}
+		if (cur && (*cur)->type == TOKEN_BUILT_IN)
+			ready_builtin(new_cmd_block, cur ,gc);
+		else if (*cur && (*cur)->type == TOKEN_ARG)
+			ready_args(new_cmd_block, cur ,gc, i);
+		(*cur) = (*cur)->next;
 	}
-	if (cur && (*cur)->type == TOKEN_BUILT_IN)
-		ready_builtin(new_cmd_block, cur ,gc);
-	else if (*cur && (*cur)->type == TOKEN_ARG)
-		ready_args(new_cmd_block, cur ,gc, i);
-	(*cur) = (*cur)->next;
 }
 
 t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
@@ -171,29 +175,7 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 	new_cmd_block->args = (char**)do_alloc(&gc->temp, sizeof(char*) * (args_count + 1), TYPE_DOUBLE_PTR, "new_cmd_block->args");
 	is_exited(new_cmd_block->args, gc);
 	
-	while(cur && cur->type != TOKEN_PIPE)
-	{
-		ready_all(new_cmd_block, &cur, gc , &i);
-		// if (cur && (cur->type & (TOKEN_REDIRECT_IN | TOKEN_REDIRECT_OUT | TOKEN_APPEND | TOKEN_HEREDOC)))
-		// {
-		// 	add_io_streams(&cur, new_cmd_block);
-		// 	continue;
-		// }
-		// if (cur && cur->type == TOKEN_BUILT_IN)
-		// 	ready_builtin(new_cmd_block, &cur ,gc);
-		// else if (cur && cur->type == TOKEN_ARG)
-		// {
-		// 	if (i == 0 && !new_cmd_block->is_built_in && !(new_cmd_block->io_streams && !cur->next))
-		// 	{
-		// 		new_cmd_block->is_external_cmd = true;
-		// 	}
-		// 	new_cmd_block->args[i++] = gc_strdup(cur->value, &gc->temp);
-		// 	t_gc_list *find;
-		// 	find = find_node(gc->temp, (char*)cur->value);
-		// 	delete_node(&gc->temp, find);
-		// }
-		// cur = cur->next;
-	}
+	ready_all(new_cmd_block, &cur, gc , &i);
 	new_cmd_block->args[args_count] = NULL;
 	*token = cur;
 	return new_cmd_block;

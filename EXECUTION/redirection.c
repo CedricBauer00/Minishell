@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:26 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/10 13:57:56 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 15:15:15 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,15 @@ int	handle_re_dir(t_cmd_block *cmd_block)
 	return 0;
 }
 
+static void	handle_redir_error()
+{
+	t_gc	*gc;
+	
+	gc = get_gc();
+	gc_free(gc);
+	exit(1);
+}
+
 void	set_io_streams(t_cmd_block *cmd)	
 {
 	t_io_streams_list	*io_streams;
@@ -107,42 +116,25 @@ void	set_io_streams(t_cmd_block *cmd)
 		if (io_streams->infile_name)
 		{
 			if (in_redir_file_open(io_streams, io_streams->infile_name) == -1)
-			{
-				gc_free(gc);
-				exit(1);
-			}
+				handle_redir_error();
 			if (re_dir_in(io_streams) == -1)
-			{
-				gc_free(gc);
-				exit(1);
-			}
+				handle_redir_error();
 		}
 		if (io_streams->outfile_name)
 		{
 			if (out_redir_file_open(io_streams, io_streams->outfile_name) == -1)
-			{
-				gc_free(gc);
-				exit(1);
-			}
+				handle_redir_error();
 			if (re_dir_out(io_streams) == -1)
-			{
-				gc_free(gc);
-				exit(1);
-			}
+				handle_redir_error();
 		}
 		if (io_streams->append_file_name)
 		{
 			if (append_redir_file_open(io_streams, io_streams->append_file_name) == -1)
-			{
-				gc_free(gc);
-				exit(1);
-			}
+				handle_redir_error();
 			if (re_dir_out(io_streams) == -1)
-			{
-				gc_free(gc);
-				exit(1);
-			}
+				handle_redir_error();
 		}
 		io_streams = io_streams->next;
 	}
 }
+
