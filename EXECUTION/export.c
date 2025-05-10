@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:04 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/10 11:56:34 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 12:32:07 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,8 @@ void	print_envp(t_shell *shell)
 	{
 		name = extract_name(shell->my_envp[i]);
 		value = extract_value(shell->my_envp[i]);
-		if ((name == NULL && value == NULL ) || value == NULL)
-			printf(YELLOW"declare -x %s\n"DEFAULT, \
-				extract_name(shell->my_envp[i]));
+		if ((name != NULL && value == NULL ) || value == NULL)
+			printf(YELLOW"declare -x %s\n"DEFAULT, extract_name(shell->my_envp[i]));
 		else
 			printf(YELLOW"declare -x %s=\"%s\"\n"DEFAULT, name, value);
 		i++;
@@ -97,5 +96,5 @@ char	*extract_value(char *arg)
 	if (arg[i] == '=')
 		return (gc_strdup(arg + i + 1, &gc->temp));
 	else
-		return (NULL);
+		return "";
 }
