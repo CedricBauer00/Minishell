@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/10 15:19:10 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/10 16:28:34 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			signal(SIGQUIT, signal_handler_for_child);
 			execve(cmd_block->args[0], cmd_block->args, shell->my_envp);
 			perror(RED"error execve() (absolute path)"DEFAULT);
-			gc_free(gc);
+			// gc_free(gc);
 			exit(1);
 		}
 		
