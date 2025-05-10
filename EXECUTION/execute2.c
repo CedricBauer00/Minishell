@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/10 17:23:55 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/10 17:55:54 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 	if (!cur)
 		return;
 	shell = get_shell();
-
 	if (cur->io_streams)
 		set_io_streams(cur);
 	if (cur->is_built_in)
@@ -129,7 +128,7 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			signal(SIGINT, SIG_DFL);
 			execve(cmd_block->args[0], cmd_block->args, shell->my_envp);
 			perror(RED"error execve() (absolute path)"DEFAULT);
-			gc_free(gc);
+			// gc_free(gc);
 			exit(1);
 		}
 		
@@ -173,7 +172,6 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			i++;
 		}
 		printf(RED"command not found\n"DEFAULT);
-	
 		exit(127);
 	}
 	return ;
@@ -201,6 +199,7 @@ void	wait_for_child_and_update_status(int i)
 			shell->last_status_exit = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
 		{
+<<<<<<< HEAD
 			//fprintf(stderr, RED"signal ! happend!\n"DEFAULT);
 			shell->last_status_exit = 128 + WTERMSIG(status);
 			
@@ -209,6 +208,13 @@ void	wait_for_child_and_update_status(int i)
 			//rl_on_new_line();
 			// rl_redisplay();
 			return ;
+=======
+			rl_replace_line("", 0);
+			rl_redisplay();
+			write(1, "\n", 1);
+			// rl_on_new_line();
+			shell->last_status_exit = 128 + WTERMSIG(status);
+>>>>>>> bb64c22381d84b95903db9f59a53f991fdb37c1a
 		}
 		idx++;
 	}

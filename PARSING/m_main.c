@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/10 17:22:48 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/10 17:55:58 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,11 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	using_history();
 	set_default(&main);
+<<<<<<< HEAD
+=======
+	// signal(SIGINT, signal_func);
+	// signal(SIGQUIT, SIG_IGN);
+>>>>>>> bb64c22381d84b95903db9f59a53f991fdb37c1a
 	if (ttyattr() < 0)
 		return (printf("ERROR\nttyattr failed!\n"), -1);
 	gc = get_gc();

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   grouplize.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:08 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/10 15:22:20 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/10 15:43:32 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,6 @@ static void	add_io_streams(t_token **cur, t_cmd_block *new_cmd_block)
 	gc = get_gc();
 	if (!cur)
 		return ;
-	
 	new_io_streams = init_io_stream_struct(gc);
 	is_exited((t_io_streams_list*)new_io_streams, gc);
 	add_io_streams_list(&new_cmd_block->io_streams, new_io_streams);
@@ -122,22 +121,18 @@ static void	add_io_streams(t_token **cur, t_cmd_block *new_cmd_block)
 		*cur = (*cur)->next;
 	}
 	if(*cur && (*cur)->next && (*cur)->next->type == TOKEN_FILE)
-	{
 		ready_redir_files(new_io_streams, cur, gc);
-	}
 }
 
 static void ready_args(t_cmd_block *new_cmd_block, t_token **cur, t_gc *gc, int *i)
 {
+	t_gc_list *find;
+
 	if (!cur || !*cur || !new_cmd_block || !i)
 		return ;
 	if (*i == 0 && !new_cmd_block->is_built_in && !(new_cmd_block->io_streams && !(*cur)->next))
-	{
 		new_cmd_block->is_external_cmd = true;
-	}
 	new_cmd_block->args[(*i)++] = gc_strdup((*cur)->value, &gc->temp);
-	
-	t_gc_list *find;
 	find = find_node(gc->temp, (char*)(*cur)->value);
 	delete_node(&gc->temp, find);
 }
@@ -165,18 +160,20 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)
 {
 	t_cmd_block			*new_cmd_block;
 	t_token				*cur;
-	int args_count = 0;
+	int					args_count;
+	int					i;
 
+	i = 0;
+	args_count = 0;
 	cur = *token;
 	new_cmd_block = init_command_struct(gc);
-	is_exited((t_cmd_block*)new_cmd_block, gc);
-	int i = 0;
+	is_exited((t_cmd_block *)new_cmd_block, gc);
 	args_count = count_cmd_block(cur);
-	new_cmd_block->args = (char**)do_alloc(&gc->temp, sizeof(char*) * (args_count + 1), TYPE_DOUBLE_PTR, "new_cmd_block->args");
+	new_cmd_block->args = (char **)do_alloc(&gc->temp, sizeof(char*) * (args_count + 1), \
+		TYPE_DOUBLE_PTR, "new_cmd_block->args");
 	is_exited(new_cmd_block->args, gc);
-	
-	ready_all(new_cmd_block, &cur, gc , &i);
+	ready_all(new_cmd_block, &cur, gc, &i);
 	new_cmd_block->args[args_count] = NULL;
 	*token = cur;
-	return new_cmd_block;
+	return (new_cmd_block);
 }

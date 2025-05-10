@@ -19,7 +19,7 @@ CC = cc
 
 NAME = minishell
 
-LIBFT_DIR = ../libft
+LIBFT_DIR = libft
 
 #GET_NEXT_LINE_DIR = ../get_next_line
 
@@ -27,49 +27,49 @@ LIBFT_DIR = ../libft
 
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SOURCES = m_main.c \
-		m_utils1.c \
-		m_utils2.c \
-		m_utils4.c \
-		m_signal.c \
-		m_copy_envp.c \
-		m_set_up_tokens.c \
-		../GC/gc1.c \
-		../GC/gc2.c \
-		../GC/gc3.c \
-		../GC/gc_utils.c\
-		p_words.c \
-		p_builtins.c \
-		p_quotes.c \
-		p_dquotes.c \
-		p_expand.c \
-		p_operators.c \
-		p_heredoc.c \
-		m_syntax.c \
-		m_token_handling.c \
-		m_sorting.c \
-		printing.c \
-		../EXECUTION/builtin_utils.c \
-		../EXECUTION/cd.c \
-		../EXECUTION/copy_envp.c \
-		../EXECUTION/echo.c \
-		../EXECUTION/env.c \
-		../EXECUTION/exe_utils.c \
-		../EXECUTION/execute.c \
-		../EXECUTION/execute2.c \
-		../EXECUTION/execute3.c \
-		../EXECUTION/export.c \
-		../EXECUTION/grouplize.c \
-		../EXECUTION/heredoc.c \
-		../EXECUTION/init.c \
-		../EXECUTION/pipe.c \
-		../EXECUTION/pwd.c \
-		../EXECUTION/redirection.c \
-		../EXECUTION/unset.c \
-		../EXECUTION/signal.c\
-		../EXECUTION/exit.c\
-		../EXECUTION/ft_setenv.c\
-		../EXECUTION/builtin_utils1.c
+SOURCES = PARSING/m_main.c \
+		PARSING/m_utils1.c \
+		PARSING/m_utils2.c \
+		PARSING/m_utils4.c \
+		PARSING/m_signal.c \
+		PARSING/m_copy_envp.c \
+		PARSING/m_set_up_tokens.c \
+		GC/gc1.c \
+		GC/gc2.c \
+		GC/gc3.c \
+		GC/gc_utils.c\
+		PARSING/p_words.c \
+		PARSING/p_builtins.c \
+		PARSING/p_quotes.c \
+		PARSING/p_dquotes.c \
+		PARSING/p_expand.c \
+		PARSING/p_operators.c \
+		PARSING/p_heredoc.c \
+		PARSING/m_syntax.c \
+		PARSING/m_token_handling.c \
+		PARSING/m_sorting.c \
+		PARSING/printing.c \
+		EXECUTION/builtin_utils.c \
+		EXECUTION/cd.c \
+		EXECUTION/copy_envp.c \
+		EXECUTION/echo.c \
+		EXECUTION/env.c \
+		EXECUTION/exe_utils.c \
+		EXECUTION/execute.c \
+		EXECUTION/execute2.c \
+		EXECUTION/execute3.c \
+		EXECUTION/export.c \
+		EXECUTION/grouplize.c \
+		EXECUTION/heredoc.c \
+		EXECUTION/init.c \
+		EXECUTION/pipe.c \
+		EXECUTION/pwd.c \
+		EXECUTION/redirection.c \
+		EXECUTION/unset.c \
+		EXECUTION/signal.c\
+		EXECUTION/exit.c\
+		EXECUTION/ft_setenv.c\
+		EXECUTION/builtin_utils1.c
 
 OBJECTS := $(SOURCES:.c=.o)
 
