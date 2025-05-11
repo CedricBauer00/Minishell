@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:26:29 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/11 11:21:30 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/11 12:35:01 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	signal_func(int sig)
     write(1, "\n", 1);
     rl_replace_line("", 0);
     rl_on_new_line();
-    rl_redisplay();      
+    rl_redisplay();
 	shell->last_status_exit = 1;
 }
 
