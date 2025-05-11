@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:23 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/11 12:21:14 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/11 12:30:28 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +72,4 @@ void	cd(char **args, t_shell *shell, t_gc *gc)
 	ft_setenv("OLDPWD", shell->cur_dir, 1, shell);
 	shell->cur_dir = new_dir;
 	ft_setenv("PWD", shell->cur_dir, 1, shell);
-	fprintf(stderr, RED"shell->curdir %s\n"DEFAULT, shell->cur_dir);
 }

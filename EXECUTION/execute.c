@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/11 12:22:51 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/11 12:28:26 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,16 @@
 
 void	execute_pipeline(t_cmd_block *cmd_block)
 {
-	t_cmd_block *cur;
+	t_cmd_block	*cur;
 	t_gc		*gc;
-	int		 i;
+	int			i;
+
 	i = 0;
 	gc = get_gc();
 	cur = cmd_block;
 	if (!cur->next)
 		return ;
-	while(cur)
+	while (cur)
 	{
 		fork_and_execute(cur, gc, &i);
 		i++;
@@ -34,19 +35,18 @@ void	execute_pipeline(t_cmd_block *cmd_block)
 void	execute_single_command(t_cmd_block *cmd_block)
 {
 	t_gc	*gc;
+
 	gc = get_gc();
-	if(cmd_block && !cmd_block->prev && !cmd_block->next)
-	{
+	if (cmd_block && !cmd_block->prev && !cmd_block->next)
 		single_cmd_execute(cmd_block, gc);
-	}
 }
 
 void	main_execute(t_cmd_block *cmd_block)
 {
-	t_cmd_block *cur;
-	int		 stdin_backup;
-	int		 stdout_backup;
-	int 		pid_counts;
+	t_cmd_block	*cur;
+	int			stdin_backup;
+	int			stdout_backup;
+	int			pid_counts;
 
 	cur = cmd_block;
 	stdin_backup = dup(STDIN_FILENO);
@@ -54,13 +54,9 @@ void	main_execute(t_cmd_block *cmd_block)
 	pid_counts = count_command(cmd_block);
 	do_alloc_pids(cmd_block);
 	if (pid_counts == 1)
-	{
 		execute_single_command(cur);
-	}
 	if (pid_counts > 1)
-	{
 		execute_pipeline(cur);
-	}
 	prevent_zombie_process();
 	dup2(stdin_backup, STDIN_FILENO);
 	dup2(stdout_backup, STDOUT_FILENO);
@@ -68,34 +64,37 @@ void	main_execute(t_cmd_block *cmd_block)
 	close(stdout_backup);
 }
 
-void	do_alloc_pids(t_cmd_block* cmd_block)
+void	do_alloc_pids(t_cmd_block *cmd_block)
 {
-	int	 count;
-	t_shell *shell;
+	int		count;
+	t_shell	*shell;
 	t_gc	*gc;
+
 	gc = get_gc();
 	count = count_command(cmd_block);
 	if (count == 0 || (count == 1 && cmd_block->built_in))
 		return ;
 	shell = get_shell();
-	shell->pids = do_alloc(&gc->temp, sizeof(pid_t) * count, TYPE_SINGLE_PTR, "pids");
-	if(!shell->pids)
+	shell->pids = do_alloc(&gc->temp, sizeof(pid_t) * count, \
+		TYPE_SINGLE_PTR, "pids");
+	if (!shell->pids)
 	{
 		gc_free(gc);
 		exit(1);
 	}
 }
 
-int count_command(t_cmd_block *cmd_block)
+int	count_command(t_cmd_block *cmd_block)
 {
-	t_cmd_block *temp;
-	int		 count;
+	t_cmd_block	*temp;
+	int			count;
+
 	temp = cmd_block;
 	count = 0;
-	while(temp)
+	while (temp)
 	{
 		count++;
 		temp = temp->next;
 	}
-	return count;
+	return (count);
 }

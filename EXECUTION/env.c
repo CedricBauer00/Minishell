@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:44 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/11 12:22:05 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/11 12:31:47 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	ft_env(char **args, t_shell *shell)
 	while (shell->my_envp[i])
 	{
 		if (extract_name(shell->my_envp[i]) && extract_value(shell->my_envp[i]))
-			printf(YELLOW"%s=%s\n"DEFAULT, extract_name(shell->my_envp[i]), \
+			printf("%s=%s\n", extract_name(shell->my_envp[i]), \
 				extract_value(shell->my_envp[i]));
 		i++;
 	}
