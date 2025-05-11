@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:01:32 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/10 17:56:05 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/11 11:17:23 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,6 @@ int	validate_syntax(t_token *token)
 			{
 				signal(SIGINT, signal_func);
 				signal(SIGQUIT, SIG_IGN);
-				// if (ttyattr() < 0)
-				// 	return (printf("ERROR\nttyattr failed!\n"), -1);
 			}
 		}
 		if (syntax_helper(&cur) < 0)

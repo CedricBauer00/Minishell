@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/10 17:55:54 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/11 11:44:11 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,12 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 	}
 	else if (cur->is_external_cmd)
 	{
+		signal(SIGINT, SIG_IGN);
 		pid = fork();
 		shell->pids[0] = pid;
 		if (pid == 0)
 		{
-			signal(SIGINT, signal_handler_for_child);
+			signal(SIGINT, SIG_DFL);
 			signal(SIGQUIT, SIG_DFL);
 			if (cur->io_streams && cur->io_streams->heredoc_eof)
 			{
@@ -125,13 +126,11 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 	{
 		if (access(cmd_block->args[0], F_OK | X_OK) == 0)
 		{
-			signal(SIGINT, SIG_DFL);
 			execve(cmd_block->args[0], cmd_block->args, shell->my_envp);
 			perror(RED"error execve() (absolute path)"DEFAULT);
 			// gc_free(gc);
 			exit(1);
 		}
-		
 		fprintf(stderr, RED"command not found (absolute path): %s\n"DEFAULT, cmd_block->args[0]);
 		exit(127);
 	}
@@ -162,7 +161,6 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			}
 			if (access(cmd_path, F_OK | X_OK) == 0)
 			{
-				signal(SIGINT, SIG_DFL);
 				if (execve(cmd_path , cmd_block->args, shell->my_envp) == -1)
 				{
 					perror(RED"error execve()"DEFAULT);
@@ -192,29 +190,16 @@ void	wait_for_child_and_update_status(int i)
 		wait4(shell->pids[idx], &status, 0 ,NULL);
 		if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
 		{
-			fprintf(stderr, "wait finished\n");
+			//fprintf(stderr, "parent wait child\n");
 			shell->last_status_exit = WEXITSTATUS(status);
 		}
 		if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
 			shell->last_status_exit = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
 		{
-<<<<<<< HEAD
-			//fprintf(stderr, RED"signal ! happend!\n"DEFAULT);
+			//fprintf(stderr, "parent got signal\n");
 			shell->last_status_exit = 128 + WTERMSIG(status);
-			
-			//write(1, "\n", 1);
-			// rl_replace_line("", 0);
-			//rl_on_new_line();
-			// rl_redisplay();
 			return ;
-=======
-			rl_replace_line("", 0);
-			rl_redisplay();
-			write(1, "\n", 1);
-			// rl_on_new_line();
-			shell->last_status_exit = 128 + WTERMSIG(status);
->>>>>>> bb64c22381d84b95903db9f59a53f991fdb37c1a
 		}
 		idx++;
 	}
