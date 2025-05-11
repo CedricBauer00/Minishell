@@ -6,15 +6,16 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/11 13:17:59 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/11 14:18:45 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 
-void	prevent_zombie_process()
+void	prevent_zombie_process(void)
 {
-	while (waitpid(-1, NULL, WNOHANG) > 0);
+	while (waitpid(-1, NULL, WNOHANG) > 0)
+		;
 }
 
 void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell)
@@ -62,4 +63,3 @@ void	fork_and_execute(t_cmd_block *cur, t_gc *gc, int *i)
 	close_pipefd(cur);
 	shell->pids[*i] = pid;
 }
-
