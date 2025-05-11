@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/10 14:58:45 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/11 11:22:13 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,14 @@ void	fork_and_execute(t_cmd_block *cur, t_gc *gc, int *i)
 	{
 		add_pipe(&cur);
 	}
+	signal(SIGINT, SIG_IGN);
 	pid = fork();
 	if (pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		execute_child(cur, gc, shell);
+	}
 	close_pipefd(cur);
 	shell->pids[*i] = pid;
 }

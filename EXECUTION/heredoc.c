@@ -6,11 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/05/10 17:36:19 by jisokim2         ###   ########.fr       */
-=======
-/*   Updated: 2025/05/10 15:47:14 by cbauer           ###   ########.fr       */
->>>>>>> bb64c22381d84b95903db9f59a53f991fdb37c1a
+/*   Updated: 2025/05/11 11:24:33 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +126,7 @@ int	execute_heredoc(t_shell *shell, t_token *cur)
 
 	stdin_backup = dup(STDIN_FILENO);
     stdout_backup = dup(STDOUT_FILENO);
+	
 	pid = fork();
 	if (pid == 0)
 		process_heredoc(shell, cur);
