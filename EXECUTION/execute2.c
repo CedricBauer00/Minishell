@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/11 11:44:11 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/11 11:47:53 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,11 +126,6 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 	{
 		if (access(cmd_block->args[0], F_OK | X_OK) == 0)
 		{
-<<<<<<< HEAD
-			signal(SIGINT, SIG_DFL);
-			signal(SIGQUIT, SIG_DFL);
-=======
->>>>>>> 7004bd3da8988d7e770f974cd0f6a076d55ab228
 			execve(cmd_block->args[0], cmd_block->args, shell->my_envp);
 			perror(RED"error execve() (absolute path)"DEFAULT);
 			// gc_free(gc);
@@ -166,11 +161,6 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			}
 			if (access(cmd_path, F_OK | X_OK) == 0)
 			{
-<<<<<<< HEAD
-				signal(SIGINT, SIG_DFL);
-			        signal(SIGQUIT, SIG_DFL);
-=======
->>>>>>> 7004bd3da8988d7e770f974cd0f6a076d55ab228
 				if (execve(cmd_path , cmd_block->args, shell->my_envp) == -1)
 				{
 					perror(RED"error execve()"DEFAULT);
@@ -207,13 +197,9 @@ void	wait_for_child_and_update_status(int i)
 			shell->last_status_exit = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
 		{
-<<<<<<< HEAD
-			shell->last_status_exit = 128 + WTERMSIG(status);
-=======
 			//fprintf(stderr, "parent got signal\n");
 			shell->last_status_exit = 128 + WTERMSIG(status);
 			return ;
->>>>>>> 7004bd3da8988d7e770f974cd0f6a076d55ab228
 		}
 		idx++;
 	}

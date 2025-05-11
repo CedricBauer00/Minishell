@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 12:13:48 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/10 13:38:12 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/11 12:10:49 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,36 +94,31 @@ char	*gc_strjoin(char const *s1, char const *s2, t_gc_list **gc_list)
 	return (newstr);
 }
 
-int	is_valid_char(char c)
+char	*gc_substr(char const *str, unsigned int start, size_t len, t_gc *gc)
 {
-	return ((ft_isalnum(c) || c == '_') && c != '=' && c != '$');
-}
-
-char	*gc_substr(char const *s, unsigned int start, size_t len, t_gc *gc)
-{
-	char	*substr;
+	char	*s;
 	size_t	counter;
 	size_t	i;
 
 	if (len == 0)
 		return (gc_strdup("", &gc->temp));
-	if (!s)
+	if (!str)
 		return (0);
-	if (start >= ft_strlen(s))
+	if (start >= ft_strlen(str))
 		return (gc_strdup("", &gc->temp));
-	if (len > ft_strlen(s) - start)
-		len = ft_strlen(s) - start;
-	substr = do_alloc(&gc->temp, (len + 1) * sizeof(char), TYPE_SINGLE_PTR, "gc_substr");
-	if (!substr)
+	if (len > ft_strlen(str) - start)
+		len = ft_strlen(str) - start;
+	s = do_alloc(&gc->temp, (len + 1) * sizeof(char), TYPE_SINGLE_PTR, "sbst");
+	if (!s)
 		return (NULL);
 	counter = start;
 	i = 0;
 	while (counter < len + start)
 	{
-		substr[i] = s[counter];
+		s[i] = str[counter];
 		counter++;
 		i++;
 	}
-	substr[i] = '\0';
-	return (substr);
+	s[i] = '\0';
+	return (s);
 }
