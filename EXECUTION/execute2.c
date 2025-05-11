@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/11 12:44:55 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/11 12:56:59 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,9 @@ void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 	char	**splitted_path;
 	t_shell	*shell;
 	char	*path;
+	char	*attach_slash_to_cmd;
+	int		i;
+	char	*cmd_path;
 
 	if (!cmd_block || !cmd_block->args || !cmd_block->args[0])
 		return ;
@@ -121,7 +124,8 @@ void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 		gc_free(gc);
 		exit(1);
 	}
-	if (cmd_block->args[0][0] == '/' || ft_strncmp(cmd_block->args[0], "./", 2) == 0)
+	if (cmd_block->args[0][0] == '/'
+		|| ft_strncmp(cmd_block->args[0], "./", 2) == 0)
 	{
 		if (access(cmd_block->args[0], F_OK | X_OK) == 0)
 		{
@@ -129,7 +133,8 @@ void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			perror(RED"error execve() (absolute path)"DEFAULT);
 			exit(1);
 		}
-		fprintf(stderr, RED"command not found (absolute path): %s\n"DEFAULT, cmd_block->args[0]);
+		fprintf(stderr, RED"command not found (absolute path): %s\n"DEFAULT, \
+			cmd_block->args[0]);
 		exit(127);
 	}
 	else
@@ -141,16 +146,17 @@ void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			gc_free(gc);
 			exit(1);
 		}
-		int i = 0;
-		while(splitted_path[i])
+		i = 0;
+		while (splitted_path[i])
 		{
-			char *attach_slash_to_cmd = gc_strjoin(splitted_path[i], "/", &gc->temp);
+			attach_slash_to_cmd = gc_strjoin(splitted_path[i], "/", &gc->temp);
 			if (!attach_slash_to_cmd)
 			{
 				gc_free(gc);
 				exit(1);
 			}
-			char *cmd_path = gc_strjoin(attach_slash_to_cmd, cmd_block->args[0], &gc->temp);
+			cmd_path = gc_strjoin(attach_slash_to_cmd, \
+				cmd_block->args[0], &gc->temp);
 			if (!cmd_path)
 			{
 				gc_free(gc);
@@ -158,7 +164,7 @@ void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			}
 			if (access(cmd_path, F_OK | X_OK) == 0)
 			{
-				if (execve(cmd_path , cmd_block->args, shell->my_envp) == -1)
+				if (execve(cmd_path, cmd_block->args, shell->my_envp) == -1)
 				{
 					perror(RED"error execve()"DEFAULT);
 					exit(1);
@@ -184,7 +190,7 @@ void	wait_for_child_and_update_status(int i)
 		return ;
 	while (idx < i)
 	{
-		wait4(shell->pids[idx], &status, 0 ,NULL);
+		wait4(shell->pids[idx], &status, 0, NULL);
 		if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
 			shell->last_status_exit = WEXITSTATUS(status);
 		if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
