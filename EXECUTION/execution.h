@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/11 12:03:56 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/11 13:14:13 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,7 @@ t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc);
 //memo heredoc.c
 int		heredoc();
 //void	wait_for_heredoc_pid(pid_t heredoc_pid, int status);
-void	wait_for_heredoc_pid(pid_t heredoc_pid, int status);
+int		wait_for_heredoc_pid(pid_t heredoc_pid, int status);
 
 //memo validate.c
 //int		validate_syntax(t_token *token);
@@ -175,7 +175,7 @@ void	validate_check(t_cmd_block *cmd_block);
 //memo heredoc.c
 void		process_heredoc(t_shell *shell, t_token *token);
 //void	execute_heredoc(t_shell *shell, t_token *cur);
-void		execute_heredoc(t_shell *shell, t_token *cur);
+int		execute_heredoc(t_shell *shell, t_token *cur);
 
 // ----------------------------------------------------------------------
 // 							memo execute.c
