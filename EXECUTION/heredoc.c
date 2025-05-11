@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/11 12:46:40 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/11 12:49:57 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void	process_heredoc(t_shell *shell, t_token *token)
 
 void	wait_for_heredoc_pid(pid_t heredoc_pid, int status)
 {
-	t_shell *shell;
+	t_shell	*shell;
 
 	shell = get_shell();
 	
@@ -121,12 +121,14 @@ static void heredoc_sigint_handler(int sig)
 
 void	execute_heredoc(t_shell *shell, t_token *cur)
 {
-	int status = 0;
-	pid_t pid;
-	pid = 0;
-	int stdin_backup;
-	int stdout_backup;
+	int		status;
+	pid_t	pid;
+	int		stdin_backup;
+	int		stdout_backup;
+	int		test;
 
+	pid = 0;
+	status = 0;
 	stdin_backup = dup(STDIN_FILENO);
     stdout_backup = dup(STDOUT_FILENO);
 	signal(SIGINT, SIG_IGN);

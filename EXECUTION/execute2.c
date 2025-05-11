@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/11 11:44:11 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/11 12:44:55 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 	pid_t	pid;
 
 	if (!cur)
-		return;
+		return ;
 	shell = get_shell();
 	if (cur->io_streams)
 		set_io_streams(cur);
@@ -58,33 +58,31 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 	}
 }
 
-int heredoc_fd_offset_and_redir(t_cmd_block *cur)
+int	heredoc_fd_offset_and_redir(t_cmd_block *cur)
 {
 	t_shell	*shell;
 
 	shell = get_shell();
 	if (!cur)
-		return -1;
-	shell->heredoc_fd = open("temp_heredoc" ,O_RDWR | O_CREAT, 0644);
+		return (-1);
+	shell->heredoc_fd = open("temp_heredoc", O_RDWR | O_CREAT, 0644);
 	if (shell->heredoc_fd < 0)
-	{
-		return -1;
-	}
+		return (-1);
 	if (dup2(shell->heredoc_fd, STDIN_FILENO) == -1)
 	{
 		fprintf(stderr, "in heredoc_fd_offset_and_redir 2 \n");
 		close(shell->heredoc_fd);
 		unlink("temp_heredoc");
-		return -1;
+		return (-1);
 	}
 	close(shell->heredoc_fd);
 	unlink("temp_heredoc");
-	return 1;
+	return (1);
 }
 
 void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 {
-	t_gc *gc;
+	t_gc	*gc;
 
 	gc = get_gc();
 	if (ft_strcmp(cur->built_in, "cd") == 0)
@@ -107,15 +105,16 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 	return ;
 }
 
-void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
+void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 {
 	char	**splitted_path;
 	t_shell	*shell;
-	
+	char	*path;
+
 	if (!cmd_block || !cmd_block->args || !cmd_block->args[0])
 		return ;
 	shell = get_shell();
-	char *path = find_var_in_env(shell->my_envp, "PATH", 4);
+	path = find_var_in_env(shell->my_envp, "PATH", 4);
 	if (!path)
 	{
 		printf(RED"can't find PATH"DEFAULT);
@@ -128,7 +127,6 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 		{
 			execve(cmd_block->args[0], cmd_block->args, shell->my_envp);
 			perror(RED"error execve() (absolute path)"DEFAULT);
-			// gc_free(gc);
 			exit(1);
 		}
 		fprintf(stderr, RED"command not found (absolute path): %s\n"DEFAULT, cmd_block->args[0]);
@@ -136,7 +134,6 @@ void 	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 	}
 	else
 	{
-		//fprintf(stderr, RED"in run_execve()\n"DEFAULT);
 		splitted_path = ft_split(path, ':');
 		free(path);
 		if (!splitted_path)
@@ -183,21 +180,17 @@ void	wait_for_child_and_update_status(int i)
 
 	idx = 0;
 	shell = get_shell();
-	if(!shell->pids)
-		return;
-	while(idx < i)
+	if (!shell->pids)
+		return ;
+	while (idx < i)
 	{
 		wait4(shell->pids[idx], &status, 0 ,NULL);
 		if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
-		{
-			//fprintf(stderr, "parent wait child\n");
 			shell->last_status_exit = WEXITSTATUS(status);
-		}
 		if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
 			shell->last_status_exit = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
 		{
-			//fprintf(stderr, "parent got signal\n");
 			shell->last_status_exit = 128 + WTERMSIG(status);
 			return ;
 		}

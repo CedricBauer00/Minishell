@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:44 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/10 15:09:29 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/11 12:31:47 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_env(char **args, t_shell *shell)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	if (*args)
@@ -22,10 +22,11 @@ void	ft_env(char **args, t_shell *shell)
 		printf(RED"ENV TOO MANY ARGS\n"DEFAULT);
 		return ;
 	}
-	while(shell->my_envp[i])
+	while (shell->my_envp[i])
 	{
-		if(extract_name(shell->my_envp[i]) && extract_value(shell->my_envp[i]))
-			printf(YELLOW"%s=%s\n"DEFAULT, extract_name(shell->my_envp[i]), extract_value(shell->my_envp[i]));
+		if (extract_name(shell->my_envp[i]) && extract_value(shell->my_envp[i]))
+			printf("%s=%s\n", extract_name(shell->my_envp[i]), \
+				extract_value(shell->my_envp[i]));
 		i++;
 	}
 }

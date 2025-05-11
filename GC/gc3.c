@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:01:21 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/10 13:35:40 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/11 12:10:53 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,4 +68,9 @@ void	print_list(t_gc_list **gc_lst)
 		i++;
 		cur = cur->next;
 	}
+}
+
+int	is_valid_char(char c)
+{
+	return ((ft_isalnum(c) || c == '_') && c != '=' && c != '$');
 }
