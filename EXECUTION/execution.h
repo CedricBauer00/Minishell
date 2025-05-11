@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/11 13:14:13 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/11 18:37:01 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ typedef struct s_pipe
 
 typedef struct s_shell
 {
+	int		stdin_backup;
+	int		stdout_backup;
 	char	**my_envp;
 	int		*pids;
 	char	*cur_dir;

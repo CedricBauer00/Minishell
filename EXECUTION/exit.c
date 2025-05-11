@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:53:04 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/10 16:33:10 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/11 18:12:59 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ long long	ft_atoll(const char *str, long long *exitvalue)
 	while (*str)
 	{
 		if (*str < '0' || *str > '9')
-			return (0);
+			return (-1);
 		digit = *str - '0';
 		if (num > (LONGLONGMAX / 10) || (num == (LONGLONGMAX / 10) && digit > LONGLONGMAX % 10))
         {
@@ -50,23 +50,16 @@ long long	ft_atoll(const char *str, long long *exitvalue)
 		num = num * 10 + digit;
 		str++;
 	}
-	num *= sign;
-	if (num > LONGLONGMAX || num < LONGLONGMIN)
-	{
-		*exitvalue = 255;
-		return -1;
-	}
-    return num;
+	*exitvalue = num * sign;
+    return 0;
 }
 
 void	ft_exit(char **args, t_shell *shell)
 {
 	long long exitvalue;
-	char	*temp;
 	t_gc	*gc;
 
 	gc = get_gc();
-	temp = NULL;
 	exitvalue = 0;
 	write(1, "exit\n", 5);
 	if (args[0] == NULL)
@@ -81,19 +74,7 @@ void	ft_exit(char **args, t_shell *shell)
 		all_free(&gc->temp);
 		return;
 	}
-	temp = args[0];
-	if (*temp == '-' || *temp == '+')
-			temp++;
-	int i = 0;
-	while (args[0][i])
-	{
-		if (args[0][i] >= '0' && args[0][i] <= '9')
-		fprintf(stderr, RED"exit: %s numeric argument required\n"DEFAULT, args[0]);
-		gc_free(gc);
-		exit(255);
-		i++;
-	}
-	if (ft_atoll(args[0], &exitvalue) == -1)
+	if ((ft_atoll(args[0], &exitvalue) == -1))
 	{
 		fprintf(stderr, RED"exit: %s numeric argument required\n"DEFAULT, args[0]);
 		gc_free(gc);

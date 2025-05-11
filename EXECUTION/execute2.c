@@ -6,11 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/05/11 12:56:50 by jisokim2         ###   ########.fr       */
-=======
-/*   Updated: 2025/05/11 12:56:59 by cbauer           ###   ########.fr       */
->>>>>>> f9bd0e9fe4ffa5f6698e8a84a7940184ab8be589
+/*   Updated: 2025/05/11 19:10:53 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,9 +120,9 @@ void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 	path = find_var_in_env(shell->my_envp, "PATH", 4);
 	if (!path)
 	{
-		printf(RED"can't find PATH"DEFAULT);
+		printf(RED"can't find PATH\n"DEFAULT);
 		gc_free(gc);
-		exit(1);
+		exit(127);
 	}
 	if (cmd_block->args[0][0] == '/'
 		|| ft_strncmp(cmd_block->args[0], "./", 2) == 0)
@@ -168,6 +164,8 @@ void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			}
 			if (access(cmd_path, F_OK | X_OK) == 0)
 			{
+				close(shell->stdin_backup);
+				close(shell->stdout_backup);
 				if (execve(cmd_path, cmd_block->args, shell->my_envp) == -1)
 				{
 					perror(RED"error execve()"DEFAULT);
@@ -195,9 +193,7 @@ void	wait_for_child_and_update_status(int i)
 	while (idx < i)
 	{
 		wait4(shell->pids[idx], &status, 0, NULL);
-		if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
-			shell->last_status_exit = WEXITSTATUS(status);
-		if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
+		if (WIFEXITED(status) && WEXITSTATUS(status))
 			shell->last_status_exit = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
 		{

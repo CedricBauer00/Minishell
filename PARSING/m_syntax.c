@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:01:32 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/11 13:16:18 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/11 18:44:53 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,12 @@ int	validate_syntax(t_token *token)
 			}
 			shell->heredoc_fd = heredoc_fd;
 			if (execute_heredoc(shell, cur) == 1)
+			{
+				close(shell->heredoc_fd);
+				close(shell->stdin_backup);
+				close(shell->stdout_backup);
 				return -1;
+			}
 		}
 		if (syntax_helper(&cur) < 0)
 		{

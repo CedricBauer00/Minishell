@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/11 13:15:46 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/11 18:53:49 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static char	*expand_case_in_heredoc(char *line ,t_shell *shell)
 			i++;
 			while(line[i] && (ft_isalpha(line[i]) || line[i] == '_'))
 				i++;
-			key =  ft_substr(line, start, i - start);
+			key =  gc_substr(line, start, i - start, gc);
 			k = check_existing(shell->my_envp, &key[1]);
 			if (k >= 0)
 				value = extract_value(shell->my_envp[k]);
@@ -43,7 +43,6 @@ static char	*expand_case_in_heredoc(char *line ,t_shell *shell)
 				return result;
 			}
 			result = gc_strjoin(result, value, &gc->temp);
-			free(key);
 		}
 		else
 		{
@@ -51,15 +50,53 @@ static char	*expand_case_in_heredoc(char *line ,t_shell *shell)
 			str[0] = line[i];
 			str[1] = '\0';
 			result = gc_strjoin(result, str, &gc->temp);
+			
 			i++;
 		}
 	}
 	return (result);
 }
 
+//memo it is too complicated so maybe i can change lie this.
+// void	process_heredoc(t_shell *shell, t_token *token)
+// {
+// 	int	fd_heredoc = shell->heredoc_fd;
+// 	t_gc *gc;
+
+// 	gc = get_gc();
+// 	while(1)
+// 	{
+// 		char *line;
+// 		line = readline("heredoc > ");
+// 		if (!line)
+// 		{
+// 			//fprintf(stderr, "ctrl  + d in heredoc \n");
+// 			close(fd_heredoc);
+// 			gc_free(gc);
+// 			exit(0);
+// 		}
+
+	
+// 		char *expanded_var = expand_case_in_heredoc(line, shell);
+// 		size_t len = ft_strlen(line);
+// 		char *temp = do_alloc(&gc->temp, len + 1, TYPE_SINGLE_PTR, "heredoc");
+// 		ft_strlcpy(temp, expanded_var, len + 1);
+// 		if (!line || strcmp(line, token->value) == 0)
+// 		{
+// 			free(line);
+// 			close(fd_heredoc);
+// 			gc_free(gc);
+// 			exit(0);
+// 			break;
+// 		}
+// 		write(fd_heredoc, expanded_var, strlen(expanded_var));
+// 		write(fd_heredoc, "\n", 1);
+// 		free(line);
+// 	}
+// }
+
 void	process_heredoc(t_shell *shell, t_token *token)
 {
-	int	fd_heredoc = shell->heredoc_fd;
 	t_gc *gc;
 
 	gc = get_gc();
@@ -67,27 +104,18 @@ void	process_heredoc(t_shell *shell, t_token *token)
 	{
 		char *line;
 		line = readline("> ");
-		if (!line)
+		if (!line || strcmp(line, token->value) == 0)
 		{
-			//fprintf(stderr, "ctrl  + d in heredoc \n");
-			close(fd_heredoc);
+			free(line);
+			close(shell->heredoc_fd);
+			close(shell->stdin_backup);
+			close(shell->stdout_backup);
 			gc_free(gc);
 			exit(0);
 		}
 		char *expanded_var = expand_case_in_heredoc(line, shell);
-		size_t len = ft_strlen(line);
-		char *temp = do_alloc(&gc->temp, len + 1, TYPE_SINGLE_PTR, "heredoc");
-		ft_strlcpy(temp, expanded_var, len + 1);
-		if (!line || strcmp(line, token->value) == 0)
-		{
-			free(line);
-			close(fd_heredoc);
-			gc_free(gc);
-			exit(0);
-			break;
-		}
-		write(fd_heredoc, expanded_var, strlen(expanded_var));
-		write(fd_heredoc, "\n", 1);
+		write(shell->heredoc_fd, expanded_var, strlen(expanded_var));
+		write(shell->heredoc_fd, "\n", 1);
 		free(line);
 	}
 }
@@ -97,28 +125,45 @@ int	wait_for_heredoc_pid(pid_t heredoc_pid, int status)
 	t_shell	*shell;
 
 	shell = get_shell();
-	
 	waitpid(heredoc_pid, &status, 0);
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 	{
 		int exit_status = WTERMSIG(status);
-		// fprintf(stderr, "exit_status %d\n", exit_status);
         shell->last_status_exit = 128 + exit_status;
+		close(shell->heredoc_fd);
+		close(shell->stdin_backup);
+		close(shell->stdout_backup);
+		unlink("temp_heredoc");
 		return shell->last_status_exit;
 	}
 	else if (WIFEXITED(status))
 	{
 		int exit_status = WEXITSTATUS(status);
-		//fprintf(stderr, "exit_status %d\n", exit_status);
 		shell->last_status_exit = exit_status;
+		close(shell->heredoc_fd);
+		close(shell->stdin_backup);
+		close(shell->stdout_backup);
+		unlink("temp_heredoc");
 		return shell->last_status_exit;
 	}
-	//shell->last_status_exit = 1;
 	return 0;
 }
+
 static void heredoc_sigint_handler(int sig)
 {
-    (void)sig;
+	t_shell *shell;
+	t_gc *gc;
+
+	gc = get_gc();
+	shell = get_shell();
+	if (sig == SIGINT)
+	{
+		close(shell->heredoc_fd);
+		close(shell->stdin_backup);
+		close(shell->stdout_backup);
+		if (gc)
+		 	gc_free(gc);
+	}
     write(1, "\n", 1);
     exit(1);
 }
@@ -127,13 +172,11 @@ int	execute_heredoc(t_shell *shell, t_token *cur)
 {
 	int		status;
 	pid_t	pid;
-	int		stdin_backup;
-	int		stdout_backup;
 
 	pid = 0;
 	status = 0;
-	stdin_backup = dup(STDIN_FILENO);
-    stdout_backup = dup(STDOUT_FILENO);
+	shell->stdin_backup = dup(STDIN_FILENO);
+    shell->stdout_backup = dup(STDOUT_FILENO);
 	signal(SIGINT, SIG_IGN);
 	pid = fork();
 	if (pid == 0)
@@ -147,10 +190,8 @@ int	execute_heredoc(t_shell *shell, t_token *cur)
 		int test = wait_for_heredoc_pid(pid, status);
 		if (test == 1)
 			return 1;
-		dup2(stdin_backup, STDIN_FILENO);
-		dup2(stdout_backup, STDOUT_FILENO);
-		close(stdin_backup);
-		close(stdout_backup);
+		dup2(shell->stdin_backup, STDIN_FILENO);
+		dup2(shell->stdout_backup, STDOUT_FILENO);
 	}
 	return 0;
 }
