@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/11 12:19:12 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/11 12:49:57 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,13 @@ void	process_heredoc(t_shell *shell, t_token *token)
 	t_gc *gc;
 
 	gc = get_gc();
-	signal(SIGINT, SIG_DFL);
 	while(1)
 	{
 		char *line;
 		line = readline("> ");
 		if (!line)
 		{
+			fprintf(stderr, "ctrl  + d in heredoc \n");
 			close(fd_heredoc);
 			gc_free(gc);
 			exit(0);
@@ -92,31 +92,34 @@ void	process_heredoc(t_shell *shell, t_token *token)
 	}
 }
 
-int	wait_for_heredoc_pid(pid_t heredoc_pid, int status)
+void	wait_for_heredoc_pid(pid_t heredoc_pid, int status)
 {
 	t_shell	*shell;
 
 	shell = get_shell();
-	signal(SIGINT, SIG_IGN);
+	
 	waitpid(heredoc_pid, &status, 0);
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 	{
 		shell->last_status_exit = 1;
-		return (-1);
+		return ;
 	}
 	else if (WIFEXITED(status))
 	{
 		int exit_status = WEXITSTATUS(status);
-		if (exit_status != 0)
-		{
-			shell->last_status_exit = exit_status;
-			return (1);
-		}
+		shell->last_status_exit = exit_status;
+		return ;
 	}
-	return 0;
+	return ;
+}
+static void heredoc_sigint_handler(int sig)
+{
+    (void)sig;
+    write(1, "\n", 1);
+    exit(1);
 }
 
-int	execute_heredoc(t_shell *shell, t_token *cur)
+void	execute_heredoc(t_shell *shell, t_token *cur)
 {
 	int		status;
 	pid_t	pid;
@@ -128,18 +131,20 @@ int	execute_heredoc(t_shell *shell, t_token *cur)
 	status = 0;
 	stdin_backup = dup(STDIN_FILENO);
     stdout_backup = dup(STDOUT_FILENO);
+	signal(SIGINT, SIG_IGN);
 	pid = fork();
 	if (pid == 0)
+	{
+		signal(SIGINT, heredoc_sigint_handler);
+		signal(SIGQUIT, SIG_DFL);	
 		process_heredoc(shell, cur);
+	}
 	else if (pid > 0)
 	{
-		test = wait_for_heredoc_pid(pid, status);
-		if (test == -1)
-			return -1;
+		wait_for_heredoc_pid(pid, status);
 		dup2(stdin_backup, STDIN_FILENO);
 		dup2(stdout_backup, STDOUT_FILENO);
 		close(stdin_backup);
 		close(stdout_backup);
 	}
-	return 0;
 }
