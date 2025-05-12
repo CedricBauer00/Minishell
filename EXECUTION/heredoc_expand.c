@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 12:28:10 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/12 13:03:21 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 15:05:46 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,3 @@ char	*expand_case_in_heredoc(char *line, t_shell *shell)
 	}
 	return (result);
 }
-

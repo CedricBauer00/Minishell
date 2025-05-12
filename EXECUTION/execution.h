@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 14:10:13 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 15:48:49 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ char	*extract_name(char *arg);
 char	*extract_value(char *arg);
 
 //memo unset.c
+void	foo(char *arg, t_shell *shell);
 void	ft_unset(char **argv, t_shell *shell);
 
 //memo echo.c

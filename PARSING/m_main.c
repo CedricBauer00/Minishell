@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_main.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/12 14:59:22 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 15:48:11 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,9 @@
 int	main_helper(t_main *main, t_gc_list **gc_temp)
 {
 	size_t	len;
-	//MEMO FOR TESTER
+
 	if (isatty(fileno(stdin)))
 		main->temp_for_line = readline(RED"minishell> "DEFAULT);
-	// else
-	// {
-	// 	char *line;
-	// 	line = get_next_line(fileno(stdin));
-	// 	main->temp_for_line = ft_strtrim(line, "\n");
-	// 	free(line);
-	// }
 	len = 0;
 	if (!main->temp_for_line)
 		return (printf("exit\n"), 1);
@@ -69,6 +62,7 @@ int	main_loop(t_main *main, int i, t_gc *gc, t_shell *shell)
 {
 	int	ret;
 	
+	foo("OLDPWD", shell);
 	while (1)
 	{
 		i = 0;

@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 14:40:35 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 15:10:57 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ int	heredoc_fd_offset_and_redir(t_cmd_block *cur)
 
 char	*check_path_before_exec(t_shell *shell, t_gc *gc)
 {
-	char *path;
+	char	*path;
+
 	path = find_var_in_env(shell->my_envp, "PATH", 4);
 	if (!path)
 	{
@@ -81,10 +82,10 @@ char	*check_path_before_exec(t_shell *shell, t_gc *gc)
 		gc_free(gc);
 		exit(127);
 	}
-	return path;
+	return (path);
 }
 
-void access_and_exec(char *arg, char **args, t_shell *shell)
+void	access_and_exec(char *arg, char **args, t_shell *shell)
 {
 	if (access(arg, F_OK | X_OK) == 0)
 	{

@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:53:04 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/12 14:39:24 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 15:30:20 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 // 		*exitvalue = 255;
 // 		return (-1);
 // 	}
+// 	return (0);
 // }
 
 long long	ft_atoll(const char *str, long long *exitvalue)
