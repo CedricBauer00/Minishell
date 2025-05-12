@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 15:12:18 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 15:55:00 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,9 +80,7 @@ void	wait_for_child_and_update_status(int i)
 			shell->last_status_exit = WEXITSTATUS(status);
 		}
 		else if (WIFSIGNALED(status))
-		{
 			shell->last_status_exit = 128 + WTERMSIG(status);
-		}
 		idx++;
 	}
 }

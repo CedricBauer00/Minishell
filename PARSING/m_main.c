@@ -6,7 +6,11 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/05/12 15:48:11 by jisokim2         ###   ########.fr       */
+=======
+/*   Updated: 2025/05/12 15:05:11 by cbauer           ###   ########.fr       */
+>>>>>>> 20b150f7ff713719f883e0888993f5cc81b64a5b
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +65,12 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc, t_shell *shell)
 int	main_loop(t_main *main, int i, t_gc *gc, t_shell *shell)
 {
 	int	ret;
+<<<<<<< HEAD
 	
 	foo("OLDPWD", shell);
+=======
+
+>>>>>>> 20b150f7ff713719f883e0888993f5cc81b64a5b
 	while (1)
 	{
 		i = 0;

@@ -6,13 +6,13 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 15:06:13 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 15:55:53 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 
-static	int	wait_for_heredoc_pid(pid_t heredoc_pid, int status)
+static int	wait_for_heredoc_pid(pid_t heredoc_pid, int status)
 {
 	t_shell	*shell;
 	int		exit_status;

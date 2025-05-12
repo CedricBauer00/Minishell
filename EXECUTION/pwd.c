@@ -6,7 +6,11 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:22 by jisokim2          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/05/12 15:17:43 by jisokim2         ###   ########.fr       */
+=======
+/*   Updated: 2025/05/12 15:07:15 by cbauer           ###   ########.fr       */
+>>>>>>> 20b150f7ff713719f883e0888993f5cc81b64a5b
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +49,11 @@ void	ft_pwd(char **args, t_gc *gc)
 	find = NULL;
 	if (*args)
 	{
-		printf(RED"PWD TOO MANY ARGS\n"DEFAULT);
+		printf("PWD TOO MANY ARGS\n");
 		return ;
 	}
 	pwd = my_getcwd();
-	printf(YELLOW"%s\n"DEFAULT, pwd);
+	printf("%s\n", pwd);
 	find = find_node(find, (char *)pwd);
 	delete_node(&gc->temp, (t_gc_list *)find);
 }
