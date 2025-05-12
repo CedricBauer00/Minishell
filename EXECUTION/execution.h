@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 13:53:31 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 14:10:13 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int		is_valid_dir(const char *path);
 void 	cd(char **args, t_shell *shell, t_gc *gc);
 
 //memo exit.c
-void	ft_exit(char **args, t_shell *shell);
+void	ft_exit(char **args, t_shell *shell, t_gc *gc);
 
 //memo export.c
 void	export(char **argv, t_shell *shell);

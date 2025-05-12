@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   temp_excute.c                                      :+:      :+:    :+:   */
+/*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 13:43:18 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 14:53:05 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,7 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 
 	gc = get_gc();
 	if (ft_strcmp(cur->built_in, "cd") == 0)
-	{
-		fprintf(stderr, "in execute_builtin()\n");
 		cd(cur->args, shell, gc);
-	}
 	else if (ft_strcmp(cur->built_in, "echo") == 0)
 		ft_echo(cur->args, true, 0, 1);
 	else if (ft_strcmp(cur->built_in, "export") == 0)
@@ -33,7 +30,7 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 	else if (ft_strcmp(cur->built_in, "unset") == 0)
 		ft_unset(cur->args, shell);
 	else if (ft_strcmp(cur->built_in, "exit") == 0)
-		ft_exit(cur->args, shell);
+		ft_exit(cur->args, shell, gc);
 	return ;
 }
 
@@ -75,6 +72,7 @@ void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 	}
 	else
 	{
+		fprintf(stderr, "relative path run_execve?\n");
 		exec_relative_path(path, cmd_block, gc, shell);
 	}
 	printf(RED"No such file or DIR"DEFAULT);

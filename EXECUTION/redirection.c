@@ -6,31 +6,38 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:26 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 14:01:41 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 14:09:17 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 
-// static void	error_redir_open()
-// {
-// 	t_gc	*gc;
+static void	error_redir_open()
+{
+	t_gc	*gc;
 	
-// 	gc = get_gc();
-// 	gc_free(gc);
-// 	exit(1);
-// }
+	gc = get_gc();
+	gc_free(gc);
+	exit(1);
+}
 
 static void	open_redir_file(int *fd, char *filename, int flags, mode_t mode)
 {
-	*fd = open(filename, flags, mode);	
-		//error_redir_open();
+	*fd = open(filename, flags, mode);
+	if (*fd == -1)
+	{
+		perror(RED"failed open for redir"DEFAULT);
+		error_redir_open();
+	}
 }
 
 static void dup2_redir(int oldfd, int newfd)
 {
-	dup2(oldfd, newfd);
-		//error_redir_open();
+	if (dup2(oldfd, newfd) == -1)
+	{
+		perror(RED"failed open for redir"DEFAULT);
+		error_redir_open();
+	}
 }
 
 void handle_redir(t_io_streams_list	*io_streams)

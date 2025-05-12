@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 13:40:21 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 15:02:53 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,15 @@ void	wait_for_child_and_update_status(int i)
 		return ;
 	while (idx < i)
 	{
-		wait4(shell->pids[idx], &status, 0, NULL);
-		if (WIFEXITED(status) && WEXITSTATUS(status))
+		waitpid(shell->pids[idx], &status, 0);
+		if (WIFEXITED(status))
+		{
 			shell->last_status_exit = WEXITSTATUS(status);
+			fprintf(stderr, "shell->last_status_exit %d\n",shell->last_status_exit);	
+		}
 		else if (WIFSIGNALED(status))
 		{
 			shell->last_status_exit = 128 + WTERMSIG(status);
-			return ;
 		}
 		idx++;
 	}

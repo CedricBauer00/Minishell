@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 13:37:23 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 14:52:11 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ void 	execute_single_external_cmd(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 		signal(SIGQUIT, SIG_DFL);
 		run_execve(cur, gc);
 	}
-	else
+	else if (pid > 0)
+	{
 		wait_for_child_and_update_status(1);
+	}
 }
