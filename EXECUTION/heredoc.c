@@ -6,13 +6,13 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 14:34:03 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 15:08:15 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 
-static	int wait_for_heredoc_pid(pid_t heredoc_pid, int status)
+static int	wait_for_heredoc_pid(pid_t heredoc_pid, int status)
 {
 	t_shell	*shell;
 	int		exit_status;
@@ -49,6 +49,7 @@ void	heredoc_sigint_handler(int sig)
 	write(1, "\n", 1);
 	exit(1);
 }
+
 void	process_heredoc(t_shell *shell, t_token *token)
 {
 	t_gc	*gc;

@@ -6,13 +6,14 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 11:43:28 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/12 12:09:54 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 15:07:52 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 
-void	add_io_streams_list(t_io_streams_list **head, t_io_streams_list *new_io_streams)
+void	add_io_streams_list(t_io_streams_list **head, \
+	t_io_streams_list *new_io_streams)
 {
 	t_io_streams_list	*last;
 
@@ -27,7 +28,8 @@ void	add_io_streams_list(t_io_streams_list **head, t_io_streams_list *new_io_str
 	}
 }
 
-void	ready_redir_files(t_io_streams_list *new_io_streams, t_token **cur, t_gc *gc)
+void	ready_redir_files(t_io_streams_list *new_io_streams, \
+	t_token **cur, t_gc *gc)
 {
 	t_gc_list	*find;
 

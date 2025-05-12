@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_expand.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 12:28:10 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/12 13:03:21 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 15:08:25 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,3 @@ char	*expand_case_in_heredoc(char *line, t_shell *shell)
 	}
 	return (result);
 }
-

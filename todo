@@ -1,0 +1,6 @@
+cd - after starting minishell -> unset OLDPWD
+
+cd in generall should print the folder were we go to
+
+env -i ./minishell -> env call -> PWD and SHLVL == 1
+

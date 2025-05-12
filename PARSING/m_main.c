@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/12 14:59:22 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 15:05:11 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc, t_shell *shell)
 int	main_loop(t_main *main, int i, t_gc *gc, t_shell *shell)
 {
 	int	ret;
-	
+
 	while (1)
 	{
 		i = 0;

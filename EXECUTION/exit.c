@@ -3,30 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:53:04 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/12 14:39:24 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 15:13:32 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
-
-// static int over_and_under_check(const char *str, int *digit, int num, long long *exitvalue)
-// {
-// 	if (num > (LONGLONGMAX / 10) || (num == (LONGLONGMAX / 10)
-// 		&& digit > LONGLONGMAX % 10))
-// 	{
-// 		*exitvalue = 255;
-// 		return (-1);
-// 	}
-// 	if (num < (LONGLONGMIN / 10) || (num == (LONGLONGMIN / 10)
-// 		&& digit > -(LONGLONGMIN % 10)))
-// 	{
-// 		*exitvalue = 255;
-// 		return (-1);
-// 	}
-// }
 
 long long	ft_atoll(const char *str, long long *exitvalue)
 {

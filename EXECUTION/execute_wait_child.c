@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_wait_child.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 15:02:53 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 15:22:44 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 void	prevent_zombie_process(void)
 {
-	while (waitpid(-1, NULL, WNOHANG) > 0);
+	while (waitpid(-1, NULL, WNOHANG) > 0)
+		;
 }
 
 void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell)
@@ -77,12 +78,9 @@ void	wait_for_child_and_update_status(int i)
 		if (WIFEXITED(status))
 		{
 			shell->last_status_exit = WEXITSTATUS(status);
-			fprintf(stderr, "shell->last_status_exit %d\n",shell->last_status_exit);	
 		}
 		else if (WIFSIGNALED(status))
-		{
 			shell->last_status_exit = 128 + WTERMSIG(status);
-		}
 		idx++;
 	}
 }

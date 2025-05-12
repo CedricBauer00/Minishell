@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_single.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 14:52:11 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 15:11:44 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 	}
 }
 
-void 	execute_single_external_cmd(t_cmd_block *cur, t_gc *gc, t_shell *shell)
+void	execute_single_external_cmd(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 {
 	pid_t	pid;
 

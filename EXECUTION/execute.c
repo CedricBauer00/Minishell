@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 15:03:47 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 15:10:42 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 		return ;
 	shell = get_shell();
 	path = check_path_before_exec(shell, gc);
-	if (cmd_block->args[0][0] == '/' || ft_strncmp(cmd_block->args[0], "./", 2) == 0)
+	if (cmd_block->args[0][0] == '/'
+		|| ft_strncmp(cmd_block->args[0], "./", 2) == 0)
 		access_and_exec(cmd_block->args[0], cmd_block->args, shell);
 	else
 		exec_relative_path(path, cmd_block, gc, shell);
@@ -74,9 +75,10 @@ void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 	exit(127);
 }
 
-void exec_relative_path(char *path, t_cmd_block *cmd_block, t_gc *gc, t_shell *shell)
+void	exec_relative_path(char *path, t_cmd_block *cmd_block, \
+	t_gc *gc, t_shell *shell)
 {
-	int	i;
+	int		i;
 	char	**splitted_path;
 	char	*cmd_path;
 	char	*attach_slash_to_cmd;
@@ -89,7 +91,8 @@ void exec_relative_path(char *path, t_cmd_block *cmd_block, t_gc *gc, t_shell *s
 	{
 		attach_slash_to_cmd = gc_strjoin(splitted_path[i], "/", &gc->temp);
 		is_exited(attach_slash_to_cmd, gc);
-		cmd_path = gc_strjoin(attach_slash_to_cmd, cmd_block->args[0], &gc->temp);
+		cmd_path = gc_strjoin(attach_slash_to_cmd, \
+			cmd_block->args[0], &gc->temp);
 		is_exited(cmd_path, gc);
 		access_and_exec(cmd_path, cmd_block->args, shell);
 		i++;
