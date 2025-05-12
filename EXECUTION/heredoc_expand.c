@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 12:28:10 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/12 15:55:42 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 16:51:04 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ char	*expand_case_in_heredoc(char *line, t_shell *shell)
 	expanded = NULL;
 	while (line[i])
 	{
-		if (line[i] == '$' && line[i + 1] != '\0')
+		if (shell->heredoc_expandable == true
+			&& line[i] == '$' && line[i + 1] != '\0')
 		{
 			expanded = extract_expanded_env(line, &i, shell, gc);
 			result = gc_strjoin(result, expanded, &gc->temp);
