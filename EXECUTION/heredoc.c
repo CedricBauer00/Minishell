@@ -6,52 +6,67 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 10:06:05 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 11:02:46 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 
+static char *extract_expanded_env(char *line, int *i, t_shell *shell, t_gc *gc)
+{
+	char	*value;
+	char	*key;
+	int		idx;
+	int		start;
+
+	start = 0;
+	idx = -1;
+	value = NULL;
+	start = *i;
+	(*i)++;
+	while(line[*i] && (ft_isalpha(line[*i]) || line[*i] == '_'))
+		(*i)++;
+	key =  gc_substr(line, start, *i - start, gc);
+	idx = check_existing(shell->my_envp, &key[1]);
+	if (idx >= 0)
+		value = extract_value(shell->my_envp[idx]);
+	else
+		value = gc_strdup("", &gc->temp);
+	return value;
+}
+
+static char *non_expanded_case(char *line, char *result, int *i, t_gc *gc)
+{
+	char str[2];
+
+	str[0] = line[*i];
+	str[1] = '\0';
+	result = gc_strjoin(result, str, &gc->temp);
+	(*i)++;
+	return result;
+}
+
 static char	*expand_case_in_heredoc(char *line ,t_shell *shell)
 {
 	t_gc	*gc;
-	char	*value;
+	char	*expanded;
 	int		i;
-	int		k;
-	char	*key;
+	char	*result;
 	
-	k = 0;
 	gc = get_gc();
-	char *result = gc_strdup("", &gc->temp);
-	value = NULL;
+	result = gc_strdup("", &gc->temp);
+	expanded = NULL;
 	i = 0;
 	while(line[i])
 	{
 		if (line[i] == '$' && line[i + 1] != '\0')
 		{
-			int start = i;
-			i++;
-			while(line[i] && (ft_isalpha(line[i]) || line[i] == '_'))
-				i++;
-			key =  gc_substr(line, start, i - start, gc);
-			k = check_existing(shell->my_envp, &key[1]);
-			if (k >= 0)
-				value = extract_value(shell->my_envp[k]);
-			else
-			{
-				result = gc_strdup("", &gc->temp);
-				return result;
-			}
-			result = gc_strjoin(result, value, &gc->temp);
+			expanded = extract_expanded_env(line ,&i, shell ,gc);
+			result = gc_strjoin(result, expanded, &gc->temp);
 		}
 		else
 		{
-			char str[2];
-			str[0] = line[i];
-			str[1] = '\0';
-			result = gc_strjoin(result, str, &gc->temp);
-			
-			i++;
+			result = non_expanded_case(line, result, &i, gc);
 		}
 	}
 	return (result);
@@ -126,24 +141,26 @@ int	wait_for_heredoc_pid(pid_t heredoc_pid, int status)
 
 	shell = get_shell();
 	waitpid(heredoc_pid, &status, 0);
-	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+	//memo never go into this if statment
+	// if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+	// {
+	// 	int exit_status = WTERMSIG(status);
+    //     shell->last_status_exit = 128 + exit_status;
+	// 	fprintf(stderr, "1\n");
+	// 	close(shell->heredoc_fd);
+	// 	close(shell->stdin_backup);
+	// 	close(shell->stdout_backup);
+	// 	unlink("temp_heredoc");
+	// 	return shell->last_status_exit;
+	// }
+	if (WIFEXITED(status))
 	{
-		int exit_status = WTERMSIG(status);
-        shell->last_status_exit = 128 + exit_status;
-		close(shell->heredoc_fd);
-		close(shell->stdin_backup);
-		close(shell->stdout_backup);
-		unlink("temp_heredoc");
-		return shell->last_status_exit;
-	}
-	else if (WIFEXITED(status))
-	{
+		fprintf(stderr, "2\n");
 		int exit_status = WEXITSTATUS(status);
 		shell->last_status_exit = exit_status;
 		close(shell->heredoc_fd);
 		close(shell->stdin_backup);
 		close(shell->stdout_backup);
-		unlink("temp_heredoc");
 		return shell->last_status_exit;
 	}
 	return 0;
