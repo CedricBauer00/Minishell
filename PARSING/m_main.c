@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/12 14:26:36 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 14:59:22 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc, t_shell *shell)
 	if (indic == -1)
 		return (all_free(&gc->temp), -1);
 	//print_tokens(main->tokens);
+	shell->last_status_exit = 0;
 	grouplize(main->tokens, &cmd_block, gc);
 	main_execute(cmd_block);
 	if (gc->temp)
@@ -67,9 +68,10 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc, t_shell *shell)
 int	main_loop(t_main *main, int i, t_gc *gc, t_shell *shell)
 {
 	int	ret;
-
+	
 	while (1)
 	{
+		i = 0;
 		signal(SIGINT, signal_func);
 		signal(SIGQUIT, SIG_IGN);
 		main->tokens = NULL;
@@ -80,15 +82,13 @@ int	main_loop(t_main *main, int i, t_gc *gc, t_shell *shell)
 			continue ;
 		if (check_quote(main) < 0)
 			continue ;
-		i = 0;
 		while (main->line[i])
 		{
 			if (check_operator(main, &i, &gc->temp) < 0 || i < 0)
 				return (printf("ERROR\nCheck_operator failed!\n"), \
 					gc_free(gc), -1);
 		}
-		if (main_loop_helper(main, 0, gc, shell) < 0)
-			continue ;
+		main_loop_helper(main, 0, gc, shell);
 	}
 	return (0);
 }
