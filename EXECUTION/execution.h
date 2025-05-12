@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 16:03:25 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 16:47:37 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct s_shell
 	char	*old_dir;
 	int		heredoc_fd;
 	int		last_status_exit;
+	bool	heredoc_expandable;
 }	t_shell;
 
 typedef struct s_token
@@ -113,9 +114,12 @@ void	print_envp(t_shell *shell);
 char	*extract_name(char *arg);
 char	*extract_value(char *arg);
 
-//memo unset.c
-void	foo(char *arg, t_shell *shell);
+// ----------------------------------------------------------------------
+// 								unset.c
+// ----------------------------------------------------------------------
+
 void	ft_unset(char **argv, t_shell *shell);
+void	foo(char *arg, t_shell *shell);
 
 // ----------------------------------------------------------------------
 // 								echo.c

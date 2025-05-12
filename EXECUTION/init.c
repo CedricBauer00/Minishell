@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:13 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 12:31:18 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 16:34:57 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ t_shell	*init_shell_struct(t_gc_list **gc_lst)
 	shell->my_envp = NULL;
 	shell->pids = NULL;
 	shell->last_status_exit = 0;
+	shell->heredoc_expandable = true;
 	return (shell);
 }
 
