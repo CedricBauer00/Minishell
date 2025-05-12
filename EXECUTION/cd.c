@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:23 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 15:57:17 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 15:58:16 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	cd(char **args, t_shell *shell, t_gc *gc)
 
 	if (!shell)
 		return ;
-	shell->cur_dir = my_getcwd(gc);
+	shell->cur_dir = my_getcwd();
 	target = get_cd_target(args, shell, gc);
 	if (!target || chdir(target) != 0)
 	{
@@ -48,7 +48,7 @@ void	cd(char **args, t_shell *shell, t_gc *gc)
 		shell->last_status_exit = 127;
 		return ;
 	}
-	new_dir = my_getcwd(gc);
+	new_dir = my_getcwd();
 	ft_setenv("PWD", new_dir, 1, shell);
 	shell->cur_dir = new_dir;
 	find = find_node(gc->temp, (char *)target);
