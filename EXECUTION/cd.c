@@ -6,28 +6,11 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:23 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/11 16:50:46 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 13:15:31 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
-
-int	is_valid_dir(const char *path)
-{
-	struct stat	file_stat;
-
-	if (stat(path, &file_stat) != 0)
-	{
-		perror("failed stat()");
-		return (0);
-	}
-	else
-	{
-		if (S_ISDIR(file_stat.st_mode))
-			return (1);
-	}
-	return (0);
-}
 
 static char	*get_cd_target(char **args, t_shell *shell, t_gc *gc)
 {

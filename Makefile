@@ -51,17 +51,18 @@ SOURCES = PARSING/m_main.c \
 		PARSING/printing.c \
 		EXECUTION/builtin_utils.c \
 		EXECUTION/cd.c \
-		EXECUTION/copy_envp.c \
 		EXECUTION/echo.c \
 		EXECUTION/env.c \
-		EXECUTION/exe_utils.c \
+		EXECUTION/alloc_check.c \
+		EXECUTION/execute_helper.c \
 		EXECUTION/execute.c \
-		EXECUTION/execute2.c \
-		EXECUTION/execute3.c \
+		EXECUTION/execute_single.c \
+		EXECUTION/execute_wait_child.c\
 		EXECUTION/export.c \
 		EXECUTION/grouplize_helper.c \
 		EXECUTION/grouplize.c \
 		EXECUTION/heredoc.c \
+		EXECUTION/heredoc_expand.c\
 		EXECUTION/init.c \
 		EXECUTION/pipe_close.c \
 		EXECUTION/pipe_process.c \
@@ -69,7 +70,6 @@ SOURCES = PARSING/m_main.c \
 		EXECUTION/pwd.c \
 		EXECUTION/redirection.c \
 		EXECUTION/unset.c \
-		EXECUTION/signal.c\
 		EXECUTION/exit.c\
 		EXECUTION/ft_setenv.c\
 		EXECUTION/builtin_utils1.c
