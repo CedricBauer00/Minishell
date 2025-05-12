@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 11:24:26 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 12:55:00 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,7 @@ void	fork_and_execute(t_cmd_block *cur, t_gc *gc, int *i)
 
 	shell = get_shell();
 	if (cur && cur->next)
-	{
 		add_pipe(&cur);
-	}
 	signal(SIGINT, SIG_IGN);
 	pid = fork();
 	if (pid == 0)

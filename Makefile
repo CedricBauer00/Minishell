@@ -62,11 +62,10 @@ SOURCES = PARSING/m_main.c \
 		EXECUTION/grouplize_helper.c \
 		EXECUTION/grouplize.c \
 		EXECUTION/heredoc.c \
-		EXECUTION/init_helper.c \
 		EXECUTION/init.c \
-		EXECUTION/pipe_helper.c \
-		EXECUTION/pipe_helper2.c \
-		EXECUTION/pipe.c \
+		EXECUTION/pipe_close.c \
+		EXECUTION/pipe_process.c \
+		EXECUTION/pipe_utils.c \
 		EXECUTION/pwd.c \
 		EXECUTION/redirection.c \
 		EXECUTION/unset.c \
