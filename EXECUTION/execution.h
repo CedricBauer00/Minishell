@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/11 19:44:45 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 13:00:44 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 #ifndef EXECUTION_H
 # define EXECUTION_H
+# define LONGLONGMAX 9223372036854775807LL
+# define LONGLONGMIN (-9223372036854775807LL - 1)
 
 # include "../minishell.h"
 
@@ -76,16 +78,13 @@ typedef struct s_token //struct being allocated for each token from input
 	struct s_token	*prev;
 }	t_token;
 
-
 //memo init.c
 t_shell	*init_shell_struct(t_gc_list **gc_lst);
 t_shell *get_shell(void);
 t_cmd_block *init_command_struct(t_gc *gc);
 t_pipe *init_pipe(t_gc *gc);
-
 t_io_streams_list	*init_io_stream_struct(t_gc *gc);
 
-t_cmd_block *get_cmd_block(void);
 
 //memo builtin_utils.c
 char	*find_var_in_env(char **my_envp, char *find, size_t find_len);
@@ -123,7 +122,6 @@ void	export(char **argv, t_shell *shell);
 void	print_envp(t_shell *shell);
 char	*extract_name(char *arg);
 char	*extract_value(char *arg);
-//char	*ft_strchr(char *str, char c);
 
 //memo unset.c
 void	ft_unset(char **argv, t_shell *shell);
@@ -145,6 +143,34 @@ void	close_last_pipefd(t_cmd_block *cmd);
 void	close_middle_pipefd(t_cmd_block *cmd);
 void	close_first_pipefd(t_cmd_block *cmd);
 
+// ----------------------------------------------------------------------
+// 								pipe_.c
+// ----------------------------------------------------------------------
+
+void	add_pipe(t_cmd_block **cmd_block);
+bool	is_first_pipe(t_cmd_block *cmd);
+bool	is_middle_pipe(t_cmd_block *cmd);
+bool	is_last_pipe(t_cmd_block *cmd);
+int		first_pipe_cmd(t_cmd_block *command);
+
+// ----------------------------------------------------------------------
+// 							  pipe_close.c
+// ----------------------------------------------------------------------
+
+void	close_first_pipefd(t_cmd_block *cmd);
+void	close_middle_pipefd(t_cmd_block *cmd);
+void	close_last_pipefd(t_cmd_block *cmd);
+void	close_pipefd(t_cmd_block *cmd);
+void	processing_pipe(t_cmd_block *cmd);
+
+// ----------------------------------------------------------------------
+// 							  pipe_utils.c
+// ----------------------------------------------------------------------
+
+int	middle_pipe_cmd(t_cmd_block *command);
+int	last_pipe_cmd(t_cmd_block *command);
+
+
 //memo redirection.c
 int		handle_re_dir(t_cmd_block *cmd_block);
 int		re_dir_out(t_io_streams_list *io_streams);
@@ -161,8 +187,10 @@ void	is_exited(void *failed, t_gc *gc);
 //t_cmd_block *add_token(t_gc_list *gc_lst, char *cmd, char **args, t_token_type type);
 
 //memo grouplize.c
-void	grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc);
+void		grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc);
 t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc);
+void		ready_all(t_cmd_block *new_cmd_block, t_token **cur, t_gc *gc, int *i);
+int			count_cmd_block(t_token *token);
 
 //memo heredoc.c
 int		heredoc();
@@ -208,8 +236,20 @@ void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell);
 void	fork_and_execute(t_cmd_block *cmd_block, t_gc *gc, int *i);
 void	hanlde_heredoc(t_cmd_block *cmd_block);
 
+// ----------------------------------------------------------------------
+// 							grouplize_helper.c
+// ----------------------------------------------------------------------
+
+void	add_io_streams_list(t_io_streams_list **head, t_io_streams_list *new_io_streams);
+void	ready_redir_files(t_io_streams_list *new_io_streams, t_token **cur, t_gc *gc);
+void	ready_builtin(t_cmd_block *new_cmd_block, t_token **cur, t_gc *gc);
+void	add_io_streams(t_token **cur, t_cmd_block *new_cmd_block);
+void	ready_args(t_cmd_block *new_cmd_block, t_token **cur, t_gc *gc, int *i);
+
 
 //memo signal.c
+
+
 
 void	signal_handler_for_child(int sign);
 //built_in

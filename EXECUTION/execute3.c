@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   execute3.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/11 19:45:20 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 11:24:26 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 
-void	prevent_zombie_process()
+void	prevent_zombie_process(void)
 {
-	while (waitpid(-1, NULL, WNOHANG) > 0);
+	while (waitpid(-1, NULL, WNOHANG) > 0)
+		;
 }
 
-//memo : maybe i need t_cmd_block **cur
 void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 {
 	if (cur && cur->io_streams && cur->io_streams->heredoc_eof)
@@ -63,4 +63,3 @@ void	fork_and_execute(t_cmd_block *cur, t_gc *gc, int *i)
 	close_pipefd(cur);
 	shell->pids[*i] = pid;
 }
-

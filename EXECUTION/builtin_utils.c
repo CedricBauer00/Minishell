@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:18 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/11 18:04:53 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 11:25:43 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,12 @@ bool	is_valid_identifier(const char *name)
 	int	i;
 
 	if (!name || !(ft_isalpha(name[0]) || name[0] == '_'))
-		return false;
+		return (false);
 	i = 1;
 	while (name[i])
 	{
 		if (!(ft_isalnum(name[i]) || name[i] == '_'))
-			return false;
+			return (false);
 		i++;
 	}
 	return (true);

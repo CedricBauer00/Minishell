@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/12 12:46:22 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 12:58:29 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static void foo(char *path, t_cmd_block *cmd_block, t_gc *gc, t_shell *shell)
 		execute(cmd_path, cmd_block->args, shell);
 		i++;
 	}
-	perror("command not found");
+	printf("command not found\n");
     exit(127);
 }
 
@@ -78,7 +78,7 @@ void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 	{
 		foo(path, cmd_block, gc, shell);
 	}
-	perror(RED"no such file"DEFAULT);
+	printf(RED"No such file or DIR"DEFAULT);
 	exit(127);
 }
 
