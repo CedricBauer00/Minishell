@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:23 by jisokim2          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/05/12 16:00:34 by jisokim2         ###   ########.fr       */
-=======
-/*   Updated: 2025/05/12 15:58:56 by cbauer           ###   ########.fr       */
->>>>>>> fe78a68c5503c133330f958440117f27d8923f63
+/*   Updated: 2025/05/12 16:03:55 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +45,7 @@ void	cd(char **args, t_shell *shell, t_gc *gc)
 	target = NULL;
 	if (!shell)
 		return ;
-	shell->cur_dir = my_getcwd(gc);
+	shell->cur_dir = my_getcwd();
 	get_cd_target(args, shell, gc);
 	if (!target || chdir(target) != 0)
 	{
