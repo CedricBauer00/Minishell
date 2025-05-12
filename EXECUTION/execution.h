@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/11 15:11:13 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 11:52:03 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ typedef struct s_pipe
 
 typedef struct s_shell
 {
+	int		stdin_backup;
+	int		stdout_backup;
 	char	**my_envp;
 	int		*pids;
 	char	*cur_dir;
@@ -161,8 +163,10 @@ void	is_exited(void *failed, t_gc *gc);
 //t_cmd_block *add_token(t_gc_list *gc_lst, char *cmd, char **args, t_token_type type);
 
 //memo grouplize.c
-void	grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc);
+void		grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc);
 t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc);
+void		ready_all(t_cmd_block *new_cmd_block, t_token **cur, t_gc *gc, int *i);
+int			count_cmd_block(t_token *token);
 
 //memo heredoc.c
 int		heredoc();
@@ -208,8 +212,22 @@ void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell);
 void	fork_and_execute(t_cmd_block *cmd_block, t_gc *gc, int *i);
 void	hanlde_heredoc(t_cmd_block *cmd_block);
 
+// ----------------------------------------------------------------------
+// 							grouplize_helper.c
+// ----------------------------------------------------------------------
+
+void	add_io_streams_list(t_io_streams_list **head, t_io_streams_list *new_io_streams);
+void	ready_redir_files(t_io_streams_list *new_io_streams, t_token **cur, t_gc *gc);
+void	ready_builtin(t_cmd_block *new_cmd_block, t_token **cur, t_gc *gc);
+void	add_io_streams(t_token **cur, t_cmd_block *new_cmd_block);
+void	ready_args(t_cmd_block *new_cmd_block, t_token **cur, t_gc *gc, int *i);
+
+
+
 
 //memo signal.c
+
+
 
 void	signal_handler_for_child(int sign);
 //built_in

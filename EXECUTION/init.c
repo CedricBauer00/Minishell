@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:13 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/10 13:46:06 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/11 18:37:16 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ t_shell	*init_shell_struct(t_gc_list **gc_lst)
 	shell->cur_dir = NULL;
 	shell->old_dir = NULL;
 	shell->heredoc_fd = -1;
+	shell->stdin_backup = -1;
+	shell->stdout_backup = -1;
 	shell->my_envp = NULL;
 	shell->pids = NULL;
 	shell->last_status_exit = 0;

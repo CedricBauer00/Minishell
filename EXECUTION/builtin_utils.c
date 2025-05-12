@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:18 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/11 12:16:34 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 11:25:43 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,18 @@ char	*find_var_in_env(char **my_envp, char *find, size_t find_len)
 
 bool	is_valid_identifier(const char *name)
 {
-	if (!name || (!ft_isalpha(name[0]) && name[0] != '_'))
+	int	i;
+
+	if (!name || !(ft_isalpha(name[0]) || name[0] == '_'))
 		return (false);
-	else
-		return (true);
+	i = 1;
+	while (name[i])
+	{
+		if (!(ft_isalnum(name[i]) || name[i] == '_'))
+			return (false);
+		i++;
+	}
+	return (true);
 }
 
 char	*create_new_path(const char *name, const char *value)
@@ -76,7 +84,7 @@ int	check_existing(char **my_envp, const char *name)
 	i = 0;
 	while (my_envp[i])
 	{
-		if ((strncmp(my_envp[i], name, strlen(name)) == 0))
+		if ((ft_strncmp(my_envp[i], name, strlen(name)) == 0))
 			return (i);
 		i++;
 	}

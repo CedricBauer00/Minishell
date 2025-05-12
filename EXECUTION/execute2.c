@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/11 13:18:22 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 11:24:23 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,9 +120,9 @@ void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 	path = find_var_in_env(shell->my_envp, "PATH", 4);
 	if (!path)
 	{
-		printf(RED"can't find PATH"DEFAULT);
+		printf(RED"can't find PATH\n"DEFAULT);
 		gc_free(gc);
-		exit(1);
+		exit(127);
 	}
 	if (cmd_block->args[0][0] == '/'
 		|| ft_strncmp(cmd_block->args[0], "./", 2) == 0)
@@ -191,9 +191,7 @@ void	wait_for_child_and_update_status(int i)
 	while (idx < i)
 	{
 		wait4(shell->pids[idx], &status, 0, NULL);
-		if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
-			shell->last_status_exit = WEXITSTATUS(status);
-		if (WIFEXITED(status) && WEXITSTATUS(status) == 1)
+		if (WIFEXITED(status) && WEXITSTATUS(status))
 			shell->last_status_exit = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
 		{

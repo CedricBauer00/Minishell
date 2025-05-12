@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:23 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/11 12:30:28 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/11 16:50:46 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,11 @@ void	cd(char **args, t_shell *shell, t_gc *gc)
 		return ;
 	}
 	new_dir = my_getcwd(gc);
+	ft_setenv("PWD", new_dir, 1, shell);
+	shell->cur_dir = new_dir;
 	find = find_node(gc->temp, (char *)target);
 	delete_node(&gc->temp, find);
 	shell->old_dir = shell->cur_dir;
-	ft_setenv("OLDPWD", shell->cur_dir, 1, shell);
-	shell->cur_dir = new_dir;
-	ft_setenv("PWD", shell->cur_dir, 1, shell);
+	if (check_existing(shell->my_envp, "OLDPWD") > 0)
+		ft_setenv("OLDPWD", shell->cur_dir, 1, shell);
 }

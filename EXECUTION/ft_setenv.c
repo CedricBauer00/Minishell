@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:53:22 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/11 15:25:04 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 11:27:59 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ static void	make_env(char *new_path)
 	shell->my_envp = new_envp;
 }
 
-void	ft_setenv(const char *name, const char *value, int overwrite, t_shell *shell)
+void	ft_setenv(const char *name, const char *value, \
+	int overwrite, t_shell *shell)
 {
 	int			index;
 	char		*new_path;
