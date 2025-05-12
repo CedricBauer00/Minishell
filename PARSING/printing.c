@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 11:59:23 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/09 18:06:40 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 16:53:52 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,7 @@ void	print_token(t_token *tokens)
 	else if (tokens->type & TOKEN_FILE)
 		printf("Token Type: %s, Value: %s\n", "FILE", tokens->value);
 	else
-		printf("Token Type: UNKNOWN (%d), Value: %s\n", \
-			tokens->type, tokens->value);
+		printf("Token Type: UN (%d), Value: %s\n", tokens->type, tokens->value);
 	tokens = tokens->next;
 }
 

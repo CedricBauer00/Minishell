@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:23 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 16:47:16 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 17:02:29 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "execution.h"
 
@@ -48,7 +47,6 @@ void	cd(char **args, t_shell *shell, t_gc *gc)
 	get_cd_target(args, shell, gc);
 	if (!target || chdir(target) != 0)
 	{
-		//perror(RED""DEFAULT);
 		shell->last_status_exit = 1;
 		return ;
 	}

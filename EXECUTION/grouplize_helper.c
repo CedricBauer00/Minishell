@@ -6,16 +6,16 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 11:43:28 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/12 15:55:36 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 17:12:41 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 
-void	add_io_streams_list(t_io_streams_list **head, \
-	t_io_streams_list *new_io_streams)
+void	add_io_streams_list(t_io_list **head, \
+	t_io_list *new_io_streams)
 {
-	t_io_streams_list	*last;
+	t_io_list	*last;
 
 	if (!*head)
 		*head = new_io_streams;
@@ -28,7 +28,7 @@ void	add_io_streams_list(t_io_streams_list **head, \
 	}
 }
 
-void	ready_redir_files(t_io_streams_list *new_io_streams, \
+void	ready_redir_files(t_io_list *new_io_streams, \
 	t_token **cur, t_gc *gc)
 {
 	t_gc_list	*find;
@@ -63,7 +63,7 @@ void	ready_builtin(t_cmd_block *new_cmd_block, t_token **cur, t_gc *gc)
 
 void	add_io_streams(t_token **cur, t_cmd_block *new_cmd_block)
 {
-	t_io_streams_list	*new_io_streams;
+	t_io_list			*new_io_streams;
 	t_gc				*gc;
 	t_gc_list			*find;
 
@@ -72,7 +72,7 @@ void	add_io_streams(t_token **cur, t_cmd_block *new_cmd_block)
 	if (!cur)
 		return ;
 	new_io_streams = init_io_stream_struct(gc);
-	is_exited((t_io_streams_list *)new_io_streams, gc);
+	is_exited((t_io_list *)new_io_streams, gc);
 	add_io_streams_list(&new_cmd_block->io_streams, new_io_streams);
 	if ((*cur)->type & (TOKEN_HEREDOC))
 	{

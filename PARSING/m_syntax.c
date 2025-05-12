@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:01:32 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/12 16:42:40 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 16:52:47 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,6 @@ int	validate_syntax(t_token *token, int heredoc_fd, t_shell *shell)
 		}
 		if (cur->type == TOKEN_HEREDOC)
 		{
-			if (shell->heredoc_expandable == true)
-				printf("true!\n");
-			else
-				printf("false!\n");
 			heredoc_fd = open("temp_heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
 			if (heredoc_fd == -1)
 				return (perror("failed to open temp_heredoc"), -1);

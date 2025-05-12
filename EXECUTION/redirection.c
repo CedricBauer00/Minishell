@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:26 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 15:55:57 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 17:12:26 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	dup2_redir(int oldfd, int newfd)
 	}
 }
 
-void	handle_redir(t_io_streams_list	*io_streams)
+void	handle_redir(t_io_list	*io_streams)
 {
 	int	fd;
 
@@ -69,7 +69,7 @@ void	handle_redir(t_io_streams_list	*io_streams)
 
 void	set_io_streams(t_cmd_block *cmd)
 {
-	t_io_streams_list	*io_streams;
+	t_io_list	*io_streams;
 
 	if (!cmd)
 		return ;
