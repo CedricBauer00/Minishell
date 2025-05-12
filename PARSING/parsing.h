@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/10 16:02:13 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 14:26:54 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,9 @@ typedef struct s_main
 // ----------------------------------------------------------------------
 
 int		main_helper(t_main *main, t_gc_list **gc_list);
-int		main_loop(t_main *main, int i, t_gc *gc);
+int		main_loop(t_main *main, int i, t_gc *gc, t_shell *shell);
 int		main(int argc, char **argv, char **envp);
-int		main_loop_helper(t_main *main, int indic, t_gc *gc);
+int		main_loop_helper(t_main *main, int indic, t_gc *gc, t_shell *shell);
 
 // ----------------------------------------------------------------------
 // 							   UTILS_1
@@ -238,7 +238,8 @@ void	lex_tokens_correctly(t_token *tokens);
 
 int		syntax_redirects(t_token **cur);
 int		syntax_helper(t_token **cur);
-int		validate_syntax(t_token *token);
+int		syntax_heredoc(t_shell *shell, t_token *cur);
+int		validate_syntax(t_token *token, int heredoc_fd, t_shell *shell);
 
 // ----------------------------------------------------------------------
 // 								PRINTING

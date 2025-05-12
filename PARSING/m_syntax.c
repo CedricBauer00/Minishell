@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_syntax.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:01:32 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/11 18:44:53 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 14:32:59 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,43 +53,40 @@ int	syntax_helper(t_token **cur)
 	return (0);
 }
 
-int	validate_syntax(t_token *token)
+int	syntax_heredoc(t_shell *shell, t_token *cur)
+{
+	if (execute_heredoc(shell, cur) == 1)
+	{
+		close(shell->heredoc_fd);
+		close(shell->stdin_backup);
+		close(shell->stdout_backup);
+		return (-1);
+	}
+	return (0);
+}
+
+int	validate_syntax(t_token *token, int heredoc_fd, t_shell *shell)
 {
 	t_token	*cur;
-	t_shell	*shell;
-	t_gc	*gc;
-	int		heredoc_fd;
 
-	shell = get_shell();
 	if (!token)
 		return (1);
 	cur = token;
 	while (cur)
 	{
-		if (cur->type == TOKEN_HEREDOC)
-		{
-			gc = get_gc();
-			heredoc_fd = open("temp_heredoc", \
-				O_RDWR | O_CREAT | O_TRUNC, 0644);
-			if (heredoc_fd == -1)
-			{
-				perror(RED"failed to open temp_heredoc"DEFAULT);
-				gc_free(gc);
-				exit(1);
-			}
-			shell->heredoc_fd = heredoc_fd;
-			if (execute_heredoc(shell, cur) == 1)
-			{
-				close(shell->heredoc_fd);
-				close(shell->stdin_backup);
-				close(shell->stdout_backup);
-				return -1;
-			}
-		}
 		if (syntax_helper(&cur) < 0)
 		{
 			get_shell()->last_status_exit = 258;
 			return (-1);
+		}
+		if (cur->type == TOKEN_HEREDOC)
+		{
+			heredoc_fd = open("temp_heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
+			if (heredoc_fd == -1)
+				return (perror("failed to open temp_heredoc"), -1);
+			shell->heredoc_fd = heredoc_fd;
+			if (syntax_heredoc(shell, cur) < 0)
+				return (-1);
 		}
 		cur = cur->next;
 	}

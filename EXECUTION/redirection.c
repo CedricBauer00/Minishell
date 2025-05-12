@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:26 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 14:09:17 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 15:03:36 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void	open_redir_file(int *fd, char *filename, int flags, mode_t mode)
 	}
 }
 
-static void dup2_redir(int oldfd, int newfd)
+static void	dup2_redir(int oldfd, int newfd)
 {
 	if (dup2(oldfd, newfd) == -1)
 	{
@@ -53,19 +53,21 @@ void handle_redir(t_io_streams_list	*io_streams)
 	}
 	if (io_streams->outfile_name)
 	{
-		open_redir_file(&fd, io_streams->outfile_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		open_redir_file(&fd, io_streams->outfile_name, O_WRONLY \
+			| O_CREAT | O_TRUNC, 0644);
 		dup2_redir(fd, STDOUT_FILENO);
 		close(fd);
 	}
 	if (io_streams->append_file_name)
 	{
-		open_redir_file(&fd, io_streams->append_file_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		open_redir_file(&fd, io_streams->append_file_name, O_WRONLY \
+			| O_CREAT | O_APPEND, 0644);
 		dup2_redir(fd, STDOUT_FILENO);
 		close(fd);
 	}
 }
 
-void	set_io_streams(t_cmd_block *cmd)	
+void	set_io_streams(t_cmd_block *cmd)
 {
 	t_io_streams_list	*io_streams;
 
@@ -117,8 +119,6 @@ void	set_io_streams(t_cmd_block *cmd)
 // 	return (1);
 // }
 
-
-
 // int	in_redir_file_open(t_io_streams_list *io_streams, char *in_filename)
 // {
 // 	int	fd;
@@ -147,7 +147,8 @@ void	set_io_streams(t_cmd_block *cmd)
 // 	return (1);
 // }
 
-// int	append_redir_file_open(t_io_streams_list *io_streams, char *appned_file_name)
+// int	append_redir_file_open(t_io_streams_list \
+	// *io_streams, char *appned_file_name)
 // {
 // 	int	fd;
 
@@ -169,5 +170,3 @@ void	set_io_streams(t_cmd_block *cmd)
 // 		re_dir_out(cmd_block->io_streams);
 // 	return 0;
 // }
-
-
