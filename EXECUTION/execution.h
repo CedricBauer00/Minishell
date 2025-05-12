@@ -6,14 +6,14 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 17:13:46 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 17:17:55 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXECUTION_H
 # define EXECUTION_H
 # define LONGLONGMAX 9223372036854775807LL
-# define LONGLONGMIN -9223372036854775808LL
+# define LONGLONGMIN (-9223372036854775807LL - 1)
 
 # include "../minishell.h"
 
