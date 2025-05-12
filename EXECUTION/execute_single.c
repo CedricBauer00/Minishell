@@ -1,63 +1,65 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute3.c                                         :+:      :+:    :+:   */
+/*   execute_single.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 12:55:00 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 13:37:23 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 
-void	prevent_zombie_process(void)
+void	execute_single_command(t_cmd_block *cmd_block)
 {
-	while (waitpid(-1, NULL, WNOHANG) > 0)
-		;
+	t_gc	*gc;
+
+	gc = get_gc();
+	if (cmd_block && !cmd_block->prev && !cmd_block->next)
+		single_cmd_execute(cmd_block, gc);
 }
 
-void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell)
+void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 {
-	if (cur && cur->io_streams && cur->io_streams->heredoc_eof)
+	t_shell	*shell;
+
+	if (!cur)
+		return ;
+	shell = get_shell();
+	if (cur->io_streams && cur->io_streams->heredoc_eof)
 	{
 		if (heredoc_fd_offset_and_redir(cur) == -1)
 		{
-			perror("errror heredoc");
 			gc_free(gc);
 			exit(1);
 		}
 	}
-	processing_pipe(cur);
-	set_io_streams(cur);
-	if (cur && cur->built_in)
-	{
+	if (cur->io_streams)
+		set_io_streams(cur);
+	if (cur->is_built_in)
 		execute_builtin(cur, shell);
-		exit(shell->last_status_exit);
-	}
-	if (cur && cur->args && cur->args[0] && !cur->built_in)
+	else if (cur->is_external_cmd)
 	{
-		run_execve(cur, gc);
+		execute_single_external_cmd(cur, gc, shell);
 	}
 }
 
-void	fork_and_execute(t_cmd_block *cur, t_gc *gc, int *i)
+void 	execute_single_external_cmd(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 {
-	pid_t		pid;
-	t_shell		*shell;
+	pid_t	pid;
 
-	shell = get_shell();
-	if (cur && cur->next)
-		add_pipe(&cur);
+	pid = 0;
 	signal(SIGINT, SIG_IGN);
 	pid = fork();
+	shell->pids[0] = pid;
 	if (pid == 0)
 	{
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
-		execute_child(cur, gc, shell);
+		run_execve(cur, gc);
 	}
-	close_pipefd(cur);
-	shell->pids[*i] = pid;
+	else
+		wait_for_child_and_update_status(1);
 }

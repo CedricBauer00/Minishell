@@ -1,44 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute.c                                          :+:      :+:    :+:   */
+/*   temp_excute.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/11 12:28:26 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 13:43:18 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 
-void	execute_pipeline(t_cmd_block *cmd_block)
-{
-	t_cmd_block	*cur;
-	t_gc		*gc;
-	int			i;
-
-	i = 0;
-	gc = get_gc();
-	cur = cmd_block;
-	if (!cur->next)
-		return ;
-	while (cur)
-	{
-		fork_and_execute(cur, gc, &i);
-		i++;
-		cur = cur->next;
-	}
-	wait_for_child_and_update_status(i);
-}
-
-void	execute_single_command(t_cmd_block *cmd_block)
+void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 {
 	t_gc	*gc;
 
 	gc = get_gc();
-	if (cmd_block && !cmd_block->prev && !cmd_block->next)
-		single_cmd_execute(cmd_block, gc);
+	if (ft_strcmp(cur->built_in, "cd") == 0)
+	{
+		fprintf(stderr, "in execute_builtin()\n");
+		cd(cur->args, shell, gc);
+	}
+	else if (ft_strcmp(cur->built_in, "echo") == 0)
+		ft_echo(cur->args, true, 0, 1);
+	else if (ft_strcmp(cur->built_in, "export") == 0)
+		export(cur->args, shell);
+	else if (ft_strcmp(cur->built_in, "pwd") == 0)
+		ft_pwd(cur->args, gc);
+	else if (ft_strcmp(cur->built_in, "env") == 0)
+		ft_env(cur->args, shell);
+	else if (ft_strcmp(cur->built_in, "unset") == 0)
+		ft_unset(cur->args, shell);
+	else if (ft_strcmp(cur->built_in, "exit") == 0)
+		ft_exit(cur->args, shell);
+	return ;
 }
 
 void	main_execute(t_cmd_block *cmd_block)
@@ -64,37 +60,67 @@ void	main_execute(t_cmd_block *cmd_block)
 	close(stdout_backup);
 }
 
-void	do_alloc_pids(t_cmd_block *cmd_block)
+void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 {
-	int		count;
 	t_shell	*shell;
-	t_gc	*gc;
+	char	*path;
 
-	gc = get_gc();
-	count = count_command(cmd_block);
-	if (count == 0 || (count == 1 && cmd_block->built_in))
+	if (!cmd_block || !cmd_block->args || !cmd_block->args[0])
 		return ;
 	shell = get_shell();
-	shell->pids = do_alloc(&gc->temp, sizeof(pid_t) * count, \
-		TYPE_SINGLE_PTR, "pids");
-	if (!shell->pids)
+	path = check_path_before_exec(shell, gc);
+	if (cmd_block->args[0][0] == '/' || ft_strncmp(cmd_block->args[0], "./", 2) == 0)
 	{
-		gc_free(gc);
-		exit(1);
+		access_and_exec(cmd_block->args[0], cmd_block->args, shell);
 	}
+	else
+	{
+		exec_relative_path(path, cmd_block, gc, shell);
+	}
+	printf(RED"No such file or DIR"DEFAULT);
+	exit(127);
 }
 
-int	count_command(t_cmd_block *cmd_block)
+void exec_relative_path(char *path, t_cmd_block *cmd_block, t_gc *gc, t_shell *shell)
 {
-	t_cmd_block	*temp;
-	int			count;
+	int	i;
+	char	**splitted_path;
+	char	*cmd_path;
+	char	*attach_slash_to_cmd;
 
-	temp = cmd_block;
-	count = 0;
-	while (temp)
+	i = 0;
+	splitted_path = ft_split(path, ':');
+	free(path);
+	is_exited(splitted_path, gc);
+	while (splitted_path[i])
 	{
-		count++;
-		temp = temp->next;
+		attach_slash_to_cmd = gc_strjoin(splitted_path[i], "/", &gc->temp);
+		is_exited(attach_slash_to_cmd, gc);
+		cmd_path = gc_strjoin(attach_slash_to_cmd, cmd_block->args[0], &gc->temp);
+		is_exited(cmd_path, gc);
+		access_and_exec(cmd_path, cmd_block->args, shell);
+		i++;
 	}
-	return (count);
+	printf("command not found\n");
+    exit(127);
+}
+
+void	execute_pipeline(t_cmd_block *cmd_block)
+{
+	t_cmd_block	*cur;
+	t_gc		*gc;
+	int			i;
+
+	i = 0;
+	gc = get_gc();
+	cur = cmd_block;
+	if (!cur->next)
+		return ;
+	while (cur)
+	{
+		fork_and_execute(cur, gc, &i);
+		i++;
+		cur = cur->next;
+	}
+	wait_for_child_and_update_status(i);
 }
