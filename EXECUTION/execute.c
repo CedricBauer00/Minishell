@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 15:10:42 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 15:55:19 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 		return ;
 	shell = get_shell();
 	path = check_path_before_exec(shell, gc);
-	if (cmd_block->args[0][0] == '/'
-		|| ft_strncmp(cmd_block->args[0], "./", 2) == 0)
+	if (cmd_block->args[0][0] == '/' ||
+			ft_strncmp(cmd_block->args[0], "./", 2) == 0)
 		access_and_exec(cmd_block->args[0], cmd_block->args, shell);
 	else
 		exec_relative_path(path, cmd_block, gc, shell);

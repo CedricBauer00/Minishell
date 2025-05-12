@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:23 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 15:58:16 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 15:58:56 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ static char	*get_cd_target(char **args, t_shell *shell, t_gc *gc)
 	}
 	else if (ft_strcmp(args[0], "-") == 0)
 	{
+		target = 
 		target = find_var_in_env(shell->my_envp, "OLDPWD", 6);
 	}
 	else
@@ -42,9 +43,11 @@ void	cd(char **args, t_shell *shell, t_gc *gc)
 		return ;
 	shell->cur_dir = my_getcwd();
 	target = get_cd_target(args, shell, gc);
+	if (check_existing(shell->my_envp, "OLDPWD") > 0)
+		ft_setenv("OLDPWD", shell->cur_dir, 1, shell);
 	if (!target || chdir(target) != 0)
 	{
-		perror(RED"cd () error"DEFAULT);
+		perror(RED""DEFAULT);
 		shell->last_status_exit = 127;
 		return ;
 	}
@@ -54,6 +57,5 @@ void	cd(char **args, t_shell *shell, t_gc *gc)
 	find = find_node(gc->temp, (char *)target);
 	delete_node(&gc->temp, find);
 	shell->old_dir = shell->cur_dir;
-	if (check_existing(shell->my_envp, "OLDPWD") > 0)
-		ft_setenv("OLDPWD", shell->cur_dir, 1, shell);
+	printf(YELLOW"%s\n"DEFAULT, shell->cur_dir);
 }

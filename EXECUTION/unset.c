@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:31 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/11 12:15:24 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 15:48:37 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 
-static void	foo(char *arg, t_shell *shell)
+void	foo(char *arg, t_shell *shell)
 {
 	t_gc		*gc;
 	int			found;
