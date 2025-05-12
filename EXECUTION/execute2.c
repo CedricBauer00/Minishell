@@ -6,55 +6,122 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/12 09:59:48 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 12:46:22 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 
+static char	*check_path_before_exec(t_shell *shell, t_gc *gc)
+{
+	char *path;
+	path = find_var_in_env(shell->my_envp, "PATH", 4);
+	if (!path)
+	{
+		printf(RED"can't find PATH\n"DEFAULT);
+		gc_free(gc);
+		exit(127);
+	}
+	return path;
+}
+
+static void execute(char *arg, char **args, t_shell *shell)
+{
+	if (access(arg, F_OK | X_OK) == 0)
+	{
+		if (execve(arg, args, shell->my_envp) == -1)
+		{
+			perror(RED"execve ()failed"DEFAULT);
+			exit(1);
+		}
+	}
+}
+
+static void foo(char *path, t_cmd_block *cmd_block, t_gc *gc, t_shell *shell)
+{
+	int	i;
+	char	**splitted_path;
+	char	*cmd_path;
+	char	*attach_slash_to_cmd;
+
+	i = 0;
+	splitted_path = ft_split(path, ':');
+	free(path);
+	is_exited(splitted_path, gc);
+	while (splitted_path[i])
+	{
+		attach_slash_to_cmd = gc_strjoin(splitted_path[i], "/", &gc->temp);
+		is_exited(attach_slash_to_cmd, gc);
+		cmd_path = gc_strjoin(attach_slash_to_cmd, cmd_block->args[0], &gc->temp);
+		is_exited(cmd_path, gc);
+		execute(cmd_path, cmd_block->args, shell);
+		i++;
+	}
+	perror("command not found");
+    exit(127);
+}
+
+void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
+{
+	t_shell	*shell;
+	char	*path;
+
+	if (!cmd_block || !cmd_block->args || !cmd_block->args[0])
+		return ;
+	shell = get_shell();
+	path = check_path_before_exec(shell, gc);
+	if (cmd_block->args[0][0] == '/' || ft_strncmp(cmd_block->args[0], "./", 2) == 0)
+	{
+		execute(cmd_block->args[0], cmd_block->args, shell);
+	}
+	else
+	{
+		foo(path, cmd_block, gc, shell);
+	}
+	perror(RED"no such file"DEFAULT);
+	exit(127);
+}
+
+static void 	execute_single_cmd(t_cmd_block *cur, t_gc *gc, t_shell *shell)
+{
+	pid_t	pid;
+
+	pid = 0;
+	signal(SIGINT, SIG_IGN);
+	pid = fork();
+	shell->pids[0] = pid;
+	if (pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+		run_execve(cur, gc);
+	}
+	else
+		wait_for_child_and_update_status(1);
+}
+
 void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 {
 	t_shell	*shell;
-	pid_t	pid;
 
 	if (!cur)
 		return ;
 	shell = get_shell();
+	if (cur->io_streams && cur->io_streams->heredoc_eof)
+	{
+		if (heredoc_fd_offset_and_redir(cur) == -1)
+		{
+			gc_free(gc);
+			exit(1);
+		}
+	}
 	if (cur->io_streams)
 		set_io_streams(cur);
 	if (cur->is_built_in)
-	{
-		if (cur->io_streams && cur->io_streams->heredoc_eof)
-		{
-			if (heredoc_fd_offset_and_redir(cur) == -1)
-			{
-				gc_free(gc);
-				exit(1);
-			}
-		}
 		execute_builtin(cur, shell);
-	}
 	else if (cur->is_external_cmd)
 	{
-		signal(SIGINT, SIG_IGN);
-		pid = fork();
-		shell->pids[0] = pid;
-		if (pid == 0)
-		{
-			signal(SIGINT, SIG_DFL);
-			signal(SIGQUIT, SIG_DFL);
-			if (cur->io_streams && cur->io_streams->heredoc_eof)
-			{
-				if (heredoc_fd_offset_and_redir(cur) == -1)
-				{
-					gc_free(gc);
-					exit(1);
-				}
-			}
-			run_execve(cur, gc);
-		}
-		else
-			wait_for_child_and_update_status(1);
+		execute_single_cmd(cur, gc, shell);
 	}
 }
 
@@ -67,7 +134,9 @@ int	heredoc_fd_offset_and_redir(t_cmd_block *cur)
 		return (-1);
 	shell->heredoc_fd = open("temp_heredoc", O_RDWR | O_CREAT, 0644);
 	if (shell->heredoc_fd < 0)
+	{
 		return (-1);
+	}
 	if (dup2(shell->heredoc_fd, STDIN_FILENO) == -1)
 	{
 		fprintf(stderr, "in heredoc_fd_offset_and_redir 2 \n");
@@ -102,79 +171,6 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 		ft_unset(cur->args, shell);
 	else if (ft_strcmp(cur->built_in, "exit") == 0)
 		ft_exit(cur->args, shell);
-	return ;
-}
-
-void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
-{
-	char	**splitted_path;
-	t_shell	*shell;
-	char	*path;
-	char	*attach_slash_to_cmd;
-	int		i;
-	char	*cmd_path;
-
-	if (!cmd_block || !cmd_block->args || !cmd_block->args[0])
-		return ;
-	shell = get_shell();
-	path = find_var_in_env(shell->my_envp, "PATH", 4);
-	if (!path)
-	{
-		printf(RED"can't find PATH\n"DEFAULT);
-		gc_free(gc);
-		exit(127);
-	}
-	if (cmd_block->args[0][0] == '/'
-		|| ft_strncmp(cmd_block->args[0], "./", 2) == 0)
-	{
-		if (access(cmd_block->args[0], F_OK | X_OK) == 0)
-		{
-			execve(cmd_block->args[0], cmd_block->args, shell->my_envp);
-			perror(RED"error execve() (absolute path)"DEFAULT);
-			exit(1);
-		}
-		fprintf(stderr, RED"command not found (absolute path): %s\n"DEFAULT, \
-			cmd_block->args[0]);
-		exit(127);
-	}
-	else
-	{
-		splitted_path = ft_split(path, ':');
-		free(path);
-		if (!splitted_path)
-		{
-			gc_free(gc);
-			exit(1);
-		}
-		i = 0;
-		while (splitted_path[i])
-		{
-			attach_slash_to_cmd = gc_strjoin(splitted_path[i], "/", &gc->temp);
-			if (!attach_slash_to_cmd)
-			{
-				gc_free(gc);
-				exit(1);
-			}
-			cmd_path = gc_strjoin(attach_slash_to_cmd, \
-				cmd_block->args[0], &gc->temp);
-			if (!cmd_path)
-			{
-				gc_free(gc);
-				exit(1);
-			}
-			if (access(cmd_path, F_OK | X_OK) == 0)
-			{
-				if (execve(cmd_path, cmd_block->args, shell->my_envp) == -1)
-				{
-					perror(RED"error execve()"DEFAULT);
-					exit(1);
-				}
-			}
-			i++;
-		}
-		printf(RED"command not found\n"DEFAULT);
-		exit(127);
-	}
 	return ;
 }
 

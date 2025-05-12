@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 11:02:46 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 12:46:31 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,6 @@ int	wait_for_heredoc_pid(pid_t heredoc_pid, int status)
 	// }
 	if (WIFEXITED(status))
 	{
-		fprintf(stderr, "2\n");
 		int exit_status = WEXITSTATUS(status);
 		shell->last_status_exit = exit_status;
 		close(shell->heredoc_fd);
