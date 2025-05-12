@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 09:37:15 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/11 19:10:53 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 09:59:48 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,8 +164,6 @@ void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 			}
 			if (access(cmd_path, F_OK | X_OK) == 0)
 			{
-				close(shell->stdin_backup);
-				close(shell->stdout_backup);
 				if (execve(cmd_path, cmd_block->args, shell->my_envp) == -1)
 				{
 					perror(RED"error execve()"DEFAULT);

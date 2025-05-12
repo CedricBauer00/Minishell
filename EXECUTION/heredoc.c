@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/11 18:53:49 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 10:06:05 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,7 @@ int	execute_heredoc(t_shell *shell, t_token *cur)
 	if (pid == 0)
 	{
 		signal(SIGINT, heredoc_sigint_handler);
-		signal(SIGQUIT, SIG_DFL);	
+		signal(SIGQUIT, SIG_IGN);	
 		process_heredoc(shell, cur);
 	}
 	else if (pid > 0)
