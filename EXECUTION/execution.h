@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 11:52:03 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 12:47:40 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,34 @@ void	close_last_pipefd(t_cmd_block *cmd);
 void	close_middle_pipefd(t_cmd_block *cmd);
 void	close_first_pipefd(t_cmd_block *cmd);
 
+// ----------------------------------------------------------------------
+// 								pipe.c
+// ----------------------------------------------------------------------
+
+void	add_pipe(t_cmd_block **cmd_block);
+bool	is_first_pipe(t_cmd_block *cmd);
+bool	is_middle_pipe(t_cmd_block *cmd);
+bool	is_last_pipe(t_cmd_block *cmd);
+int		first_pipe_cmd(t_cmd_block *command);
+
+// ----------------------------------------------------------------------
+// 							  pipe_helper.c
+// ----------------------------------------------------------------------
+
+void	close_first_pipefd(t_cmd_block *cmd);
+void	close_middle_pipefd(t_cmd_block *cmd);
+void	close_last_pipefd(t_cmd_block *cmd);
+void	close_pipefd(t_cmd_block *cmd);
+void	processing_pipe(t_cmd_block *cmd);
+
+// ----------------------------------------------------------------------
+// 							  pipe_helper2.c
+// ----------------------------------------------------------------------
+
+int	middle_pipe_cmd(t_cmd_block *command);
+int	last_pipe_cmd(t_cmd_block *command);
+
+
 //memo redirection.c
 int		handle_re_dir(t_cmd_block *cmd_block);
 int		re_dir_out(t_io_streams_list *io_streams);
@@ -221,8 +249,6 @@ void	ready_redir_files(t_io_streams_list *new_io_streams, t_token **cur, t_gc *g
 void	ready_builtin(t_cmd_block *new_cmd_block, t_token **cur, t_gc *gc);
 void	add_io_streams(t_token **cur, t_cmd_block *new_cmd_block);
 void	ready_args(t_cmd_block *new_cmd_block, t_token **cur, t_gc *gc, int *i);
-
-
 
 
 //memo signal.c
