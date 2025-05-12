@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:23 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 16:10:53 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 16:12:23 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	cd(char **args, t_shell *shell, t_gc *gc)
 	target = NULL;
 	if (!shell)
 		return ;
-	shell->cur_dir = my_getcwd(gc);
+	shell->cur_dir = my_getcwd();
 	get_cd_target(args, shell, gc);
 	if (!target || chdir(target) != 0)
 	{

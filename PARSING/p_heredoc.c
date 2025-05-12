@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 10:54:17 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/02 15:07:10 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 16:41:44 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,9 @@ char	*del_quote(char *word, int i, t_gc_list **gc_list)
 {
 	char	*str;
 	char	*ret;
+	t_shell	*shell;
 
+	shell = get_shell();
 	str = (char *)malloc(sizeof(char) * (ft_strlen(word) + 1));
 	if (!str)
 		return (NULL);
@@ -44,6 +46,7 @@ char	*del_quote(char *word, int i, t_gc_list **gc_list)
 	{
 		if (*word == '\'' || *word == '"')
 		{
+			shell->heredoc_expandable = false;
 			if (heredoc_quote_helper(word) == 1)
 				str[i++] = *word;
 		}
@@ -55,8 +58,7 @@ char	*del_quote(char *word, int i, t_gc_list **gc_list)
 	ret = gc_strdup(str, gc_list);
 	if (!ret)
 		return (free(str), NULL);
-	free(str);
-	return (ret);
+	return (free(str), ret);
 }
 
 int	heredoc(t_main *main, int i, t_gc_list **gc_list)

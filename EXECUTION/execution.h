@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 16:10:38 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 16:33:13 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct s_shell
 	char	*old_dir;
 	int		heredoc_fd;
 	int		last_status_exit;
+	bool	heredoc_expandable;
 }	t_shell;
 
 typedef struct s_token
@@ -118,6 +119,7 @@ char	*extract_value(char *arg);
 // ----------------------------------------------------------------------
 
 void	ft_unset(char **argv, t_shell *shell);
+void	foo(char *arg, t_shell *shell);
 
 // ----------------------------------------------------------------------
 // 								echo.c

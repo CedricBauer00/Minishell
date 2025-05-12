@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/12 16:04:23 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 16:40:37 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc, t_shell *shell)
 	indic = validate_syntax(main->tokens, 0, shell);
 	if (indic == -1)
 		return (all_free(&gc->temp), -1);
-	//print_tokens(main->tokens);
+	// print_tokens(main->tokens);
 	shell->last_status_exit = 0;
 	grouplize(main->tokens, &cmd_block, gc);
 	main_execute(cmd_block);
@@ -62,7 +62,7 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc, t_shell *shell)
 int	main_loop(t_main *main, int i, t_gc *gc, t_shell *shell)
 {
 	int	ret;
-	
+
 	foo("OLDPWD", shell);
 	while (1)
 	{
