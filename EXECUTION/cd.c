@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:23 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 15:58:56 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 16:02:41 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,9 @@ static char	*get_cd_target(char **args, t_shell *shell, t_gc *gc)
 	char	*target;
 
 	if (args[0] == NULL || ft_strcmp(args[0], "~") == 0)
-	{
 		target = find_var_in_env(shell->my_envp, "HOME", 4);
-	}
 	else if (ft_strcmp(args[0], "-") == 0)
-	{
-		target = 
 		target = find_var_in_env(shell->my_envp, "OLDPWD", 6);
-	}
 	else
 	{
 		target = gc_strdup(args[0], &gc->temp);
