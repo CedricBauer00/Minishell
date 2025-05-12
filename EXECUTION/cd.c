@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:23 by jisokim2          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/05/12 16:00:34 by jisokim2         ###   ########.fr       */
+=======
+/*   Updated: 2025/05/12 15:58:56 by cbauer           ###   ########.fr       */
+>>>>>>> fe78a68c5503c133330f958440117f27d8923f63
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +57,7 @@ void	cd(char **args, t_shell *shell, t_gc *gc)
 		shell->last_status_exit = 1;
 		return ;
 	}
-	new_dir = my_getcwd(gc);
+	new_dir = my_getcwd();
 	ft_setenv("PWD", new_dir, 1, shell);
 	shell->cur_dir = new_dir;
 	find = find_node(gc->temp, (char *)target);

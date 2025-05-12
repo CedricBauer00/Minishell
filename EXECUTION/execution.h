@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   execution.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/05/12 16:00:04 by jisokim2         ###   ########.fr       */
+=======
+/*   Updated: 2025/05/12 15:59:25 by cbauer           ###   ########.fr       */
+>>>>>>> fe78a68c5503c133330f958440117f27d8923f63
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,43 +21,38 @@
 
 # include "../minishell.h"
 
-typedef struct s_cmd_block //struct being allocated for each token from input
+typedef struct s_cmd_block
 {
-	char						*built_in; //memo just check if it is built in or not!
+	char						*built_in;
 	bool						is_built_in;
 	bool						is_external_cmd;
-	//int		heredoc_fd;
 	char						**args;
 	struct s_io_streams_list	*io_streams;
 	struct s_pipe				*pipe;
-	int							prev_read_end_fd; //pipe 초기값은 -1로.
+	int							prev_read_end_fd;
 	int							cur_fd_write_end;
 	int							pipe_count;
 	struct s_cmd_block			*prev;
 	struct s_cmd_block			*next;
 }	t_cmd_block;
-/***********************************************************************/
 
-typedef struct s_io_streams_list //> < > <
+typedef struct s_io_streams_list
 {
-	char	*infile_name;
-	char	*outfile_name;
-	char	*append_file_name;
-	char	*heredoc_eof;
-	char	*heredoc_file;
-
-	int		fd_org_read;
-	int		fd_org_write;
-	int		fd_in_file;
-	int		fd_out_file;
+	char						*infile_name;
+	char						*outfile_name;
+	char						*append_file_name;
+	char						*heredoc_eof;
+	char						*heredoc_file;
+	int							fd_org_read;
+	int							fd_org_write;
+	int							fd_in_file;
+	int							fd_out_file;
 	struct s_io_streams_list	*next;
 }	t_io_streams_list;
 
 typedef struct s_pipe
 {
-	int					*pipefd;
-	// struct s_pipe		*next; //maybe i dont need list
-	// struct s_pipe		*prev; //maybe i dont need list
+	int	*pipefd;
 }	t_pipe;
 
 typedef struct s_shell
@@ -68,7 +67,7 @@ typedef struct s_shell
 	int		last_status_exit;
 }	t_shell;
 
-typedef struct s_token //struct being allocated for each token from input
+typedef struct s_token
 {
 	t_token_type	type;
 	char			*value;
@@ -80,27 +79,28 @@ typedef struct s_token //struct being allocated for each token from input
 // 								env.c
 // ----------------------------------------------------------------------
 
-void    ft_env(char **args, t_shell *shell);
+void	ft_env(char **args, t_shell *shell);
 
 // ----------------------------------------------------------------------
 // 								pwd.c
 // ----------------------------------------------------------------------
 
-char	*my_getcwd();
+char	*my_getcwd(void);
 void	ft_pwd(char **args, t_gc *gc);
 
 // ----------------------------------------------------------------------
 // 							 ft_setenv.c
 // ----------------------------------------------------------------------
 
-void	ft_setenv(const char *name, const char *value, int overwrite, t_shell *shell);
+void	ft_setenv(const char *name, const char *value, \
+	int overwrite, t_shell *shell);
 
 // ----------------------------------------------------------------------
 // 								cd.c
 // ----------------------------------------------------------------------
 
 int		is_valid_dir(const char *path);
-void 	cd(char **args, t_shell *shell, t_gc *gc);
+void	cd(char **args, t_shell *shell, t_gc *gc);
 
 // ----------------------------------------------------------------------
 // 								exit.c
@@ -117,8 +117,15 @@ void	print_envp(t_shell *shell);
 char	*extract_name(char *arg);
 char	*extract_value(char *arg);
 
+<<<<<<< HEAD
 //memo unset.c
 void	foo(char *arg, t_shell *shell);
+=======
+// ----------------------------------------------------------------------
+// 								unset.c
+// ----------------------------------------------------------------------
+
+>>>>>>> fe78a68c5503c133330f958440117f27d8923f63
 void	ft_unset(char **argv, t_shell *shell);
 
 // ----------------------------------------------------------------------
@@ -150,10 +157,10 @@ int		is_valid_dir(const char *path);
 // 							 init.c
 // ----------------------------------------------------------------------
 
-t_shell				*init_shell_struct(t_gc_list **gc_lst);
-t_shell 			*get_shell(void);
-t_cmd_block 		*init_command_struct(t_gc *gc);
-t_pipe 				*init_pipe(t_gc *gc);
+t_shell	*init_shell_struct(t_gc_list **gc_lst);
+t_shell	*get_shell(void);
+t_cmd_block	*init_command_struct(t_gc *gc);
+t_pipe	*init_pipe(t_gc *gc);
 t_io_streams_list	*init_io_stream_struct(t_gc *gc);
 
 // ----------------------------------------------------------------------
@@ -201,11 +208,12 @@ int		last_pipe_cmd(t_cmd_block *command);
 // ----------------------------------------------------------------------
 
 void	set_io_streams(t_cmd_block *cmd);
-void 	handle_redir(t_io_streams_list	*io_streams);
+void	handle_redir(t_io_streams_list	*io_streams);
 
 // ----------------------------------------------------------------------
 //						alloc_check.c
 // ----------------------------------------------------------------------
+
 void	is_exited(void *failed, t_gc *gc);
 
 // ----------------------------------------------------------------------
@@ -214,7 +222,7 @@ void	is_exited(void *failed, t_gc *gc);
 
 void	execute_single_command(t_cmd_block *cmd_block);
 void	single_cmd_execute(t_cmd_block *cur, t_gc *gc);
-void 	execute_single_external_cmd(t_cmd_block *cur, t_gc *gc, t_shell *shell);
+void	execute_single_external_cmd(t_cmd_block *cur, t_gc *gc, t_shell *shell);
 
 // ----------------------------------------------------------------------
 // 							temp_execute.c
@@ -222,20 +230,19 @@ void 	execute_single_external_cmd(t_cmd_block *cur, t_gc *gc, t_shell *shell);
 void	execute_builtin(t_cmd_block *cur, t_shell *shell);
 void	main_execute(t_cmd_block *cmd_block);
 void	run_execve(t_cmd_block *cmd_block, t_gc *gc);
-void 	exec_relative_path(char *path, t_cmd_block *cmd_block, t_gc *gc, t_shell *shell);
+void	exec_relative_path(char *path, t_cmd_block *cmd_block, \
+	t_gc *gc, t_shell *shell);
 void	execute_pipeline(t_cmd_block *cmd_block);
 
 // ----------------------------------------------------------------------
 // 							execute_helper.c
 // ----------------------------------------------------------------------
-void	do_alloc_pids(t_cmd_block* cmd_block);
+
+void	do_alloc_pids(t_cmd_block *cmd_block);
 int		count_command(t_cmd_block *cmd_block);
 int		heredoc_fd_offset_and_redir(t_cmd_block *cur);
 char	*check_path_before_exec(t_shell *shell, t_gc *gc);
-void 	access_and_exec(char *arg, char **args, t_shell *shell);
-
-
-void	hanlde_heredoc(t_cmd_block *cmd_block);
+void	access_and_exec(char *arg, char **args, t_shell *shell);
 
 // ----------------------------------------------------------------------
 //							execute_wait_child.c
@@ -244,14 +251,16 @@ void	hanlde_heredoc(t_cmd_block *cmd_block);
 void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell);
 void	fork_and_execute(t_cmd_block *cmd_block, t_gc *gc, int *i);
 void	wait_for_child_and_update_status(int i);
-void	prevent_zombie_process();
+void	prevent_zombie_process(void);
 
 // ----------------------------------------------------------------------
 // 							grouplize_helper.c
 // ----------------------------------------------------------------------
 
-void	add_io_streams_list(t_io_streams_list **head, t_io_streams_list *new_io_streams);
-void	ready_redir_files(t_io_streams_list *new_io_streams, t_token **cur, t_gc *gc);
+void	add_io_streams_list(t_io_streams_list **head, \
+	t_io_streams_list *new_io_streams);
+void	ready_redir_files(t_io_streams_list *new_io_streams, \
+	t_token **cur, t_gc *gc);
 void	ready_builtin(t_cmd_block *new_cmd_block, t_token **cur, t_gc *gc);
 void	add_io_streams(t_token **cur, t_cmd_block *new_cmd_block);
 void	ready_args(t_cmd_block *new_cmd_block, t_token **cur, t_gc *gc, int *i);
@@ -259,9 +268,10 @@ void	ready_args(t_cmd_block *new_cmd_block, t_token **cur, t_gc *gc, int *i);
 // ----------------------------------------------------------------------
 // 							grouplize.c
 // ----------------------------------------------------------------------
-void		grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc);
+
+void	grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc);
 t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc);
-void		ready_all(t_cmd_block *new_cmd_block, t_token **cur, t_gc *gc, int *i);
-int			count_cmd_block(t_token *token);
+void	ready_all(t_cmd_block *new_cmd_block, t_token **cur, t_gc *gc, int *i);
+int		count_cmd_block(t_token *token);
 
 #endif
