@@ -6,14 +6,14 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 16:47:37 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 16:58:03 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXECUTION_H
 # define EXECUTION_H
-# define LONGLONGMAX 9223372036854775807LL
-# define LONGLONGMIN (-9223372036854775807LL - 1)
+# define LONGLONGMAX 9223372036854775807
+# define LONGLONGMIN -9223372036854775808
 
 # include "../minishell.h"
 
@@ -150,10 +150,10 @@ int		is_valid_dir(const char *path);
 // 							 init.c
 // ----------------------------------------------------------------------
 
-t_shell	*init_shell_struct(t_gc_list **gc_lst);
-t_shell	*get_shell(void);
-t_cmd_block	*init_command_struct(t_gc *gc);
-t_pipe	*init_pipe(t_gc *gc);
+t_shell				*init_shell_struct(t_gc_list **gc_lst);
+t_shell				*get_shell(void);
+t_cmd_block			*init_command_struct(t_gc *gc);
+t_pipe				*init_pipe(t_gc *gc);
 t_io_streams_list	*init_io_stream_struct(t_gc *gc);
 
 // ----------------------------------------------------------------------
