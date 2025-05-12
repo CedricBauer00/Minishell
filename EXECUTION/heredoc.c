@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 12:27:48 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/12 14:32:24 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,6 @@ int	wait_for_heredoc_pid(pid_t heredoc_pid, int status)
 	// }
 	if (WIFEXITED(status))
 	{
-		fprintf(stderr, "2\n");
 		exit_status = WEXITSTATUS(status);
 		shell->last_status_exit = exit_status;
 		close(shell->heredoc_fd);

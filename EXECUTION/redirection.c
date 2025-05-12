@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:26 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/11 17:31:18 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/12 13:03:58 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
 
-static void	error_redir_open()
+static void	error_redir_open(void)
 {
 	t_gc	*gc;
-	
+
 	gc = get_gc();
 	gc_free(gc);
 	exit(1);
@@ -26,16 +26,15 @@ static void	open_redir_file(int *fd, char *filename, int flags, mode_t mode)
 	*fd = open(filename, flags, mode);
 	if (*fd == -1)
 		error_redir_open();
-		
 }
 
-static void dup2_redir(int oldfd, int newfd)
+static void	dup2_redir(int oldfd, int newfd)
 {
 	if (dup2(oldfd, newfd) == -1)
 		error_redir_open();
 }
 
-static void handle_redir(t_io_streams_list	*io_streams)
+static void	handle_redir(t_io_streams_list	*io_streams)
 {
 	int	fd;
 
@@ -48,19 +47,21 @@ static void handle_redir(t_io_streams_list	*io_streams)
 	}
 	if (io_streams->outfile_name)
 	{
-		open_redir_file(&fd, io_streams->outfile_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		open_redir_file(&fd, io_streams->outfile_name, O_WRONLY \
+			| O_CREAT | O_TRUNC, 0644);
 		dup2_redir(fd, STDOUT_FILENO);
 		close(fd);
 	}
 	if (io_streams->append_file_name)
 	{
-		open_redir_file(&fd, io_streams->append_file_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		open_redir_file(&fd, io_streams->append_file_name, O_WRONLY \
+			| O_CREAT | O_APPEND, 0644);
 		dup2_redir(fd, STDOUT_FILENO);
 		close(fd);
 	}
 }
 
-void	set_io_streams(t_cmd_block *cmd)	
+void	set_io_streams(t_cmd_block *cmd)
 {
 	t_io_streams_list	*io_streams;
 
@@ -73,8 +74,6 @@ void	set_io_streams(t_cmd_block *cmd)
 		io_streams = io_streams->next;
 	}
 }
-
-
 
 // int	re_dir_in(t_io_streams_list *io_streams)
 // {
@@ -106,8 +105,6 @@ void	set_io_streams(t_cmd_block *cmd)
 // 	return (1);
 // }
 
-
-
 // int	in_redir_file_open(t_io_streams_list *io_streams, char *in_filename)
 // {
 // 	int	fd;
@@ -136,7 +133,8 @@ void	set_io_streams(t_cmd_block *cmd)
 // 	return (1);
 // }
 
-// int	append_redir_file_open(t_io_streams_list *io_streams, char *appned_file_name)
+// int	append_redir_file_open(t_io_streams_list \
+	// *io_streams, char *appned_file_name)
 // {
 // 	int	fd;
 
@@ -158,5 +156,3 @@ void	set_io_streams(t_cmd_block *cmd)
 // 		re_dir_out(cmd_block->io_streams);
 // 	return 0;
 // }
-
-
