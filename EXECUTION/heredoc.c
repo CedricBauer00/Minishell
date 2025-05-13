@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 15:55:53 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/13 10:04:05 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,3 +104,35 @@ int	execute_heredoc(t_shell *shell, t_token *cur)
 	}
 	return (0);
 }
+// minishell> << ei f
+// > $USER
+// > ey
+// > ei
+// doesnt give command not found for f
+
+// bash:
+//<< eof | ls | cat 
+// > eof
+// Makefile
+// ft_atoi.c
+// ft_atoi.o
+// ft_bzero.c
+// ft_bzero.o
+// ft_calloc.c
+// ft_calloc.o
+// ft_isalnum.c
+
+//minishell:
+// << oef | ls |cat
+// > oef
+// last_pipe_cmd dup2 error
+// : Bad file descriptor
+// EXECUTION
+// GC
+// Makefile
+// PARSING
+// get_next_line
+// libft
+// minishell
+// minishell.h
+// minishell> 

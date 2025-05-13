@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 15:55:19 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/13 10:07:18 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 		access_and_exec(cmd_block->args[0], cmd_block->args, shell);
 	else
 		exec_relative_path(path, cmd_block, gc, shell);
-	printf(RED"No such file or DIR"DEFAULT);
+	printf("No such file or DIR"); //DIR uppercase?
 	exit(127);
 }
 
@@ -97,7 +97,7 @@ void	exec_relative_path(char *path, t_cmd_block *cmd_block, \
 		access_and_exec(cmd_path, cmd_block->args, shell);
 		i++;
 	}
-	printf("command not found\n");
+	printf("minishell: : command not found\n"); //minishell: "input": command not found
 	exit(127);
 }
 

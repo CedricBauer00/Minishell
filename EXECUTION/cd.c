@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:23 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 17:02:29 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/13 10:06:00 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,5 +58,5 @@ void	cd(char **args, t_shell *shell, t_gc *gc)
 	shell->old_dir = shell->cur_dir;
 	if (check_existing(shell->my_envp, "OLDPWD") > 0)
 		ft_setenv("OLDPWD", shell->cur_dir, 1, shell);
-	printf(YELLOW"%s\n"DEFAULT, shell->cur_dir);
+	printf("%s\n", shell->cur_dir);
 }

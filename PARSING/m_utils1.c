@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 17:53:21 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/12 16:33:54 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/13 10:10:08 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,18 +30,18 @@ int	check_operator2(t_main *main, int *i, t_gc_list **gc_list)
 	if (main->line[*i] == '"')
 	{
 		if (dquotes(main, i, gc_list) < 0)
-			return (printf(BLUE"ERROR\nQuotes failed!\n"DEFAULT), -1);
+			return (printf("ERROR\nQuotes failed!\n"), -1); //ERROR? Even error message required?
 	}
 	else if (main->line[*i] == '$')
 	{
 		if (expands(main, i, 0, gc_list) < 0)
-			return (perror("ERROR\nExpand failed!\n"), -1);
+			return (perror("ERROR\nExpand failed!\n"), -1); //ERROR? Even error message required?
 	}
 	else if (!ft_isspace(main->line[*i]))
 		words(main, i, 0, gc_list);
 	else
 		printf("Warning: Unrecognized character '%c' at position %d\n", \
-			main->line[*i], *i);
+			main->line[*i], *i); //ERROR? Even error message required?
 	return (0);
 }
 
@@ -63,7 +63,7 @@ int	check_operator(t_main *main, int *i, t_gc_list **gc_list)
 	else if (main->line[*i] == '\'')
 	{
 		if (quotes(main, i, gc_list) < 0)
-			return (printf("ERROR\nQuotes failed!\n"), -1);
+			return (printf("ERROR\nQuotes failed!\n"), -1); //ERROR? Even error message required?
 	}
 	else if (check_operator2(main, i, gc_list) < 0)
 		return (-1);

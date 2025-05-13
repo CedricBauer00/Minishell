@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:44 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 16:05:33 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/13 10:06:49 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	ft_env(char **args, t_shell *shell)
 	i = 0;
 	if (*args)
 	{
-		printf(RED"ENV TOO MANY ARGS\n"DEFAULT);
+		printf("ENV TOO MANY ARGS\n"); // do we need?
 		return ;
 	}
 	while (shell->my_envp[i])

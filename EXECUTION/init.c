@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:13 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 17:12:26 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/13 10:26:47 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ t_pipe	*init_pipe(t_gc	*gc)
 		return (NULL);
 	if (pipe(p_pipe->pipefd) == -1)
 	{
-		perror("init_pipe()");
+		perror("init_pipe()"); // do we need? correct message?
 		return (NULL);
 	}
 	return (p_pipe);

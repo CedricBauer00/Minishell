@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:01:32 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/12 16:52:47 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/13 10:28:31 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int	validate_syntax(t_token *token, int heredoc_fd, t_shell *shell)
 		{
 			heredoc_fd = open("temp_heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
 			if (heredoc_fd == -1)
-				return (perror("failed to open temp_heredoc"), -1);
+				return (perror("failed to open temp_heredoc"), -1); // do we need? correct message?
 			shell->heredoc_fd = heredoc_fd;
 			if (syntax_heredoc(shell, cur) < 0)
 				return (-1);

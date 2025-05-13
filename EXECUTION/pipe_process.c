@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipe_helper2.c                                     :+:      :+:    :+:   */
+/*   pipe_process.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 12:42:56 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/12 12:50:12 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/13 10:30:37 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	first_pipe_cmd(t_cmd_block *command)
 		close(command->pipe->pipefd[0]);
 	if (dup2(command->pipe->pipefd[1], STDOUT_FILENO) == -1)
 	{
-		perror(RED"first cmd dup2 error\n"DEFAULT);
+		perror("first cmd dup2 error\n"); // do we need? correct message?
 		return (-1);
 	}
 	if (command->pipe->pipefd[1] >= 0)
@@ -40,7 +40,7 @@ int	middle_pipe_cmd(t_cmd_block *command)
 {
 	if (dup2(command->prev_read_end_fd, STDIN_FILENO) == -1)
 	{
-		perror(RED"middle pipe dup2 error\n"DEFAULT);
+		perror("middle pipe dup2 error\n"); // do we need? correct message?
 		return (-1);
 	}
 	if (command->prev_read_end_fd >= 0)
@@ -49,7 +49,7 @@ int	middle_pipe_cmd(t_cmd_block *command)
 		close(command->pipe->pipefd[0]);
 	if (dup2(command->pipe->pipefd[1], STDOUT_FILENO) == -1)
 	{
-		perror(RED"middle pipe dup2 error\n"DEFAULT);
+		perror("middle pipe dup2 error\n"); // do we need? correct message?
 		return (-1);
 	}
 	if (command->pipe->pipefd[1] >= 0)
@@ -61,7 +61,7 @@ int	last_pipe_cmd(t_cmd_block *command)
 {
 	if (dup2(command->prev_read_end_fd, STDIN_FILENO) == -1)
 	{
-		perror(RED"last_pipe_cmd dup2 error\n"DEFAULT);
+		// perror("last_pipe_cmd dup2 error\n"); // do we need? correct message?
 		return (-1);
 	}
 	if (command->prev_read_end_fd >= 0)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:26 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 17:12:26 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/13 10:28:08 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	open_redir_file(int *fd, char *filename, int flags, mode_t mode)
 	*fd = open(filename, flags, mode);
 	if (*fd == -1)
 	{
-		perror(RED"failed open for redir"DEFAULT);
+		perror("failed open for redir"); // do we need? correct message?
 		error_redir_open();
 	}
 }
@@ -35,7 +35,7 @@ static void	dup2_redir(int oldfd, int newfd)
 {
 	if (dup2(oldfd, newfd) == -1)
 	{
-		perror(RED"failed open for redir"DEFAULT);
+		perror("failed open for redir"); // do we need? correct message?
 		error_redir_open();
 	}
 }

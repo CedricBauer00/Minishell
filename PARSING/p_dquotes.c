@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   p_dquotes.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 09:42:44 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/02 17:07:22 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/13 10:28:41 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	dquotes_helper(t_main *main, int *i, t_gc_list **gc_list)
 		if (main->line[*i] == '$')
 		{
 			if (expands(main, i, 0, gc_list) < 0)
-				return (perror("ERROR\nExpand failed!\n"), -1);
+				return (perror("ERROR\nExpand failed!\n"), -1); // do we need? correct message?
 		}
 		if (main->line[*i] && main->line[*i] != '"' && main->line[*i] != '$')
 		{
@@ -87,7 +87,7 @@ int	dquotes(t_main *main, int *i, t_gc_list **gc_list)
 	if (dquotes_helper(main, i, gc_list) < 0)
 		return (-1);
 	if (main->line[*i] != '"')
-		return (printf(RED"ERROR\nUnclosed quotes!\n"DEFAULT), 0);
+		return (printf("ERROR\nUnclosed quotes!\n"), 0);  //ERROR? Even error message required?
 	if (main->line[*i] != '\0')
 		(*i)++;
 	return (0);

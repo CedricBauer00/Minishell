@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:47:59 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/12 15:54:54 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/13 10:26:20 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	is_valid_dir(const char *path)
 
 	if (stat(path, &file_stat) != 0)
 	{
-		perror("failed stat()");
+		perror("failed stat()"); // do we need? correct error message?
 		return (0);
 	}
 	else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_helper.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 15:54:52 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/13 10:26:29 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	heredoc_fd_offset_and_redir(t_cmd_block *cur)
 	}
 	if (dup2(shell->heredoc_fd, STDIN_FILENO) == -1)
 	{
-		fprintf(stderr, "in heredoc_fd_offset_and_redir 2 \n");
+		printf("in heredoc_fd_offset_and_redir 2 \n"); // do we need?
 		close(shell->heredoc_fd);
 		unlink("temp_heredoc");
 		return (-1);
@@ -78,7 +78,7 @@ char	*check_path_before_exec(t_shell *shell, t_gc *gc)
 	path = find_var_in_env(shell->my_envp, "PATH", 4);
 	if (!path)
 	{
-		printf(RED"can't find PATH\n"DEFAULT);
+		printf("can't find PATH\n");
 		gc_free(gc);
 		exit(127);
 	}
@@ -91,7 +91,7 @@ void	access_and_exec(char *arg, char **args, t_shell *shell)
 	{
 		if (execve(arg, args, shell->my_envp) == -1)
 		{
-			perror(RED"execve ()failed"DEFAULT);
+			perror("execve ()failed");// do we need? correct message?
 			exit(1);
 		}
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_wait_child.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 15:55:00 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/13 10:26:41 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 	{
 		if (heredoc_fd_offset_and_redir(cur) == -1)
 		{
-			perror("errror heredoc");
+			perror("errror heredoc");// do we need? correct message?
 			gc_free(gc);
 			exit(1);
 		}

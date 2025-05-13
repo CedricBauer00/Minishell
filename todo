@@ -1,0 +1,42 @@
+1. //----------------------------------------------------------//
+
+		when: << eof | ls
+		ctrl D dont work correctly
+
+2. //----------------------------------------------------------//
+
+		./minishell 
+minishell> << eof | ls | << f| ls
+> eof
+> ls
+> f
+EXECUTION       GC              Makefile        PARSING         get_next_line   libft           minishell       minishell.h     todo
+minishell> minishell> 
+minishell> 
+minishell> 
+minishell> 
+exit
+
+exit
+minishell> 
+exit
+minishell> 
+exit
+cbauer@3-C-1 MINISHELL % 
+
+3. //----------------------------------------------------------//
+
+./minishell
+minishell> << eof | ls | << f| << L|<< F|<<D
+> eof
+> ls
+> f
+> L
+> F
+> D
+middle pipe dup2 error
+: Bad file descriptor
+minishell> minishell> minishell> minishell> minishell> minishell> minishell> minishell> minishell> minishell> minishell> minishell> minishell> minishell> minishell> minishell> 
+
+
+
