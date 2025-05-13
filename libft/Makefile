@@ -1,3 +1,6 @@
+COLOUR_GREEN = \033[0;32m
+COLOUR_END = \033[0m
+
 CFLAGS	= -Wall -Wextra -Werror -g3
 RM = rm -f
 CC = cc
@@ -68,11 +71,11 @@ bonus: ${OBJECTS} ${BONUS_OBJECTS}
 
 clean:
 	${RM} ${OBJECTS} ${BONUS_OBJECTS}
-	echo "$(COLOUR_RED)Libft cleaned successfully!$(COLOUR_END)"
+	echo "$(COLOUR_GREEN)Libft cleaned successfully!$(COLOUR_END)"
 
 fclean: clean
 	${RM} ${NAME}
-	echo "$(COLOUR_RED)Libft cleaned successfully!$(COLOUR_END)"
+	echo "$(COLOUR_GREEN)Libft cleaned successfully!$(COLOUR_END)"
 
 re: fclean all
 
