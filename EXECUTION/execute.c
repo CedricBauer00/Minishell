@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/13 15:55:19 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/13 18:34:09 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 {
 	t_gc	*gc;
 
+	if (!shell || !cur->args)
+		return ;
 	gc = get_gc();
 	if (ft_strcmp(cur->built_in, "cd") == 0)
 		cd(cur->args, shell, gc);
@@ -65,12 +67,17 @@ void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 	if (!cmd_block || !cmd_block->args || !cmd_block->args[0])
 		return ;
 	shell = get_shell();
-	path = check_path_before_exec(shell, gc);
-	if (cmd_block->args[0][0] == '/' ||
-			ft_strncmp(cmd_block->args[0], "./", 2) == 0)
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	if (cmd_block->args[0][0] == '/' || ft_strncmp(cmd_block->args[0], "./", 2) == 0)
+	{
 		access_and_exec(cmd_block->args[0], cmd_block->args, shell);
+	}
 	else
+	{
+		path = check_path_before_exec(shell, gc);
 		exec_relative_path(path, cmd_block, gc, shell);
+	}
 	printf("No such file or DIR"); //DIR uppercase?
 	exit(127);
 }
@@ -115,8 +122,10 @@ void	execute_pipeline(t_cmd_block *cmd_block)
 	while (cur)
 	{
 		if (cur->is_built_in || cur->is_external_cmd)
+		{
 			fork_and_execute(cur, gc, &i);
-		i++;
+			i++;
+		}
 		cur = cur->next;
 	}
 	wait_for_child_and_update_status(i);

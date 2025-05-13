@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_main.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/13 10:09:40 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/13 18:29:36 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc, t_shell *shell)
 	if (indic == -1)
 		return (all_free(&gc->temp), -1);
 	shell->last_status_exit = 0;
+	print_token(main->tokens);
 	grouplize(main->tokens, &cmd_block, gc);
 	main_execute(cmd_block);
 	if (gc->temp)
@@ -61,7 +62,6 @@ int	main_loop(t_main *main, int i, t_gc *gc, t_shell *shell)
 {
 	int	ret;
 
-	foo("OLDPWD", shell);
 	while (1)
 	{
 		i = 0;
@@ -101,6 +101,7 @@ int	main(int argc, char **argv, char **envp)
 	gc = get_gc();
 	shell = get_shell();
 	shell->my_envp = copy_envp(gc, envp);
+	foo("OLDPWD", shell);
 	if (!shell->my_envp)
 		return (printf("ERROR\nCopy_envp failed!\n"), -1); //ERROR? Even error message required?
 	if (incrmnt_shllvl(shell, gc) < 0)

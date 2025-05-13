@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_single.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/13 14:35:09 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/13 18:54:19 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 		}
 	}
 	if (cur->io_streams)
-		set_io_streams(cur);
+		if (set_io_streams(cur) == -1)
+			return ;
 	if (cur->is_built_in)
 		execute_builtin(cur, shell);
 	else if (cur->is_external_cmd)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:53:04 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/13 14:00:01 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/13 17:22:49 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	ft_exit(char **args, t_shell *shell, t_gc *gc)
 	write(1, "exit\n", 5);
 	if (args[0] == NULL)
 	{
-		gc_free(gc);
+		all_free(&gc->temp);
 		exit(shell->last_status_exit);
 	}
 	if (args[1] != NULL)

@@ -40,4 +40,21 @@ minishell> minishell> minishell> minishell> minishell> minishell> minishell> min
 
 
 
-issue : it makes more child procs
+//todo
+// ctrl + z block maybe just igonre 
+// env -i ./minishell
+
+//at the tokenizer turn builtsins to lowercase so ecHo and so on works
+// echo "" -n hast to print -> space -n
+
+
+// bash-3.2$ echo ~
+// /Users/jisokim2
+// bash-3.2$ echo ~c
+// ~c
+// bash-3.2$ echo c~
+// c~
+// bash-3.2$ echo "~"
+// ~
+// bash-3.2$ 
+

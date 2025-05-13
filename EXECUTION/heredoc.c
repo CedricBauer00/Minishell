@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/13 14:14:52 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/13 18:10:16 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,17 @@ void	process_heredoc(t_shell *shell, t_token *token)
 	while (1)
 	{
 		line = readline("> ");
-		if (!line || strcmp(line, token->value) == 0)
+		if(!line)
+		{
+			free(line);
+			close(shell->heredoc_fd);
+			unlink("temp_heredoc");
+			close(shell->stdin_backup);
+			close(shell->stdout_backup);
+			gc_free(gc);
+			exit(0);
+		}
+		if (strcmp(line, token->value) == 0)
 		{
 			free(line);
 			close(shell->heredoc_fd);
@@ -121,7 +131,7 @@ int	execute_heredoc(t_shell *shell, t_token *cur)
 // ft_calloc.c
 // ft_calloc.o
 // ft_isalnum.c
-
+						
 //minishell:
 // << oef | ls |cat
 // > oef
@@ -136,3 +146,6 @@ int	execute_heredoc(t_shell *shell, t_token *cur)
 // minishell
 // minishell.h
 // minishell> 
+
+
+
