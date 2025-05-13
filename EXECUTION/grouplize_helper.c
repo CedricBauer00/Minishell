@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 11:43:28 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/12 17:12:41 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/13 15:27:28 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ void	add_io_streams(t_token **cur, t_cmd_block *new_cmd_block)
 	add_io_streams_list(&new_cmd_block->io_streams, new_io_streams);
 	if ((*cur)->type & (TOKEN_HEREDOC))
 	{
+		fprintf(stderr, "am i here?\n");
 		new_io_streams->heredoc_eof = gc_strdup((*cur)->value, &gc->temp);
 		find = find_node(gc->temp, (char *)(*cur)->value);
 		delete_node(&gc->temp, find);

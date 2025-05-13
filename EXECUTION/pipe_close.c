@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_close.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 12:42:19 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/12 13:04:39 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/13 16:07:58 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ void	close_last_pipefd(t_cmd_block *cmd)
 
 void	close_pipefd(t_cmd_block *cmd)
 {
+	if (!cmd || !cmd->pipe || !cmd->pipe->pipefd)
+		return ;
 	if (!cmd->prev && cmd->next)
 		close_first_pipefd(cmd);
 	else if (cmd->prev && cmd->next)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/13 14:22:27 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/13 15:55:19 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,8 @@ void	execute_pipeline(t_cmd_block *cmd_block)
 		return ;
 	while (cur)
 	{
-		fork_and_execute(cur, gc, &i);
+		if (cur->is_built_in || cur->is_external_cmd)
+			fork_and_execute(cur, gc, &i);
 		i++;
 		cur = cur->next;
 	}
