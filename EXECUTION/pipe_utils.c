@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:18 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 13:04:22 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/13 14:26:34 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ void	add_pipe(t_cmd_block **cmd_block)
 	if (!cmd_block || !*cmd_block)
 		return ;
 	new_pipe_node = init_pipe(gc);
+	if (new_pipe_node)
+		fprintf(stderr, "heres pipe\n");
 	if (!new_pipe_node)
 	{
 		gc_free(gc);

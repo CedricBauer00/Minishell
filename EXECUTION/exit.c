@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:53:04 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/12 16:46:40 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/13 14:00:01 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ void	ft_exit(char **args, t_shell *shell, t_gc *gc)
 	write(1, "exit\n", 5);
 	if (args[0] == NULL)
 	{
-		exit(shell->last_status_exit);
 		gc_free(gc);
+		exit(shell->last_status_exit);
 	}
 	if (args[1] != NULL)
 	{
@@ -98,6 +98,6 @@ void	ft_exit(char **args, t_shell *shell, t_gc *gc)
 		exit(255);
 	}
 	shell->last_status_exit = (unsigned char)exitvalue % 256;
-	exit(shell->last_status_exit);
 	gc_free(gc);
+	exit(shell->last_status_exit);
 }

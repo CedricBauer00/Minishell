@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/13 10:26:41 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/13 14:24:08 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	fork_and_execute(t_cmd_block *cur, t_gc *gc, int *i)
 		add_pipe(&cur);
 	signal(SIGINT, SIG_IGN);
 	pid = fork();
+	fprintf(stderr, "pid : %d\n", pid);
 	if (pid == 0)
 	{
 		signal(SIGINT, SIG_DFL);
