@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:22 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/13 10:08:03 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 14:31:30 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,11 @@ void	ft_pwd(char **args, t_gc *gc)
 	find = NULL;
 	if (*args)
 	{
-		printf("PWD TOO MANY ARGS\n"); //all uppercase? // do we need?
+		printf("PWD TOO MANY ARGS\n");
 		return ;
 	}
 	pwd = my_getcwd();
-	printf("%s\n", pwd); // do we need?
+	printf("%s\n", pwd);
 	find = find_node(find, (char *)pwd);
 	delete_node(&gc->temp, (t_gc_list *)find);
 }

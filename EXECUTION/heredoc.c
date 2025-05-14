@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/14 14:35:14 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/14 15:18:10 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,12 +101,12 @@ int	execute_heredoc(t_shell *shell, t_token *cur)
 		test = wait_for_heredoc_pid(pid, status);
 		if (test == 1)
 			return (1);
+		else
+			fprintf(stderr, "test : %d\n", test);
 		dup2(shell->stdin_backup, STDIN_FILENO);
 		dup2(shell->stdout_backup, STDOUT_FILENO);
 	}
+	fprintf(stderr, "suc\n");
 	return (0);
 }
-
-
-
 

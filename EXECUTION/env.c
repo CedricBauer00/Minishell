@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:44 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/13 10:06:49 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 13:55:17 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,7 @@ void	ft_env(char **args, t_shell *shell)
 
 	i = 0;
 	if (*args)
-	{
-		printf("ENV TOO MANY ARGS\n"); // do we need?
 		return ;
-	}
 	while (shell->my_envp[i])
 	{
 		if (extract_name(shell->my_envp[i]) && extract_value(shell->my_envp[i]))

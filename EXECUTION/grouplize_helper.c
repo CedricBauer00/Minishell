@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 11:43:28 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/14 13:33:29 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/14 15:17:47 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,6 @@ void	ready_args(t_cmd_block *new_cmd_block, t_token **cur, t_gc *gc, int *i)
 		&& !(new_cmd_block->io_streams && !(*cur)->next))
 		new_cmd_block->is_external_cmd = true;
 	new_cmd_block->args[(*i)++] = gc_strdup((*cur)->value, &gc->temp);
-	// fprintf(stderr, "new_cmd_block->args[0] :%s\n", new_cmd_block->args[0]);
 	find = find_node(gc->temp, (char *)(*cur)->value);
 	delete_node(&gc->temp, find);
 }
-

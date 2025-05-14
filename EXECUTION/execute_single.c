@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_single.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/13 18:54:19 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/14 15:07:22 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 			return ;
 	if (cur->is_built_in)
 		execute_builtin(cur, shell);
-	else if (cur->is_external_cmd)
+	else if (!cur->is_built_in || cur->args)
 	{
 		execute_single_external_cmd(cur, gc, shell);
 	}
@@ -57,6 +57,7 @@ void	execute_single_external_cmd(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 	shell->pids[0] = pid;
 	if (pid == 0)
 	{
+		fprintf(stderr, "cur->args[0] %s\n",cur->args[0]);
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
 		run_execve(cur, gc);

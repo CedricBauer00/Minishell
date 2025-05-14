@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/14 13:37:00 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/14 15:17:51 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 	{
 		if (heredoc_fd_offset_and_redir(cur) == -1)
 		{
-			perror("errror heredoc");// do we need? correct message?
 			gc_free(gc);
 			exit(1);
 		}
@@ -49,11 +48,11 @@ void	fork_and_execute(t_cmd_block *cur, t_gc *gc, int *i)
 	t_shell		*shell;
 
 	shell = get_shell();
-	if (cur && cur->next && (cur->next->is_built_in || cur->next->is_external_cmd)) 
+	if (cur && cur->next && (cur->next->is_built_in
+			|| cur->next->is_external_cmd))
 		add_pipe(&cur);
 	signal(SIGINT, SIG_IGN);
 	pid = fork();
-	fprintf(stderr, "pid : %d\n", pid);
 	if (pid == 0)
 	{
 		signal(SIGINT, SIG_DFL);

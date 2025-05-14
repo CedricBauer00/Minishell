@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/13 18:34:09 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/14 15:03:21 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 
 void	main_execute(t_cmd_block *cmd_block)
 {
+	fprintf(stderr, "main_exec\n");
 	t_cmd_block	*cur;
 	int			stdin_backup;
 	int			stdout_backup;
@@ -49,9 +50,13 @@ void	main_execute(t_cmd_block *cmd_block)
 	pid_counts = count_command(cmd_block);
 	do_alloc_pids(cmd_block);
 	if (pid_counts == 1)
+	{	
 		execute_single_command(cur);
+	}
 	if (pid_counts > 1)
+	{
 		execute_pipeline(cur);
+	}
 	prevent_zombie_process();
 	dup2(stdin_backup, STDIN_FILENO);
 	dup2(stdout_backup, STDOUT_FILENO);
@@ -69,7 +74,8 @@ void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 	shell = get_shell();
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
-	if (cmd_block->args[0][0] == '/' || ft_strncmp(cmd_block->args[0], "./", 2) == 0)
+	if (cmd_block->args[0][0] == '/'
+		|| ft_strncmp(cmd_block->args[0], "./", 2) == 0)
 	{
 		access_and_exec(cmd_block->args[0], cmd_block->args, shell);
 	}
@@ -78,7 +84,7 @@ void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 		path = check_path_before_exec(shell, gc);
 		exec_relative_path(path, cmd_block, gc, shell);
 	}
-	printf("No such file or DIR"); //DIR uppercase?
+	printf("minishell: %s : %s\n", cmd_block->args[0], strerror(errno));
 	exit(127);
 }
 
@@ -104,7 +110,7 @@ void	exec_relative_path(char *path, t_cmd_block *cmd_block, \
 		access_and_exec(cmd_path, cmd_block->args, shell);
 		i++;
 	}
-	printf("minishell: : command not found\n"); //minishell: "input": command not found
+	printf("minishell: %s: command not found\n", cmd_block->args[0]);
 	exit(127);
 }
 
@@ -121,8 +127,10 @@ void	execute_pipeline(t_cmd_block *cmd_block)
 		return ;
 	while (cur)
 	{
+		//fprintf(stderr, "0\n");
 		if (cur->is_built_in || cur->is_external_cmd)
 		{
+			//fprintf(stderr, "1\n");
 			fork_and_execute(cur, gc, &i);
 			i++;
 		}
