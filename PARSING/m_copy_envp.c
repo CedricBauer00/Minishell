@@ -6,48 +6,11 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 12:56:46 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/07 14:53:48 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 15:21:00 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
-
-// int	get_envp_count(char **envp)
-// {
-// 	int	count;
-
-// 	count = 0;
-// 	while (envp[count])
-// 	{
-// 		count++;
-// 	}
-// 	return (count);
-// }
-
-// char	**copy_envp(t_gc *gc, char **envp)
-// {
-// 	int		count;
-// 	char	**my_envp;
-// 	int		i;
-
-// 	i = 0;
-// 	if (!gc)
-// 		return (NULL);
-// 	count = get_envp_count(envp);
-// 	my_envp = (char**)do_alloc(&gc->shell, sizeof(char *) * (count + 1), 
-// 		TYPE_DOUBLE_PTR, "copy_envp");
-// 	if (!my_envp)
-// 		return (gc_free(gc), NULL);
-// 	while (envp[i])
-// 	{
-// 		my_envp[i] = gc_strdup(envp[i], &gc->shell);
-// 		if (!my_envp[i])
-// 			gc_free(gc);
-// 		i++;
-// 	}
-// 	my_envp[i] = NULL;
-// 	return (my_envp);
-// }
 
 int	num_len(int n)
 {
@@ -87,32 +50,6 @@ void	init_shllvl(char *str, int i)
 	free(temp);
 }
 
-// int	incrmnt_shllvl(t_main *main, t_gc *gc)
-// {
-// 	int	i;
-// 	int	lvl;
-
-// 	i = 0;
-// 	lvl = 0;
-// 	while (main->envp[i] != NULL)
-// 	{
-// 		if (ft_strncmp(main->envp[i], "SHLVL=", 6) == 0)
-// 		{
-// 			lvl = ft_atoi(main->envp[i] + 6);
-// 			lvl++;
-// 			break ;
-// 		}
-// 		i++;
-// 	}
-// 	main->envp[i] = do_alloc(&gc->shell, 7 + num_len(lvl), 
-// 		TYPE_SINGLE_PTR, "shllvl");
-// 	if (!main->envp[i])
-// 		return (-1);
-// 	init_shllvl(main->envp[i], lvl);
-// 	printf("%s\n", main->envp[i]);
-// 	return (0);
-// }
-
 int	incrmnt_shllvl(t_shell *shell, t_gc *gc)
 {
 	int	i;
@@ -120,6 +57,9 @@ int	incrmnt_shllvl(t_shell *shell, t_gc *gc)
 
 	i = 0;
 	lvl = 0;
+	if (!shell || !shell->my_envp)
+		return (0);
+	fprintf(stderr, "test incrmnt_shllvl()\n");
 	while (shell->my_envp[i] != NULL)
 	{
 		if (ft_strncmp(shell->my_envp[i], "SHLVL=", 6) == 0)

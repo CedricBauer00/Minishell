@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:47:59 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/14 13:53:47 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 15:19:44 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,3 +85,15 @@ int	is_valid_dir(const char *path)
 	}
 	return (0);
 }
+
+// void	handle_no_env_minishell(t_shell	*shell)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while(shell->my_envp[i])
+// 	{
+		//  = get_cwd(NULL);
+// 		shell->my_envp[i] = gc_strdup(ft_pwd())
+// 	}
+// }

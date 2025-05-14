@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_wait_child.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/14 14:26:59 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 15:17:51 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

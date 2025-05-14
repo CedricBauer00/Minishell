@@ -6,11 +6,23 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/14 15:17:59 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 15:21:40 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
+
+static void	clean_heredoc(t_shell *shell, bool remove_file)
+{
+	if (shell)
+	{
+		close(shell->heredoc_fd);
+		close(shell->stdin_backup);
+		close(shell->stdout_backup);
+	}
+	if (remove_file)
+		unlink("temp_heredoc");
+}
 
 static int	wait_for_heredoc_pid(pid_t heredoc_pid, int status)
 {
@@ -23,12 +35,9 @@ static int	wait_for_heredoc_pid(pid_t heredoc_pid, int status)
 	{
 		exit_status = WEXITSTATUS(status);
 		shell->last_status_exit = exit_status;
-		close(shell->heredoc_fd);
-		close(shell->stdin_backup);
-		close(shell->stdout_backup);
-		return (shell->last_status_exit);
+		clean_heredoc(shell, false);
 	}
-	return (0);
+	return (shell->last_status_exit);
 }
 
 void	heredoc_sigint_handler(int sig)
@@ -40,14 +49,10 @@ void	heredoc_sigint_handler(int sig)
 	shell = get_shell();
 	if (sig == SIGINT)
 	{
-		close(shell->heredoc_fd);
-		close(shell->stdin_backup);
-		close(shell->stdout_backup);
-		if (gc)
-			gc_free(gc);
+		clean_heredoc(shell, true);
+		write(1, "\n", 1);
+		exit(1);
 	}
-	write(1, "\n", 1);
-	exit(1);
 }
 
 void	process_heredoc(t_shell *shell, t_token *token)
@@ -60,27 +65,14 @@ void	process_heredoc(t_shell *shell, t_token *token)
 	while (1)
 	{
 		line = readline("> ");
-		if (!line)
+		if (!line || strcmp(line, token->value) == 0)
 		{
 			free(line);
-			close(shell->heredoc_fd);
-			unlink("temp_heredoc");
-			close(shell->stdin_backup);
-			close(shell->stdout_backup);
-			gc_free(gc);
-			exit(0);
-		}
-		if (strcmp(line, token->value) == 0)
-		{
-			free(line);
-			close(shell->heredoc_fd);
-			close(shell->stdin_backup);
-			close(shell->stdout_backup);
-			gc_free(gc);
+			clean_heredoc(shell, false);
 			exit(0);
 		}
 		expanded_var = expand_case_in_heredoc(line, shell);
-		write(shell->heredoc_fd, expanded_var, strlen(expanded_var));
+		write(shell->heredoc_fd, expanded_var, ft_strlen(expanded_var));
 		write(shell->heredoc_fd, "\n", 1);
 		free(line);
 	}

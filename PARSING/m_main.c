@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/14 15:15:52 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 15:18:48 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,12 @@ int	main(int argc, char **argv, char **envp)
 		return (-1);
 	gc = get_gc();
 	shell = get_shell();
-	shell->my_envp = copy_envp(gc, envp);
+	if (envp && *envp)
+		shell->my_envp = copy_envp(gc, envp);
+	else
+	{
+		
+	}
 	foo("OLDPWD", shell);
 	if (!shell->my_envp)
 		return (-1);
