@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/13 10:26:29 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 15:00:53 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ int	heredoc_fd_offset_and_redir(t_cmd_block *cur)
 	}
 	if (dup2(shell->heredoc_fd, STDIN_FILENO) == -1)
 	{
-		printf("in heredoc_fd_offset_and_redir 2 \n"); // do we need?
 		close(shell->heredoc_fd);
 		unlink("temp_heredoc");
 		return (-1);
@@ -91,7 +90,6 @@ void	access_and_exec(char *arg, char **args, t_shell *shell)
 	{
 		if (execve(arg, args, shell->my_envp) == -1)
 		{
-			perror("execve ()failed");// do we need? correct message?
 			exit(1);
 		}
 	}

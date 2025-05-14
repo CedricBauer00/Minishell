@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/14 12:15:04 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 15:02:53 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,14 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc, t_shell *shell)
 	cmd_block = NULL;
 	if (main->tokens && check_for_node_spaces(main, main->tokens, \
 		&gc->temp) < 0)
-		return (printf("ERROR\nChecking nodes failed!\n"), \
-		gc_free(gc), -1); //ERROR? Even error message required?
+		return (gc_free(gc), -1);	
 	lex_tokens_correctly(main->tokens);
 	indic = validate_syntax(main->tokens, 0, shell);
 	if (indic == -1)
 		return (all_free(&gc->temp), -1);
+	fprintf(stderr, "here\n");
+	print_tokens(main->tokens);
 	shell->last_status_exit = 0;
-
 	grouplize(main->tokens, &cmd_block, gc);
 	main_execute(cmd_block);
 	if (gc->temp)
@@ -78,10 +78,8 @@ int	main_loop(t_main *main, int i, t_gc *gc, t_shell *shell)
 		while (main->line[i])
 		{
 			if (check_operator(main, &i, &gc->temp) < 0 || i < 0)
-				return (printf("ERROR\nCheck_operator failed!\n"), \
-					gc_free(gc), -1); //ERROR? Even error message required?
+				return (gc_free(gc), -1);
 		}
-	// print_tokens(main->tokens);
 		main_loop_helper(main, 0, gc, shell);
 	}
 	return (0);
@@ -98,17 +96,17 @@ int	main(int argc, char **argv, char **envp)
 	using_history();
 	set_default(&main);
 	if (ttyattr() < 0)
-		return (printf("ERROR\nttyattr failed!\n"), -1); //ERROR? Even error message required?
+		return (-1);
 	gc = get_gc();
 	shell = get_shell();
 	shell->my_envp = copy_envp(gc, envp);
 	foo("OLDPWD", shell);
 	if (!shell->my_envp)
-		return (printf("ERROR\nCopy_envp failed!\n"), -1); //ERROR? Even error message required?
+		return (-1);
 	if (incrmnt_shllvl(shell, gc) < 0)
 		return (-1);
 	if (main_loop(&main, 0, gc, shell) < 0)
-		return (printf("ERROR\nMain_loop failed!\n"), -1); //ERROR? Even error message required?
+		return (-1);
 	if (gc)
 		gc_free(gc);
 }

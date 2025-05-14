@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/14 12:27:25 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 14:26:59 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 	{
 		if (heredoc_fd_offset_and_redir(cur) == -1)
 		{
-			perror("errror heredoc");// do we need? correct message?
 			gc_free(gc);
 			exit(1);
 		}
@@ -49,11 +48,11 @@ void	fork_and_execute(t_cmd_block *cur, t_gc *gc, int *i)
 	t_shell		*shell;
 
 	shell = get_shell();
-	if (cur && cur->next && (cur->next->is_built_in || cur->next->is_external_cmd)) 
+	if (cur && cur->next && (cur->next->is_built_in
+			|| cur->next->is_external_cmd))
 		add_pipe(&cur);
 	signal(SIGINT, SIG_IGN);
 	pid = fork();
-	fprintf(stderr, "pid : %d\n", pid);
 	if (pid == 0)
 	{
 		signal(SIGINT, SIG_DFL);
@@ -80,7 +79,6 @@ void	wait_for_child_and_update_status(int i)
 		if (WIFEXITED(status))
 		{
 			shell->last_status_exit = WEXITSTATUS(status);
-			// fprintf(stderr, "shell->last_status_exit %d\n", shell->last_status_exit);
 		}
 		else if (WIFSIGNALED(status))
 		{

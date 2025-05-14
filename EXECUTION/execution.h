@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/13 18:55:10 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/14 14:27:14 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,7 +204,7 @@ int				last_pipe_cmd(t_cmd_block *command);
 //							redirection.c
 // ----------------------------------------------------------------------
 
-int			set_io_streams(t_cmd_block *cmd);
+int				set_io_streams(t_cmd_block *cmd);
 //void			handle_redir(t_io_list	*io_streams);
 
 // ----------------------------------------------------------------------

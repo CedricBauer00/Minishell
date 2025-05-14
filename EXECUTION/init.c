@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:13 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/13 10:26:47 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 14:33:56 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,7 @@ t_pipe	*init_pipe(t_gc	*gc)
 	if (!p_pipe->pipefd)
 		return (NULL);
 	if (pipe(p_pipe->pipefd) == -1)
-	{
-		perror("init_pipe()"); // do we need? correct message?
 		return (NULL);
-	}
 	return (p_pipe);
 }
 

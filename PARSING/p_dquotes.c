@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 09:42:44 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/14 12:11:41 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 13:51:17 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	dquotes_helper(t_main *main, int *i, t_gc_list **gc_list)
 		if (main->line[*i] == '$')
 		{
 			if (expands(main, i, 0, gc_list) < 0)
-				return (perror("ERROR\nExpand failed!\n"), -1); // do we need? correct message?
+				return (-1);
 		}
 		if (main->line[*i] && main->line[*i] != '"' && main->line[*i] != '$')
 		{
@@ -87,7 +87,7 @@ int	dquotes(t_main *main, int *i, t_gc_list **gc_list)
 	if (dquotes_helper(main, i, gc_list) < 0)
 		return (-1);
 	if (main->line[*i] != '"')
-		return (printf("ERROR\nUnclosed quotes!\n"), 0);  //ERROR? Even error message required?
+		return (0);
 	if (main->line[*i] != '\0')
 	{
 		if (main->line[*i - 1] == '"')

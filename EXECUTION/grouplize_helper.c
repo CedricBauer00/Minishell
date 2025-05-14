@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 11:43:28 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/14 12:00:34 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 14:27:21 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ void	add_io_streams(t_token **cur, t_cmd_block *new_cmd_block)
 	add_io_streams_list(&new_cmd_block->io_streams, new_io_streams);
 	if ((*cur)->type & (TOKEN_HEREDOC))
 	{
-		fprintf(stderr, "am i here?\n");
 		new_io_streams->heredoc_eof = gc_strdup((*cur)->value, &gc->temp);
 		find = find_node(gc->temp, (char *)(*cur)->value);
 		delete_node(&gc->temp, find);
@@ -96,8 +95,6 @@ void	ready_args(t_cmd_block *new_cmd_block, t_token **cur, t_gc *gc, int *i)
 		&& !(new_cmd_block->io_streams && !(*cur)->next))
 		new_cmd_block->is_external_cmd = true;
 	new_cmd_block->args[(*i)++] = gc_strdup((*cur)->value, &gc->temp);
-	// fprintf(stderr, "new_cmd_block->args[0] :%s\n", new_cmd_block->args[0]);
 	find = find_node(gc->temp, (char *)(*cur)->value);
 	delete_node(&gc->temp, find);
 }
-

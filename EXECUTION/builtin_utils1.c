@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:47:59 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/13 10:26:20 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 13:53:47 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,7 @@ int	is_valid_dir(const char *path)
 	struct stat	file_stat;
 
 	if (stat(path, &file_stat) != 0)
-	{
-		perror("failed stat()"); // do we need? correct error message?
 		return (0);
-	}
 	else
 	{
 		if (S_ISDIR(file_stat.st_mode))

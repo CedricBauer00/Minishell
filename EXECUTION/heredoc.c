@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/13 18:10:16 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/14 14:56:31 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,16 +109,19 @@ int	execute_heredoc(t_shell *shell, t_token *cur)
 		test = wait_for_heredoc_pid(pid, status);
 		if (test == 1)
 			return (1);
+		else
+			fprintf(stderr, "test : %d\n", test);
 		dup2(shell->stdin_backup, STDIN_FILENO);
 		dup2(shell->stdout_backup, STDOUT_FILENO);
 	}
+	fprintf(stderr, "suc\n");
 	return (0);
 }
 // minishell> << ei f
 // > $USER
 // > ey
 // > ei
-// doesnt give command not found for f
+// doesnt give command not found for f!!!!
 
 // bash:
 //<< eof | ls | cat 
@@ -131,7 +134,7 @@ int	execute_heredoc(t_shell *shell, t_token *cur)
 // ft_calloc.c
 // ft_calloc.o
 // ft_isalnum.c
-						
+
 //minishell:
 // << oef | ls |cat
 // > oef
