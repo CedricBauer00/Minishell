@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/14 15:03:21 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 17:01:46 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,30 +38,30 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 
 void	main_execute(t_cmd_block *cmd_block)
 {
-	fprintf(stderr, "main_exec\n");
 	t_cmd_block	*cur;
-	int			stdin_backup;
-	int			stdout_backup;
 	int			pid_counts;
 
+	t_shell		*shell;
+	shell = get_shell();
 	cur = cmd_block;
-	stdin_backup = dup(STDIN_FILENO);
-	stdout_backup = dup(STDOUT_FILENO);
+	shell->stdin_backup = dup(STDIN_FILENO);
+	shell->stdout_backup = dup(STDOUT_FILENO);
 	pid_counts = count_command(cmd_block);
 	do_alloc_pids(cmd_block);
 	if (pid_counts == 1)
-	{	
+	{
 		execute_single_command(cur);
 	}
 	if (pid_counts > 1)
 	{
+		fprintf(stderr, "%d\n", pid_counts);
 		execute_pipeline(cur);
 	}
 	prevent_zombie_process();
-	dup2(stdin_backup, STDIN_FILENO);
-	dup2(stdout_backup, STDOUT_FILENO);
-	close(stdin_backup);
-	close(stdout_backup);
+	dup2(shell->stdin_backup, STDIN_FILENO);
+	dup2(shell->stdout_backup, STDOUT_FILENO);
+	close(shell->stdin_backup);
+	close(shell->stdout_backup);
 }
 
 void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
@@ -127,10 +127,8 @@ void	execute_pipeline(t_cmd_block *cmd_block)
 		return ;
 	while (cur)
 	{
-		//fprintf(stderr, "0\n");
 		if (cur->is_built_in || cur->is_external_cmd)
 		{
-			//fprintf(stderr, "1\n");
 			fork_and_execute(cur, gc, &i);
 			i++;
 		}

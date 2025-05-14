@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:47:59 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/14 15:39:16 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/14 17:49:00 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,18 +88,15 @@ int	is_valid_dir(const char *path)
 
 void	handle_no_env_minishell(t_shell	*shell, t_gc *gc)
 {
-	int		i;
 	char	*temp;
 	
-	i = 0;
 	temp = getcwd(NULL, 0);
 	
-	shell->my_envp = do_alloc(&gc->shell, sizeof(char *) * 5, TYPE_DOUBLE_PTR, "shell");
+	shell->my_envp = do_alloc(&gc->shell, sizeof(char *) * 4, TYPE_DOUBLE_PTR, "shell");
 	char *pwd = gc_strjoin("PWD=", temp, &gc->temp);
 	shell->my_envp[0] = gc_strdup(pwd, &gc->shell);
 	free(temp);
 	shell->my_envp[1] = gc_strdup("SHLVL=0", &gc->shell);
-	shell->my_envp[2] = gc_strdup("OLDPWD", &gc->shell);
-	shell->my_envp[3] = gc_strdup("_=/usr/bin/env", &gc->shell);
-	shell->my_envp[4] = NULL;
+	shell->my_envp[2] = gc_strdup("_=/usr/bin/env", &gc->shell);
+	shell->my_envp[3] = NULL;
 }

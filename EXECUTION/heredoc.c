@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/14 15:18:10 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/14 16:02:02 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ static void	clean_heredoc(t_shell *shell, bool remove_file)
 	if (remove_file)
 		unlink("temp_heredoc");
 }
+
 static int	wait_for_heredoc_pid(pid_t heredoc_pid, int status)
 {
 	t_shell	*shell;
@@ -42,9 +43,7 @@ static int	wait_for_heredoc_pid(pid_t heredoc_pid, int status)
 void	heredoc_sigint_handler(int sig)
 {
 	t_shell	*shell;
-	t_gc	*gc;
 
-	gc = get_gc();
 	shell = get_shell();
 	if (sig == SIGINT)
 	{
@@ -56,11 +55,9 @@ void	heredoc_sigint_handler(int sig)
 
 void	process_heredoc(t_shell *shell, t_token *token)
 {
-	t_gc	*gc;
 	char	*line;
 	char	*expanded_var;
 
-	gc = get_gc();
 	while (1)
 	{
 		line = readline("> ");
@@ -68,7 +65,6 @@ void	process_heredoc(t_shell *shell, t_token *token)
 		{
 			free(line);
 			clean_heredoc(shell, false);
-			//gc_free(gc);
 			exit(0);
 		}
 		expanded_var = expand_case_in_heredoc(line, shell);
@@ -82,7 +78,7 @@ int	execute_heredoc(t_shell *shell, t_token *cur)
 {
 	int		status;
 	pid_t	pid;
-	int		test;
+	int		check;
 
 	pid = 0;
 	status = 0;
@@ -98,15 +94,11 @@ int	execute_heredoc(t_shell *shell, t_token *cur)
 	}
 	else if (pid > 0)
 	{
-		test = wait_for_heredoc_pid(pid, status);
-		if (test == 1)
+		check = wait_for_heredoc_pid(pid, status);
+		if (check == 1)
 			return (1);
-		else
-			fprintf(stderr, "test : %d\n", test);
 		dup2(shell->stdin_backup, STDIN_FILENO);
 		dup2(shell->stdout_backup, STDOUT_FILENO);
 	}
-	fprintf(stderr, "suc\n");
 	return (0);
 }
-

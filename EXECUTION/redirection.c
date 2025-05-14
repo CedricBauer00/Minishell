@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:26 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/14 14:31:15 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 18:31:16 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static int	open_redir_file(char *filename, int flags, mode_t mode)
 
 	fd = 0;
 	fd = open(filename, flags, mode);
+	fprintf(stderr, "redir_file fd %d\n", fd);
 	if (fd == -1)
 	{
 		printf("minishell: %s: %s\n", filename, strerror(errno));
@@ -33,6 +34,7 @@ static int	dup2_redir(int oldfd, int newfd)
 		printf("minishell: dup2(%d: %d), %s\n", oldfd, newfd, strerror(errno));
 		return (-1);
 	}
+	fprintf(stderr, "dup2_redir oldfd : %d, newfd : %d\n", oldfd, newfd);
 	return (0);
 }
 

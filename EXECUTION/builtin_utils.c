@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:18 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/12 11:25:43 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 17:23:11 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	check_existing(char **my_envp, const char *name)
 	int	i;
 
 	i = 0;
-	while (my_envp[i])
+	while (my_envp && my_envp[i])
 	{
 		if ((ft_strncmp(my_envp[i], name, strlen(name)) == 0))
 			return (i);

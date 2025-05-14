@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/14 16:15:03 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/14 17:55:06 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,11 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc, t_shell *shell)
 	cmd_block = NULL;
 	if (main->tokens && check_for_node_spaces(main, main->tokens, \
 		&gc->temp) < 0)
-		return (gc_free(gc), -1);	
+		return (gc_free(gc), -1);
 	lex_tokens_correctly(main->tokens);
 	indic = validate_syntax(main->tokens, 0, shell);
 	if (indic == -1)
 		return (all_free(&gc->temp), -1);
-	fprintf(stderr, "here\n");
-	print_tokens(main->tokens);
 	shell->last_status_exit = 0;
 	grouplize(main->tokens, &cmd_block, gc);
 	main_execute(cmd_block);
@@ -100,13 +98,15 @@ int	main(int argc, char **argv, char **envp)
 	gc = get_gc();
 	shell = get_shell();
 	if (envp && *envp)
+	{
 		shell->my_envp = copy_envp(gc, envp);
-	else
+		foo("OLDPWD", shell);
+	}
+	else//env -i ./minishell
 	{
 		//return 0;
 		handle_no_env_minishell(shell, gc);
 	}
-	foo("OLDPWD", shell);
 	if (!shell->my_envp)
 		return (-1);
 	if (incrmnt_shllvl(shell, gc) < 0)

@@ -48,4 +48,13 @@ minishell> minishell> minishell> minishell> minishell> minishell> minishell> min
 // bash-3.2$ echo ~
 // /Users/jisokim2
 
+minishell> export T="echo hello" 
+minishell> $T
+minishell: echo hello: command not found
 
+//export += should works   append gc_strjoin
+
+issue : // stdin_backup = dup(STDIN_FILENO);
+	// stdout_backup = dup(STDOUT_FILENO);  still opend..
+
+	
