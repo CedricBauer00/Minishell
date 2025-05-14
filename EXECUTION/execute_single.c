@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/14 15:07:22 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 15:13:15 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void	execute_single_external_cmd(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 	shell->pids[0] = pid;
 	if (pid == 0)
 	{
-		fprintf(stderr, "cur->args[0] %s\n",cur->args[0]);
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
 		run_execve(cur, gc);

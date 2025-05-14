@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/14 14:56:31 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 15:17:59 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	process_heredoc(t_shell *shell, t_token *token)
 	while (1)
 	{
 		line = readline("> ");
-		if(!line)
+		if (!line)
 		{
 			free(line);
 			close(shell->heredoc_fd);
@@ -90,7 +90,7 @@ int	execute_heredoc(t_shell *shell, t_token *cur)
 {
 	int		status;
 	pid_t	pid;
-	int		test;
+	int		check;
 
 	pid = 0;
 	status = 0;
@@ -106,49 +106,11 @@ int	execute_heredoc(t_shell *shell, t_token *cur)
 	}
 	else if (pid > 0)
 	{
-		test = wait_for_heredoc_pid(pid, status);
-		if (test == 1)
+		check = wait_for_heredoc_pid(pid, status);
+		if (check == 1)
 			return (1);
-		else
-			fprintf(stderr, "test : %d\n", test);
 		dup2(shell->stdin_backup, STDIN_FILENO);
 		dup2(shell->stdout_backup, STDOUT_FILENO);
 	}
-	fprintf(stderr, "suc\n");
 	return (0);
 }
-// minishell> << ei f
-// > $USER
-// > ey
-// > ei
-// doesnt give command not found for f!!!!
-
-// bash:
-//<< eof | ls | cat 
-// > eof
-// Makefile
-// ft_atoi.c
-// ft_atoi.o
-// ft_bzero.c
-// ft_bzero.o
-// ft_calloc.c
-// ft_calloc.o
-// ft_isalnum.c
-
-//minishell:
-// << oef | ls |cat
-// > oef
-// last_pipe_cmd dup2 error
-// : Bad file descriptor
-// EXECUTION
-// GC
-// Makefile
-// PARSING
-// get_next_line
-// libft
-// minishell
-// minishell.h
-// minishell> 
-
-
-

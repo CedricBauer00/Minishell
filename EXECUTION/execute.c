@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/14 15:03:21 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 15:18:22 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 
 void	main_execute(t_cmd_block *cmd_block)
 {
-	fprintf(stderr, "main_exec\n");
 	t_cmd_block	*cur;
 	int			stdin_backup;
 	int			stdout_backup;
@@ -50,7 +49,7 @@ void	main_execute(t_cmd_block *cmd_block)
 	pid_counts = count_command(cmd_block);
 	do_alloc_pids(cmd_block);
 	if (pid_counts == 1)
-	{	
+	{
 		execute_single_command(cur);
 	}
 	if (pid_counts > 1)
@@ -127,10 +126,8 @@ void	execute_pipeline(t_cmd_block *cmd_block)
 		return ;
 	while (cur)
 	{
-		//fprintf(stderr, "0\n");
 		if (cur->is_built_in || cur->is_external_cmd)
 		{
-			//fprintf(stderr, "1\n");
 			fork_and_execute(cur, gc, &i);
 			i++;
 		}
