@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_copy_envp.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 12:56:46 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/07 14:53:48 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 13:46:28 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,9 @@ int	incrmnt_shllvl(t_shell *shell, t_gc *gc)
 
 	i = 0;
 	lvl = 0;
+	if (!shell || !shell->my_envp)
+		return 0;
+	fprintf(stderr, "test incrmnt_shllvl()\n");
 	while (shell->my_envp[i] != NULL)
 	{
 		if (ft_strncmp(shell->my_envp[i], "SHLVL=", 6) == 0)

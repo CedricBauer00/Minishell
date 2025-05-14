@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_main.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/14 12:15:04 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 14:11:03 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,12 @@ int	main(int argc, char **argv, char **envp)
 		return (printf("ERROR\nttyattr failed!\n"), -1); //ERROR? Even error message required?
 	gc = get_gc();
 	shell = get_shell();
-	shell->my_envp = copy_envp(gc, envp);
+	if (envp && *envp)
+		shell->my_envp = copy_envp(gc, envp);
+	else
+	{
+		
+	}
 	foo("OLDPWD", shell);
 	if (!shell->my_envp)
 		return (printf("ERROR\nCopy_envp failed!\n"), -1); //ERROR? Even error message required?
