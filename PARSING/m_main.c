@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_main.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/13 18:29:36 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:15:04 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc, t_shell *shell)
 	if (indic == -1)
 		return (all_free(&gc->temp), -1);
 	shell->last_status_exit = 0;
-	print_token(main->tokens);
+
 	grouplize(main->tokens, &cmd_block, gc);
 	main_execute(cmd_block);
 	if (gc->temp)
@@ -81,6 +81,7 @@ int	main_loop(t_main *main, int i, t_gc *gc, t_shell *shell)
 				return (printf("ERROR\nCheck_operator failed!\n"), \
 					gc_free(gc), -1); //ERROR? Even error message required?
 		}
+	// print_tokens(main->tokens);
 		main_loop_helper(main, 0, gc, shell);
 	}
 	return (0);

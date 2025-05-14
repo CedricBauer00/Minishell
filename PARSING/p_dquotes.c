@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 09:42:44 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/13 10:28:41 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 12:11:41 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,12 @@ int	dquotes(t_main *main, int *i, t_gc_list **gc_list)
 	if (main->line[*i] != '"')
 		return (printf("ERROR\nUnclosed quotes!\n"), 0);  //ERROR? Even error message required?
 	if (main->line[*i] != '\0')
+	{
+		if (main->line[*i - 1] == '"')
+			main->error = create_token(&main->tokens, TOKEN_ARG, "", gc_list);
+		if (main->error < 0)
+			return (-1);
 		(*i)++;
+	}
 	return (0);
 }

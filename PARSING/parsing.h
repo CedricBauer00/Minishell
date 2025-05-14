@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/12 14:26:54 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 10:42:19 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,6 +246,6 @@ int		validate_syntax(t_token *token, int heredoc_fd, t_shell *shell);
 // ----------------------------------------------------------------------
 
 void	print_tokens(t_token *tokens);
-void	print_token(t_token *tokens);
+void	print_tokens_helper(t_token *tokens);
 
 #endif
