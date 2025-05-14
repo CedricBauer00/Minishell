@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/14 15:18:21 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/14 16:15:03 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,8 @@ int	main(int argc, char **argv, char **envp)
 		shell->my_envp = copy_envp(gc, envp);
 	else
 	{
-		
+		//return 0;
+		handle_no_env_minishell(shell, gc);
 	}
 	foo("OLDPWD", shell);
 	if (!shell->my_envp)

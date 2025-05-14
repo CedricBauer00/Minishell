@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/14 14:27:14 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 15:29:33 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,7 @@ char			**expand_envp(t_shell *shell, char *new_path);
 char			**copy_envp(t_gc *gc, char **envp);
 int				get_envp_count(char **envp);
 int				is_valid_dir(const char *path);
+void			handle_no_env_minishell(t_shell	*shell, t_gc *gc);
 
 // ----------------------------------------------------------------------
 // 							 init.c
