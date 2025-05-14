@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/14 15:21:40 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 16:02:02 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,7 @@ static int	wait_for_heredoc_pid(pid_t heredoc_pid, int status)
 void	heredoc_sigint_handler(int sig)
 {
 	t_shell	*shell;
-	t_gc	*gc;
 
-	gc = get_gc();
 	shell = get_shell();
 	if (sig == SIGINT)
 	{
@@ -57,11 +55,9 @@ void	heredoc_sigint_handler(int sig)
 
 void	process_heredoc(t_shell *shell, t_token *token)
 {
-	t_gc	*gc;
 	char	*line;
 	char	*expanded_var;
 
-	gc = get_gc();
 	while (1)
 	{
 		line = readline("> ");

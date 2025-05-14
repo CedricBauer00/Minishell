@@ -49,3 +49,8 @@ minishell> minishell> minishell> minishell> minishell> minishell> minishell> min
 // /Users/jisokim2
 
 
+
+issue : // stdin_backup = dup(STDIN_FILENO);
+	// stdout_backup = dup(STDOUT_FILENO);  still opend..
+
+	

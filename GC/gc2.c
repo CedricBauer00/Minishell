@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:00:46 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/11 12:06:57 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/14 16:12:40 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,10 @@ void	delete_node(t_gc_list **gc_lst, t_gc_list *to_delete)
 		if (cur == to_delete)
 		{
 			free_data_by_type(cur->data, cur->type);
-			prev->next = cur->next;
+			if (prev == NULL)
+				*gc_lst = cur->next;
+			else
+				prev->next = cur->next;
 			free(cur);
 			cur = NULL;
 			break ;
