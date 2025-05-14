@@ -77,6 +77,10 @@ void	ft_exit(char **args, t_shell *shell, t_gc *gc)
 {
 	long long	exitvalue;
 
+	if (shell->stdin_backup > 0)
+		close(shell->stdin_backup);
+	if (shell->stdout_backup > 0)	
+		close(shell->stdout_backup);
 	exitvalue = 0;
 	write(1, "exit\n", 5);
 	if (args[0] == NULL)

@@ -36,6 +36,15 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 	return ;
 }
 
+static void check_open_fds(void)
+{
+    int fd;
+    for (fd = 0; fd < 1024; fd++) {
+        if (fcntl(fd, F_GETFD) != -1)
+            printf("FD %d is open\n", fd);
+    }
+}
+
 void	main_execute(t_cmd_block *cmd_block)
 {
 	t_cmd_block	*cur;
@@ -54,7 +63,6 @@ void	main_execute(t_cmd_block *cmd_block)
 	}
 	if (pid_counts > 1)
 	{
-		fprintf(stderr, "%d\n", pid_counts);
 		execute_pipeline(cur);
 	}
 	prevent_zombie_process();
@@ -62,6 +70,7 @@ void	main_execute(t_cmd_block *cmd_block)
 	dup2(shell->stdout_backup, STDOUT_FILENO);
 	close(shell->stdin_backup);
 	close(shell->stdout_backup);
+	check_open_fds();
 }
 
 void	run_execve(t_cmd_block *cmd_block, t_gc *gc)

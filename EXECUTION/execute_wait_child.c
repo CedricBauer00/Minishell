@@ -42,6 +42,15 @@ void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 	}
 }
 
+static void check_open_fds(void)
+{
+    int fd;
+    for (fd = 0; fd < 1024; fd++) {
+        if (fcntl(fd, F_GETFD) != -1)
+            fprintf(stderr, "FD %d is open\n", fd);
+    }
+}
+
 void	fork_and_execute(t_cmd_block *cur, t_gc *gc, int *i)
 {
 	pid_t		pid;
@@ -50,7 +59,10 @@ void	fork_and_execute(t_cmd_block *cur, t_gc *gc, int *i)
 	shell = get_shell();
 	if (cur && cur->next && (cur->next->is_built_in
 			|| cur->next->is_external_cmd))
-		add_pipe(&cur);
+			{
+				add_pipe(&cur);
+				fprintf(stderr, "[pid %d] pipe ( %d, %d ) \n",getpid(), cur->pipe->pipefd[0], cur->pipe->pipefd[1]);
+			}
 	signal(SIGINT, SIG_IGN);
 	pid = fork();
 	if (pid == 0)
@@ -60,6 +72,7 @@ void	fork_and_execute(t_cmd_block *cur, t_gc *gc, int *i)
 		close(shell->stdin_backup);
 		close(shell->stdout_backup);
 		execute_child(cur, gc, shell);
+		check_open_fds();
 	}
 	close_pipefd(cur);
 	shell->pids[*i] = pid;
@@ -84,6 +97,8 @@ void	wait_for_child_and_update_status(int i)
 		}
 		else if (WIFSIGNALED(status))
 		{
+			close(shell->stdin_backup);
+			close(shell->stdout_backup);
 			shell->last_status_exit = 128 + WTERMSIG(status);
 		}
 		idx++;

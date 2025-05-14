@@ -25,11 +25,17 @@ void	processing_pipe(t_cmd_block *cmd)
 int	first_pipe_cmd(t_cmd_block *command)
 {
 	if (command->pipe->pipefd[0] >= 0)
+	{
 		close(command->pipe->pipefd[0]);
+		fprintf(stderr, YELLOW"[pid : %d] close(%d)\n"DEFAULT,getpid(), command->pipe->pipefd[0]);
+	}
 	if (dup2(command->pipe->pipefd[1], STDOUT_FILENO) == -1)
 		return (-1);
 	if (command->pipe->pipefd[1] >= 0)
+	{
 		close(command->pipe->pipefd[1]);
+		fprintf(stderr, YELLOW"[pid : %d] close(%d)\n"DEFAULT,getpid(), command->pipe->pipefd[1]);
+	}
 	return (1);
 }
 
@@ -38,13 +44,22 @@ int	middle_pipe_cmd(t_cmd_block *command)
 	if (dup2(command->prev_read_end_fd, STDIN_FILENO) == -1)
 		return (-1);
 	if (command->prev_read_end_fd >= 0)
+	{
 		close(command->prev_read_end_fd);
+		fprintf(stderr, YELLOW"[pid : %d] close(%d)\n"DEFAULT, getpid(), command->prev_read_end_fd);
+	}
 	if (command->pipe->pipefd[0] >= 0)
+	{
 		close(command->pipe->pipefd[0]);
+		fprintf(stderr, YELLOW"[pid : %d] close(%d)\n"DEFAULT,getpid(), command->pipe->pipefd[0]);
+	}
 	if (dup2(command->pipe->pipefd[1], STDOUT_FILENO) == -1)
 		return (-1);
 	if (command->pipe->pipefd[1] >= 0)
+	{
 		close(command->pipe->pipefd[1]);
+		fprintf(stderr, YELLOW"[pid : %d] close(%d)\n"DEFAULT,getpid(), command->pipe->pipefd[1]);
+	}
 	return (1);
 }
 
@@ -53,6 +68,9 @@ int	last_pipe_cmd(t_cmd_block *command)
 	if (dup2(command->prev_read_end_fd, STDIN_FILENO) == -1)
 		return (-1);
 	if (command->prev_read_end_fd >= 0)
+	{
 		close(command->prev_read_end_fd);
+		fprintf(stderr, YELLOW"[pid : %d] close(%d)\n"DEFAULT, getpid(), command->prev_read_end_fd);
+	}
 	return (1);
 }
