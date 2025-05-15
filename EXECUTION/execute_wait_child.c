@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/15 10:37:46 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/15 14:41:54 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 			exit(1);
 		}
 	}
-	if (cur->is_external_cmd || cur->is_built_in)
-		processing_pipe(cur);
+	processing_pipe(cur);
 	set_io_streams(cur);
 	if (cur && cur->built_in)
 	{
@@ -51,14 +50,34 @@ static void check_open_fds(void)
     }
 }
 
+void	execute_pipeline(t_cmd_block *cmd_block)
+{
+	t_cmd_block	*cur;
+	t_gc		*gc;
+	int			i;
+
+	i = 0;
+	gc = get_gc();
+	cur = cmd_block;
+	if (!cur->next)
+		return ;
+	while (cur)
+	{
+		fprintf(stderr, "cur %p\n", cur);
+		fork_and_execute(cur, gc, &i);
+		i++;
+		cur = cur->next;
+	}
+	fprintf(stderr, "procs counts : %d\n", i);
+	wait_for_child_and_update_status(i);
+}
+
 void	fork_and_execute(t_cmd_block *cur, t_gc *gc, int *i)
 {
 	pid_t		pid;
 	t_shell		*shell;
 
 	shell = get_shell();
-	// if (cur && cur->next && (cur->next->is_built_in
-	// 		|| cur->next->is_external_cmd))
 	if (cur && cur->next)
 			{
 				add_pipe(&cur);
@@ -66,6 +85,7 @@ void	fork_and_execute(t_cmd_block *cur, t_gc *gc, int *i)
 			}
 	signal(SIGINT, SIG_IGN);
 	pid = fork();
+	fprintf(stderr, "fork()\n");
 	if (pid == 0)
 	{
 		signal(SIGINT, SIG_DFL);

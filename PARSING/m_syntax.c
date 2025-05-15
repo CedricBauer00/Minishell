@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 14:01:32 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/14 15:15:57 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/15 13:23:56 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,9 @@ int	syntax_heredoc(t_shell *shell, t_token *cur)
 	return (0);
 }
 
+// << eof | ls | << eof >> 
+// after heredoc all stdin and stdout recovered;
+// ls 
 int	validate_syntax(t_token *token, int heredoc_fd, t_shell *shell)
 {
 	t_token	*cur;

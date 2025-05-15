@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/15 10:43:41 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/15 14:26:19 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,26 +123,26 @@ void	exec_relative_path(char *path, t_cmd_block *cmd_block, \
 	exit(127);
 }
 
-void	execute_pipeline(t_cmd_block *cmd_block)
-{
-	t_cmd_block	*cur;
-	t_gc		*gc;
-	int			i;
+// void	execute_pipeline(t_cmd_block *cmd_block)
+// {
+// 	t_cmd_block	*cur;
+// 	t_gc		*gc;
+// 	int			i;
 
-	i = 0;
-	gc = get_gc();
-	cur = cmd_block;
-	if (!cur->next)
-		return ;
-	while (cur)
-	{
-		if (cur->is_built_in || cur->is_external_cmd)
-		{
-			fork_and_execute(cur, gc, &i);
-			i++;
-		}
-		cur = cur->next;
-	}
-	fprintf(stderr, "procs counts : %d\n", i);
-	wait_for_child_and_update_status(i);
-}
+// 	i = 0;
+// 	gc = get_gc();
+// 	cur = cmd_block;
+// 	if (!cur->next)
+// 		return ;
+// 	while (cur)
+// 	{
+// 		// if (cur->is_built_in || cur->is_external_cmd)
+// 		// {
+// 			fork_and_execute(cur, gc, &i);
+// 			i++;
+// 		//}
+// 		cur = cur->next;
+// 	}
+// 	fprintf(stderr, "procs counts : %d\n", i);
+// 	wait_for_child_and_update_status(i);
+// }

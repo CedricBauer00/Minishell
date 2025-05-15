@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   grouplize.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:08 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/13 15:25:41 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/15 14:40:24 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
-
+// [<< eof ] - [ ls ] - [<< eof] 
 void	grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc)
 {
 	t_cmd_block	*new_cmd_block;
