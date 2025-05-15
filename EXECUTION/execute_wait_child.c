@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_wait_child.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/14 18:28:39 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/15 10:37:46 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,9 @@ void	fork_and_execute(t_cmd_block *cur, t_gc *gc, int *i)
 	t_shell		*shell;
 
 	shell = get_shell();
-	if (cur && cur->next && (cur->next->is_built_in
-			|| cur->next->is_external_cmd))
+	// if (cur && cur->next && (cur->next->is_built_in
+	// 		|| cur->next->is_external_cmd))
+	if (cur && cur->next)
 			{
 				add_pipe(&cur);
 				fprintf(stderr, "[pid %d] pipe ( %d, %d ) \n",getpid(), cur->pipe->pipefd[0], cur->pipe->pipefd[1]);

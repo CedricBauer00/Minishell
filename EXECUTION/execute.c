@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/14 17:01:46 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/15 10:43:41 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,5 +143,6 @@ void	execute_pipeline(t_cmd_block *cmd_block)
 		}
 		cur = cur->next;
 	}
+	fprintf(stderr, "procs counts : %d\n", i);
 	wait_for_child_and_update_status(i);
 }
