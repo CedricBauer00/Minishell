@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/16 16:59:20 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/16 17:59:59 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ static void check_open_fds(void)
 {
     int fd;
     for (fd = 0; fd < 1024; fd++) {
-        if (fcntl(fd, F_GETFD) != -1)
-            printf("FD %d is open\n", fd);
+        // if (fcntl(fd, F_GETFD) != -1)
+            // printf("FD %d is open\n", fd);
     }
 }
 
@@ -64,7 +64,7 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc, t_shell *shell)
 	if (indic == -1)
 		return (all_free(&gc->temp), -1);
 	shell->last_status_exit = 0;
-	print_tokens(main->tokens);
+	// print_tokens(main->tokens);
 	executable = grouplize(main->tokens, &cmd_block, gc);
 	main_execute(executable);
 	check_open_fds();

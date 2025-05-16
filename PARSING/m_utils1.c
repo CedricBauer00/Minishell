@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 17:53:21 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/16 16:28:46 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/16 17:45:22 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ int	check_operator2(t_main *main, int *i, t_gc_list **gc_list)
 		if (expands(main, i, 0, gc_list) < 0)
 			return (-1);
 	}
-	else if (main->line[*i] && main->line[*i] == '~')
+	else if (main->line[*i] == '~' && ((main->line[*i + 1] == '\0' 
+		|| main->line[*i + 1] == '/') || ft_isspace(main->line[*i + 1])))
 		tild(main, i, gc_list);
 	else if (!ft_isspace(main->line[*i]))
 		words(main, i, 0, gc_list);

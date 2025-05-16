@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:04 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/16 17:03:19 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/16 17:04:20 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void	export_handling(char *arg, t_shell *shell)
 	}
 	value = extract_value(arg);
 	
-	if	((name[ft_strlen(name) - 1] == '+'))
+	if	(name[ft_strlen(name) - 1] == '+')
 	{
 		char *base_name = gc_substr(name, 0, ft_strlen(name) - 1, gc);
 		char *old_value = find_var_in_env(shell->my_envp, base_name, ft_strlen(base_name));
