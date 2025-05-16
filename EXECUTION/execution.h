@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/14 15:29:33 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/16 14:17:35 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ typedef struct s_cmd_block
 	struct s_pipe				*pipe;
 	int							prev_read_end_fd;
 	int							cur_fd_write_end;
-	int							pipe_count;
+	//int							pipe_count;
 	struct s_cmd_block			*prev;
 	struct s_cmd_block			*next;
 }	t_cmd_block;
@@ -238,7 +238,7 @@ void			execute_pipeline(t_cmd_block *cmd_block);
 
 void			do_alloc_pids(t_cmd_block *cmd_block);
 int				count_command(t_cmd_block *cmd_block);
-int				heredoc_fd_offset_and_redir(t_cmd_block *cur);
+void			heredoc_fd_offset_and_redir(t_cmd_block *cur);
 char			*check_path_before_exec(t_shell *shell, t_gc *gc);
 void			access_and_exec(char *arg, char **args, t_shell *shell);
 
@@ -269,7 +269,8 @@ void			ready_args(t_cmd_block *new_cmd_block, \
 // 							grouplize.c
 // ----------------------------------------------------------------------
 
-void			grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc);
+t_cmd_block	*grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc);
+//void			grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc);
 t_cmd_block		*merge_to_one_cmd(t_token **token, t_gc *gc);
 void			ready_all(t_cmd_block *new_cmd_block, \
 	t_token **cur, t_gc *gc, int *i);

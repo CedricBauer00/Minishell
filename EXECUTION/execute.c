@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/15 14:26:19 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/16 14:24:53 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,41 +36,31 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 	return ;
 }
 
-static void check_open_fds(void)
-{
-    int fd;
-    for (fd = 0; fd < 1024; fd++) {
-        if (fcntl(fd, F_GETFD) != -1)
-            printf("FD %d is open\n", fd);
-    }
-}
-
 void	main_execute(t_cmd_block *cmd_block)
 {
-	t_cmd_block	*cur;
 	int			pid_counts;
 
+	if (!cmd_block)
+		return ;
 	t_shell		*shell;
 	shell = get_shell();
-	cur = cmd_block;
 	shell->stdin_backup = dup(STDIN_FILENO);
 	shell->stdout_backup = dup(STDOUT_FILENO);
 	pid_counts = count_command(cmd_block);
 	do_alloc_pids(cmd_block);
 	if (pid_counts == 1)
 	{
-		execute_single_command(cur);
+		execute_single_command(cmd_block);
 	}
 	if (pid_counts > 1)
 	{
-		execute_pipeline(cur);
+		execute_pipeline(cmd_block);
 	}
 	prevent_zombie_process();
 	dup2(shell->stdin_backup, STDIN_FILENO);
 	dup2(shell->stdout_backup, STDOUT_FILENO);
 	close(shell->stdin_backup);
 	close(shell->stdout_backup);
-	check_open_fds();
 }
 
 void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
@@ -123,26 +113,28 @@ void	exec_relative_path(char *path, t_cmd_block *cmd_block, \
 	exit(127);
 }
 
-// void	execute_pipeline(t_cmd_block *cmd_block)
-// {
-// 	t_cmd_block	*cur;
-// 	t_gc		*gc;
-// 	int			i;
+void	execute_pipeline(t_cmd_block *cmd_block)
+{
+	t_gc		*gc;
+	int			i;
 
-// 	i = 0;
-// 	gc = get_gc();
-// 	cur = cmd_block;
-// 	if (!cur->next)
-// 		return ;
-// 	while (cur)
-// 	{
-// 		// if (cur->is_built_in || cur->is_external_cmd)
-// 		// {
-// 			fork_and_execute(cur, gc, &i);
-// 			i++;
-// 		//}
-// 		cur = cur->next;
-// 	}
-// 	fprintf(stderr, "procs counts : %d\n", i);
-// 	wait_for_child_and_update_status(i);
-// }
+	i = 0;
+	gc = get_gc();
+	if (!cmd_block)
+		return ;
+	while (cmd_block)
+	{
+		if (cmd_block->next)
+		{
+			add_pipe(&cmd_block);
+			fprintf(stderr, "[pid %d] pipe ( %d, %d ) \n",getpid(), cmd_block->pipe->pipefd[0], cmd_block->pipe->pipefd[1]);
+		}
+		if(cmd_block->is_built_in || cmd_block->is_external_cmd || cmd_block->io_streams->heredoc_eof)
+		{
+			fork_and_execute(cmd_block, gc, &i);
+			i++;
+		}
+		cmd_block = cmd_block->next;
+	}
+	wait_for_child_and_update_status(i);
+}

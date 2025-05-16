@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_wait_child.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/15 14:41:54 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/16 14:07:08 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,12 @@ void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 {
 	if (cur && cur->io_streams && cur->io_streams->heredoc_eof)
 	{
-		if (heredoc_fd_offset_and_redir(cur) == -1)
-		{
-			gc_free(gc);
-			exit(1);
-		}
+		heredoc_fd_offset_and_redir(cur);
+		// {
+		// 	fprintf()
+		// 	gc_free(gc);
+		// 	exit(1);
+		// }
 	}
 	processing_pipe(cur);
 	set_io_streams(cur);
@@ -41,51 +42,18 @@ void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 	}
 }
 
-static void check_open_fds(void)
-{
-    int fd;
-    for (fd = 0; fd < 1024; fd++) {
-        if (fcntl(fd, F_GETFD) != -1)
-            fprintf(stderr, "FD %d is open\n", fd);
-    }
-}
-
-void	execute_pipeline(t_cmd_block *cmd_block)
-{
-	t_cmd_block	*cur;
-	t_gc		*gc;
-	int			i;
-
-	i = 0;
-	gc = get_gc();
-	cur = cmd_block;
-	if (!cur->next)
-		return ;
-	while (cur)
-	{
-		fprintf(stderr, "cur %p\n", cur);
-		fork_and_execute(cur, gc, &i);
-		i++;
-		cur = cur->next;
-	}
-	fprintf(stderr, "procs counts : %d\n", i);
-	wait_for_child_and_update_status(i);
-}
-
 void	fork_and_execute(t_cmd_block *cur, t_gc *gc, int *i)
 {
 	pid_t		pid;
 	t_shell		*shell;
 
+	if (!cur)
+		return ;
 	shell = get_shell();
-	if (cur && cur->next)
-			{
-				add_pipe(&cur);
-				fprintf(stderr, "[pid %d] pipe ( %d, %d ) \n",getpid(), cur->pipe->pipefd[0], cur->pipe->pipefd[1]);
-			}
 	signal(SIGINT, SIG_IGN);
 	pid = fork();
-	fprintf(stderr, "fork()\n");
+	
+	fprintf(stderr, "fork(): %d \n", getpid());
 	if (pid == 0)
 	{
 		signal(SIGINT, SIG_DFL);
@@ -93,7 +61,7 @@ void	fork_and_execute(t_cmd_block *cur, t_gc *gc, int *i)
 		close(shell->stdin_backup);
 		close(shell->stdout_backup);
 		execute_child(cur, gc, shell);
-		check_open_fds();
+		exit(0);
 	}
 	close_pipefd(cur);
 	shell->pids[*i] = pid;
@@ -115,6 +83,7 @@ void	wait_for_child_and_update_status(int i)
 		if (WIFEXITED(status))
 		{
 			shell->last_status_exit = WEXITSTATUS(status);
+			fprintf(stderr, RED"parent got exit status of child :%d\n"DEFAULT, shell->last_status_exit);
 		}
 		else if (WIFSIGNALED(status))
 		{

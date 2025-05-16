@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_close.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 12:42:19 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/15 12:15:08 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/16 10:29:05 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,12 @@ void	close_middle_pipefd(t_cmd_block *cmd)
 		fprintf(stderr, "[pid : %d], close(%d)\n", getpid(), cmd->prev_read_end_fd);
 		cmd->prev_read_end_fd = -1;
 	}
-	if (cmd->pipe->pipefd[0] >= 0)
-	{
-		close(cmd->pipe->pipefd[0]);
-		fprintf(stderr, "[pid : %d], close(%d)\n",getpid(), cmd->pipe->pipefd[0]);
-		cmd->pipe->pipefd[0] = -1;
-	}
+	// if (cmd->pipe->pipefd[0] >= 0)
+	// {
+	// 	close(cmd->pipe->pipefd[0]);
+	// 	fprintf(stderr, "[pid : %d], close(%d)\n",getpid(), cmd->pipe->pipefd[0]);
+	// 	cmd->pipe->pipefd[0] = -1;
+	// }
 	if (cmd->pipe->pipefd[1] >= 0)
 	{
 		close(cmd->pipe->pipefd[1]);

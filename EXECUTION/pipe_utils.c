@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:18 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/15 14:50:37 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/16 10:49:41 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	add_pipe(t_cmd_block **cmd_block)
 	if (!cmd_block || !*cmd_block)
 		return ;
 	new_pipe_node = init_pipe(gc);
-	fprintf(stderr, "pipe()created \n");
 	if (!new_pipe_node)
 	{
 		gc_free(gc);

@@ -3,14 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   m_main.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/15 14:32:39 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/16 13:13:01 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
+
+//TEST 
+static void check_open_fds(void)
+{
+    int fd;
+    for (fd = 0; fd < 1024; fd++) {
+        if (fcntl(fd, F_GETFD) != -1)
+            printf("FD %d is open\n", fd);
+    }
+}
 
 int	main_helper(t_main *main, t_gc_list **gc_temp)
 {
@@ -28,7 +38,15 @@ int	main_helper(t_main *main, t_gc_list **gc_temp)
 	ft_strlcpy(main->line, main->temp_for_line, len + 1);
 	if (!main->line)
 		return (-1);
-	free(main->temp_for_line);
+	if (!main->line)
+		fprintf(stderr, "main->line is NULL\n");
+	else
+		fprintf(stderr, RED"main->line not NULL %s\n"DEFAULT, main->line);
+	if (main->temp_for_line)
+	{
+		free(main->temp_for_line);
+		main->temp_for_line = NULL;
+	}
 	if (ft_strncmp(main->line, "history -c", 10) == 0)
 		clear_history();
 	else
@@ -49,11 +67,21 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc, t_shell *shell)
 	if (indic == -1)
 		return (all_free(&gc->temp), -1);
 	shell->last_status_exit = 0;
+	
+	fprintf(stderr, RED"%s\n"DEFAULT, main->tokens->value);
 	print_tokens(main->tokens);
-	grouplize(main->tokens, &cmd_block, gc);
-	main_execute(cmd_block);
+
+	t_cmd_block *test = grouplize(main->tokens, &cmd_block, gc);
+	// if (!test)
+	// 	return (all_free(&gc->temp), -1);
+	main_execute(test);
+	check_open_fds();
 	if (gc->temp)
 		all_free(&gc->temp);
+	if (!test)
+	{
+		fprintf(stderr, RED"@@@@\n"DEFAULT);
+	}
 	return (0);
 }
 

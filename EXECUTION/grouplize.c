@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   grouplize.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:08 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/15 14:40:24 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/16 14:24:20 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
-// [<< eof ] - [ ls ] - [<< eof] 
-void	grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc)
+
+t_cmd_block	*grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc)
 {
 	t_cmd_block	*new_cmd_block;
 	t_cmd_block	*last;
 
 	if (!token)
-		return ;
+		return NULL;
 	while (token != NULL)
 	{
 		if (token && token->type == TOKEN_PIPE)
@@ -36,6 +36,7 @@ void	grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc)
 			new_cmd_block->prev = last;
 		}
 	}
+	return *cmd_block;
 }
 
 t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)

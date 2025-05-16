@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_helper.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/15 14:40:19 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/16 14:18:20 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,27 +47,30 @@ int	count_command(t_cmd_block *cmd_block)
 	return (count);
 }
 
-int	heredoc_fd_offset_and_redir(t_cmd_block *cur)
+void	heredoc_fd_offset_and_redir(t_cmd_block *cur)
 {
 	t_shell	*shell;
-
+	t_gc	*gc;
+	
+	gc = get_gc();
 	shell = get_shell();
 	if (!cur)
-		return (-1);
+		return ;
 	shell->heredoc_fd = open("temp_heredoc", O_RDWR | O_CREAT, 0644);
 	if (shell->heredoc_fd < 0)
 	{
-		return (-1);
+		gc_free(gc);
+		exit(1);
 	}
 	if (dup2(shell->heredoc_fd, STDIN_FILENO) == -1)
 	{
 		close(shell->heredoc_fd);
 		unlink("temp_heredoc");
-		return (-1);
+		gc_free(gc);
+		exit(1);
 	}
 	close(shell->heredoc_fd);
 	unlink("temp_heredoc");
-	return (1);
 }
 
 char	*check_path_before_exec(t_shell *shell, t_gc *gc)

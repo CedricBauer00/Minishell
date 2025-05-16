@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_single.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/14 15:13:15 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/16 14:18:43 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,7 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 	shell = get_shell();
 	if (cur->io_streams && cur->io_streams->heredoc_eof)
 	{
-		if (heredoc_fd_offset_and_redir(cur) == -1)
-		{
-			gc_free(gc);
-			exit(1);
-		}
+		heredoc_fd_offset_and_redir(cur);
 	}
 	if (cur->io_streams)
 		if (set_io_streams(cur) == -1)
@@ -51,6 +47,8 @@ void	execute_single_external_cmd(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 {
 	pid_t	pid;
 
+	if (!cur)
+		return ;
 	pid = 0;
 	signal(SIGINT, SIG_IGN);
 	pid = fork();
