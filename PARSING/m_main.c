@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/16 13:13:01 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/16 16:28:27 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,6 @@ int	main_helper(t_main *main, t_gc_list **gc_temp)
 	ft_strlcpy(main->line, main->temp_for_line, len + 1);
 	if (!main->line)
 		return (-1);
-	if (!main->line)
-		fprintf(stderr, "main->line is NULL\n");
-	else
-		fprintf(stderr, RED"main->line not NULL %s\n"DEFAULT, main->line);
 	if (main->temp_for_line)
 	{
 		free(main->temp_for_line);

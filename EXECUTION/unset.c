@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:31 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/14 16:09:56 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/16 16:16:52 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	ft_unset(char **args, t_shell *shell)
 		return ;
 	while (args[i])
 	{
-		if (!is_valid_identifier(args[i]))
+		if (!is_valid_identifier(args[i], "unset"))
 		{
 			printf("unset : %s non valid identifier\n", args[i]);
 			i++;
