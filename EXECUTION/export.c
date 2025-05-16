@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:04 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/16 17:00:52 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/16 17:03:19 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,21 @@ static void	export_handling(char *arg, t_shell *shell)
 		return ;
 	}
 	value = extract_value(arg);
+	
+	if	((name[ft_strlen(name) - 1] == '+'))
+	{
+		char *base_name = gc_substr(name, 0, ft_strlen(name) - 1, gc);
+		char *old_value = find_var_in_env(shell->my_envp, base_name, ft_strlen(base_name));
+		printf("old_value : %s\n", old_value);
+		if (!old_value)
+			ft_setenv(base_name, value, 1, shell);
+		else
+		{
+			char *new_value = gc_strjoin(old_value, value, &gc->temp);
+			ft_setenv(base_name, new_value, 1, shell);
+		}
+		return ;
+	}
 	ft_setenv(name, value, 1, shell);
 }
 
@@ -39,6 +54,7 @@ void	print_envp(t_shell *shell)
 	char	*name;
 	char	*value;
 
+	value = NULL;
 	i = 0;
 	if (!shell)
 		return ;
@@ -68,6 +84,7 @@ void	export(char **args, t_shell *shell)
 	}
 }
 
+//todo export += case
 char	*extract_name(char *arg)
 {
 	int		i;
@@ -77,8 +94,12 @@ char	*extract_name(char *arg)
 	i = 0;
 	while (arg[i])
 	{
+		if (arg[0] == '+')
+			break;
 		if (arg[i] == '=')
 			break ;
+		if (arg[i] == '+' && arg[1 + 1] == '=')
+			break;
 		i++;
 	}
 	return (gc_substr(arg, 0, i, gc));
