@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/16 14:17:35 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/16 16:51:12 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ int				check_existing(char **my_envp, const char *name);
 // ----------------------------------------------------------------------
 
 char			**expand_envp(t_shell *shell, char *new_path);
-char			**copy_envp(t_gc *gc, char **envp);
+char			**copy_envp(t_gc *gc, char **envp, t_shell *shell);
 int				get_envp_count(char **envp);
 int				is_valid_dir(const char *path);
 void			handle_no_env_minishell(t_shell	*shell, t_gc *gc);

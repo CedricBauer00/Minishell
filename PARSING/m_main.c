@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_main.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/16 13:13:01 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/16 16:50:51 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,6 @@ int	main_helper(t_main *main, t_gc_list **gc_temp)
 	ft_strlcpy(main->line, main->temp_for_line, len + 1);
 	if (!main->line)
 		return (-1);
-	if (!main->line)
-		fprintf(stderr, "main->line is NULL\n");
-	else
-		fprintf(stderr, RED"main->line not NULL %s\n"DEFAULT, main->line);
 	if (main->temp_for_line)
 	{
 		free(main->temp_for_line);
@@ -57,6 +53,7 @@ int	main_helper(t_main *main, t_gc_list **gc_temp)
 int	main_loop_helper(t_main *main, int indic, t_gc *gc, t_shell *shell)
 {
 	t_cmd_block	*cmd_block;
+	t_cmd_block	*executable;
 
 	cmd_block = NULL;
 	if (main->tokens && check_for_node_spaces(main, main->tokens, \
@@ -67,21 +64,12 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc, t_shell *shell)
 	if (indic == -1)
 		return (all_free(&gc->temp), -1);
 	shell->last_status_exit = 0;
-	
-	fprintf(stderr, RED"%s\n"DEFAULT, main->tokens->value);
 	print_tokens(main->tokens);
-
-	t_cmd_block *test = grouplize(main->tokens, &cmd_block, gc);
-	// if (!test)
-	// 	return (all_free(&gc->temp), -1);
-	main_execute(test);
+	executable = grouplize(main->tokens, &cmd_block, gc);
+	main_execute(executable);
 	check_open_fds();
 	if (gc->temp)
 		all_free(&gc->temp);
-	if (!test)
-	{
-		fprintf(stderr, RED"@@@@\n"DEFAULT);
-	}
 	return (0);
 }
 
@@ -127,15 +115,9 @@ int	main(int argc, char **argv, char **envp)
 	gc = get_gc();
 	shell = get_shell();
 	if (envp && *envp)
-	{
-		shell->my_envp = copy_envp(gc, envp);
-		foo("OLDPWD", shell);
-	}
-	else//env -i ./minishell
-	{
-		//return 0;
+		shell->my_envp = copy_envp(gc, envp, shell);
+	else
 		handle_no_env_minishell(shell, gc);
-	}
 	if (!shell->my_envp)
 		return (-1);
 	if (incrmnt_shllvl(shell, gc) < 0)

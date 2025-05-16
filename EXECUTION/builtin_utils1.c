@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:47:59 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/14 17:49:00 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/16 16:50:59 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	get_envp_count(char **envp)
 	return (count);
 }
 
-char	**copy_envp(t_gc *gc, char **envp)
+char	**copy_envp(t_gc *gc, char **envp, t_shell *shell)
 {
 	int		count;
 	char	**my_envp;
@@ -69,6 +69,7 @@ char	**copy_envp(t_gc *gc, char **envp)
 		i++;
 	}
 	my_envp[i] = NULL;
+	foo("OLDPWD", shell);
 	return (my_envp);
 }
 
