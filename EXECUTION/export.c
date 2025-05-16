@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:04 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/14 17:31:42 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/16 17:00:52 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	export_handling(char *arg, t_shell *shell)
 	check = false;
 	name = extract_name(arg);
 	is_exited(name, gc);
-	check = is_valid_identifier(name);
+	check = is_valid_identifier(name, "export");
 	if (check == false)
 	{
 		printf("non valid identifier\n");

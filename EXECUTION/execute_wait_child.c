@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/16 14:07:08 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/16 14:56:40 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,6 @@ void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 	if (cur && cur->io_streams && cur->io_streams->heredoc_eof)
 	{
 		heredoc_fd_offset_and_redir(cur);
-		// {
-		// 	fprintf()
-		// 	gc_free(gc);
-		// 	exit(1);
-		// }
 	}
 	processing_pipe(cur);
 	set_io_streams(cur);

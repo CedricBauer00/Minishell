@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/16 16:51:12 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/16 16:59:26 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ void			ft_echo(char **args, bool newline, int i, int j);
 
 char			*find_var_in_env(char **my_envp, \
 	char *find, size_t find_len);
-bool			is_valid_identifier(const char *name);
+bool	is_valid_identifier(const char *name, char *id);
 char			*create_new_path(const char *name, const char *value);
 int				get_env_count(char **my_envp);
 int				check_existing(char **my_envp, const char *name);
