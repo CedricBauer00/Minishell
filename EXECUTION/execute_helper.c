@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/17 12:27:15 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/17 13:49:59 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ void	heredoc_fd_offset_and_redir(t_cmd_block *cur)
 		exit(1);
 	}
 	close(shell->heredoc_fd);
-	unlink("temp_heredoc");
 }
 
 char	*check_path_before_exec(t_shell *shell, t_gc *gc)
@@ -89,9 +88,6 @@ char	*check_path_before_exec(t_shell *shell, t_gc *gc)
 
 void	access_and_exec(char *arg, char **args, t_shell *shell)
 {
-	t_gc	*gc;
-
-	gc = get_gc();
 	if (access(arg, F_OK | X_OK) == 0)
 	{
 		if (execve(arg, args, shell->my_envp) == -1)

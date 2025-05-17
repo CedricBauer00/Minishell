@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/17 12:28:05 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/17 13:17:29 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,7 @@ void	single_cmd_execute(t_cmd_block *cur, t_gc *gc)
 		heredoc_fd_offset_and_redir(cur);
 	}
 	if (cur->io_streams)
-		if (set_io_streams(cur) == -1)
-			return ;
+		set_io_streams(cur);
 	if (cur->is_built_in)
 		execute_builtin(cur, shell);
 	else if (!cur->is_built_in || cur->args)

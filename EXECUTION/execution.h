@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/17 12:47:37 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/17 13:17:10 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,7 +212,7 @@ int				last_pipe_cmd(t_cmd_block *command);
 //							redirection.c
 // ----------------------------------------------------------------------
 
-int				set_io_streams(t_cmd_block *cmd);
+void			set_io_streams(t_cmd_block *cmd);
 //void			handle_redir(t_io_list	*io_streams);
 
 // ----------------------------------------------------------------------

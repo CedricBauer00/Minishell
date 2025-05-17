@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/17 12:26:52 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/17 13:03:29 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,8 +132,7 @@ void	execute_pipeline(t_cmd_block *cmd_block)
 		{
 			add_pipe(&cmd_block);
 		}
-		if (cmd_block->is_built_in || cmd_block->is_external_cmd
-			|| cmd_block->io_streams->heredoc_eof)
+		if (cmd_block)
 		{
 			fork_and_execute(cmd_block, gc, &i);
 			i++;
