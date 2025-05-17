@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:18 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/16 16:17:40 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/17 12:21:50 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ bool	is_valid_identifier(const char *name, char *id)
 		if (ft_strcmp(id, "export") == 0)
 		{
 			if (name[i] == '+' && name[i + 1] == '\0')
-				break;
+				break ;
 		}
 		if (!(ft_isalnum(name[i]) || name[i] == '_'))
 			return (false);

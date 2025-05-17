@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:13 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/14 17:55:57 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/17 10:08:57 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ t_shell	*init_shell_struct(t_gc_list **gc_lst)
 	shell->my_envp = NULL;
 	shell->pids = NULL;
 	shell->last_status_exit = 0;
+	shell->has_envp = true;
 	shell->heredoc_expandable = true;
 	return (shell);
 }

@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/16 14:57:15 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/17 12:26:52 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 	if (!shell || !cur->args)
 		return ;
 	gc = get_gc();
+	fprintf(stderr, "cur->args[0] : %s\n", cur->args[0]);
 	if (ft_strcmp(cur->built_in, "cd") == 0)
 		cd(cur->args, shell, gc);
 	else if (ft_strcmp(cur->built_in, "echo") == 0)
@@ -39,10 +40,10 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 void	main_execute(t_cmd_block *cmd_block)
 {
 	int			pid_counts;
+	t_shell		*shell;
 
 	if (!cmd_block)
 		return ;
-	t_shell		*shell;
 	shell = get_shell();
 	shell->stdin_backup = dup(STDIN_FILENO);
 	shell->stdout_backup = dup(STDOUT_FILENO);
@@ -80,7 +81,10 @@ void	run_execve(t_cmd_block *cmd_block, t_gc *gc)
 	}
 	else
 	{
-		path = check_path_before_exec(shell, gc);
+		if (shell->has_envp == true)
+			path = check_path_before_exec(shell, gc);
+		else
+			path = gc_strdup(ABSOLUTE_PATH_ENV, &gc->temp);
 		exec_relative_path(path, cmd_block, gc, shell);
 	}
 	printf("minishell: %s : %s\n", cmd_block->args[0], strerror(errno));
@@ -127,9 +131,9 @@ void	execute_pipeline(t_cmd_block *cmd_block)
 		if (cmd_block->next)
 		{
 			add_pipe(&cmd_block);
-			fprintf(stderr, "[pid %d] pipe ( %d, %d ) \n",getpid(), cmd_block->pipe->pipefd[0], cmd_block->pipe->pipefd[1]);
 		}
-		if(cmd_block->is_built_in || cmd_block->is_external_cmd || cmd_block->io_streams->heredoc_eof)
+		if (cmd_block->is_built_in || cmd_block->is_external_cmd
+			|| cmd_block->io_streams->heredoc_eof)
 		{
 			fork_and_execute(cmd_block, gc, &i);
 			i++;

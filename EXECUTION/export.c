@@ -6,11 +6,34 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:04 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/16 17:03:19 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/17 12:43:30 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "execution.h"
+
+static int	export_append_case(char *name, char *value,
+	t_shell *shell, t_gc *gc)
+{
+	char	*base_name;
+	char	*old_value;
+	char	*new_value;
+
+	new_value = NULL;
+	base_name = NULL;
+	old_value = NULL;
+	base_name = gc_substr(name, 0, ft_strlen(name) - 1, gc);
+	old_value = find_var_in_env(shell->my_envp,
+			base_name, ft_strlen(base_name));
+	if (!old_value)
+		ft_setenv(base_name, value, 1, shell);
+	else
+	{
+		new_value = gc_strjoin(old_value, value, &gc->temp);
+		ft_setenv(base_name, new_value, 1, shell);
+	}
+	return (1);
+}
 
 static void	export_handling(char *arg, t_shell *shell)
 {
@@ -30,44 +53,12 @@ static void	export_handling(char *arg, t_shell *shell)
 		return ;
 	}
 	value = extract_value(arg);
-	
-	if	((name[ft_strlen(name) - 1] == '+'))
+	if (name[ft_strlen(name) - 1] == '+')
 	{
-		char *base_name = gc_substr(name, 0, ft_strlen(name) - 1, gc);
-		char *old_value = find_var_in_env(shell->my_envp, base_name, ft_strlen(base_name));
-		printf("old_value : %s\n", old_value);
-		if (!old_value)
-			ft_setenv(base_name, value, 1, shell);
-		else
-		{
-			char *new_value = gc_strjoin(old_value, value, &gc->temp);
-			ft_setenv(base_name, new_value, 1, shell);
-		}
-		return ;
+		if (export_append_case(name, value, shell, gc) == 1)
+			return ;
 	}
 	ft_setenv(name, value, 1, shell);
-}
-
-void	print_envp(t_shell *shell)
-{
-	int		i;
-	char	*name;
-	char	*value;
-
-	value = NULL;
-	i = 0;
-	if (!shell)
-		return ;
-	while (shell->my_envp[i])
-	{
-		name = extract_name(shell->my_envp[i]);
-		value = extract_value(shell->my_envp[i]);
-		if (ft_strchr(shell->my_envp[i], '='))
-			printf("declare -x %s=\"%s\"\n", name, value);
-		else if (name)
-			printf("declare -x %s\n", name);
-		i++;
-	}
 }
 
 void	export(char **args, t_shell *shell)
@@ -84,7 +75,6 @@ void	export(char **args, t_shell *shell)
 	}
 }
 
-//todo export += case
 char	*extract_name(char *arg)
 {
 	int		i;
@@ -95,11 +85,11 @@ char	*extract_name(char *arg)
 	while (arg[i])
 	{
 		if (arg[0] == '+')
-			break;
+			break ;
 		if (arg[i] == '=')
 			break ;
 		if (arg[i] == '+' && arg[1 + 1] == '=')
-			break;
+			break ;
 		i++;
 	}
 	return (gc_substr(arg, 0, i, gc));

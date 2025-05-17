@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:17:08 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/16 14:24:20 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/17 12:40:36 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_cmd_block	*grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc)
 	t_cmd_block	*last;
 
 	if (!token)
-		return NULL;
+		return (NULL);
 	while (token != NULL)
 	{
 		if (token && token->type == TOKEN_PIPE)
@@ -36,7 +36,7 @@ t_cmd_block	*grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc)
 			new_cmd_block->prev = last;
 		}
 	}
-	return *cmd_block;
+	return (*cmd_block);
 }
 
 t_cmd_block	*merge_to_one_cmd(t_token **token, t_gc *gc)

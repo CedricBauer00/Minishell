@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:53:04 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/13 17:22:49 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/17 12:45:15 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,7 @@ void	ft_exit(char **args, t_shell *shell, t_gc *gc)
 {
 	long long	exitvalue;
 
-	if (shell->stdin_backup > 0)
-		close(shell->stdin_backup);
-	if (shell->stdout_backup > 0)	
-		close(shell->stdout_backup);
+	recover_stdin_out(shell);
 	exitvalue = 0;
 	write(1, "exit\n", 5);
 	if (args[0] == NULL)
@@ -91,8 +88,6 @@ void	ft_exit(char **args, t_shell *shell, t_gc *gc)
 	if (args[1] != NULL)
 	{
 		printf("exit: too many arguments\n");
-		shell->last_status_exit = 1;
-		all_free(&gc->temp);
 		return ;
 	}
 	if ((ft_atoll(args[0], &exitvalue) == -1))

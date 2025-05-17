@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/16 13:23:08 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/17 10:03:20 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,14 @@ void	process_heredoc(t_shell *shell, t_token *token)
 	while (1)
 	{
 		line = readline("> ");
-		if (!line || strcmp(line, token->value) == 0)
+		if (!line)
+		{
+			free(line);
+			clean_heredoc(shell, false);
+			printf("heredoc wanted '%s\n'", token->value);
+			exit(0);
+		}
+		if (strcmp(line, token->value) == 0)
 		{
 			free(line);
 			clean_heredoc(shell, false);

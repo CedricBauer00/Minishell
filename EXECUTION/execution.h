@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:58 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/16 16:59:26 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/17 12:47:37 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define EXECUTION_H
 # define LONGLONGMAX 9223372036854775807LL
 # define LONGLONGMIN -9223372036854775807LL
+# define ABSOLUTE_PATH_ENV "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbi"
 
 # include "../minishell.h"
 
@@ -27,7 +28,6 @@ typedef struct s_cmd_block
 	struct s_pipe				*pipe;
 	int							prev_read_end_fd;
 	int							cur_fd_write_end;
-	//int							pipe_count;
 	struct s_cmd_block			*prev;
 	struct s_cmd_block			*next;
 }	t_cmd_block;
@@ -62,6 +62,7 @@ typedef struct s_shell
 	int		heredoc_fd;
 	int		last_status_exit;
 	bool	heredoc_expandable;
+	bool	has_envp;
 }	t_shell;
 
 typedef struct s_token
@@ -133,7 +134,7 @@ void			ft_echo(char **args, bool newline, int i, int j);
 
 char			*find_var_in_env(char **my_envp, \
 	char *find, size_t find_len);
-bool	is_valid_identifier(const char *name, char *id);
+bool			is_valid_identifier(const char *name, char *id);
 char			*create_new_path(const char *name, const char *value);
 int				get_env_count(char **my_envp);
 int				check_existing(char **my_envp, const char *name);
@@ -147,6 +148,12 @@ char			**copy_envp(t_gc *gc, char **envp, t_shell *shell);
 int				get_envp_count(char **envp);
 int				is_valid_dir(const char *path);
 void			handle_no_env_minishell(t_shell	*shell, t_gc *gc);
+
+// ----------------------------------------------------------------------
+// 							 builtin_utils2.c
+// ----------------------------------------------------------------------
+void			print_envp(t_shell *shell);
+void			recover_stdin_out(t_shell *shell);
 
 // ----------------------------------------------------------------------
 // 							 init.c
@@ -269,8 +276,7 @@ void			ready_args(t_cmd_block *new_cmd_block, \
 // 							grouplize.c
 // ----------------------------------------------------------------------
 
-t_cmd_block	*grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc);
-//void			grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc);
+t_cmd_block		*grouplize(t_token *token, t_cmd_block **cmd_block, t_gc *gc);
 t_cmd_block		*merge_to_one_cmd(t_token **token, t_gc *gc);
 void			ready_all(t_cmd_block *new_cmd_block, \
 	t_token **cur, t_gc *gc, int *i);

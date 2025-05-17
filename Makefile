@@ -50,6 +50,8 @@ SOURCES = PARSING/m_main.c \
 		PARSING/m_sorting.c \
 		PARSING/printing.c \
 		EXECUTION/builtin_utils.c \
+		EXECUTION/builtin_utils1.c \
+		EXECUTION/builtin_utils2.c \
 		EXECUTION/cd.c \
 		EXECUTION/echo.c \
 		EXECUTION/env.c \
@@ -72,7 +74,6 @@ SOURCES = PARSING/m_main.c \
 		EXECUTION/unset.c \
 		EXECUTION/exit.c\
 		EXECUTION/ft_setenv.c\
-		EXECUTION/builtin_utils1.c
 
 OBJECTS := $(SOURCES:.c=.o)
 

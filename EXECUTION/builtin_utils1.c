@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
+/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 13:47:59 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/16 16:50:59 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/17 12:24:35 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,11 +90,13 @@ int	is_valid_dir(const char *path)
 void	handle_no_env_minishell(t_shell	*shell, t_gc *gc)
 {
 	char	*temp;
-	
+	char	*pwd;
+
 	temp = getcwd(NULL, 0);
-	
-	shell->my_envp = do_alloc(&gc->shell, sizeof(char *) * 4, TYPE_DOUBLE_PTR, "shell");
-	char *pwd = gc_strjoin("PWD=", temp, &gc->temp);
+	shell->has_envp = false;
+	shell->my_envp = do_alloc(&gc->shell, sizeof(char *) * 4,
+			TYPE_DOUBLE_PTR, "shell");
+	pwd = gc_strjoin("PWD=", temp, &gc->temp);
 	shell->my_envp[0] = gc_strdup(pwd, &gc->shell);
 	free(temp);
 	shell->my_envp[1] = gc_strdup("SHLVL=0", &gc->shell);

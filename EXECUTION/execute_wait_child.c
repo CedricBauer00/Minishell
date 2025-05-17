@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/16 14:56:40 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/17 12:28:38 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,6 @@ void	fork_and_execute(t_cmd_block *cur, t_gc *gc, int *i)
 	shell = get_shell();
 	signal(SIGINT, SIG_IGN);
 	pid = fork();
-	
-	fprintf(stderr, "fork(): %d \n", getpid());
 	if (pid == 0)
 	{
 		signal(SIGINT, SIG_DFL);
@@ -78,7 +76,6 @@ void	wait_for_child_and_update_status(int i)
 		if (WIFEXITED(status))
 		{
 			shell->last_status_exit = WEXITSTATUS(status);
-			fprintf(stderr, RED"parent got exit status of child :%d\n"DEFAULT, shell->last_status_exit);
 		}
 		else if (WIFSIGNALED(status))
 		{
