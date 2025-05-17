@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/17 13:03:29 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/17 14:10:22 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	execute_builtin(t_cmd_block *cur, t_shell *shell)
 	if (!shell || !cur->args)
 		return ;
 	gc = get_gc();
-	fprintf(stderr, "cur->args[0] : %s\n", cur->args[0]);
 	if (ft_strcmp(cur->built_in, "cd") == 0)
 		cd(cur->args, shell, gc);
 	else if (ft_strcmp(cur->built_in, "echo") == 0)
