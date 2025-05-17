@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 17:53:21 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/17 12:29:29 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/17 14:20:47 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	tild(t_main *main, int *i, t_gc_list **gc_list)
 	value = check_for_var(main, "HOME", 0, gc_list);
 	if (!value)
 		value = gc_strdup("", gc_list);
-	printf(YELLOW"value = %s\n"DEFAULT, value);
 	main->error = create_token(&main->tokens, TOKEN_VAR, value, gc_list);
 	(*i)++;
 }

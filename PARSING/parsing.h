@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/17 12:14:06 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/17 14:25:08 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "../minishell.h"
 # include "../EXECUTION/execution.h"
-# include "../get_next_line/get_next_line.h"
+// # include "../get_next_line/get_next_line.h"
 
 typedef struct s_main
 {

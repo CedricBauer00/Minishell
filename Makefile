@@ -48,7 +48,6 @@ SOURCES = PARSING/m_main.c \
 		PARSING/m_syntax.c \
 		PARSING/m_token_handling.c \
 		PARSING/m_sorting.c \
-		PARSING/printing.c \
 		EXECUTION/builtin_utils.c \
 		EXECUTION/builtin_utils1.c \
 		EXECUTION/builtin_utils2.c \

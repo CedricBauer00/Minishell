@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/17 13:11:32 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/17 14:14:23 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ void	heredoc_fd_offset_and_redir(t_cmd_block *cur)
 		exit(1);
 	}
 	close(shell->heredoc_fd);
-	unlink("temp_heredoc");
 }
 
 char	*check_path_before_exec(t_shell *shell, t_gc *gc)

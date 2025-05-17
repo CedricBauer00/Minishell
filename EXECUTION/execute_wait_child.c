@@ -6,7 +6,7 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/17 12:28:38 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/17 13:56:55 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@ void	prevent_zombie_process(void)
 
 void	execute_child(t_cmd_block *cur, t_gc *gc, t_shell *shell)
 {
+	processing_pipe(cur);
 	if (cur && cur->io_streams && cur->io_streams->heredoc_eof)
 	{
 		heredoc_fd_offset_and_redir(cur);
 	}
-	processing_pipe(cur);
 	set_io_streams(cur);
 	if (cur && cur->built_in)
 	{
@@ -85,4 +85,6 @@ void	wait_for_child_and_update_status(int i)
 		}
 		idx++;
 	}
+	if (shell->heredoc_fd)
+		unlink("temp_heredoc");
 }
