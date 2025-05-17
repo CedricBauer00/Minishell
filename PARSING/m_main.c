@@ -6,21 +6,11 @@
 /*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/17 12:49:11 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/17 12:50:59 by jisokim2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
-
-//TEST 
-static void check_open_fds(void)
-{
-    int fd;
-    for (fd = 0; fd < 1024; fd++) {
-        if (fcntl(fd, F_GETFD) != -1)
-            printf("FD %d is open\n", fd);
-    }
-}
 
 int	main_helper(t_main *main, t_gc_list **gc_temp)
 {
@@ -105,10 +95,8 @@ int	main(int argc, char **argv, char **envp)
 	t_shell	*shell;
 	t_gc	*gc;
 
-	(void)argc;
-	(void)argv;
 	using_history();
-	set_default(&main);
+	set_default(&main, argc, argv);
 	if (ttyattr() < 0)
 		return (-1);
 	gc = get_gc();
