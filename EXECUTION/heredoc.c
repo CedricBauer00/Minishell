@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:15 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/17 10:03:20 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/17 13:39:38 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	process_heredoc(t_shell *shell, t_token *token)
 		{
 			free(line);
 			clean_heredoc(shell, false);
-			printf("heredoc wanted '%s\n'", token->value);
+			printf("heredoc wanted '%s'\n", token->value);
 			exit(0);
 		}
 		if (strcmp(line, token->value) == 0)

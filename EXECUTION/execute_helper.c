@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_helper.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 14:16:54 by jisokim2          #+#    #+#             */
-/*   Updated: 2025/05/17 12:27:15 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/17 13:11:32 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,9 +89,6 @@ char	*check_path_before_exec(t_shell *shell, t_gc *gc)
 
 void	access_and_exec(char *arg, char **args, t_shell *shell)
 {
-	t_gc	*gc;
-
-	gc = get_gc();
 	if (access(arg, F_OK | X_OK) == 0)
 	{
 		if (execve(arg, args, shell->my_envp) == -1)

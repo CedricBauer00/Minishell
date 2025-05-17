@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   m_main.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jisokim2 <jisokim2@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/17 12:50:59 by jisokim2         ###   ########.fr       */
+/*   Updated: 2025/05/17 13:11:13 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ int	main_loop_helper(t_main *main, int indic, t_gc *gc, t_shell *shell)
 	shell->last_status_exit = 0;
 	executable = grouplize(main->tokens, &cmd_block, gc);
 	main_execute(executable);
-	check_open_fds();
 	if (gc->temp)
 		all_free(&gc->temp);
 	return (0);
