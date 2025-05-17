@@ -6,7 +6,7 @@
 /*   By: cbauer < cbauer@student.42heilbronn.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:53:49 by cbauer            #+#    #+#             */
-/*   Updated: 2025/05/16 16:33:26 by cbauer           ###   ########.fr       */
+/*   Updated: 2025/05/17 12:14:06 by cbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int		main_loop_helper(t_main *main, int indic, t_gc *gc, t_shell *shell);
 // ----------------------------------------------------------------------
 
 void	tild(t_main *main, int *i, t_gc_list **gc_list);
-void	set_default(t_main *main);
+void	set_default(t_main *main, int argc, char **argv);
 int		check_operator2(t_main *main, int *i, t_gc_list **gc_list);
 int		check_operator(t_main *main, int *i, t_gc_list **gc_list);
 
